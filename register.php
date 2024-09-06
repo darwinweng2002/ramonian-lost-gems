@@ -178,7 +178,7 @@ body {
                     <p>Already have an account? <a href="http://localhost/lostgemramonian/login.php/">Login here</a></p>
                   </div>
                   <div id="g_id_onload"
-         data-client_id="YGOCSPX-kVEygpsdOrU_3FQ8fHnfv86qUrRM"
+         data-client_id="462546722729-vflluo934lv9qei2jbeaqcib5sllh9t6.apps.googleusercontent.com"
          data-context="signin"
          data-ux_mode="popup"
          data-callback="handleCredentialResponse"
@@ -226,7 +226,48 @@ body {
   <script src="<?= base_url ?>assets/js/main.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> <!-- Ensure jQuery is included -->
   <script>
-  $(document).ready(function() {
+function handleCredentialResponse(response) {
+  const id_token = response.credential;
+
+  // Send the ID token to your server
+  $.ajax({
+    url: 'google_login_process.php',
+    type: 'POST',
+    data: { id_token: id_token },
+    dataType: 'json',
+    success: function(response) {
+      if (response.success) {
+        Swal.fire({
+          title: 'Success!',
+          text: 'Login successful!',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = 'dashboard.php'; // Redirect or do something else
+          }
+        });
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: response.message,
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+    },
+    error: function(xhr, status, error) {
+      console.error('AJAX Error: ', status, error); // Log the AJAX error
+      Swal.fire({
+        title: 'Error!',
+        text: 'An error occurred during Google sign-in.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    }
+  });
+}
+ $(document).ready(function() {
     $('form').on('submit', function(e) {
       e.preventDefault(); // Prevent the default form submission
 

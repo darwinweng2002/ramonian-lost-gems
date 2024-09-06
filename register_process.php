@@ -1,6 +1,5 @@
 <?php
 include 'config.php'; // Include the database configuration file
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data
     $first_name = $_POST['first_name'];
