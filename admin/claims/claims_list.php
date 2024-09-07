@@ -89,6 +89,8 @@ $claim = $result->fetch_assoc();
 $qry->close();
 ?>
 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <?php require_once('../inc/header.php') ?>

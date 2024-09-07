@@ -1,6 +1,63 @@
 <?php
 include '../config.php';
 
+$targetDir = "../uploads/";
+$uploadStatus = 1;
+$allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
+
+// Create the uploads directory if it does not exist
+if (!file_exists($targetDir)) {
+    mkdir($targetDir, 0777, true);
+}
+
+// Check if 'images' is set and has files
+if (isset($_FILES['images']) && !empty($_FILES['images']['tmp_name'])) {
+    foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+        $fileName = basename($_FILES['images']['name'][$key]);
+        $targetFile = $targetDir . $fileName;
+        $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+        // Check if file is an image
+        $check = getimagesize($_FILES['images']['tmp_name'][$key]);
+        if ($check === false) {
+            echo "File is not an image.";
+            $uploadStatus = 0;
+        }
+
+        // Check file size (e.g., limit to 5MB)
+        if ($_FILES['images']['size'][$key] > 5000000) {
+            echo "Sorry, your file is too large.";
+            $uploadStatus = 0;
+        }
+
+        // Check file type
+        if (!in_array($fileType, $allowedTypes)) {
+            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $uploadStatus = 0;
+        }
+
+        // Check if $uploadStatus is set to 0 by an error
+        // Modify the upload section to store the file path
+if ($uploadStatus == 1) {
+    if (move_uploaded_file($_FILES['images']['tmp_name'][$key], $targetFile)) {
+        echo "The file " . htmlspecialchars($fileName) . " has been uploaded.<br>";
+
+        // Insert image path into the claims table
+        $image_path = $targetFile; // or just the file name if path is relative
+        $stmt = $conn->prepare("UPDATE claims SET image_path = ? WHERE user_id = ? AND item_id = ?");
+        $stmt->bind_param("sii", $image_path, $user_id, $item_id);
+        $stmt->execute();
+        $stmt->close();
+    } else {
+        echo "Sorry, there was an error uploading your file.";
+    }
+}
+
+    }
+} else {
+    echo "No files were uploaded.";
+}
+
 // Ensure user_id is set in session
 if (!isset($_SESSION['user_id'])) {
     echo '<!DOCTYPE html><html lang="en"><head><title>Error</title>';
@@ -224,7 +281,7 @@ $stmt->close();
     <div class="content">
         <br>
         <br>
-        <form method="post">
+        <form  method="post" enctype="multipart/form-data">
             <input type="hidden" name="item_id" value="<?= htmlspecialchars($item['id'] ?? '') ?>">
             <h2><?= htmlspecialchars($item['title'] ?? 'Title not available') ?> | <?= htmlspecialchars($item['category'] ?? 'Category not available') ?></h2>
 
@@ -242,7 +299,7 @@ $stmt->close();
 
             <label for="section">Section:</label>
             <input type="text" name="section" id="section" value="<?= htmlspecialchars($section) ?>" readonly>
-
+            <input type="file" name="images[]" multiple accept="image/*" required>
             <label for="additional_info">Additional Information:</label>
             <textarea name="additional_info" id="additional_info"></textarea>
 
