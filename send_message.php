@@ -45,9 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <?php require_once('inc/header.php') ?>
     <title>Send Message</title>
 </head>
 <body>
+<?php require_once('inc/topBarNav.php') ?>
     <form action="send_message.php" method="post" enctype="multipart/form-data">
         <label for="message">Message:</label>
         <textarea name="message" id="message" required></textarea><br>

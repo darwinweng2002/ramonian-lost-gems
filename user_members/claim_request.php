@@ -1,61 +1,13 @@
 <?php
 include '../config.php';
 
-$targetDir = "../uploads/";
+$targetDir = "../uploads/items/"; // Update directory
 $uploadStatus = 1;
 $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
 
 // Create the uploads directory if it does not exist
 if (!file_exists($targetDir)) {
     mkdir($targetDir, 0777, true);
-}
-
-// Check if 'images' is set and has files
-if (isset($_FILES['images']) && !empty($_FILES['images']['tmp_name'])) {
-    foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
-        $fileName = basename($_FILES['images']['name'][$key]);
-        $targetFile = $targetDir . $fileName;
-        $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
-        // Check if file is an image
-        $check = getimagesize($_FILES['images']['tmp_name'][$key]);
-        if ($check === false) {
-            echo "File is not an image.";
-            $uploadStatus = 0;
-        }
-
-        // Check file size (e.g., limit to 5MB)
-        if ($_FILES['images']['size'][$key] > 5000000) {
-            echo "Sorry, your file is too large.";
-            $uploadStatus = 0;
-        }
-
-        // Check file type
-        if (!in_array($fileType, $allowedTypes)) {
-            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-            $uploadStatus = 0;
-        }
-
-        // Check if $uploadStatus is set to 0 by an error
-        // Modify the upload section to store the file path
-if ($uploadStatus == 1) {
-    if (move_uploaded_file($_FILES['images']['tmp_name'][$key], $targetFile)) {
-        echo "The file " . htmlspecialchars($fileName) . " has been uploaded.<br>";
-
-        // Insert image path into the claims table
-        $image_path = $targetFile; // or just the file name if path is relative
-        $stmt = $conn->prepare("UPDATE claims SET image_path = ? WHERE user_id = ? AND item_id = ?");
-        $stmt->bind_param("sii", $image_path, $user_id, $item_id);
-        $stmt->execute();
-        $stmt->close();
-    } else {
-        echo "Sorry, there was an error uploading your file.";
-    }
-}
-
-    }
-} else {
-    echo "No files were uploaded.";
 }
 
 // Ensure user_id is set in session
@@ -171,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $section = $_POST['section'];
     $college = $_POST['college'];
 
-    // Database insertion
+    // Database insertion for the claim
     $stmt = $conn->prepare("INSERT INTO claims (user_id, item_id, additional_info, email, course, year, section, college) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("iissssss", $user_id, $item_id, $additional_info, $email, $course, $year, $section, $college);
 
@@ -181,6 +133,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo '</head><body>';
 
     if ($stmt->execute()) {
+        // Handle file uploads
+        foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+            $fileName = basename($_FILES['images']['name'][$key]);
+            $targetFile = $targetDir . $fileName;
+            $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+            // Check if file is an image
+            $check = getimagesize($_FILES['images']['tmp_name'][$key]);
+            if ($check === false) {
+                echo "File is not an image.";
+                $uploadStatus = 0;
+            }
+
+            // Check file size (e.g., limit to 5MB)
+            if ($_FILES['images']['size'][$key] > 5000000) {
+                echo "Sorry, your file is too large.";
+                $uploadStatus = 0;
+            }
+
+            // Check file type
+            if (!in_array($fileType, $allowedTypes)) {
+                echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+                $uploadStatus = 0;
+            }
+
+            // Check if $uploadStatus is set to 0 by an error
+            if ($uploadStatus == 1) {
+                if (move_uploaded_file($_FILES['images']['tmp_name'][$key], $targetFile)) {
+                    echo "The file " . htmlspecialchars($fileName) . " has been uploaded.<br>";
+
+                    // Insert image path into the claims_images table
+                    $stmt = $conn->prepare("INSERT INTO claim_images (claim_id, image_path) VALUES (?, ?)");
+                    $stmt->bind_param("is", $claim_id, $fileName);
+                    $stmt->execute();
+                    $stmt->close();
+                } else {
+                    echo "Sorry, there was an error uploading your file.";
+                }
+            }
+        }
+
         echo '<script>
             Swal.fire({
                 title: "Claim Submitted",
@@ -195,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 didClose: () => { window.location.replace("./dashboard.php"); }
             });
         </script>';
-    }else {
+    } else {
         echo '<script>
             Swal.fire({
                 title: "Error",
@@ -243,69 +236,84 @@ $stmt->close();
             margin: 0 auto;
             background: #fff;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
-        h2 {
-            margin-top: 0;
+        .form-group {
+            margin-bottom: 15px;
         }
 
-        label {
+        .form-group label {
             display: block;
-            margin: 10px 0 5px;
+            margin-bottom: 5px;
         }
 
-        input[type="text"], textarea {
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
             border-radius: 4px;
         }
 
-        button {
-            padding: 10px 15px;
+        .form-group input[type="file"] {
             border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: white;
-            font-size: 16px;
+        }
+
+        .form-group button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            border-radius: 4px;
+        }
+
+        .form-group button:hover {
+            background: #0056b3;
         }
     </style>
 </head>
 <body>
-    <?php require_once('../inc/topBarNav.php') ?>
     <div class="content">
-        <br>
-        <br>
-        <form  method="post" enctype="multipart/form-data">
-            <input type="hidden" name="item_id" value="<?= htmlspecialchars($item['id'] ?? '') ?>">
-            <h2><?= htmlspecialchars($item['title'] ?? 'Title not available') ?> | <?= htmlspecialchars($item['category'] ?? 'Category not available') ?></h2>
-
-            <label for="email">Username:</label>
-            <input type="text" name="email" id="email" value="<?= htmlspecialchars($email) ?>" readonly>
-
-            <label for="college">College:</label>
-            <input type="text" name="college" id="college" value="<?= htmlspecialchars($college) ?>" readonly>
-
-            <label for="course">Course:</label>
-            <input type="text" name="course" id="course" value="<?= htmlspecialchars($course) ?>" readonly>
-
-            <label for="year">Year:</label>
-            <input type="text" name="year" id="year" value="<?= htmlspecialchars($year) ?>" readonly>
-
-            <label for="section">Section:</label>
-            <input type="text" name="section" id="section" value="<?= htmlspecialchars($section) ?>" readonly>
-            <input type="file" name="images[]" multiple accept="image/*" required>
-            <label for="additional_info">Additional Information:</label>
-            <textarea name="additional_info" id="additional_info"></textarea>
-
-            <button type="submit">Submit Claim</button>
+        <form action="" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="item_id" value="<?php echo htmlspecialchars($item['id']); ?>">
+            <h2>Claim Request for <?php echo htmlspecialchars($item['title']); ?></h2>
+            <div class="form-group">
+                <label for="additional_info">Additional Information:</label>
+                <textarea id="additional_info" name="additional_info" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="images">Upload Images (optional):</label>
+                <input type="file" id="images" name="images[]" multiple>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="course">Course:</label>
+                <input type="text" id="course" name="course" value="<?php echo htmlspecialchars($course); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="year">Year:</label>
+                <input type="text" id="year" name="year" value="<?php echo htmlspecialchars($year); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="section">Section:</label>
+                <input type="text" id="section" name="section" value="<?php echo htmlspecialchars($section); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="college">College:</label>
+                <input type="text" id="college" name="college" value="<?php echo htmlspecialchars($college); ?>" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Submit Claim</button>
+            </div>
         </form>
     </div>
-    <?php require_once('../inc/footer.php') ?>
 </body>
 </html>
