@@ -126,15 +126,6 @@ if (isset($_GET['claim_id'])) {
                     <p><strong>Course:</strong> <?= htmlspecialchars($claim['user_course']); ?></p>
                     <p><strong>Year:</strong> <?= htmlspecialchars($claim['user_year']); ?></p>
                     <p><strong>Section:</strong> <?= htmlspecialchars($claim['user_section']); ?></p>
-                    <?php
-   $filePath = '../uploads/' . basename($claim['image_path']);
-   if (file_exists($filePath)) {
-       echo '<img src="' . htmlspecialchars($claim['image_path']) . '" alt="Uploaded Image">';
-   } else {
-       echo 'Image not found.';
-   }
-   
-    ?>
                 </div>
             </div>
             <?php require_once('../inc/footer.php'); ?>

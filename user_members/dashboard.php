@@ -2,18 +2,47 @@
 // Include the database configuration file
 include '../config.php';
 
-// Check if the user is logged in, if not then redirect to login page
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login.php");
+    exit;
+}
 
 // Fetch the user's information from the database
 $user_id = $_SESSION['user_id'];
 
 // Prepare and execute query to fetch user information
-$stmt = $conn->prepare("SELECT first_name, last_name, course, year, section, email, college FROM user_member WHERE id = ?");
+$stmt = $conn->prepare("SELECT first_name, last_name, course, year, section, email, college, avatar FROM user_member WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-$stmt->bind_result($first_name, $last_name, $course, $year, $section, $email, $college);
+$stmt->bind_result($first_name, $last_name, $course, $year, $section, $email, $college, $avatar);
 $stmt->fetch();
 $stmt->close();
+
+// Handle avatar upload
+if(isset($_POST['upload_avatar'])) {
+    if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
+        $avatar_name = $_FILES['avatar']['name'];
+        $avatar_tmp_name = $_FILES['avatar']['tmp_name'];
+        $avatar_folder = '../uploads/avatars/'.$avatar_name;
+
+        // Move uploaded file to the avatars folder
+        if (move_uploaded_file($avatar_tmp_name, $avatar_folder)) {
+            $stmt = $conn->prepare("UPDATE user_member SET avatar = ? WHERE id = ?");
+            $stmt->bind_param("si", $avatar_name, $user_id);
+            $stmt->execute();
+            $stmt->close();
+            
+            // Refresh the page to reflect changes
+            header("Location: dashboard.php");
+            exit;
+        } else {
+            echo "Failed to upload avatar.";
+        }
+    } else {
+        echo "No file uploaded or upload error.";
+    }
+}
 
 // Fetch the user's claim history with additional details
 $claim_stmt = $conn->prepare("
@@ -61,8 +90,8 @@ $post_stmt->close();
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
-        /* Your existing CSS */
-        body {
+     /* Your existing CSS */
+     body {
             overflow: auto;
         }
         .logo img {
@@ -139,20 +168,35 @@ $post_stmt->close();
                             </div>
                             <div class="card mb-3">
                                 <div class="card-body">
-                                <div class="pt-4 pb-2 text-center">
-    <h5 class="card-title text-center pb-0 fs-4">User Dashboard</h5>
-    <div class="d-flex justify-content-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-user">
-            <circle cx="12" cy="12" r="10"/>
-            <circle cx="12" cy="10" r="3"/>
-            <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
-        </svg>
-    </div>
-    <p class="text-center small">Welcome, <?= htmlspecialchars($first_name . ' ' . $last_name) ?></p>
-</div>
+                                    <div class="pt-4 pb-2 text-center">
+                                        <h5 class="card-title text-center pb-0 fs-4">User Dashboard</h5>
+                                        <div class="d-flex justify-content-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-user">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <circle cx="12" cy="10" r="3"/>
+                                                <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
+                                            </svg>
+                                        </div>
+                                        <p class="text-center small">Welcome, <?= htmlspecialchars($first_name . ' ' . $last_name) ?></p>
+                                    </div>
 
+                                    <!-- Display User Avatar -->
+                                    <div class="text-center mb-3">
+                                        <?php if($avatar): ?>
+                                            <img src="../uploads/avatars/<?= htmlspecialchars($avatar) ?>" alt="User Avatar" style="width: 100px; height: 100px; border-radius: 50%;">
+                                        <?php else: ?>
+                                            <img src="../uploads/avatars/default-avatar.png" alt="Default Avatar" style="width: 100px; height: 100px; border-radius: 50%;">
+                                        <?php endif; ?>
+                                    </div>
 
-                                    <div class="row">
+                                    <!-- Avatar Upload Form -->
+                                    <form action="dashboard.php" method="post" enctype="multipart/form-data">
+                                        <label class="form-label">Upload Avatar:</label>
+                                        <input type="file" name="avatar" id="avatar" required>
+                                        <button type="submit" name="upload_avatar" class="btn btn-primary mt-2">Upload</button>
+                                    </form>
+
+                                    <div class="row mt-4">
                                         <div class="col-12">
                                             <label class="form-label">Full Name</label>
                                             <p class="form-control"><?= htmlspecialchars($first_name . ' ' . $last_name) ?></p>
@@ -160,6 +204,10 @@ $post_stmt->close();
                                         <div class="col-12">
                                             <label class="form-label">College</label>
                                             <p class="form-control"><?= htmlspecialchars($college) ?></p>
+                                        </div>
+                                        <div class="col-12">
+                                            <label class="form-label">Email</label>
+                                            <p class="form-control"><?= htmlspecialchars($email) ?></p>
                                         </div>
                                         <div class="col-12">
                                             <label class="form-label">Course</label>
@@ -178,6 +226,12 @@ $post_stmt->close();
                                             <p class="form-control"><?= htmlspecialchars($email) ?></p>
                                         </div>
                                     </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
 
                                     <div class="history-title">Your Claim History</div>
                                     <table class="table claim-history-table">
@@ -233,7 +287,6 @@ $post_stmt->close();
                                             <?php endif; ?>
                                         </tbody>
                                     </table>
-
                                     <div class="text-center mt-4 d-flex justify-content-center">
                                         <button id="logout-btn" class="btn btn-primary mx-2">Logout</button>
                                         <a href="http://localhost/lostgemramonian/" class="btn btn-secondary mx-2">Back</a>
@@ -241,24 +294,6 @@ $post_stmt->close();
 
                                 </div>
                             </div>
-                            <footer>
-                                <div class="container text-center py-4">
-                                    <div class="copyright mb-2">
-                                        &copy; <strong><span>Ramonian LostGems</span></strong>. All Rights Reserved
-                                    </div>
-                                    <div class="credits">
-                                        <p>
-                                            <a href="http://localhost/lostgemramonian/register.php">prmsuramonianlostgems.com</a>
-                                        </p>
-                                    </div>
-                                    <div class="logo mb-2">
-                                        <a href="<?= base_url ?>">
-                                            <img style="height: 55px; width: 55px;" src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
-                                        </a>
-                                    </div>
-                                </div>
-                            </footer>
-
                         </div>
                     </div>
                 </div>
@@ -291,5 +326,6 @@ $post_stmt->close();
             });
         });
     </script>
+    <?php require_once('../inc/footer.php'); ?>
 </body>
 </html>

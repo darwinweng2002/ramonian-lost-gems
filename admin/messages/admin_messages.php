@@ -10,13 +10,14 @@ if ($conn->connect_error) {
 }
 
 // Correct SQL query
-$sql = "SELECT mh.id, mh.message, mi.image_path, um.first_name, um.email 
+$sql = "SELECT mh.id, mh.message, mi.image_path, mh.landmark, um.first_name, um.college, um.email, um.avatar 
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN user_member um ON mh.user_id = um.id
         ORDER BY mh.id DESC";
 $result = $conn->query($sql);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,6 +26,7 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Messages - Admin View</title>
     <?php require_once('../inc/header.php'); ?>
+    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,6 +38,7 @@ $result = $conn->query($sql);
         .container {
             margin: 30px auto;
             width: 90%;
+            max-width: 1200px;
         }
         h1 {
             text-align: center;
@@ -48,11 +51,101 @@ $result = $conn->query($sql);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin-bottom: 20px;
+            position: relative;
+        }
+        .message-box p {
+            margin: 10px 0;
         }
         .message-box img {
-            max-width: 200px;
-            margin-bottom: 10px;
+            max-width: 100%;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
         }
+        .message-box img:hover {
+            transform: scale(1.1);
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .publish-btn {
+    background-color: #28a745; /* Green background color */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 20px;
+    right: 80px; /* Position it to the left of the delete button */
+}
+.publish-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+.message-box {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.delete-btn, .publish-btn {
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 20px;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+    right: 20px; /* Position the delete button */
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.publish-btn {
+    background-color: #28a745;
+    color: white;
+    right: 90px; /* Adjust this value to create space between buttons */
+}
+
+.publish-btn:hover {
+    background-color: #218838;
+}
+/* CSS for the avatar images */
+/* CSS for the avatar images */
+/* Ensure that your avatar images are styled correctly */
+.container .avatar {
+    width: 100px; /* Set the width of the avatar */
+    height: 100px; /* Set the height of the avatar to the same value as width for a circle */
+    border-radius: 100%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image covers the circle without distortion */
+    display: block; /* Ensures the image is displayed as a block element */
+    margin-bottom: 10px; /* Adds space below the image if needed */
+}
+
+
     </style>
 </head>
 <body>
@@ -60,7 +153,7 @@ $result = $conn->query($sql);
     <?php require_once('../inc/navigation.php'); ?>
 
     <div class="container">
-        <h1>Messages and Images</h1>
+        <h1><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-pen-line"><path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2"/><path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/><path d="M8 18h1"/></svg>Reported Items</h1>
         <?php
         if ($result->num_rows > 0) {
             $messages = [];
@@ -70,7 +163,10 @@ $result = $conn->query($sql);
                         'message' => $row['message'], 
                         'images' => [],
                         'first_name' => $row['first_name'],
-                        'email' => $row['email']
+                        'landmark' => $row['landmark'],
+                        'college' => $row['college'],
+                        'email' => $row['email'],
+                        'avatar' => $row['avatar']
                     ];
                 }
                 if ($row['image_path']) {
@@ -82,19 +178,40 @@ $result = $conn->query($sql);
             
             foreach ($messages as $msgId => $msgData) {
                 echo "<div class='message-box'>";
-                echo "<p><strong>User:</strong> " . htmlspecialchars($msgData['first_name']) . " (" . htmlspecialchars($msgData['email']) . ")</p>";
-                echo "<p><strong>Message:</strong> " . htmlspecialchars($msgData['message']) . "</p>";
+                // Ensure values are strings or use default empty strings
+                $firstName = htmlspecialchars($msgData['first_name'] ?? '');
+                $email = htmlspecialchars($msgData['email'] ?? '');
+                $college = htmlspecialchars($msgData['college'] ?? '');
+                $landmark = htmlspecialchars($msgData['landmark'] ?? '');
+                $message = htmlspecialchars($msgData['message'] ?? '');
+                $avatar = htmlspecialchars($msgData['avatar'] ?? '');
+                if ($avatar) {
+                    $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
+                    echo "<img  src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
+                } else {
+                    echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>"; // Default avatar
+                }
+                
+                echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
+                echo "<p><strong>College:</strong> " . $college . "</p>";
+                echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
+                echo "<p><strong>Description:</strong> " . $message . "</p>";
+                
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
+                    echo "<div class='image-grid'>";
                     foreach ($msgData['images'] as $imagePath) {
-                        // Display the image
-                        echo "<img src='" . htmlspecialchars($imagePath) . "' alt='Image'><br>";
+                        // Add Lightbox attributes
+                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
                     }
+                    echo "</div>";
                 }
+                // Add both buttons
+                echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "'>Publish</button>";
+                echo "<button class='delete-btn' data-id='" . htmlspecialchars($msgId) . "'>Delete</button>";
                 echo "</div>";
             }
-        } else {
-            echo "<p>No messages found.</p>";
+            
         }
         ?>
     </div>
@@ -103,21 +220,59 @@ $result = $conn->query($sql);
     <script src="../js/jquery.min.js"></script> <!-- Ensure this path is correct -->
     <script src="../js/bootstrap.min.js"></script> <!-- Ensure this path is correct -->
     <script src="../js/custom.js"></script> <!-- Ensure this path is correct -->
+    <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            // Example code for handling navigation button triggers
-            $('.nav-button').on('click', function() {
-                // Your logic for handling navigation button click
-                alert('Navigation button clicked!');
+      $(document).ready(function() {
+    $('.delete-btn').on('click', function() {
+        var messageId = $(this).data('id');
+        if (confirm('Are you sure you want to delete this message?')) {
+            $.ajax({
+                url: 'delete_message.php',
+                type: 'POST',
+                data: { id: messageId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        alert('Message deleted successfully.');
+                        location.reload();
+                    } else {
+                        alert('Failed to delete the message: ' + response.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX error:", status, error);
+                    alert('An error occurred: ' + error);
+                }
             });
+        }
+    });
 
-            // Example code for handling header settings
-            $('#settings-button').on('click', function() {
-                // Your logic for handling header settings
-                alert('Settings button clicked!');
+    $('.publish-btn').on('click', function() {
+        var messageId = $(this).data('id');
+        if (confirm('Are you sure you want to publish this message?')) {
+            $.ajax({
+                url: 'publish_message.php',
+                type: 'POST',
+                data: { id: messageId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        alert('Message published successfully.');
+                        location.reload();
+                    } else {
+                        alert('Failed to publish the message: ' + response.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX error:", status, error);
+                    alert('An error occurred: ' + error);
+                }
             });
-        });
+        }
+    });
+});
+
     </script>
 </body>
 <?php require_once('../inc/footer.php') ?>

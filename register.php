@@ -102,32 +102,29 @@ body {
         <div class="invalid-feedback">Please enter your last name.</div>
     </div>
     <div class="col-12">
-        <label for="college" class="form-label">College</label>
-        <select name="college" class="form-control" id="college" required>
-            <option value="" disabled selected>Select your college</option>
-            <option value="CABA">CABA</option>
-            <option value="CTHM">CTHM</option>
-            <option value="CTE">CTE</option>
-            <option value="CAS">CAS</option>
-            <option value="CIT">CIT</option>
-            <option value="CON">CON</option>
-            <option value="CCIT">CCIT</option>
-            <option value="COE">COE</option>
-        </select>
-        <div class="invalid-feedback">Please select your college.</div>
-    </div>
-    <div class="col-12">
-        <label for="course" class="form-label">Course</label>
-        <select name="course" class="form-control" id="course" required>
-            <option value="" disabled selected>Select your course</option>
-            <option value="Bachelor of Science in Information Technology">Bachelor of Science in Information Technology</option>
-            <option value="Bachelor of Science in Computer Science">Bachelor of Science in Computer Science</option>
-            <option value="Bachelor of Science in Computer Engineering">Bachelor of Science in Computer Engineering</option>
-            <option value="Bachelor of Science in Civil Engineering">Bachelor of Science in Civil Engineering</option>
-            <option value="Bachelor of Science in Mechanical Engineering">Bachelor of Science in Mechanical Engineering</option>
-        </select>
-        <div class="invalid-feedback">Please select your course.</div>
-    </div>
+    <label for="college" class="form-label">College</label>
+    <select name="college" class="form-control" id="college" required>
+        <option value="" disabled selected>Select your college</option>
+        <option value="CABA">College of Accountancy and Business Administration</option>
+        <option value="CAS">College of Arts and Sciences</option>
+        <option value="CCIT">College of Communication and Information Technology</option>
+        <option value="CTE">College of Teacher Education</option>
+        <option value="CE">College of Engineering</option>
+        <option value="CIT">College of Industrial Technology</option>
+        <option value="CAF">College of Agriculture and Forestry</option>
+        <option value="NUR">College of Nursing</option>
+        <option value="CTHM">College of Tourism and Hospitality Management</option>
+    </select>
+    <div class="invalid-feedback">Please select your college.</div>
+</div>
+<div class="col-12">
+    <label for="course" class="form-label">Course</label>
+    <select name="course" class="form-control" id="course" required>
+        <option value="" disabled selected>Select your course</option>
+    </select>
+    <div class="invalid-feedback">Please select your course.</div>
+</div>
+
     <div class="col-12">
         <label for="year" class="form-label">Year</label>
         <select name="year" class="form-control" id="year" required>
@@ -226,6 +223,92 @@ body {
   <script src="<?= base_url ?>assets/js/main.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> <!-- Ensure jQuery is included -->
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Define the courses for each college
+    const coursesByCollege = {
+        "CABA": [
+            "Bachelor of Science in Accountancy",
+            "Bachelor of Science in Accounting and Information System",
+            "Bachelor of Science in Business Administration - Marketing",
+            "Bachelor of Science in Business Administration - Financial Management",
+            "Bachelor of Science in Business Administration - Human Resource Development Management",
+            "Bachelor of Public Administration"
+        ],
+        "CAS": [
+            "Bachelor of Science in Biology",
+            "Bachelor of Science in Psychology"
+        ],
+        "CCIT": [
+            "Bachelor of Science in Computer Science",
+            "Bachelor of Science in Information Technology"
+        ],
+        "CTE": [
+            "Bachelor of Secondary Education - English Education",
+            "Bachelor of Secondary Education - Filipino Education",
+            "Bachelor of Secondary Education - Mathematics Education",
+            "Bachelor of Secondary Education - Science Education",
+            "Bachelor of Secondary Education - Social Studies Education",
+            "Bachelor of Elementary Education",
+            "Bachelor of Physical Education",
+            "Bachelor of Professional Education"
+        ],
+        "CE": [
+            "Bachelor of Science in Civil Engineering",
+            "Bachelor of Science in Electrical Engineering",
+            "Bachelor of Science in Mechanical Engineering",
+            "Bachelor of Science in Computer Engineering",
+            "Bachelor of Science in Mining Engineering"
+        ],
+        "CIT": [
+            "Bachelor of Technology and Livelihood Education - Industrial Arts",
+            "Bachelor of Technical Vocational Teacher Education - Computer Programming",
+            "Bachelor of Technical Vocational Teacher Education - Drafting Technology",
+            "Bachelor of Technical Vocational Teacher Education - Mechanical Technology (Machine)",
+            "Bachelor of Technical Vocational Teacher Education - Electrical Technology",
+            "Bachelor of Technical Vocational Teacher Education - Food and Service Management Technology",
+            "Bachelor of Technical Vocational Teacher Education - Automotive Technology",
+            "Bachelor of Technical Vocational Teacher Education - Electronics Technology",
+            "Bachelor of Technical Vocational Teacher Education - Welding and Fabrication Technology",
+            "Bachelor of Science in Industrial Technology - Automotive Technology",
+            "Bachelor of Science in Industrial Technology - Computer Technology",
+            "Bachelor of Science in Industrial Technology - Drafting Technology",
+            "Bachelor of Science in Industrial Technology - Electrical Technology",
+            "Bachelor of Science in Industrial Technology - Electronics Technology",
+            "Bachelor of Science in Industrial Technology - Food Technology",
+            "Bachelor of Science in Industrial Technology - Furniture and Cabinet Marketing Technology",
+            "Bachelor of Science in Industrial Technology - Mechanical Technology"
+        ],
+        "CAF": [
+            "Bachelor of Science in Environmental Science"
+        ],
+        "NUR": [
+            "Bachelor of Science in Nursing"
+        ],
+        "CTHM": [
+            "Bachelor of Science in Hospitality Management",
+            "Bachelor of Science in Tourism Management"
+        ]
+    };
+
+    const collegeSelect = document.getElementById('college');
+    const courseSelect = document.getElementById('course');
+
+    collegeSelect.addEventListener('change', function() {
+        const selectedCollege = this.value;
+        const courses = coursesByCollege[selectedCollege] || [];
+
+        // Clear existing options
+        courseSelect.innerHTML = '<option value="" disabled selected>Select your course</option>';
+
+        // Populate new options
+        courses.forEach(function(course) {
+            const option = document.createElement('option');
+            option.value = course;
+            option.textContent = course;
+            courseSelect.appendChild(option);
+        });
+    });
+});
 function handleCredentialResponse(response) {
   const id_token = response.credential;
 
