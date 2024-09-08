@@ -1,10 +1,15 @@
 <?php
+include('config.php');
+session_start(); // Start the session to access session variables
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Include configuration and database connection
-    include('config.php'); // Ensure this path is correct
+    // Check if user is logged in and user_id is set in session
+    if (!isset($_SESSION['user_id'])) {
+        die("User not logged in");
+    }
 
     $message = $_POST['message'];
-    $userId = $_POST['user_id']; // Ensure this comes from a secure source, e.g., session
+    $userId = $_SESSION['user_id']; // Use user ID from session
 
     // Directory for uploading files
     $uploadDir = 'uploads/items/';
@@ -39,22 +44,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     echo "Message and images uploaded successfully!";
 }
+
+// Retrieve user information
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+    $stmt = $conn->prepare("SELECT username, email FROM users WHERE id = ?");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $stmt->bind_result($username, $email);
+    $stmt->fetch();
+    $stmt->close();
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <?php require_once('inc/header.php') ?>
     <title>Send Message</title>
+    <?php require_once('inc/header.php'); ?>
 </head>
 <body>
-<?php require_once('inc/topBarNav.php') ?>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <?php require_once('inc/topBarNav.php') ?>
+    
+    <!-- Display user information -->
+    <?php if (isset($username) && isset($email)): ?>
+        <div>
+            <h2>Welcome, <?php echo htmlspecialchars($username); ?>!</h2>
+            <p>Email: <?php echo htmlspecialchars($email); ?></p>
+        </div>
+    <?php endif; ?>
+
     <form action="send_message.php" method="post" enctype="multipart/form-data">
         <label for="message">Message:</label>
         <textarea name="message" id="message" required></textarea><br>
-        <label for="user_id">User ID:</label>
-        <input type="text" name="user_id" id="user_id" required><br>
         <label for="images">Upload Images:</label>
         <input type="file" name="images[]" id="images" multiple><br>
         <input type="submit" value="Send Message">
