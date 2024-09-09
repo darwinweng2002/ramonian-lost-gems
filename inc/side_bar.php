@@ -59,6 +59,14 @@
 #sidebar-toggle-button:hover {
     background-color: #2980b9; /* Darker shade on hover */
 }
+/* Active avatar styling */
+.active-avatar {
+    width: 80px; /* Smaller size */
+    height: 80px; /* Smaller size */
+    border-radius: 50%; /* Circular shape */
+    border: 3px solid #2ecc71; /* Green border */
+}
+
 
 /* Responsive adjustments for sidebar */
 @media (max-width: 800px) {
@@ -74,9 +82,14 @@
 
 <!-- Toggle Button -->
 <button id="sidebar-toggle-button">☰</button>
-
-<!-- Sidebar -->
 <div id="side-nav-bar">
+<div style="text-align: center;">
+        <?php if($avatar): ?>
+            <img src="../uploads/avatars/<?= htmlspecialchars($avatar) ?>" alt="User Avatar" class="active-avatar">
+        <?php else: ?>
+            <img src="../uploads/avatars/default-avatar.png" alt="Default Avatar" class="active-avatar">
+        <?php endif; ?>
+    </div>
         <ul>
             <br>
             <br>

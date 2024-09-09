@@ -10,7 +10,7 @@ if ($conn->connect_error) {
 }
 
 // Correct SQL query
-$sql = "SELECT mh.id, mh.message, mi.image_path, mh.landmark, um.first_name, um.college, um.email, um.avatar 
+$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar 
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN user_member um ON mh.user_id = um.id
@@ -164,6 +164,7 @@ $result = $conn->query($sql);
                         'images' => [],
                         'first_name' => $row['first_name'],
                         'landmark' => $row['landmark'],
+                        'title' => $row['title'],
                         'college' => $row['college'],
                         'email' => $row['email'],
                         'avatar' => $row['avatar']
@@ -182,6 +183,7 @@ $result = $conn->query($sql);
                 $firstName = htmlspecialchars($msgData['first_name'] ?? '');
                 $email = htmlspecialchars($msgData['email'] ?? '');
                 $college = htmlspecialchars($msgData['college'] ?? '');
+                $title = htmlspecialchars($msgData['title'] ?? '');
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                 $message = htmlspecialchars($msgData['message'] ?? '');
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
@@ -195,6 +197,7 @@ $result = $conn->query($sql);
                 echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
+                echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 
                 if (!empty($msgData['images'])) {
