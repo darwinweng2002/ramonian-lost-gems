@@ -1,44 +1,34 @@
 <?php
 include '../../config.php';
 
-header('Content-Type: application/json');
+// Database connection
+$conn = new mysqli('localhost', 'root', '1234', 'lfis_db'); // Replace with your actual DB connection details
 
-$response = ['success' => false, 'error' => 'Unknown error occurred'];
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
-// Check if the ID is provided
+// Check if the ID is set in the POST request
 if (isset($_POST['id'])) {
     $messageId = intval($_POST['id']);
 
-    // Database connection
-    $conn = new mysqli('localhost', 'root', '1234', 'lfis_db'); // Replace with your actual DB connection details
+    // Update the message's is_published status to 1
+    $sql = "UPDATE message_history SET is_published = 1 WHERE id = ?";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $messageId);
 
-    if ($conn->connect_error) {
-        $response['error'] = "Connection failed: " . $conn->connect_error;
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true]);
     } else {
-        // Example SQL to "publish" a message
-        $sql = "UPDATE message_history SET published = 1 WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-
-        if ($stmt) {
-            $stmt->bind_param('i', $messageId);
-
-            if ($stmt->execute()) {
-                $response['success'] = true;
-                unset($response['error']); // Clear the error message on success
-            } else {
-                $response['error'] = "Failed to execute query: " . $stmt->error;
-            }
-
-            $stmt->close();
-        } else {
-            $response['error'] = "Failed to prepare statement: " . $conn->error;
-        }
-
-        $conn->close();
+        echo json_encode(['success' => false, 'error' => $stmt->error]);
     }
+
+    $stmt->close();
 } else {
-    $response['error'] = 'No message ID provided';
+    echo json_encode(['success' => false, 'error' => 'No ID provided']);
 }
 
-echo json_encode($response);
+$conn->close();
 ?>

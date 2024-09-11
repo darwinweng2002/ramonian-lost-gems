@@ -22,11 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $uploadedFiles = [];
 
     // Handle message saving
-    $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, time_found) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("issss", $userId, $message, $landmark, $title, $timeFound); // Updated to include new fields
-    $stmt->execute();
-    $messageId = $stmt->insert_id;
-    $stmt->close();
+   // Handle message saving
+$stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, time_found, status) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("isssss", $userId, $message, $landmark, $title, $timeFound, $status);
+$status = 'Pending'; // Set default status
+$stmt->execute();
+$messageId = $stmt->insert_id;
+$stmt->close();
+
 
     // Handle file uploads
     foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {

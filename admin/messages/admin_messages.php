@@ -10,14 +10,13 @@ if ($conn->connect_error) {
 }
 
 // Correct SQL query
-$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar 
+$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.time_found 
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN user_member um ON mh.user_id = um.id
         ORDER BY mh.id DESC";
 $result = $conn->query($sql);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +27,7 @@ $result = $conn->query($sql);
     <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
-        body {
+         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -153,7 +152,7 @@ $result = $conn->query($sql);
     <?php require_once('../inc/navigation.php'); ?>
 
     <div class="container">
-        <h1><svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-pen-line"><path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2"/><path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/><path d="M8 18h1"/></svg>Reported Items</h1>
+        <h1>Reported Items</h1>
         <?php
         if ($result->num_rows > 0) {
             $messages = [];
@@ -167,7 +166,8 @@ $result = $conn->query($sql);
                         'title' => $row['title'],
                         'college' => $row['college'],
                         'email' => $row['email'],
-                        'avatar' => $row['avatar']
+                        'avatar' => $row['avatar'],
+                        'time_found' => $row['time_found'] // Add this line
                     ];
                 }
                 if ($row['image_path']) {
@@ -187,9 +187,10 @@ $result = $conn->query($sql);
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                 $message = htmlspecialchars($msgData['message'] ?? '');
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
+                $timeFound = htmlspecialchars($msgData['time_found'] ?? ''); // Add this line
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
-                    echo "<img  src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
+                    echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                 } else {
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>"; // Default avatar
                 }
@@ -199,6 +200,7 @@ $result = $conn->query($sql);
                 echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
+                echo "<p><strong>Time Found:</strong> " . $timeFound . "</p>"; // Display time_found
                 
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
@@ -227,55 +229,55 @@ $result = $conn->query($sql);
 
     <script>
       $(document).ready(function() {
-    $('.delete-btn').on('click', function() {
-        var messageId = $(this).data('id');
-        if (confirm('Are you sure you want to delete this message?')) {
-            $.ajax({
-                url: 'delete_message.php',
-                type: 'POST',
-                data: { id: messageId },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        alert('Message deleted successfully.');
-                        location.reload();
-                    } else {
-                        alert('Failed to delete the message: ' + response.error);
+        $('.delete-btn').on('click', function() {
+            var messageId = $(this).data('id');
+            if (confirm('Are you sure you want to delete this message?')) {
+                $.ajax({
+                    url: '../delete_message.php',
+                    type: 'POST',
+                    data: { id: messageId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Message deleted successfully.');
+                            location.reload();
+                        } else {
+                            alert('Failed to delete the message: ' + response.error);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX error:", status, error);
+                        alert('An error occurred: ' + error);
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX error:", status, error);
-                    alert('An error occurred: ' + error);
-                }
-            });
-        }
-    });
+                });
+            }
+        });
 
-    $('.publish-btn').on('click', function() {
-        var messageId = $(this).data('id');
-        if (confirm('Are you sure you want to publish this message?')) {
-            $.ajax({
-                url: 'publish_message.php',
-                type: 'POST',
-                data: { id: messageId },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        alert('Message published successfully.');
-                        location.reload();
-                    } else {
-                        alert('Failed to publish the message: ' + response.error);
+        $('.publish-btn').on('click', function() {
+            var messageId = $(this).data('id');
+            if (confirm('Are you sure you want to publish this message?')) {
+                $.ajax({
+                    url: '../publish_message.php',
+                    type: 'POST',
+                    data: { id: messageId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Message published successfully.');
+                            location.reload();
+                        } else {
+                            alert('Failed to publish the message: ' + response.error);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX error:", status, error);
+                        alert('An error occurred: ' + error);
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX error:", status, error);
-                    alert('An error occurred: ' + error);
-                }
-            });
-        }
-    });
-});
+                });
+            }
+        });
 
+      });
     </script>
 </body>
 <?php require_once('../inc/footer.php') ?>

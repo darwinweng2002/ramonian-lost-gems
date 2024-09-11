@@ -108,7 +108,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     </dl>
                     <div class="center-buttons">
                         <div class="btn btn-light-green">
-                            <a href="http://localhost/lostgemramonian/user_members/claim_request.php?item_id=<?= htmlspecialchars($item_id) ?>">Request to Claim</a>
+                            <a href="user_members/claim_request.php?item_id=<?= htmlspecialchars($item_id) ?>">Request to Claim</a>
                         </div>
                         <div class="btn btn-primary">
                             <a href="./?page=items">Back</a>

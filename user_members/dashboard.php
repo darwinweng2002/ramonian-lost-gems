@@ -66,15 +66,16 @@ while ($claim_stmt->fetch()) {
 $claim_stmt->close();
 
 // Fetch the user's posted items history
-$post_stmt = $conn->prepare("SELECT item_name, post_date FROM posts WHERE user_id = ?");
+$post_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE user_id = ?");
 $post_stmt->bind_param("i", $user_id);
 $post_stmt->execute();
-$post_stmt->bind_result($item_name, $post_date);
+$post_stmt->bind_result($title, $time_found, $status);
 $posts = [];
 while ($post_stmt->fetch()) {
     $posts[] = [
-        'item_name' => $item_name, 
-        'post_date' => $post_date
+        'title' => $title, 
+        'time_found' => $time_found,
+        'status' => $status
     ];
 }
 $post_stmt->close();
@@ -270,6 +271,7 @@ $post_stmt->close();
                                             <tr>
                                                 <th>Item Name</th>
                                                 <th>Post Date</th>
+                                                <th>Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -280,8 +282,10 @@ $post_stmt->close();
                                             <?php else: ?>
                                                 <?php foreach ($posts as $post): ?>
                                                     <tr>
-                                                        <td><?= htmlspecialchars($post['item_name']) ?></td>
-                                                        <td><?= htmlspecialchars($post['post_date']) ?></td>
+                                                        <td><?= htmlspecialchars($post['title']) ?></td>
+                                                        <td><?= htmlspecialchars($post['time_found']) ?></td>
+                                                        <td><?= htmlspecialchars($post['status']) ?></td>
+
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>
