@@ -234,7 +234,7 @@ $post_stmt->close();
                     </div>
                    
 
-                                    <div class="history-title">Your Claim History</div>
+                                    <div class="history-title">Claim Request History</div>
                                     <table class="table claim-history-table">
                                         <thead>
                                             <tr>
@@ -265,7 +265,7 @@ $post_stmt->close();
                                         </tbody>
                                     </table>
 
-                                    <div class="history-title">Your Posted Items</div>
+                                    <div class="history-title">Reported Items History</div>
                                     <table class="table post-history-table">
                                         <thead>
                                             <tr>

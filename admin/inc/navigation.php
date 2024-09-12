@@ -115,9 +115,21 @@
   </li>
   <?php endif; ?>
   <li class="nav-item">
-    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="http://localhost/lostgemramonian/admin/messages/admin_messages.php/">
+    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="http://localhost/lostgemramonian/admin/messages/reported_items.php/">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
       <span>Reported Items</span>
+      <?php 
+      $message = $conn->query("SELECT * FROM `message_history` where `status` = 1")->num_rows;
+      ?>
+      <?php if($message > 0): ?>
+        <span class="badge rounded-pill bg-danger text-light ms-4"><?= format_num($message) ?></span>
+      <?php endif; ?>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="http://localhost/lostgemramonian/admin/messages/admin_messages.php/">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
+      <span>All Reported Items</span>
       <?php 
       $message = $conn->query("SELECT * FROM `message_history` where `status` = 1")->num_rows;
       ?>
