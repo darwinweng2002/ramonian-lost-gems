@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
                 $_SESSION['email'] = $email;  
 
                 // Redirect to a protected page
-                header("Location: https://ramonianlostgems.com/lostgemramonian/");
+                header("Location: https://ramonianlostgems.com/");
                 exit();
             } else {
                 $error_message = 'Invalid email or password.';
@@ -118,7 +118,7 @@ if (isset($_POST['guest_login'])) {
                     </div>
                   </form>
                   <br>
-                  <button class="btn btn-primary w-100"><a style="color: #fff;" href="http://localhost/lostgemramonian/admin/login.php">Login as Admin</a></button>
+                  <button class="btn btn-primary w-100"><a style="color: #fff;" href="https://ramonianlostgems.com/admin/login.php">Login as Admin</a></button>
                   <form method="POST" action="">
                     <div class="col-12">
                       <br>
