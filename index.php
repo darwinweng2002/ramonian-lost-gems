@@ -2,10 +2,6 @@
 require_once('./config.php');
 
 // Check if the user is logged in, if not then redirect to login page
-if (!isset($_SESSION['user_id'])) {
-    header("Location: main.php");
-    exit();
-}
 
 // Include the database configuration file
 
