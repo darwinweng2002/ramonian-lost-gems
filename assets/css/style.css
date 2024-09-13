@@ -490,8 +490,8 @@ h6 {
 
     /* Adjust size of icons */
     .header-nav .nav-link svg {
-        width: 20px;
-        height: 20px;
+        width: 12px;
+        height: 12px;
     }
 
     /* Optionally, adjust padding and spacing of navigation links */
@@ -501,7 +501,7 @@ h6 {
     
     /* Optionally, adjust the container padding */
     .container-lg {
-        padding: 0 15px; /* Reduce padding */
+        padding: 0 5px; /* Reduce padding */
     }
 }
 
