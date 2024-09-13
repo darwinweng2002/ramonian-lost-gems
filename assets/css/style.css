@@ -482,7 +482,7 @@ h6 {
 }
 
 /* Media query for smaller screens */
-@media (max-width: 768px) {
+@media (max-width: 512px) {
     /* Hide text in the navigation links when screen width is less than 768px */
     .header-nav .nav-link span {
         display: none;
