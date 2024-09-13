@@ -496,7 +496,7 @@ h6 {
 
     /* Optionally, adjust padding and spacing of navigation links */
     .header-nav .nav-item {
-        padding: 0 5px; /* Reduce padding on smaller screens */
+        padding: 0 2px; /* Reduce padding on smaller screens */
     }
     
     /* Optionally, adjust the container padding */
