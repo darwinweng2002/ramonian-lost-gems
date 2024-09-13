@@ -347,7 +347,7 @@ h6 {
   line-height: 1;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 512px) {
   .logo {
     width: 10px;
   }
