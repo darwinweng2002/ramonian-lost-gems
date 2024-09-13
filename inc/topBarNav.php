@@ -295,10 +295,6 @@
             </a>
         </div>
 
-        <button class="navbar-toggler d-lg-none" id="navbar-toggler" type="button" aria-expanded="false">
-            <span class="navbar-toggler-icon">☰</span>
-        </button>
-
         <nav class="header-nav me-auto" id="navbar-menu">
             <ul class="d-flex align-items-center h-100">
                 <li class="nav-item pe-3">
