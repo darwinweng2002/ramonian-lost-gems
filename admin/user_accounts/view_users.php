@@ -194,7 +194,7 @@ $result = $conn->query($sql);
                             <td><?= htmlspecialchars($row['email']) ?></td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <a href="edit_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-edit btn-sm me-2">
+                                    <a href="https://ramonianlostgems.com/edit_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-edit btn-sm me-2">
                                         <i class="fa fa-edit"></i> Edit
                                     </a>
                                     <button class="btn btn-delete btn-sm" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
