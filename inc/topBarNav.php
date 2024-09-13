@@ -251,7 +251,7 @@
     text-decoration: none;
 }
 /* Responsive adjustments for sidebar */
-@media (max-width: 800px) {
+@media (max-width: 512px) {
     #side-nav-bar {
         width: 50%; /* Adjust width for small screens */
         left: -100%; /* Initially hide the sidebar */
