@@ -322,7 +322,7 @@ if (!$is_guest) {
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Redirect to logout URL
-                    window.location.href = 'http://localhost/lostgemramonian/logout.php';
+                    window.location.href = 'https://ramonianlostgems.com/lostgemramonian/logout.php';
                 }
             });
         });
