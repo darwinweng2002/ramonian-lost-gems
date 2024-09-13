@@ -124,7 +124,7 @@
     </div>
 
     <?php
-    $con = new PDO("mysql:host=localhost;dbname=lfis_db", 'root', '1234');
+    $con = new PDO("mysql:host=localhost;u450897284_lfis_db", 'u450897284_root', 'Lfisgemsdb1234');
 
     if (isset($_POST["submit"])) {
         $search = $_POST["search"];
