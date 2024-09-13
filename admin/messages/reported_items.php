@@ -55,7 +55,7 @@ $result = $conn->query($sql);
 <body>
     <?php require_once('../inc/topBarNav.php'); ?>
     <?php require_once('../inc/navigation.php'); ?>
-
+    <div class="card card-outline rounded-0 card-navy">
     <div class="container">
         <h1>Reported Items List</h1>
         <table>
@@ -88,6 +88,7 @@ $result = $conn->query($sql);
                 ?>
             </tbody>
         </table>
+    </div>
     </div>
 
     <?php require_once('../inc/footer.php'); ?>
