@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
                 $_SESSION['email'] = $email;  
 
                 // Redirect to a protected page
-                header("Location: http://localhost/lostgemramonian/");
+                header("Location: https://ramonianlostgems.com/lostgemramonian/");
                 exit();
             } else {
                 $error_message = 'Invalid email or password.';
@@ -50,7 +50,7 @@ if (isset($_POST['guest_login'])) {
     $_SESSION['email'] = 'guest@example.com';  // This can be any guest identifier
 
     // Redirect guest user to the main page
-    header("Location: http://localhost/lostgemramonian/");
+    header("Location: https://ramonianlostgems.com/lostgemramonian/");
     exit();
 }
 ?>
