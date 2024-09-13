@@ -347,7 +347,7 @@ h6 {
   line-height: 1;
 }
 
-@media (min-width: 512px) {
+@media (min-width: 1200px) {
   .logo {
     width: 10px;
   }
@@ -490,8 +490,8 @@ h6 {
 
     /* Adjust size of icons */
     .header-nav .nav-link svg {
-        width: 12px;
-        height: 12px;
+        width: 20px;
+        height: 20px;
     }
 
     /* Optionally, adjust padding and spacing of navigation links */
@@ -501,7 +501,7 @@ h6 {
     
     /* Optionally, adjust the container padding */
     .container-lg {
-        padding: 0 5px; /* Reduce padding */
+        padding: 0 15px; /* Reduce padding */
     }
 }
 
@@ -1367,7 +1367,7 @@ div#site-header .siteTitle {
 
 /*KWIRI NG TITLE*/
 /* Media Query for responsiveness */
-@media (max-width: 768px) {
+@media (max-width: 412px) {
   div#site-header {
     height: 300px; /* Reduce header height on smaller screens */
     background-attachment: scroll; /* Disable fixed background on small screens */
