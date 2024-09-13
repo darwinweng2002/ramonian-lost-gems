@@ -289,7 +289,7 @@ if (!$is_guest) {
                                             </div>
                                             <div class="text-center mt-4 d-flex justify-content-center">
                                         <button id="logout-btn" class="btn btn-primary mx-2">Logout</button>
-                                        <a href="http://localhost/lostgemramonian/" class="btn btn-secondary mx-2">Back</a>
+                                        <a href="https://ramonianlostgems.com/" class="btn btn-secondary mx-2">Back</a>
                                     </div>
                                         </div>
                                     <?php endif; ?>
