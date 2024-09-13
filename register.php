@@ -394,7 +394,7 @@ function handleCredentialResponse(response) {
               confirmButtonText: 'OK'
             }).then((result) => {
               if (result.isConfirmed) {
-                window.location.href = 'login.php'; // Redirect or do something else
+                window.location.href = 'https://ramonianlostgems.com/login.php'; // Redirect or do something else
               }
             });
           } else {
@@ -415,7 +415,7 @@ function handleCredentialResponse(response) {
             confirmButtonText: 'OK'
           }).then((result) => {
             if (result.isConfirmed) {
-              window.location.href = 'login.php'; // Redirect or do something else
+              window.location.href = 'https://ramonianlostgems.com/login.php'; // Redirect or do something else
             }
           });
         }
