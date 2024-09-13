@@ -269,93 +269,83 @@
 
 </style>
 
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <!-- Sidebar -->
-
-<!-- Sidebar Trigger Button -->
-    <button id="sidebar-toggle-button">☰</button>
-
-    <!-- Sidebar -->
-    <div id="side-nav-bar">
-        <ul>
-            <br>
-            <br>
-            <li><a href="https://ramonianlostgems.com/user_members/dashboard.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-user"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/></svg> Profile</a></li>
-            <li><a href="https://ramonianlostgems.com/send_message.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-mouse-pointer"><path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/><path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/></svg> Report Items</a></li>
-            <li><a href="https://ramonianlostgems.com/itemss/items.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg> Browse  Items</a></li>
-            <li><a href="https://ramonianlostgems.com/../logout.php" class="btn btn-primary mx-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>Logout</a></li>
-        </ul>
-    </div>
-
+<header>
     <div class="container-lg d-flex justify-content-between px-4">
+        <!-- Logo Section -->
         <div class="d-flex align-items-center justify-content-between" style="margin-left: 0;">
             <a href="<?= base_url ?>" class="logo d-flex align-items-center">
-                <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
+                <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo" class="img-fluid">
                 <span class="d-none d-lg-block"><?= $_settings->info('short_name') ?></span>
             </a>
         </div>
 
-        <button class="navbar-toggler d-lg-none" id="navbar-toggler" type="button" aria-expanded="false">
+        <!-- Mobile Toggler -->
+        <button class="navbar-toggler d-lg-none" id="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu" aria-expanded="false">
             <span class="navbar-toggler-icon">☰</span>
         </button>
 
-        <nav class="header-nav me-auto" id="navbar-menu">
-            <ul class="d-flex align-items-center h-100">
+        <!-- Navbar Menu -->
+        <nav class="header-nav collapse navbar-collapse me-auto" id="navbar-menu">
+            <ul class="d-flex align-items-center h-100 flex-column flex-lg-row">
+                <!-- Home Link -->
                 <li class="nav-item pe-3">
                     <a href="<?= base_url ?>" class="nav-link" title="Go to Home Page">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home">
-                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                            <polyline points="9 22 9 12 15 12 15 22"/>
+                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
                         </svg>
                         <span class="nav-text">Home</span>
                     </a>
                 </li>
 
-                <li class="nav-item pe-3" class="active">
+                <!-- Lost Items Link -->
+                <li class="nav-item pe-3 active">
                     <a href="<?= base_url.'?page=items' ?>" id="home-link" class="nav-link" title="Lost and Found">
-                        <svg title="This is a icon!" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search">
-                            <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
-                            <path d="M4.268 21a2 2 0 0 0 1.727 1H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"/>
-                            <path d="m9 18-1.5-1.5"/>
-                            <circle cx="5" cy="14" r="3"/>
+                        <svg title="This is an icon!" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search">
+                            <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                            <path d="M4.268 21a2 2 0 0 0 1.727 1H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3" />
+                            <path d="m9 18-1.5-1.5" />
+                            <circle cx="5" cy="14" r="3" />
                         </svg>
                         <span class="nav-text">Lost Items</span>
                     </a>
                 </li>
 
+                <!-- Dropdown for Posting Item -->
                 <li class="nav-item pe-3 dropdown">
-                <a href="#" class="nav-link dropdown-button" title="Post an Item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-signpost">
-                        <path d="M12 3v3"/>
-                        <path d="M18.5 13h-13L2 9.5 5.5 6h13L22 9.5Z"/>
-                        <path d="M12 13v8"/>
-                    </svg>
-                    <span class="nav-text">Post an Item</span>
-                </a>
-                <div class="dropdown-content" style="color: #000000;">
-                <a href="<?= base_url.'?page=found' ?>" style="color: #000000; padding: 12px 16px; text-decoration: none; display: block;">Post Found Item</a>
-                <a href="<?= base_url.'?page=missing' ?>" style="color: #000000; padding: 12px 16px; text-decoration: none; display: block;">Post Missing Item</a>
-                </div>
+                    <a href="#" class="nav-link dropdown-toggle" id="postItemDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Post an Item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-signpost">
+                            <path d="M12 3v3" />
+                            <path d="M18.5 13h-13L2 9.5 5.5 6h13L22 9.5Z" />
+                            <path d="M12 13v8" />
+                        </svg>
+                        <span class="nav-text">Post an Item</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="<?= base_url.'?page=found' ?>">Post Found Item</a></li>
+                        <li><a class="dropdown-item" href="<?= base_url.'?page=missing' ?>">Post Missing Item</a></li>
+                    </ul>
                 </li>
 
-
+                <!-- About Link -->
                 <li class="nav-item pe-3">
                     <a href="<?= base_url.'?page=about' ?>" class="nav-link" title="About Page">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-slash">
-                            <path d="m13.5 8.5-5 5"/>
-                            <circle cx="11" cy="11" r="8"/>
-                            <path d="m21 21-4.3-4.3"/>
+                            <path d="m13.5 8.5-5 5" />
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="m21 21-4.3-4.3" />
                         </svg>
                         <span class="nav-text">About</span>
                     </a>
                 </li>
 
+                <!-- Contact Link -->
                 <li class="nav-item pe-3">
                     <a href="<?= base_url.'?page=contact' ?>" class="nav-link" title="Message">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mails">
-                            <rect width="16" height="13" x="6" y="4" rx="2"/>
-                            <path d="m22 7-7.1 3.78c-.57.3-1.23.3-1.8 0L6 7"/>
-                            <path d="M2 8v11 c0 1.1.9 2 2 2h14"/>
+                            <rect width="16" height="13" x="6" y="4" rx="2" />
+                            <path d="m22 7-7.1 3.78c-.57.3-1.23.3-1.8 0L6 7" />
+                            <path d="M2 8v11c0 1.1.9 2 2 2h14" />
                         </svg>
                         <span class="nav-text">Message</span>
                     </a>
@@ -363,15 +353,17 @@
             </ul>
         </nav>
 
+        <!-- Profile and Menu Dropdown -->
         <div class="dropdown">
-            <button class="dropdown-buttonm">Menu</button>
-            <div class="dropdown-content">
-                <a href="<?= base_url.'admin' ?>">Login</a>
-                <a href="<?= base_url.'user_members/dashboard.php' ?>">Profile</a>
-            </div>
+            <button class="dropdown-toggle" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false">Menu</button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="<?= base_url.'admin' ?>">Login</a></li>
+                <li><a class="dropdown-item" href="<?= base_url.'user_members/dashboard.php' ?>">Profile</a></li>
+            </ul>
         </div>
     </div>
 </header>
+
 
 <script type="text/javascript">
     document.getElementById('navbar-toggler').addEventListener('click', function() {
