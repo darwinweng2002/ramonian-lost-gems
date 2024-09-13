@@ -184,7 +184,7 @@ if (isset($_SESSION['user_id'])) {
         </div>
         <?php endif; ?>
 
-        <form action="" method="post" enctype="multipart/form-data" class="message-form">
+        <form action="send_message.php" method="post" enctype="multipart/form-data" class="message-form">
         <label for="title">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pin"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
                 </svg> Title of the Reported Item:
@@ -199,18 +199,6 @@ if (isset($_SESSION['user_id'])) {
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
                 </svg> Time Found:
             </label>
-            <select name="category" id="category" required>
-                <?php
-                // Fetch categories from the database
-                $stmt = $conn->prepare("SELECT id, name FROM categories");
-                $stmt->execute();
-                $stmt->bind_result($catId, $catName);
-                while ($stmt->fetch()) {
-                    echo "<option value='" . htmlspecialchars($catId) . "'>" . htmlspecialchars($catName) . "</option>";
-                }
-                $stmt->close();
-                ?>
-            </select>
             <input type="datetime-local" name="time_found" id="time_found" required>
             <form action="send_message.php" method="post" enctype="multipart/form-data" class="message-form">
             <label for="message"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-notebook-pen"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg> Description:</label>
