@@ -36,9 +36,9 @@ if (isset($_FILES['proof_file']) && $_FILES['proof_file']['error'] === UPLOAD_ER
 }
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_Ifis_db'); // Replace with actual DB connection details
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with actual DB connection details
 
-// Check connection
+// Check connectionI
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
