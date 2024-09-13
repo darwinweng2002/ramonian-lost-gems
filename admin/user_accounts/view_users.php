@@ -229,7 +229,7 @@ $result = $conn->query($sql);
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('delete_user.php', {
+            fetch('../delete_user.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
