@@ -65,7 +65,7 @@
     }
 
 }
-.logo img {
+.logo-container img {
  
     margin: 0;
     top: 0;
@@ -290,7 +290,7 @@
     </div>
 
     <div class="container-lg d-flex justify-content-between px-4">
-        <div class="d-flex align-items-center justify-content-between" style="margin-left: 0;">
+        <div class="logo-container" style="margin-left: 0;">
             <a href="<?= base_url ?>" class="logo d-flex align-items-center">
                 <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
                 <span class="d-none d-lg-block"><?= $_settings->info('short_name') ?></span>
