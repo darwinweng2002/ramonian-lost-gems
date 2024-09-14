@@ -30,11 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
                 $_SESSION['email'] = $email;  
 
                 // Redirect to a protected page
-<<<<<<< HEAD
-                header("Location: http://localhost/ramonian/");
-=======
                 header("Location: https://ramonianlostgems.com/");
->>>>>>> 9a847130ad55804bf61cf6bbb72da1dde26168f9
                 exit();
             } else {
                 $error_message = 'Invalid email or password.';
@@ -54,11 +50,7 @@ if (isset($_POST['guest_login'])) {
     $_SESSION['email'] = 'guest@example.com';  // This can be any guest identifier
 
     // Redirect guest user to the main page
-<<<<<<< HEAD
-    header("Location: http://localhost/ramonian/");
-=======
     header("Location: https://ramonianlostgems.com/lostgemramonian/");
->>>>>>> 9a847130ad55804bf61cf6bbb72da1dde26168f9
     exit();
 }
 ?>
@@ -126,11 +118,7 @@ if (isset($_POST['guest_login'])) {
                     </div>
                   </form>
                   <br>
-<<<<<<< HEAD
-                  <button class="btn btn-primary w-100"><a style="color: #fff;" href="http://localhost/ramonian/admin/login.php">Login as Admin</a></button>
-=======
                   <button class="btn btn-primary w-100"><a style="color: #fff;" href="https://ramonianlostgems.com/admin/login.php">Login as Admin</a></button>
->>>>>>> 9a847130ad55804bf61cf6bbb72da1dde26168f9
                   <form method="POST" action="">
                     <div class="col-12">
                       <br>

@@ -2,11 +2,7 @@
 include '../../config.php';
 
 // Database connection
-<<<<<<< HEAD
-$conn = new mysqli('localhost', 'root', '1234', 'lost_db'); // Update with your DB credentials
-=======
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Update with your DB credentials
->>>>>>> 9a847130ad55804bf61cf6bbb72da1dde26168f9
 
 // Check connection
 if ($conn->connect_error) {
