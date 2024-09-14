@@ -191,7 +191,7 @@
 /* Sidebar styling */
 #side-nav-bar {
     position: fixed;
-    right: -250px; /* Initially hide the sidebar on the right side */
+    left: -250px; /* Initially hide the sidebar on the right side */
     top: 0;
     width: 250px;
     height: 100%;
@@ -206,7 +206,7 @@
 
 /* No hover effect for sidebar */
 #side-nav-bar:hover {
-    right: -250px; /* Ensure sidebar stays hidden when not toggled */
+    left: -250px; /* Ensure sidebar stays hidden when not toggled */
 }
 
 /* Sidebar links */
@@ -237,7 +237,7 @@
 /* Sidebar toggle button */
 #sidebar-toggle-button {
     position: fixed;
-    right: 0;
+    left: 0;
     top: 15px; /* Adjust to align with your design */
     background-color: #3498db; /* Professional color */
     color: white;
@@ -260,7 +260,7 @@
 @media (max-width: 512px) {
     #side-nav-bar {
         width: 50%; /* Adjust width for small screens */
-        right: -100%; /* Initially hide the sidebar */
+        left: -100%; /* Initially hide the sidebar */
     }
     #sidebar-toggle-button {
         display: block;
@@ -381,10 +381,10 @@
     document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
         const sideNavBar = document.getElementById('side-nav-bar');
 
-        if (sideNavBar.style.right === '0px' || sideNavBar.style.right === '') {
-            sideNavBar.style.right = '-250px'; // Hide the sidebar
+        if (sideNavBar.style.left === '0px' || sideNavBar.style.right === '') {
+            sideNavBar.style.left = '-250px'; // Hide the sidebar
         } else {
-            sideNavBar.style.right = '0'; // Show the sidebar
+            sideNavBar.style.left = '0'; // Show the sidebar
         }
     });
 
