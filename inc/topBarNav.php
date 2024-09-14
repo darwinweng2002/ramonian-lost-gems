@@ -273,7 +273,7 @@
     <!-- Sidebar -->
 
 <!-- Sidebar Trigger Button -->
-    <button id="sidebar-toggle-button"></button>
+    <button id="sidebar-toggle-button">☰</button>
 
     <!-- Sidebar -->
     <div id="side-nav-bar">
@@ -296,7 +296,7 @@
         </div>
 
         <button class="navbar-toggler d-lg-none" id="navbar-toggler" type="button" aria-expanded="false">
-            <span class="navbar-toggler-icon">☰</span>
+            <span class="navbar-toggler-icon"></span>
         </button>
 
         <nav class="header-nav me-auto" id="navbar-menu">
