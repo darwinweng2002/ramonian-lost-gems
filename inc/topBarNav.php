@@ -2,11 +2,18 @@
 <style type="text/css">
  /* Initially hide dropdown menu */
 /* Initially hide dropdown menu */
+/* Header Navigation */
+.header-nav .nav-link {
+    text-decoration: none;
+}
+
+/* Initially hide dropdown menu */
 #navbar-menu {
     display: block;
     font-weight: bold;
     color: #012970;
 }
+
 /* Make dropdown menu visible and regular nav links hidden on smaller screens */
 @media (max-width: 600px) {
     /* Show toggle button on smaller screens */
@@ -19,33 +26,34 @@
         display: none;
         width: auto;
     }
+
     .header-nav ul li {
         font-size: 8px;
         margin: 0;
     }
+
     .nav-text {
         display: none;
     }
 
     /* Show dropdown menu when toggled */
     #navbar-menu.show {
-        display: none;
+        display: flex;
         flex-direction: column;
     }
+
     .header-nav ul li:hover {
-        background-color: #F6B825; 
-        color: white; 
+        background-color: #F6B825;
+        color: white;
         padding: 5px;
         border-radius: 4px;
     }
+
     .nav-item:hover .nav-link {
-        background-color: #F6B825; 
+        background-color: #F6B825;
     }
-    title {
-        padding: 10px;
-        background-color: #ccc;
-    }
-    /* Base styling for tooltip */
+
+    /* Tooltip styling */
     a title {
         position: absolute;
         background-color: #333;
@@ -63,62 +71,14 @@
         opacity: 1;
         visibility: visible;
     }
-
 }
+
+/* Logo styling */
 .logo img {
- 
     margin: 0;
-    top: 0;
     padding: 0;
 }
- .dropdown {
-            position: relative;
-            display: inline-block;
-        }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-content a:hover {background-color: #f1f1f1}
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-            text-decoration: none;
-        }
-
- .dropdown .dropdown-buttonm {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 16px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-            text-decoration: none;
-        }
-
-        .dropdown-button:hover {
-            background-color: #0056b3;
-            text-decoration: none;
-        }
-
-
-        
-        /*-----*/
-        /* Dropdown Container */
 /* Dropdown Container */
 .dropdown {
     position: relative;
@@ -181,17 +141,10 @@
     transform: translateX(100%);
 }
 
-
-/* Show Dropdown Content on Hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-    text-decoration: none;
-}
-
 /* Sidebar styling */
 #side-nav-bar {
     position: fixed;
-    left: -250px; /* Initially hide the sidebar on the right side */
+    left: -250px; /* Initially hide the sidebar */
     top: 0;
     width: 250px;
     height: 100%;
@@ -202,11 +155,6 @@
     overflow-y: auto;
     padding-top: 20px;
     box-shadow: -2px 0 5px rgba(0,0,0,0.5); /* Adjust shadow for right side */
-}
-
-/* No hover effect for sidebar */
-#side-nav-bar:hover {
-    left: -250px; /* Ensure sidebar stays hidden when not toggled */
 }
 
 /* Sidebar links */
@@ -253,9 +201,6 @@
     background-color: #2980b9; /* Darker shade on hover */
 }
 
-.header-nav .nav-link {
-    text-decoration: none;
-}
 /* Responsive adjustments for sidebar */
 @media (max-width: 512px) {
     #side-nav-bar {
@@ -266,12 +211,11 @@
         display: block;
     }
 }
+
 /* Hide the sidebar toggle button when the sidebar is open */
 #sidebar-toggle-button.hidden {
     display: none;
 }
-
-
 
 </style>
 
@@ -286,10 +230,10 @@
         <ul>
             <br>
             <br>
-            <li><a href="https://ramonianlostgems.com/user_members/dashboard.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-user"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/></svg> Profile</a></li>
-            <li><a href="https://ramonianlostgems.com/send_message.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-mouse-pointer"><path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/><path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/></svg> Report Items</a></li>
-            <li><a href="https://ramonianlostgems.com/itemss/items.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg> Browse  Items</a></li>
-            <li><a href="https://ramonianlostgems.com/../logout.php" class="btn btn-primary mx-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>Logout</a></li>
+            <li><a href="https://ramonianlostgems.com/user_members/dashboard.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-user"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/></svg>Profile</a></li>
+            <li><a href="https://ramonianlostgems.com/register.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-pen"><path d="M11.5 15H7a4 4 0 0 0-4 4v2"/><path d="M21.378 16.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/><circle cx="10" cy="7" r="4"/></svg>Register Account</a></li>
+            <li><a href="https://ramonianlostgems.com/itemss/items.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-key-round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>Login</a></li>
+          <!--  <li><a href="https://ramonianlostgems.com/../logout.php" class="btn btn-primary mx-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>Logout</a></li> -->
         </ul>
     </div>
 
@@ -378,20 +322,21 @@
         navbarMenu.classList.toggle('show');
     });
 
-    document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
-        const sideNavBar = document.getElementById('side-nav-bar');
-
-        if (sideNavBar.style.left === '0px' || sideNavBar.style.left === '') {
-            sideNavBar.style.left = '-250px'; // Hide the sidebar
-        } else {
-            sideNavBar.style.left = '0'; // Show the sidebar
-        }
-    });
-
-document.getElementById('navbar-toggler').addEventListener('click', function() {
+    document.getElementById('navbar-toggler').addEventListener('click', function() {
     const navbarMenu = document.getElementById('navbar-menu');
     navbarMenu.classList.toggle('show');
 });
+
+document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
+    const sideNavBar = document.getElementById('side-nav-bar');
+
+    if (sideNavBar.style.left === '0px' || sideNavBar.style.left === '') {
+        sideNavBar.style.left = '-250px'; // Hide the sidebar
+    } else {
+        sideNavBar.style.left = '0'; // Show the sidebar
+    }
+});
+
 
 
 </script>
