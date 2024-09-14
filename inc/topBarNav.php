@@ -98,7 +98,7 @@
             display: block;
         }
 
-        .dropdown-buttonm {
+ .dropdown .dropdown-buttonm {
             background-color: #007bff;
             color: white;
             padding: 12px 16px;
@@ -106,6 +106,7 @@
             border: none;
             cursor: pointer;
             border-radius: 4px;
+            text-decoration: none;
         }
 
         .dropdown-button:hover {
@@ -157,6 +158,7 @@
     display: block;
     padding: 10px 16px;
     color: black;
+    text-decoration: none;
     text-decoration: none;
     position: relative;
     overflow: hidden;
@@ -364,6 +366,13 @@
                 </li>
             </ul>
         </nav>
+        <div class="dropdown">
+            <button class="dropdown-buttonm">Menu</button>
+            <div class="dropdown-content">
+                <a href="<?= base_url.'admin' ?>">Login</a>
+                <a href="<?= base_url.'user_members/dashboard.php' ?>">Profile</a>
+            </div>
+        </div>
 
     </div>
 </header>
