@@ -99,7 +99,7 @@
             text-decoration: none;
         }
 
- .dropdown .dropdown-buttonm a {
+ .dropdown .dropdown-buttonm {
             background-color: #007bff;
             color: white;
             padding: 12px 16px;
@@ -112,6 +112,7 @@
 
         .dropdown-button:hover {
             background-color: #0056b3;
+            text-decoration: none;
         }
 
 
