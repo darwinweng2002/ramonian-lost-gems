@@ -367,19 +367,20 @@
 </header>
 
 <script type="text/javascript">
-    document.getElementById('navbar-toggler').addEventListener('click', function() {
+   document.getElementById('navbar-toggler').addEventListener('click', function() {
         const navbarMenu = document.getElementById('navbar-menu');
         navbarMenu.classList.toggle('show');
     });
+
     document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
-    const sideNavBar = document.getElementById('side-nav-bar');
-    
-    if (sideNavBar.style.left === '0px' || sideNavBar.style.left === '') {
-        sideNavBar.style.left = '-250px'; // Hide the sidebar
-    } else {
-        sideNavBar.style.left = '0'; // Show the sidebar
-    }
-});
+        const sideNavBar = document.getElementById('side-nav-bar');
+
+        if (sideNavBar.style.right === '0px' || sideNavBar.style.right === '') {
+            sideNavBar.style.right = '-250px'; // Hide the sidebar
+        } else {
+            sideNavBar.style.right = '0'; // Show the sidebar
+        }
+    });
 
 document.getElementById('navbar-toggler').addEventListener('click', function() {
     const navbarMenu = document.getElementById('navbar-menu');
