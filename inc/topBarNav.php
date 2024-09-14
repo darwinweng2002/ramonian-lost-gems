@@ -197,7 +197,7 @@
     height: 100%;
     background-color: #2c3e50; /* Dark background for a professional look */
     color: #ecf0f1; /* Light text color */
-    transition: right 0.3s ease; /* Smooth transition */
+    transition: left 0.3s ease; /* Smooth transition */
     z-index: 9999; /* Make sure it's above other elements */
     overflow-y: auto;
     padding-top: 20px;
@@ -381,7 +381,7 @@
     document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
         const sideNavBar = document.getElementById('side-nav-bar');
 
-        if (sideNavBar.style.left === '0px' || sideNavBar.style.right === '') {
+        if (sideNavBar.style.left === '0px' || sideNavBar.style.left === '') {
             sideNavBar.style.left = '-250px'; // Hide the sidebar
         } else {
             sideNavBar.style.left = '0'; // Show the sidebar
