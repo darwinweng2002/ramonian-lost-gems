@@ -89,7 +89,11 @@
         }
         
         /* Media query for mobile devices */
-        @media screen and (max-width: 512px) {
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
             h1 {
                 font-size: 1.8rem;
             }
@@ -97,11 +101,52 @@
                 font-size: 1.4rem;
             }
             p {
-                font-size: 0.9rem;
+                font-size: 0.95rem;
             }
             .button {
                 padding: 10px 20px;
                 font-size: 0.9rem;
+            }
+
+            .banner {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .banner img {
+                width: 100%;
+                border-radius: 6px;
+            }
+        }
+
+        /* Media query for smaller mobile screens (up to 512px) */
+        @media screen and (max-width: 512px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+            h2 {
+                font-size: 1.3rem;
+            }
+            p {
+                font-size: 0.9rem;
+            }
+            .button {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+
+            .banner img {
+                width: 100%;
+                border-radius: 6px;
+            }
+
+            .container {
+                padding: 5px;
+            }
+
+            img {
+                border-radius: 5px;
+                margin-bottom: 10px;
             }
         }
     </style>
