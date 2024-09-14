@@ -8,7 +8,7 @@
     color: #012970;
 }
 /* Make dropdown menu visible and regular nav links hidden on smaller screens */
-@media (min-width: 480px) {
+@media (max-width: 600px) {
     /* Show toggle button on smaller screens */
     #navbar-toggler {
         display: block;
@@ -273,7 +273,7 @@
     <!-- Sidebar -->
 
 <!-- Sidebar Trigger Button -->
-    <button id="sidebar-toggle-button">☰</button>
+    <button id="sidebar-toggle-button"></button>
 
     <!-- Sidebar -->
     <div id="side-nav-bar">
