@@ -96,6 +96,7 @@
 
         .dropdown:hover .dropdown-content {
             display: block;
+            text-decoration: none;
         }
 
  .dropdown .dropdown-buttonm {
