@@ -20,8 +20,8 @@
         width: auto;
     }
     .header-nav ul li {
-        font-size: 10px;
-        margin-left: 10px;
+        font-size: 5px;
+        margin: 0;
     }
     .nav-text {
         display: none;
