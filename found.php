@@ -109,19 +109,6 @@ $stmt->bind_param("sisssssss", $email, $category_id, $fullname, $title, $contact
     </div>
 </div>
 <script>
-    var contactField = $('#contact');
-            var contactValue = contactField.val().replace(/\D/g, ''); // Remove non-digits
-            if (contactValue.length !== 11) {
-                contactField.focus();
-                var el = $('<div>').addClass("alert alert-danger err-msg").text("Contact number must be exactly 11 digits.");
-                _this.prepend(el);
-                el.show('slow');
-                $("html, body").scrollTop(0);
-                return false; // Stop form submission
-            }
-
-            // Set formatted contact number
-            contactField.val(contactValue);
     function displayImg(input,_this) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -180,4 +167,17 @@ $stmt->bind_param("sisssssss", $email, $category_id, $fullname, $title, $contact
             }, 200);
         });
     });
+    var contactField = $('#contact');
+            var contactValue = contactField.val().replace(/\D/g, ''); // Remove non-digits
+            if (contactValue.length !== 11) {
+                contactField.focus();
+                var el = $('<div>').addClass("alert alert-danger err-msg").text("Contact number must be exactly 11 digits.");
+                _this.prepend(el);
+                el.show('slow');
+                $("html, body").scrollTop(0);
+                return false; // Stop form submission
+            }
+
+            // Set formatted contact number
+            contactField.val(contactValue);
 </script>
