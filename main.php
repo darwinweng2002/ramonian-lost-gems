@@ -1,3 +1,19 @@
+<?php 
+require_once('./config.php');
+
+// Check if the user is logged in, if not then redirect to login page
+
+// Include the database configuration file
+
+// Fetch the user's information from the database
+$user_id = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT first_name, last_name, course, year, section, email FROM user_member WHERE id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($first_name, $last_name, $course, $year, $section, $email); // Fix bind_result to match SQL columns
+$stmt->fetch();
+$stmt->close();
+?>
 <!DOCTYPE html>
 <!-- Coding By CodingNepal - codingnepalweb.com -->
 <html lang="en">
@@ -5,14 +21,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
     <!-- ===== CSS ===== -->
     <link rel="stylesheet" href="style.css">
         
     <!-- ===== Boxicons CSS ===== -->
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 
-     <title>Responsive Navigation Menu Bar</title>
+     <title>Lostgem Ramonian</title>
      <style>
         /* ===== Google Font Import - Poppins ===== */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
@@ -315,14 +330,14 @@ body.dark .search-field i{
 
             <div class="menu">
                 <div class="logo-toggle">
-                    <span class="logo"><a href="#">CodingLab</a></span>
+                    <span class="logo"><a href="#">Ramonian Lost Gems</a></span>
                     <i class='bx bx-x siderbarClose'></i>
                 </div>
 
                 <ul class="nav-links">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Portfolio</a></li>
+                    <li><a href="https://ramonianlostgems.com/">Home</a></li>
+                    <li><a href="https://ramonianlostgems.com/found.php">Post Item</a></li>
+                    <li><a href="https://ramonianlostgems.com/items/index.php">Lost Items</a></li>
                     <li><a href="#">Services</a></li>
                     <li><a href="#">Contact</a></li>
                 </ul>
@@ -396,6 +411,6 @@ body.addEventListener("click" , e =>{
 });
 
 </script>
-
+<?php require_once('inc/footer.php') ?>
 </body>
 </html>
