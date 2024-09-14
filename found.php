@@ -58,12 +58,15 @@ $stmt->bind_param("sisssssss", $email, $category_id, $fullname, $title, $contact
                             <input type="text" name="title" id="title" class="form-control form-control-sm rounded-0" value="<?php echo isset($title) ? $title : ''; ?>" required/>
                         </div>
                     </div>
-                    <div class="row">
+                                        <div class="row">
                         <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <label for="contact" class="control-label">Contact #</label>
-                            <input type="text" name="contact" id="contact" class="form-control form-control-sm rounded-0" value="<?php echo isset($contact) ? $contact : ''; ?>" required/>
+                            <input type="text" name="contact" id="contact" class="form-control form-control-sm rounded-0" 
+                                value="<?php echo isset($contact) ? $contact : ''; ?>" required
+                                pattern="\d{11}" title="Please enter exactly 11 digits" maxlength="11" />
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <label for="description" class="control-label">Description<i> (Kindly indicate where and when you found the missing item through description.)</i></label>
@@ -106,6 +109,19 @@ $stmt->bind_param("sisssssss", $email, $category_id, $fullname, $title, $contact
     </div>
 </div>
 <script>
+    var contactField = $('#contact');
+            var contactValue = contactField.val().replace(/\D/g, ''); // Remove non-digits
+            if (contactValue.length !== 11) {
+                contactField.focus();
+                var el = $('<div>').addClass("alert alert-danger err-msg").text("Contact number must be exactly 11 digits.");
+                _this.prepend(el);
+                el.show('slow');
+                $("html, body").scrollTop(0);
+                return false; // Stop form submission
+            }
+
+            // Set formatted contact number
+            contactField.val(contactValue);
     function displayImg(input,_this) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -123,7 +139,7 @@ $stmt->bind_param("sisssssss", $email, $category_id, $fullname, $title, $contact
             placeholder: 'Please Select Here',
             width: '100%'
         });
-
+      
         $('#item-form').submit(function(e){
             e.preventDefault();
             var _this = $(this);
