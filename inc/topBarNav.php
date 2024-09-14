@@ -8,7 +8,7 @@
     color: #012970;
 }
 /* Make dropdown menu visible and regular nav links hidden on smaller screens */
-@media (min-width: 412px) {
+@media (max-width: 412px) {
     /* Show toggle button on smaller screens */
     #navbar-toggler {
         display: block;
@@ -17,7 +17,7 @@
     /* Hide regular nav links */
     .header-nav ul {
         display: none;
-        width: auto;
+        width: 20%;
     }
     .header-nav ul li {
         font-size: 8px;
