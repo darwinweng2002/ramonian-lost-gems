@@ -99,7 +99,7 @@
             text-decoration: none;
         }
 
- .header .dropdown .dropdown-buttonm a {
+ .header .dropdown .dropdown-buttonm  {
             background-color: #007bff;
             color: white;
             padding: 12px 16px;
@@ -371,8 +371,8 @@
         <div class="dropdown">
             <button class="dropdown-buttonm">Menu</button>
             <div class="dropdown-content">
-                <a href="<?= base_url.'admin' ?>">Login</a>
-                <a href="<?= base_url.'user_members/dashboard.php' ?>">Profile</a>
+                <a href="<?= base_url.'admin' ?>" style="text-decoration: none;">Login</a>
+                <a href="<?= base_url.'user_members/dashboard.php' ?>" style="text-decoration: none;">Profile</a>
             </div>
         </div>
 
