@@ -99,7 +99,7 @@
             text-decoration: none;
         }
 
- .dropdown .dropdown-buttonm {
+ .dropdown .dropdown-buttonm a {
             background-color: #007bff;
             color: white;
             padding: 12px 16px;
@@ -159,7 +159,6 @@
     display: block;
     padding: 10px 16px;
     color: black;
-    text-decoration: none;
     text-decoration: none;
     position: relative;
     overflow: hidden;
