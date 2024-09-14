@@ -68,7 +68,6 @@
 .logo img {
  
     margin-right: 0;
-    margin-left: 0;
 }
  .dropdown {
             position: relative;
@@ -364,13 +363,6 @@
             </ul>
         </nav>
 
-        <div class="dropdown">
-            <button class="dropdown-buttonm">Menu</button>
-            <div class="dropdown-content">
-                <a href="<?= base_url.'admin' ?>">Login</a>
-                <a href="<?= base_url.'user_members/dashboard.php' ?>">Profile</a>
-            </div>
-        </div>
     </div>
 </header>
 
