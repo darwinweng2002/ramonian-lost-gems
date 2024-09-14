@@ -185,7 +185,7 @@
 /* Sidebar styling */
 #side-nav-bar {
     position: fixed;
-    left: -250px; /* Initially hide the sidebar */
+    right: -250px; /* Initially hide the sidebar */
     top: 0;
     width: 250px;
     height: 100%;
@@ -200,7 +200,7 @@
 
 /* No hover effect for sidebar */
 #side-nav-bar:hover {
-    left: -250px; /* Ensure sidebar stays hidden when not toggled */
+    right: -250px; /* Ensure sidebar stays hidden when not toggled */
 }
 
 /* Sidebar links */
