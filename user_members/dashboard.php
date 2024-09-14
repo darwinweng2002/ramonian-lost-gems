@@ -180,11 +180,13 @@ if (!$is_guest) {
                                         <div class="pt-4 pb-2 text-center">
                                             <h5 class="card-title text-center pb-0 fs-4">User Dashboard</h5>
                                             <div class="d-flex justify-content-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-user">
-                                                    <circle cx="12" cy="12" r="10"/>
-                                                    <circle cx="12" cy="10" r="3"/>
-                                                    <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
-                                                </svg>
+                                            <div class="text-center mb-3">
+                                            <?php if ($avatar): ?>
+                                                <img src="../uploads/avatars/<?= htmlspecialchars($avatar) ?>" alt="User Avatar" style="width: 100px; height: 100px; border-radius: 50%;">
+                                            <?php else: ?>
+                                                <img src="../uploads/avatars/default-avatar.png" alt="Default Avatar" style="width: 100px; height: 100px; border-radius: 50%;">
+                                            <?php endif; ?>
+                                        </div>
                                             </div>
                                             <p class="text-center small">Welcome, <?= htmlspecialchars($first_name ?? '') . ' ' . htmlspecialchars($last_name ?? '') ?></p>
                                         </div>
@@ -213,7 +215,10 @@ if (!$is_guest) {
                                                 <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Claim History</a>
                                             </li>
                                             <li class="nav-item" role="presentation">
-                                                <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Posted Items</a>
+                                                <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Posted Found Items</a>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Posted Missing Items</a>
                                             </li>
                                         </ul>
                                         <div class="tab-content">
@@ -265,7 +270,30 @@ if (!$is_guest) {
                                                 </table>
                                             </div>
                                             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                                                <h5 class="history-title">Posted Items</h5>
+                                                <h5 class="history-title">Posted Found Items</h5>
+                                                <table class="table table-striped post-history-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Title</th>
+                                                            <th>Date Posted</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php foreach ($posts as $post): ?>
+                                                            <tr>
+                                                                <td><?= htmlspecialchars($post['title']) ?></td>
+                                                                <td><?= htmlspecialchars($post['time_found']) ?></td>
+                                                                <td class="<?= $post['status'] == 'Approved' ? 'status-approved' : '' ?>">
+                                                                    <?= htmlspecialchars($post['status']) ?>
+                                                                </td>
+                                                            </tr>
+                                                        <?php endforeach; ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                                                <h5 class="history-title">Posted Missing Items</h5>
                                                 <table class="table table-striped post-history-table">
                                                     <thead>
                                                         <tr>

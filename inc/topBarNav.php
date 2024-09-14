@@ -2,20 +2,13 @@
 <style type="text/css">
  /* Initially hide dropdown menu */
 /* Initially hide dropdown menu */
-/* Header Navigation */
-.header-nav .nav-link {
-    text-decoration: none;
-}
-
-/* Initially hide dropdown menu */
 #navbar-menu {
     display: block;
     font-weight: bold;
     color: #012970;
 }
-
 /* Make dropdown menu visible and regular nav links hidden on smaller screens */
-@media (max-width: 600px) {
+@media (max-width: 512px) {
     /* Show toggle button on smaller screens */
     #navbar-toggler {
         display: block;
@@ -24,36 +17,35 @@
     /* Hide regular nav links */
     .header-nav ul {
         display: none;
-        width: auto;
+        width: 50%;
     }
-
     .header-nav ul li {
-        font-size: 8px;
-        margin: 0;
+        font-size: 10px;
+        margin-left: 10px;
     }
-
     .nav-text {
         display: none;
     }
 
     /* Show dropdown menu when toggled */
     #navbar-menu.show {
-        display: flex;
+        display: none;
         flex-direction: column;
     }
-
     .header-nav ul li:hover {
-        background-color: #F6B825;
-        color: white;
-        padding: 5px;
+        background-color: #F6B825; 
+        color: white; 
+        padding: 2px;
         border-radius: 4px;
     }
-
     .nav-item:hover .nav-link {
-        background-color: #F6B825;
+        background-color: #F6B825; 
     }
-
-    /* Tooltip styling */
+    title {
+        padding: 10px;
+        background-color: #ccc;
+    }
+    /* Base styling for tooltip */
     a title {
         position: absolute;
         background-color: #333;
@@ -71,14 +63,59 @@
         opacity: 1;
         visibility: visible;
     }
-}
 
-/* Logo styling */
+}
 .logo img {
-    margin: 0;
-    padding: 0;
+ 
+    margin-right: 0;
 }
+ .dropdown {
+            position: relative;
+            display: inline-block;
+        }
 
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            text-decoration: none;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+      .dropdown  .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {background-color: #f1f1f1}
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            text-decoration: none;
+        }
+
+        .dropdown-buttonm {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .dropdown-button:hover {
+            background-color: #0056b3;
+        }
+
+
+        
+        /*-----*/
+        /* Dropdown Container */
 /* Dropdown Container */
 .dropdown {
     position: relative;
@@ -141,6 +178,12 @@
     transform: translateX(100%);
 }
 
+
+/* Show Dropdown Content on Hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
 /* Sidebar styling */
 #side-nav-bar {
     position: fixed;
@@ -154,7 +197,12 @@
     z-index: 9999; /* Make sure it's above other elements */
     overflow-y: auto;
     padding-top: 20px;
-    box-shadow: -2px 0 5px rgba(0,0,0,0.5); /* Adjust shadow for right side */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.5); /* Add subtle shadow */
+}
+
+/* No hover effect for sidebar */
+#side-nav-bar:hover {
+    left: -250px; /* Ensure sidebar stays hidden when not toggled */
 }
 
 /* Sidebar links */
@@ -186,7 +234,7 @@
 #sidebar-toggle-button {
     position: fixed;
     left: 0;
-    top: 15px; /* Adjust to align with your design */
+    top: 20px; /* Adjust to align with your design */
     background-color: #3498db; /* Professional color */
     color: white;
     padding: 10px 20px;
@@ -201,6 +249,9 @@
     background-color: #2980b9; /* Darker shade on hover */
 }
 
+.header-nav .nav-link {
+    text-decoration: none;
+}
 /* Responsive adjustments for sidebar */
 @media (max-width: 512px) {
     #side-nav-bar {
@@ -211,11 +262,12 @@
         display: block;
     }
 }
-
 /* Hide the sidebar toggle button when the sidebar is open */
 #sidebar-toggle-button.hidden {
     display: none;
 }
+
+
 
 </style>
 
