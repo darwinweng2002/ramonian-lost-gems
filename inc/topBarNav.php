@@ -20,7 +20,7 @@
         width: auto;
     }
     .header-nav ul li {
-        font-size: 5px;
+        font-size: 8px;
         margin: 0;
     }
     .nav-text {
@@ -68,6 +68,7 @@
 .logo img {
  
     margin-right: 0;
+    margin-left: 0;
 }
  .dropdown {
             position: relative;
