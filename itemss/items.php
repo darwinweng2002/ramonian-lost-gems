@@ -10,11 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 // Database connection
 
-<<<<<<< HEAD
-$conn = new mysqli('localhost', 'root', '1234', 'lost_db'); // Replace with your actual DB connection details
-=======
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
->>>>>>> 9a847130ad55804bf61cf6bbb72da1dde26168f9
 
 // Check connection
 if ($conn->connect_error) {
