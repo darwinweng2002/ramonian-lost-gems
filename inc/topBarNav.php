@@ -349,7 +349,7 @@
     const sideNavBar = document.getElementById('side-nav-bar');
     
     if (sideNavBar.style.left === '0px' || sideNavBar.style.left === '') {
-        sideNavBar.style.left = '-250px'; // Hide the sidebar
+        sideNavBar.style.left = '250px'; // Hide the sidebar
     } else {
         sideNavBar.style.left = '0'; // Show the sidebar
     }
