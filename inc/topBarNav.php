@@ -232,7 +232,7 @@
 #sidebar-toggle-button {
     position: fixed;
     right: 0;
-    top: 20px; /* Adjust to align with your design */
+    top: 0; /* Adjust to align with your design */
     background-color: #3498db; /* Professional color */
     color: white;
     padding: 10px 20px;
