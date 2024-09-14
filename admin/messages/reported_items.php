@@ -2,7 +2,11 @@
 include '../../config.php';
 
 // Database connection
+<<<<<<< HEAD
 $conn = new mysqli('localhost', 'root', '1234', 'lost_db'); // Update with your DB credentials
+=======
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Update with your DB credentials
+>>>>>>> 9a847130ad55804bf61cf6bbb72da1dde26168f9
 
 // Check connection
 if ($conn->connect_error) {
@@ -79,7 +83,7 @@ $result = $conn->query($sql);
                         echo "<td>" . htmlspecialchars($row['first_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['college']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['time_found']) . "</td>";
-                        echo "<td><a href='../view_reported_item.php?id=" . htmlspecialchars($row['id']) . "' class='action-btn'>View</a></td>";
+                        echo "<td><a href='https://ramonianlostgems.com/view_reported_item.php?id=" . htmlspecialchars($row['id']) . "' class='action-btn'>View</a></td>";
                         echo "</tr>";
                     }
                 } else {

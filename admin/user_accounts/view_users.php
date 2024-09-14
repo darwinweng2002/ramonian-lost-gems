@@ -2,7 +2,11 @@
 include '../../config.php';
 
 // Database connection
+<<<<<<< HEAD
 $conn = new mysqli("localhost", "root", "1234", "lost_db");
+=======
+$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
+>>>>>>> 9a847130ad55804bf61cf6bbb72da1dde26168f9
 
 // Check connection
 if ($conn->connect_error) {
@@ -194,7 +198,7 @@ $result = $conn->query($sql);
                             <td><?= htmlspecialchars($row['email']) ?></td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <a href="edit_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-edit btn-sm me-2">
+                                    <a href="https://ramonianlostgems.com/edit_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-edit btn-sm me-2">
                                         <i class="fa fa-edit"></i> Edit
                                     </a>
                                     <button class="btn btn-delete btn-sm" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">

@@ -1,20 +1,29 @@
 <?php  
 // Retain original category selection logic without adding new categories
 $category_id = isset($_POST['category_id']) ? $_POST['category_id'] : null;
+// Assuming you're processing the form data here
+$landmark = $_POST['landmark'] ?? '';
+$time_found = $_POST['time_found'] ?? '';
+
+// SQL query to insert or update the item
+$sql = "INSERT INTO `item_list` (email, category_id, fullname, title, contact, description, landmark, time_found, image_path) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("sisssssss", $email, $category_id, $fullname, $title, $contact, $description, $landmark, $time_found, $image_path);
 
 // Proceed with saving the item including the $category_id
 ?>
 
-<h1 class="pageTitle text-center">Post Missing Item</h1>
+<h1 class="pageTitle text-center">Post Missing Item Item</h1>
 <hr class="mx-auto bg-primary border-primary opacity-100" style="width:50px">
 <div class="row justify-content-center">
     <div class="col-lg-8 col-md-8 col-sm-12 col-12">
         <div class="card">
             <div class="card-body py-4">
                 <h4 class="pageTitle">Please fill all the required fields</h4>
-                <form action="" id="missing-item-form">
+                <form action="" id="item-form">
                     <input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
-                    <input type="hidden" name="reporter">
+                    <input type="hidden" name="founder">
                     <div class="row">
                         <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <label for="email" class="control-label">Email</label>
@@ -39,7 +48,7 @@ $category_id = isset($_POST['category_id']) ? $_POST['category_id'] : null;
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <label for="fullname" class="control-label">Reporter Name</label>
+                            <label for="fullname" class="control-label">Founder Name</label>
                             <input type="text" name="fullname" id="fullname" class="form-control form-control-sm rounded-0" value="<?php echo isset($fullname) ? $fullname : ''; ?>" required/>
                         </div>
                     </div>
@@ -57,8 +66,20 @@ $category_id = isset($_POST['category_id']) ? $_POST['category_id'] : null;
                     </div>
                     <div class="row">
                         <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <label for="description" class="control-label">Description<i> (Kindly indicate when and where you last saw the missing item through description.)</i></label>
+                            <label for="description" class="control-label">Description<i> (Kindly indicate where and when you found the missing item through description.)</i></label>
                             <textarea rows="5" name="description" id="description" class="form-control form-control-sm rounded-0" required><?php echo isset($description) ? $description : ''; ?></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <label for="landmark" class="control-label">Landmark</label>
+                            <input type="text" name="landmark" id="landmark" class="form-control form-control-sm rounded-0" value="<?php echo isset($landmark) ? $landmark : ''; ?>" required/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <label for="time_found" class="control-label">Time Found</label>
+                            <input type="datetime-local" name="time_found" id="time_found" class="form-control form-control-sm rounded-0" value="<?php echo isset($time_found) ? $time_found : ''; ?>" required/>
                         </div>
                     </div>
                     <div class="row">
@@ -78,7 +99,7 @@ $category_id = isset($_POST['category_id']) ? $_POST['category_id'] : null;
             </div>
             <div class="card-footer">
                 <div class="col-lg-4 col-md-6 col-sm-10 col-12 mx-auto">
-                    <button class="btn btn-primary btn-sm w-100" form="missing-item-form"><i class="bi bi-send"></i> Submit</button>
+                    <button class="btn btn-primary btn-sm w-100" form="item-form"><i class="bi bi-send"></i> Submit</button>
                 </div>
             </div>
         </div>
@@ -103,7 +124,7 @@ $category_id = isset($_POST['category_id']) ? $_POST['category_id'] : null;
             width: '100%'
         });
 
-        $('#missing-item-form').submit(function(e){
+        $('#item-form').submit(function(e){
             e.preventDefault();
             var _this = $(this);
             $('.err-msg').remove();
@@ -111,7 +132,7 @@ $category_id = isset($_POST['category_id']) ? $_POST['category_id'] : null;
                 start_loader();
 
                 $.ajax({
-                    url: _base_url_ + "classes/Master.php?f=save_missing_item",
+                    url: _base_url_ + "classes/Master.php?f=save_item",
                     data: new FormData($(this)[0]),
                     cache: false,
                     contentType: false,
@@ -126,7 +147,7 @@ $category_id = isset($_POST['category_id']) ? $_POST['category_id'] : null;
                     },
                     success: function(resp) {
                         if (typeof resp === 'object' && resp.status === 'success') {
-                            location.replace('./?page=missing');
+                            location.replace('./?page=found');
                         } else if (resp.status === 'failed' && !!resp.msg) {
                             var el = $('<div>').addClass("alert alert-danger err-msg").text(resp.msg);
                             _this.prepend(el);

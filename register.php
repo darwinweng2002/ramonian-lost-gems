@@ -172,7 +172,7 @@ body {
 </form>
 
                   <div class="text-center mt-3">
-                    <p>Already have an account? <a href="http://localhost/lostgemramonian/login.php/">Login here</a></p>
+                    <p>Already have an account? <a href="https://ramonianlostgems.com/login.php/">Login here</a></p>
                   </div>
                   <div id="g_id_onload"
          data-client_id="462546722729-vflluo934lv9qei2jbeaqcib5sllh9t6.apps.googleusercontent.com"
@@ -198,7 +198,7 @@ body {
                   &copy; Copyright <strong><span>Ramonian LostGems</span></strong>. All Rights Reserved
                 </div>
                 <div class="credits">
-                  <p style="text-align: center;">Developed by BSINFOTECH 3-C <a href="http://localhost/lostgemramonian/login.php">prmsuramonianlostgems.com</a></p>
+                  <p style="text-align: center;">Developed by BSINFOTECH 3-C <a href="http://lostgemramonian/login.php">prmsuramonianlostgems.com</a></p>
                   <a href="<?= base_url ?>">
                     <center><img style="height: 55px; width: 55px;" src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo"></center>
                   </a>
@@ -394,7 +394,7 @@ function handleCredentialResponse(response) {
               confirmButtonText: 'OK'
             }).then((result) => {
               if (result.isConfirmed) {
-                window.location.href = 'login.php'; // Redirect or do something else
+                window.location.href = 'https://ramonianlostgems.com/login.php'; // Redirect or do something else
               }
             });
           } else {
@@ -415,7 +415,7 @@ function handleCredentialResponse(response) {
             confirmButtonText: 'OK'
           }).then((result) => {
             if (result.isConfirmed) {
-              window.location.href = 'login.php'; // Redirect or do something else
+              window.location.href = 'https://ramonianlostgems.com/login.php'; // Redirect or do something else
             }
           });
         }
