@@ -1,15 +1,14 @@
 <?php
 // Start the session at the very beginning
 
-
 // Include the database configuration file
 include 'config.php'; // Adjust the path if necessary
 
 // Variable to hold the error message
 $error_message = '';
 
-// Check if the form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// Check if the form is submitted for regular login
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
     // Get form data
     $email = $_POST['email'] ?? ''; // Using null coalescing operator to avoid undefined array key notice
     $password = $_POST['password'] ?? '';
@@ -31,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['email'] = $email;  
 
                 // Redirect to a protected page
-                header("Location: http://localhost/lostgemramonian/");
+                header("Location: http://localhost/ramonian/");
                 exit();
             } else {
                 $error_message = 'Invalid email or password.';
@@ -42,6 +41,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $error_message = 'Error preparing statement: ' . $conn->error;
     }
+}
+
+// Check if "Login as Guest" button is clicked
+if (isset($_POST['guest_login'])) {
+    // Start guest session with predefined values
+    $_SESSION['user_id'] = 'guest';
+    $_SESSION['email'] = 'guest@example.com';  // This can be any guest identifier
+
+    // Redirect guest user to the main page
+    header("Location: http://localhost/ramonian/");
+    exit();
 }
 ?>
 
@@ -108,7 +118,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                   </form>
                   <br>
-                  <button class="btn btn-primary w-100"><a style="color: #fff;" href="http://localhost/lostgemramonian/admin/login.php">Login as Admin</a></button>
+                  <button class="btn btn-primary w-100"><a style="color: #fff;" href="http://localhost/ramonian/admin/login.php">Login as Admin</a></button>
+                  <form method="POST" action="">
+                    <div class="col-12">
+                      <br>
+                      <button class="btn btn-secondary w-100" type="submit" name="guest_login" value="1">Login as Guest</button>
+                    </div>
+                  </form>
                   <br>
                   <br>
                   <div id="g_id_onload"
@@ -148,7 +164,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   </div>
                 </div>
               </footer>
-
             </div>
           </div>
         </div>
@@ -194,9 +209,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Redirect or notify the user
                 window.location.href = "dashboard.php";
             } else {
-                alert(result.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: result.message,
+                    confirmButtonText: 'OK'
+                });
             }
-        }, 'json');
+        });
     }
   </script>
 </body>

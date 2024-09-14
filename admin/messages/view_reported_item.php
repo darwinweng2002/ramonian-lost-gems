@@ -2,7 +2,7 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli('localhost', 'root', '1234', 'lfis_db'); // Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'root', '1234', 'lost_db'); // Replace with your actual DB connection details
 
 // Check connection
 if ($conn->connect_error) {

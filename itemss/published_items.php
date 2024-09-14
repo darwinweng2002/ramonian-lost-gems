@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Database connection
-$conn = new mysqli('localhost', 'root', '1234', 'lfis_db'); // Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'root', '1234', 'lost_db'); // Replace with your actual DB connection details
 
 // Check connection
 if ($conn->connect_error) {
@@ -172,7 +172,8 @@ $result = $stmt->get_result();
                 }
                 
                 // Add Claim Request Button
-                echo "<a href='claim_request.php?id=" . htmlspecialchars($msgId) . "' class='claim-button'>Claim Request</a>";
+                echo "<a href='claim_request.php?id=" . urlencode($msgId) . "' class='claim-button'>Claim Request</a>";
+
                 
                 echo "</div>";
             }
