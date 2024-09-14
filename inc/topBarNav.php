@@ -254,7 +254,7 @@
 @media (max-width: 512px) {
     #side-nav-bar {
         width: 50%; /* Adjust width for small screens */
-        left: -100%; /* Initially hide the sidebar */
+        right: -100%; /* Initially hide the sidebar */
     }
     #sidebar-toggle-button {
         display: block;
