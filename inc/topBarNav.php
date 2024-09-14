@@ -99,7 +99,7 @@
             text-decoration: none;
         }
 
- .header .dropdown .dropdown-buttonm  {
+ .dropdown .dropdown-buttonm {
             background-color: #007bff;
             color: white;
             padding: 12px 16px;
@@ -238,7 +238,7 @@
 #sidebar-toggle-button {
     position: fixed;
     right: 0;
-    top: 0; /* Adjust to align with your design */
+    top: 15px; /* Adjust to align with your design */
     background-color: #3498db; /* Professional color */
     color: white;
     padding: 10px 20px;
@@ -368,13 +368,6 @@
                 </li>
             </ul>
         </nav>
-        <div class="dropdown">
-            <button class="dropdown-buttonm">Menu</button>
-            <div class="dropdown-content">
-                <a href="<?= base_url.'admin' ?>" style="text-decoration: none;">Login</a>
-                <a href="<?= base_url.'user_members/dashboard.php' ?>" style="text-decoration: none;">Profile</a>
-            </div>
-        </div>
 
     </div>
 </header>
