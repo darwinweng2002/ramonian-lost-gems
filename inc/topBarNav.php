@@ -231,7 +231,7 @@
 /* Sidebar toggle button */
 #sidebar-toggle-button {
     position: fixed;
-    left: 0;
+    right: 0;
     top: 20px; /* Adjust to align with your design */
     background-color: #3498db; /* Professional color */
     color: white;
@@ -374,10 +374,10 @@
     document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
     const sideNavBar = document.getElementById('side-nav-bar');
     
-    if (sideNavBar.style.right === '0px' || sideNavBar.style.left === '') {
-        sideNavBar.style.right = '-250px'; // Hide the sidebar
+    if (sideNavBar.style.left === '0px' || sideNavBar.style.left === '') {
+        sideNavBar.style.left = '-250px'; // Hide the sidebar
     } else {
-        sideNavBar.style.right = '0'; // Show the sidebar
+        sideNavBar.style.left = '0'; // Show the sidebar
     }
 });
 
