@@ -183,55 +183,31 @@
 }
 
 /* Sidebar styling */
+/* Sidebar styling */
 #side-nav-bar {
     position: fixed;
-    right: 250px; /* Initially hide the sidebar */
+    right: -250px; /* Initially hide the sidebar on the right side */
     top: 0;
     width: 250px;
     height: 100%;
     background-color: #2c3e50; /* Dark background for a professional look */
     color: #ecf0f1; /* Light text color */
-    transition: left 0.3s ease; /* Smooth transition */
+    transition: right 0.3s ease; /* Smooth transition */
     z-index: 9999; /* Make sure it's above other elements */
     overflow-y: auto;
     padding-top: 20px;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.5); /* Add subtle shadow */
+    box-shadow: -2px 0 5px rgba(0,0,0,0.5); /* Adjust shadow for right side */
 }
 
 /* No hover effect for sidebar */
 #side-nav-bar:hover {
-    right: 250px; /* Ensure sidebar stays hidden when not toggled */
-}
-
-/* Sidebar links */
-#side-nav-bar ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-#side-nav-bar ul li {
-    padding: 10px;
-    border-bottom: 1px solid #34495e; /* Light border for separation */
-}
-
-#side-nav-bar ul li a {
-    text-decoration: none;
-    color: #ecf0f1; /* Match text color with the sidebar */
-    display: block;
-    font-size: 16px;
-    transition: background-color 0.3s ease, padding-left 0.3s ease;
-}
-
-#side-nav-bar ul li a:hover {
-    background-color: #34495e; /* Slightly lighter background on hover */
-    padding-left: 20px; /* Indent the link on hover for a subtle effect */
+    right: -250px; /* Ensure sidebar stays hidden when not toggled */
 }
 
 /* Sidebar toggle button */
 #sidebar-toggle-button {
     position: fixed;
-    left: 0;
+    right: 0; /* Place the toggle button on the right side */
     top: 20px; /* Adjust to align with your design */
     background-color: #3498db; /* Professional color */
     color: white;
@@ -247,19 +223,17 @@
     background-color: #2980b9; /* Darker shade on hover */
 }
 
-.header-nav .nav-link {
-    text-decoration: none;
-}
 /* Responsive adjustments for sidebar */
 @media (max-width: 512px) {
     #side-nav-bar {
         width: 50%; /* Adjust width for small screens */
-        right: 100%; /* Initially hide the sidebar */
+        right: -100%; /* Initially hide the sidebar on the right side */
     }
     #sidebar-toggle-button {
         display: block;
     }
 }
+
 /* Hide the sidebar toggle button when the sidebar is open */
 #sidebar-toggle-button.hidden {
     display: none;
