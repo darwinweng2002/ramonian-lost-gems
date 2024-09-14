@@ -185,7 +185,7 @@
 /* Sidebar styling */
 #side-nav-bar {
     position: fixed;
-    right: -250px; /* Initially hide the sidebar */
+    right: 250px; /* Initially hide the sidebar */
     top: 0;
     width: 250px;
     height: 100%;
@@ -200,7 +200,7 @@
 
 /* No hover effect for sidebar */
 #side-nav-bar:hover {
-    right: -250px; /* Ensure sidebar stays hidden when not toggled */
+    right: 250px; /* Ensure sidebar stays hidden when not toggled */
 }
 
 /* Sidebar links */
@@ -254,7 +254,7 @@
 @media (max-width: 512px) {
     #side-nav-bar {
         width: 50%; /* Adjust width for small screens */
-        right: -100%; /* Initially hide the sidebar */
+        right: 100%; /* Initially hide the sidebar */
     }
     #sidebar-toggle-button {
         display: block;
