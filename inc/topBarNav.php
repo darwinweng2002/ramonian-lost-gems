@@ -185,6 +185,7 @@
 /* Show Dropdown Content on Hover */
 .dropdown:hover .dropdown-content {
     display: block;
+    text-decoration: none;
 }
 
 /* Sidebar styling */
