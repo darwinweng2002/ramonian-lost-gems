@@ -32,7 +32,7 @@ if (isset($_GET['id'])) {
             LEFT JOIN user_member um ON mi.user_id = um.id
             LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
             WHERE mi.id = ?
-            GROUP BY mii.id");
+            GROUP BY mi.id, um.email, um.college, um.avatar"); // Group by all non-aggregated columns
     
     $stmt->bind_param('i', $itemId); // Bind the integer value
     $stmt->execute();
@@ -50,7 +50,7 @@ if (isset($_GET['id'])) {
     <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
-         body {
+        body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -106,68 +106,27 @@ if (isset($_GET['id'])) {
             background-color: #c82333;
         }
         .publish-btn {
-    background-color: #28a745; /* Green background color */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    position: absolute;
-    bottom: 20px;
-    right: 80px; /* Position it to the left of the delete button */
-}
-.publish-btn:hover {
-    background-color: #218838; /* Darker green on hover */
-}
-.message-box {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-    position: relative;
-}
-
-.delete-btn, .publish-btn {
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    position: absolute;
-    bottom: 20px;
-}
-
-.delete-btn {
-    background-color: #dc3545;
-    color: white;
-    right: 20px; /* Position the delete button */
-}
-
-.delete-btn:hover {
-    background-color: #c82333;
-}
-
-.publish-btn {
-    background-color: #28a745;
-    color: white;
-    right: 90px; /* Adjust this value to create space between buttons */
-}
-
-.publish-btn:hover {
-    background-color: #218838;
-}
-/* CSS for the avatar images */
-/* CSS for the avatar images */
-/* Ensure that your avatar images are styled correctly */
-.container .avatar {
-    width: 100px; /* Set the width of the avatar */
-    height: 100px; /* Set the height of the avatar to the same value as width for a circle */
-    border-radius: 100%; /* Makes the image circular */
-    object-fit: cover; /* Ensures the image covers the circle without distortion */
-    display: block; /* Ensures the image is displayed as a block element */
-    margin-bottom: 10px; /* Adds space below the image if needed */
-}
-
-
+            background-color: #28a745; /* Green background color */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            right: 80px; /* Position it to the left of the delete button */
+        }
+        .publish-btn:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+        .container .avatar {
+            width: 100px; /* Set the width of the avatar */
+            height: 100px; /* Set the height of the avatar to the same value as width for a circle */
+            border-radius: 100%; /* Makes the image circular */
+            object-fit: cover; /* Ensures the image covers the circle without distortion */
+            display: block; /* Ensures the image is displayed as a block element */
+            margin-bottom: 10px; /* Adds space below the image if needed */
+        }
     </style>
 </head>
 <body>
@@ -177,37 +136,19 @@ if (isset($_GET['id'])) {
     <div class="container">
         <h1>View Missing Item Details</h1>
         <?php
-        if ($result->num_rows > 0) {
-            $messages = [];
+        if ($result && $result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                if (!isset($messages[$row['id']])) {
-                    $messages[$row['id']] = [
-                        'images' => [],
-                        'last_seen_location' => $row['last_seen_location'],
-                        'title' => $row['title'],
-                        'college' => $row['college'],
-                        'email' => $row['email'],
-                        'description' => $row['description'],
-                        'avatar' => $row['avatar'],
-                        'time_missing' => $row['time_missing'],
-                    ];
-                }
-                if (isset($row['image_path']) && !empty($row['image_path'])) {
-                    $fullImagePath = base_url . 'uploads/items/' . $row['image_path'];
-                    $messages[$row['id']]['images'][] = $fullImagePath;
-                }
-            }
-            
-            foreach ($messages as $msgId => $msgData) {
+                $images = explode(',', $row['images']); // Convert image paths to an array
+
                 echo "<div class='message-box'>";
-                $firstName = htmlspecialchars($msgData['first_name'] ?? '');
-                $email = htmlspecialchars($msgData['email'] ?? '');
-                $college = htmlspecialchars($msgData['college'] ?? '');
-                $title = htmlspecialchars($msgData['title'] ?? '');
-                $lastSeenLocation = htmlspecialchars($msgData['last_seen_location'] ?? '');
-                $description = htmlspecialchars($msgData['description'] ?? '');
-                $avatar = htmlspecialchars($msgData['avatar'] ?? '');
-                $timeMissing = htmlspecialchars($msgData['time_missing'] ?? '');
+                $firstName = htmlspecialchars($row['first_name'] ?? '');
+                $email = htmlspecialchars($row['email'] ?? '');
+                $college = htmlspecialchars($row['college'] ?? '');
+                $title = htmlspecialchars($row['title'] ?? '');
+                $lastSeenLocation = htmlspecialchars($row['last_seen_location'] ?? '');
+                $description = htmlspecialchars($row['description'] ?? '');
+                $avatar = htmlspecialchars($row['avatar'] ?? '');
+                $timeMissing = htmlspecialchars($row['time_missing'] ?? '');
                 
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
@@ -223,21 +164,21 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
                 
-                if (!empty($msgData['images'])) {
+                if (!empty($images)) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
-                    foreach ($msgData['images'] as $imagePath) {
+                    foreach ($images as $imagePath) {
+                        $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($imagePath);
                         // Add Lightbox attributes
-                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
+                        echo "<a href='" . $fullImagePath . "' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Image'></a>";
                     }
                     echo "</div>";
                 }
                 // Add both buttons
-                echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "'>Publish</button>";
-                echo "<button class='delete-btn' data-id='" . htmlspecialchars($msgId) . "'>Delete</button>";
+                echo "<button class='publish-btn' data-id='" . htmlspecialchars($row['id']) . "'>Publish</button>";
+                echo "<button class='delete-btn' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
                 echo "</div>";
             }
-            
         }
         ?>
     </div>
@@ -275,7 +216,7 @@ if (isset($_GET['id'])) {
 
         $('.publish-btn').on('click', function() {
             var messageId = $(this).data('id');
-            if (confirm('Do you want to publish this missing item?')) {
+            if (confirm('Are you sure you want to publish this missing item?')) {
                 $.ajax({
                     url: 'publish_message.php',
                     type: 'POST',
@@ -299,7 +240,3 @@ if (isset($_GET['id'])) {
     </script>
 </body>
 </html>
-<?php require_once('../inc/footer.php') ?>
-<?php
-$conn->close();
-?>
