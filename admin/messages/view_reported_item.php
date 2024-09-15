@@ -249,7 +249,7 @@ if ($message_id > 0) {
             var messageId = $(this).data('id');
             if (confirm('Are you sure you want to delete this message?')) {
                 $.ajax({
-                    url: '../delete_message.php',
+                    url: 'delete_message.php',
                     type: 'POST',
                     data: { id: messageId },
                     dataType: 'json',
@@ -273,7 +273,7 @@ if ($message_id > 0) {
             var messageId = $(this).data('id');
             if (confirm('Are you sure you want to publish this message?')) {
                 $.ajax({
-                    url: '../publish_message.php',
+                    url: 'publish_message.php',
                     type: 'POST',
                     data: { id: messageId },
                     dataType: 'json',
