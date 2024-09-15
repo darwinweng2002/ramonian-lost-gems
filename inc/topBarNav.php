@@ -282,10 +282,10 @@
         <ul>
             <br>
             <br>
-            <li><a href="https://ramonianlostgems.com/user_members/dashboard.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-user"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/></svg>  Profile</a></li>
-            <li><a href="https://ramonianlostgems.com/register.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-pen"><path d="M11.5 15H7a4 4 0 0 0-4 4v2"/><path d="M21.378 16.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/><circle cx="10" cy="7" r="4"/></svg>  Register Account</a></li>
-            <li><a href="https://ramonianlostgems.com/login.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-key-round"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"/><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"/></svg>  Login</a></li>
-          <!--  <li><a href="https://ramonianlostgems.com/../logout.php" class="btn btn-primary mx-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>Logout</a></li> -->
+            <li><a href="https://ramonianlostgems.com/user_members/dashboard.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-user"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/></svg> Profile</a></li>
+            <li><a href="https://ramonianlostgems.com/send_message.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-mouse-pointer"><path d="M12.034 12.681a.498.498 0 0 1 .647-.647l9 3.5a.5.5 0 0 1-.033.943l-3.444 1.068a1 1 0 0 0-.66.66l-1.067 3.443a.5.5 0 0 1-.943.033z"/><path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/></svg> Report Items</a></li>
+            <li><a href="https://ramonianlostgems.com/itemss/items.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg> Browse  Items</a></li>
+            <li><a href="https://ramonianlostgems.com/logout.php" class="btn btn-primary mx-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>Logout</a></li>
         </ul>
     </div>
 
@@ -305,7 +305,7 @@
             <ul class="d-flex align-items-center h-100">
                 <li class="nav-item pe-3">
                     <a href="<?= base_url ?>" class="nav-link" title="Go to Home Page">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home">
                             <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                             <polyline points="9 22 9 12 15 12 15 22"/>
                         </svg>
@@ -315,7 +315,7 @@
 
                 <li class="nav-item pe-3" class="active">
                     <a href="<?= base_url.'?page=items' ?>" id="home-link" class="nav-link" title="Lost and Found">
-                        <svg title="This is a icon!" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search">
+                        <svg title="This is a icon!" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search">
                             <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
                             <path d="M4.268 21a2 2 0 0 0 1.727 1H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"/>
                             <path d="m9 18-1.5-1.5"/>
@@ -327,7 +327,7 @@
 
                 <li class="nav-item pe-3 dropdown">
                 <a href="#" class="nav-link dropdown-button" title="Post an Item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-signpost">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-signpost">
                         <path d="M12 3v3"/>
                         <path d="M18.5 13h-13L2 9.5 5.5 6h13L22 9.5Z"/>
                         <path d="M12 13v8"/>
@@ -340,21 +340,9 @@
                 </div>
                 </li>
 
-
-                <li class="nav-item pe-3">
-                    <a href="<?= base_url.'?page=about' ?>" class="nav-link" title="About Page">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-slash">
-                            <path d="m13.5 8.5-5 5"/>
-                            <circle cx="11" cy="11" r="8"/>
-                            <path d="m21 21-4.3-4.3"/>
-                        </svg>
-                        <span class="nav-text">About</span>
-                    </a>
-                </li>
-
                 <li class="nav-item pe-3">
                     <a href="<?= base_url.'?page=contact' ?>" class="nav-link" title="Message">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mails">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mails">
                             <rect width="16" height="13" x="6" y="4" rx="2"/>
                             <path d="m22 7-7.1 3.78c-.57.3-1.23.3-1.8 0L6 7"/>
                             <path d="M2 8v11 c0 1.1.9 2 2 2h14"/>
@@ -365,23 +353,24 @@
             </ul>
         </nav>
 
+        <div class="dropdown">
+            <button class="dropdown-buttonm">Menu</button>
+            <div class="dropdown-content">
+                <a href="<?= base_url.'admin' ?>">Login</a>
+                <a href="<?= base_url.'user_members/dashboard.php' ?>">Profile</a>
+            </div>
+        </div>
     </div>
 </header>
 
 <script type="text/javascript">
-   document.getElementById('navbar-toggler').addEventListener('click', function() {
+    document.getElementById('navbar-toggler').addEventListener('click', function() {
         const navbarMenu = document.getElementById('navbar-menu');
         navbarMenu.classList.toggle('show');
     });
-
-    document.getElementById('navbar-toggler').addEventListener('click', function() {
-    const navbarMenu = document.getElementById('navbar-menu');
-    navbarMenu.classList.toggle('show');
-});
-
-document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
+    document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
     const sideNavBar = document.getElementById('side-nav-bar');
-
+    
     if (sideNavBar.style.left === '0px' || sideNavBar.style.left === '') {
         sideNavBar.style.left = '-250px'; // Hide the sidebar
     } else {
@@ -389,6 +378,10 @@ document.getElementById('sidebar-toggle-button').addEventListener('click', funct
     }
 });
 
+document.getElementById('navbar-toggler').addEventListener('click', function() {
+    const navbarMenu = document.getElementById('navbar-menu');
+    navbarMenu.classList.toggle('show');
+});
 
 
 </script>
