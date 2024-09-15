@@ -14,7 +14,7 @@ if (isset($_POST['id'])) {
     $messageId = intval($_POST['id']);
 
     // Update the message's is_published status to 1
-    $sql = "UPDATE message_history SET is_published = 1 WHERE id = ?";
+    $sql = "UPDATE missing_items SET is_published = 1 WHERE id = ?";
     
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('i', $messageId);
