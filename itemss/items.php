@@ -26,7 +26,7 @@ $sqlFound = "SELECT mh.id, mh.title, GROUP_CONCAT(mi.image_path) AS image_paths
 
 $sqlMissing = "SELECT mi.id, mi.title, GROUP_CONCAT(mii.image_path) AS image_paths
                FROM missing_items mi
-               LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
+               LEFT JOIN missing_item_images mii ON mi.id = mii.id
                WHERE mi.status = 'Published'
                GROUP BY mi.id
                ORDER BY mi.id DESC";
