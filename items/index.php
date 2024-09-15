@@ -78,11 +78,11 @@ include '../config.php';
             width: 50px;
         }
         .container {
-            text-align: center;
+            width: 100%;
         }
-        @media (max-width: 800px) {
+        @media (max-width: 512px) {
             .container {
-                text-align: center;
+                width: 100%;
             }
             .container h1 {
                 text-align: center;
