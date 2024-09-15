@@ -1,0 +1,301 @@
+<?php
+include '../../config.php';
+
+// Database connection
+$conn = new mysqli('localhost', 'root', '1234', 'lost_db'); // Replace with your actual DB connection details
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Initialize $result as null
+$result = null;
+
+if (isset($_GET['id'])) {
+    $itemId = $_GET['id'];
+
+    // Prepare the SQL statement
+    $stmt = $conn->prepare("SELECT 
+                mi.id, 
+                mi.title, 
+                mi.description, 
+                mi.last_seen_location, 
+                mi.time_missing, 
+                mi.status, 
+                mi.created_at, 
+                um.email, 
+                um.college,
+                um.avatar, 
+                GROUP_CONCAT(mii.image_path) AS images 
+            FROM missing_items mi
+            LEFT JOIN user_member um ON mi.user_id = um.id
+            LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
+            WHERE mi.id = ?
+            GROUP BY mii.id");
+    
+    $stmt->bind_param('i', $itemId); // Bind the integer value
+    $stmt->execute();
+    $result = $stmt->get_result();
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missing Items - Admin View</title>
+    <?php require_once('../inc/header.php'); ?>
+    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 70px; /* Adjust this according to the height of your navbar */
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin: 30px auto;
+            width: 90%;
+            max-width: 1200px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .message-box {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .message-box p {
+            margin: 10px 0;
+        }
+        .message-box img {
+            max-width: 100%;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+        }
+        .message-box img:hover {
+            transform: scale(1.1);
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .publish-btn {
+    background-color: #28a745; /* Green background color */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 20px;
+    right: 80px; /* Position it to the left of the delete button */
+}
+.publish-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+.message-box {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.delete-btn, .publish-btn {
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 20px;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+    right: 20px; /* Position the delete button */
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.publish-btn {
+    background-color: #28a745;
+    color: white;
+    right: 90px; /* Adjust this value to create space between buttons */
+}
+
+.publish-btn:hover {
+    background-color: #218838;
+}
+/* CSS for the avatar images */
+/* CSS for the avatar images */
+/* Ensure that your avatar images are styled correctly */
+.container .avatar {
+    width: 100px; /* Set the width of the avatar */
+    height: 100px; /* Set the height of the avatar to the same value as width for a circle */
+    border-radius: 100%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image covers the circle without distortion */
+    display: block; /* Ensures the image is displayed as a block element */
+    margin-bottom: 10px; /* Adds space below the image if needed */
+}
+
+
+    </style>
+</head>
+<body>
+    <?php require_once('../inc/topBarNav.php'); ?>
+    <?php require_once('../inc/navigation.php'); ?>
+
+    <div class="container">
+        <h1>View Missing Item Details</h1>
+        <?php
+        if ($result->num_rows > 0) {
+            $messages = [];
+            while ($row = $result->fetch_assoc()) {
+                if (!isset($messages[$row['id']])) {
+                    $messages[$row['id']] = [
+                        'images' => [],
+                        'last_seen_location' => $row['last_seen_location'],
+                        'title' => $row['title'],
+                        'college' => $row['college'],
+                        'email' => $row['email'],
+                        'description' => $row['description'],
+                        'avatar' => $row['avatar'],
+                        'time_missing' => $row['time_missing'],
+                    ];
+                }
+                if (isset($row['image_path']) && !empty($row['image_path'])) {
+                    $fullImagePath = base_url . 'uploads/items/' . $row['image_path'];
+                    $messages[$row['id']]['images'][] = $fullImagePath;
+                }
+            }
+            
+            foreach ($messages as $msgId => $msgData) {
+                echo "<div class='message-box'>";
+                $firstName = htmlspecialchars($msgData['first_name'] ?? '');
+                $email = htmlspecialchars($msgData['email'] ?? '');
+                $college = htmlspecialchars($msgData['college'] ?? '');
+                $title = htmlspecialchars($msgData['title'] ?? '');
+                $lastSeenLocation = htmlspecialchars($msgData['last_seen_location'] ?? '');
+                $description = htmlspecialchars($msgData['description'] ?? '');
+                $avatar = htmlspecialchars($msgData['avatar'] ?? '');
+                $timeMissing = htmlspecialchars($msgData['time_missing'] ?? '');
+                
+                if ($avatar) {
+                    $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
+                    echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
+                } else {
+                    echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                }
+                
+                echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
+                echo "<p><strong>College:</strong> " . $college . "</p>";
+                echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
+                echo "<p><strong>Title:</strong> " . $title . "</p>";
+                echo "<p><strong>Description:</strong> " . $description . "</p>";
+                echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
+                
+                if (!empty($msgData['images'])) {
+                    echo "<div class='images'>"; // Updated 'images' to match the key used in the array
+                    foreach ($msgData['images'] as $image) {
+                        echo '<img src="' . htmlspecialchars($image) . '" alt="Missing Item Image" width="150">';
+                    }
+                    echo "</div>";
+                } else {
+                    echo "<p>No images available for this item.</p>";
+                }
+                echo "</div>";
+            }
+        }
+        ?>
+    </div>
+
+    <!-- Include JavaScript files -->
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/custom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
+
+    <script>
+      $(document).ready(function() {
+        $('.delete-btn').on('click', function() {
+            var messageId = $(this).data('id');
+            if (confirm('Are you sure you want to delete this missing item?')) {
+                $.ajax({
+                    url: 'delete_message.php',
+                    type: 'POST',
+                    data: { id: messageId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Missing item deleted successfully.');
+                            location.reload();
+                        } else {
+                            alert('Failed to delete the missing item: ' + response.error);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX error:", status, error);
+                    }
+                });
+            }
+        });
+
+        $('.publish-btn').on('click', function() {
+            var messageId = $(this).data('id');
+            if (confirm('Do you want to publish this missing item?')) {
+                $.ajax({
+                    url: 'publish_message.php',
+                    type: 'POST',
+                    data: { id: messageId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Missing item published successfully.');
+                            location.reload();
+                        } else {
+                            alert('Failed to publish the missing item: ' + response.error);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX error:", status, error);
+                    }
+                });
+            }
+        });
+      });
+    </script>
+</body>
+</html>
+<?php require_once('../inc/footer.php') ?>
+<?php
+$conn->close();
+?>
