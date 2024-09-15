@@ -7,7 +7,7 @@ $response = array('success' => false, 'error' => '');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['id'])) {
         $messageId = intval($_POST['id']);
-        $sql = "DELETE FROM message_history WHERE id = ?";
+        $sql = "DELETE FROM missing_items WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $messageId);
         
