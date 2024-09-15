@@ -69,7 +69,22 @@ if (!$is_guest) {
     }
     $claim_stmt->close();
 
-    // Fetch the user's posted items history
+   // Fetch the user's posted missing items history
+$missing_items = [];
+$missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
+$missing_stmt->bind_param("i", $user_id);
+$missing_stmt->execute();
+$missing_stmt->bind_result($title, $time_missing, $status);
+while ($missing_stmt->fetch()) {
+    $missing_items[] = [
+        'title' => $title, 
+        'time_missing' => $time_missing, 
+        'status' => $status
+    ];
+}
+$missing_stmt->close();
+
+
     $posts = [];
     $post_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE user_id = ?");
     $post_stmt->bind_param("i", $user_id);
@@ -191,7 +206,8 @@ if (!$is_guest) {
                                             <p class="text-center small">Welcome, <?= htmlspecialchars($first_name ?? '') . ' ' . htmlspecialchars($last_name ?? '') ?></p>
                                         </div>
 
-                        
+                                        <!-- Display User Avatar -->
+                                        
 
                                         <!-- Avatar Upload Form -->
                                         <form action="" method="post" enctype="multipart/form-data">
@@ -211,7 +227,7 @@ if (!$is_guest) {
                                                 <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Posted Found Items</a>
                                             </li>
                                             <li class="nav-item" role="presentation">
-                                                <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Posted Missing Items</a>
+                                                <a class="nav-link" id="history-tab" data-bs-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">Posted Missing Items</a>
                                             </li>
                                         </ul>
                                         <div class="tab-content">
@@ -263,7 +279,7 @@ if (!$is_guest) {
                                                 </table>
                                             </div>
                                             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                                                <h5 class="history-title">Posted Found Items</h5>
+                                                <h5 class="history-title">Posted Items</h5>
                                                 <table class="table table-striped post-history-table">
                                                     <thead>
                                                         <tr>
@@ -285,29 +301,28 @@ if (!$is_guest) {
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                                                <h5 class="history-title">Posted Missing Items</h5>
-                                                <table class="table table-striped post-history-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Title</th>
-                                                            <th>Date Posted</th>
-                                                            <th>Status</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php foreach ($posts as $post): ?>
-                                                            <tr>
-                                                                <td><?= htmlspecialchars($post['title']) ?></td>
-                                                                <td><?= htmlspecialchars($post['time_found']) ?></td>
-                                                                <td class="<?= $post['status'] == 'Approved' ? 'status-approved' : '' ?>">
-                                                                    <?= htmlspecialchars($post['status']) ?>
-                                                                </td>
-                                                            </tr>
-                                                        <?php endforeach; ?>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+    <h5 class="history-title">Posted Missing Items</h5>
+    <table class="table table-striped post-history-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Date Missing</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($missing_items as $missing_item): ?>
+                <tr>
+                    <td><?= htmlspecialchars($missing_item['title']) ?></td>
+                    <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
+                    <td><?= htmlspecialchars($missing_item['status']) ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
                                             <div class="text-center mt-4 d-flex justify-content-center">
                                         <button id="logout-btn" class="btn btn-primary mx-2">Logout</button>
                                         <a href="https://ramonianlostgems.com/" class="btn btn-secondary mx-2">Back</a>
