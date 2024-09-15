@@ -224,16 +224,20 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
                 
                 if (!empty($msgData['images'])) {
-                    echo "<div class='images'>"; // Updated 'images' to match the key used in the array
-                    foreach ($msgData['images'] as $image) {
-                        echo '<img src="' . htmlspecialchars($image) . '" alt="Missing Item Image" width="150">';
+                    echo "<p><strong>Images:</strong></p>";
+                    echo "<div class='image-grid'>";
+                    foreach ($msgData['images'] as $imagePath) {
+                        // Add Lightbox attributes
+                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
                     }
                     echo "</div>";
-                } else {
-                    echo "<p>No images available for this item.</p>";
                 }
+                // Add both buttons
+                echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "'>Publish</button>";
+                echo "<button class='delete-btn' data-id='" . htmlspecialchars($msgId) . "'>Delete</button>";
                 echo "</div>";
             }
+            
         }
         ?>
     </div>
