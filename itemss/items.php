@@ -9,7 +9,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Database connection
-
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
 
 // Check connection
@@ -17,17 +16,24 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// SQL queries to get published items
+$sqlFound = "SELECT mh.id, mh.title, GROUP_CONCAT(mi.image_path) AS image_paths
+             FROM message_history mh
+             LEFT JOIN message_images mi ON mh.id = mi.message_id
+             WHERE mh.is_published = 1
+             GROUP BY mh.id
+             ORDER BY mh.id DESC";
 
-// SQL query to get published items
-$sql = "SELECT mh.id, mh.title, GROUP_CONCAT(mi.image_path) AS image_paths
-        FROM message_history mh
-        LEFT JOIN message_images mi ON mh.id = mi.message_id
-        WHERE mh.is_published = 1
-        GROUP BY mh.id
-        ORDER BY mh.id DESC";
-$result = $conn->query($sql);
+$sqlMissing = "SELECT mi.id, mi.title, GROUP_CONCAT(mii.image_path) AS image_paths
+               FROM missing_items mi
+               LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
+               WHERE mi.status = 'Published'
+               GROUP BY mi.id
+               ORDER BY mi.id DESC";
 
-
+// Execute queries
+$resultFound = $conn->query($sqlFound);
+$resultMissing = $conn->query($sqlMissing);
 ?>
 
 <!DOCTYPE html>
@@ -36,7 +42,7 @@ $result = $conn->query($sql);
 <?php require_once('../inc/header.php') ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Found Items</title>
+    <title>Items Gallery</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -84,11 +90,12 @@ $result = $conn->query($sql);
 <body>
 <?php require_once('../inc/topBarNav.php') ?>
     <div class="container">
-        <h1>Found Items</h1>
+        <h1>Published Items Gallery</h1>
+        <h2>Found Items</h2>
         <div class="gallery-grid">
             <?php
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
+            if ($resultFound->num_rows > 0) {
+                while ($row = $resultFound->fetch_assoc()) {
                     $itemId = htmlspecialchars($row['id']);
                     $title = htmlspecialchars($row['title']);
                     $imagePaths = htmlspecialchars($row['image_paths']);
@@ -106,7 +113,34 @@ $result = $conn->query($sql);
                     echo "</div>";
                 }
             } else {
-                echo "<p>No published items available.</p>";
+                echo "<p>No published found items available.</p>";
+            }
+            ?>
+        </div>
+        
+        <h2>Missing Items</h2>
+        <div class="gallery-grid">
+            <?php
+            if ($resultMissing->num_rows > 0) {
+                while ($row = $resultMissing->fetch_assoc()) {
+                    $itemId = htmlspecialchars($row['id']);
+                    $title = htmlspecialchars($row['title']);
+                    $imagePaths = htmlspecialchars($row['image_paths']);
+                    $images = explode(',', $imagePaths); // Split concatenated images
+
+                    echo "<div class='gallery-item'>";
+                    echo "<a href='missing_items.php?id=" . $itemId . "'>";
+                    if (!empty($images)) {
+                        echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
+                    } else {
+                        echo "<img src='uploads/items/default-image.png' alt='No Image'>";
+                    }
+                    echo "<h3>" . $title . "</h3>";
+                    echo "</a>";
+                    echo "</div>";
+                }
+            } else {
+                echo "<p>No published missing items available.</p>";
             }
             ?>
         </div>
