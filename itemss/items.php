@@ -92,7 +92,7 @@ $result = $conn->query($sql);
                     $images = explode(',', $imagePaths); // Split concatenated images
 
                     echo "<div class='gallery-item'>";
-                    echo "<a href='published_items.php?id=" . $itemId . "'>";
+                    echo "<a href='../published_items.php?id=" . $itemId . "'>";
                     if (!empty($images)) {
                         echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
                     } else {
