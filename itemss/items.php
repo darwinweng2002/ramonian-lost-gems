@@ -20,10 +20,10 @@ if ($conn->connect_error) {
 
 $sql = "SELECT mi.id, mi.title, GROUP_CONCAT(mii.image_path) AS image_paths
         FROM missing_items mi
-        LEFT JOIN  missing_item_images mii ON mi.id = mii.missing_it
-        WHERE mh.is_published = 1
-        GROUP BY mh.id
-        ORDER BY mh.id DESC";
+        LEFT JOIN  missing_item_images mii ON mi.id = mii.id
+        WHERE mi.is_published = 1
+        GROUP BY mi.id
+        ORDER BY mi.id DESC";
 $result = $conn->query($sql);
 
 // SQL query to get published items
