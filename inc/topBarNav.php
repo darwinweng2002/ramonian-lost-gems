@@ -324,7 +324,7 @@
                 </li>
 
                 <li class="nav-item pe-3" class="active">
-                    <a href="<?= base_url.'?page=items' ?>" id="home-link" class="nav-link" title="Lost and Found">
+                    <a href="https://ramonianlostgems.com/itemss/items.php" id="home-link" class="nav-link" title="Lost and Found">
                         <svg title="This is a icon!" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search">
                             <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
                             <path d="M4.268 21a2 2 0 0 0 1.727 1H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"/>
