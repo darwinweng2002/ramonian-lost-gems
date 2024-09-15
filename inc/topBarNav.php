@@ -7,9 +7,11 @@
     font-weight: bold;
     color: #012970;
 }
+
 /* Make dropdown menu visible and regular nav links hidden on smaller screens */
 @media (max-width: 512px) {
     /* Show toggle button on smaller screens */
+    
     #navbar-toggler {
         display: block;
     }
@@ -18,6 +20,7 @@
     .header-nav ul {
         display: none;
         width: 50%;
+        margin: 0;
     }
     .header-nav ul li {
         font-size: 10px;
@@ -304,7 +307,7 @@
             <ul class="d-flex align-items-center h-100">
                 <li class="nav-item pe-3">
                     <a href="<?= base_url ?>" class="nav-link" title="Go to Home Page">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-home">
                             <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                             <polyline points="9 22 9 12 15 12 15 22"/>
                         </svg>
