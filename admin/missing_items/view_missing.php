@@ -240,3 +240,7 @@ if (isset($_GET['id'])) {
     </script>
 </body>
 </html>
+<?php require_once('../inc/footer.php') ?>
+<?php
+$conn->close();
+?>
