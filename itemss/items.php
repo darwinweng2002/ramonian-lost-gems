@@ -90,7 +90,7 @@ $resultMissing = $conn->query($sqlMissing);
 <body>
 <?php require_once('../inc/topBarNav.php') ?>
     <div class="container">
-        <h1>Published Items Gallery</h1>
+        <h1>Published Items</h1>
         <h2>Found Items</h2>
         <div class="gallery-grid">
             <?php
