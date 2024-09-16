@@ -41,11 +41,12 @@ $result = $stmt->get_result();
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Open Sans', sans-serif;
+            font: 16px;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            padding-top: 70px;
-            background-color: #f4f4f4;
+            color: #333;
         }
         .container {
             margin: 30px auto;
