@@ -18,22 +18,16 @@ if ($conn->connect_error) {
 // Get item ID from URL
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// SQL query to get both found and missing item details
-$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar, 'found' AS item_type
+// SQL query to get published item details
+$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar 
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN user_member um ON mh.user_id = um.id
         WHERE mh.is_published = 1 AND mh.id = ?
-        UNION
-        SELECT mi.id, mi.message, mii.image_path, mi.title, mi.landmark, mi.time_found, um.first_name, um.college, um.email, um.avatar, 'missing' AS item_type
-        FROM missing_items mi
-        LEFT JOIN missing_item_images mii ON mi.id = mii.id
-        LEFT JOIN user_member um ON mi.user_id = um.id
-        WHERE mi.status = 'Published' AND mi.id = ?
-        ORDER BY id DESC";
+        ORDER BY mh.id DESC";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param('ii', $itemId, $itemId);
+$stmt->bind_param('i', $itemId);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -119,7 +113,7 @@ $result = $stmt->get_result();
 <body>
 <?php require_once('../inc/topBarNav.php') ?>
     <div class="container">
-        <h1>Item Details</h1>
+        <h1>Found Items</h1>
         <?php
         if ($result->num_rows > 0) {
             $messages = [];
@@ -134,8 +128,7 @@ $result = $stmt->get_result();
                         'college' => $row['college'],
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
-                        'time_found' => $row['time_found'],
-                        'item_type' => $row['item_type']
+                        'time_found' => $row['time_found']
                     ];
                 }
                 if ($row['image_path']) {
@@ -155,7 +148,6 @@ $result = $stmt->get_result();
                 $message = htmlspecialchars($msgData['message'] ?? '');
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
                 $timeFound = htmlspecialchars($msgData['time_found'] ?? ''); // Fetch date and time
-                $itemType = htmlspecialchars($msgData['item_type'] ?? '');
                 
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
@@ -180,11 +172,10 @@ $result = $stmt->get_result();
                     echo "</div>";
                 }
                 
-                // Add Claim Request Button if item type is 'missing'
-                if ($itemType === 'missing') {
-                    echo "<a href='claim_request.php?id=" . urlencode($msgId) . "' class='claim-button'>Claim Request</a>";
-                }
+                // Add Claim Request Button
+                echo "<a href='claim_request.php?id=" . urlencode($msgId) . "' class='claim-button'>Claim Request</a>";
 
+                
                 echo "</div>";
             }
         } else {
