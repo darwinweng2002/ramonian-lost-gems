@@ -113,13 +113,10 @@ $result = $stmt->get_result();
 <body>
 <?php require_once('../inc/topBarNav.php') ?>
     <div class="container">
+        <br>
+        <br>
+        <br>
         <h1>Found item details.</h1>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
         <?php
         if ($result->num_rows > 0) {
             $messages = [];
