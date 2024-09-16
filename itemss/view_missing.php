@@ -49,12 +49,9 @@ $result = $stmt->get_result();
             color: #333;
         }
         .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            margin: 30px auto;
+            width: 90%;
+            max-width: 1200px;
         }
         h1 {
             text-align: center;
