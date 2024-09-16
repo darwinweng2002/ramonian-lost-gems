@@ -19,11 +19,11 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get published item details
-$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar 
+$sql = "SELECT mh.id, mh.message, mh.status, mi.image_path, mh.title, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar 
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN user_member um ON mh.user_id = um.id
-        WHERE mh.is_published = 1 AND mh.id = ?
+        WHERE mh.id = ?
         ORDER BY mh.id DESC";
 
 $stmt = $conn->prepare($sql);
@@ -41,61 +41,23 @@ $result = $stmt->get_result();
     <title>Published Item Details</title>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            padding-top: 70px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            margin: 30px auto;
-            width: 90%;
-            max-width: 1200px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .message-box {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-        .message-box p {
-            margin: 10px 0;
-        }
-        .message-box img {
-            max-width: 100%;
+        /* Existing styles... */
+        .status-box {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            transition: transform 0.3s ease;
         }
-        .message-box img:hover {
-            transform: scale(1.1);
+        .status-box p {
+            margin: 0;
         }
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-        }
-        .container .avatar {
-            width: 100px; /* Set the width of the avatar */
-            height: 100px; /* Set the height of the avatar to the same value as width for a circle */
-            border-radius: 100%; /* Makes the image circular */
-            object-fit: cover; /* Ensures the image covers the circle without distortion */
-            display: block; /* Ensures the image is displayed as a block element */
-            margin-bottom: 10px; /* Adds space below the image if needed */
-        }
-        .claim-button {
+        .status-button {
             display: inline-block;
             padding: 10px 20px;
             font-size: 16px;
             color: #fff;
-            background-color: #3498db; /* Blue color */
+            background-color: #e67e22; /* Orange color */
             border: none;
             border-radius: 5px;
             text-align: center;
@@ -104,9 +66,8 @@ $result = $stmt->get_result();
             transition: background-color 0.3s ease;
             margin-top: 10px;
         }
-        .claim-button:hover {
-            background-color: #2980b9; /* Darker blue */
-            color: #fff;
+        .status-button:hover {
+            background-color: #d35400; /* Darker orange */
         }
     </style>
 </head>
@@ -121,6 +82,7 @@ $result = $stmt->get_result();
                 if (!isset($messages[$row['id']])) {
                     $messages[$row['id']] = [
                         'message' => $row['message'], 
+                        'status' => $row['status'], // Include status
                         'images' => [],
                         'first_name' => $row['first_name'],
                         'landmark' => $row['landmark'],
@@ -172,9 +134,14 @@ $result = $stmt->get_result();
                     echo "</div>";
                 }
                 
-                // Add Claim Request Button
+                // Display Status
+                echo "<div class='status-box'>";
+                echo "<p><strong>Status:</strong> " . htmlspecialchars($msgData['status']) . "</p>";
+                echo "<button class='status-button' data-id='" . htmlspecialchars($msgId) . "' data-status='claimed'>Mark as Claimed</button>";
+                echo "<button class='status-button' data-id='" . htmlspecialchars($msgId) . "' data-status='surrendered'>Mark as Surrendered</button>";
+                echo "</div>";
+                
                 echo "<a href='claim_request.php?id=" . urlencode($msgId) . "' class='claim-button'>Claim Request</a>";
-
                 
                 echo "</div>";
             }
@@ -188,6 +155,34 @@ $result = $stmt->get_result();
     <script src="../js/bootstrap.min.js"></script> <!-- Ensure this path is correct -->
     <script src="../js/custom.js"></script> <!-- Ensure this path is correct -->
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.status-button').on('click', function() {
+                var itemId = $(this).data('id');
+                var status = $(this).data('status');
+                if (confirm('Are you sure you want to change the status to ' + status + '?')) {
+                    $.ajax({
+                        url: 'update_status.php',
+                        type: 'POST',
+                        data: { id: itemId, status: status },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                alert('Status updated successfully.');
+                                location.reload();
+                            } else {
+                                alert('Failed to update status: ' + response.error);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("AJAX error:", status, error);
+                            alert('An error occurred: ' + error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 
