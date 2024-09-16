@@ -10,7 +10,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch the claim history for displaying in the activity log
-$sql = "SELECT ch.id, ch.claimed_by, ch.claimed_at, il.title 
+$sql = "SELECT ch.id, ch.claimed_by, ch.claimed_at, mh.title 
         FROM claim_history ch 
         JOIN message_history il ON ch.item_id = mh.id 
         ORDER BY ch.claimed_at DESC";
