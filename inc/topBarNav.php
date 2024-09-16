@@ -345,8 +345,8 @@
                     <span class="nav-text">Post an Item</span>
                 </a>
                 <div class="dropdown-content" style="color: #000000;">
-                <a href="<?= base_url.'?page=found' ?>" style="color: #000000; padding: 12px 16px; text-decoration: none; display: block;">Post Found Item</a>
-                <a href="<?= base_url.'?page=missing' ?>" style="color: #000000; padding: 12px 16px; text-decoration: none; display: block;">Post Missing Item</a>
+                <a href="https://ramonianlostgems.com/send_message.php" style="color: #000000; padding: 12px 16px; text-decoration: none; display: block;">Post Found Item</a>
+                <a href="https://ramonianlostgems.com/send_missing.php" style="color: #000000; padding: 12px 16px; text-decoration: none; display: block;">Post Missing Item</a>
                 </div>
                 </li>
 
