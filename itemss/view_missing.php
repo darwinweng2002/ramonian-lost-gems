@@ -18,7 +18,7 @@ if ($conn->connect_error) {
 // Get item ID from URL
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// SQL query to get missing item details
+// SQL query to get missing item details and associated images
 $sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi.title, um.first_name, um.college, um.email, um.avatar, imi.image_path
         FROM missing_items mi
         LEFT JOIN user_member um ON mi.user_id = um.id
@@ -84,6 +84,11 @@ $result = $stmt->get_result();
             display: block; /* Ensures the image is displayed as a block element */
             margin-bottom: 10px; /* Adds space below the image if needed */
         }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
         .claim-button {
             display: inline-block;
             padding: 10px 20px;
@@ -110,15 +115,37 @@ $result = $stmt->get_result();
         <h1>Missing Items</h1>
         <?php
         if ($result->num_rows > 0) {
+            $items = [];
             while ($row = $result->fetch_assoc()) {
-                $firstName = htmlspecialchars($row['first_name'] ?? '');
-                $email = htmlspecialchars($row['email'] ?? '');
-                $college = htmlspecialchars($row['college'] ?? '');
-                $title = htmlspecialchars($row['title'] ?? '');
-                $lastSeenLocation = htmlspecialchars($row['last_seen_location'] ?? '');
-                $description = htmlspecialchars($row['description'] ?? '');
-                $avatar = htmlspecialchars($row['avatar'] ?? '');
-                $timeMissing = htmlspecialchars($row['time_missing'] ?? ''); // Fetch date and time
+                if (!isset($items[$row['id']])) {
+                    $items[$row['id']] = [
+                        'description' => $row['description'],
+                        'last_seen_location' => $row['last_seen_location'],
+                        'time_missing' => $row['time_missing'],
+                        'title' => $row['title'],
+                        'first_name' => $row['first_name'],
+                        'college' => $row['college'],
+                        'email' => $row['email'],
+                        'avatar' => $row['avatar'],
+                        'images' => []
+                    ];
+                }
+                if ($row['image_path']) {
+                    // Construct the correct URL to the image
+                    $fullImagePath = base_url . 'uploads/missing_items/' . $row['image_path'];
+                    $items[$row['id']]['images'][] = $fullImagePath;
+                }
+            }
+            
+            foreach ($items as $itemId => $itemData) {
+                $firstName = htmlspecialchars($itemData['first_name'] ?? '');
+                $email = htmlspecialchars($itemData['email'] ?? '');
+                $college = htmlspecialchars($itemData['college'] ?? '');
+                $title = htmlspecialchars($itemData['title'] ?? '');
+                $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
+                $description = htmlspecialchars($itemData['description'] ?? '');
+                $avatar = htmlspecialchars($itemData['avatar'] ?? '');
+                $timeMissing = htmlspecialchars($itemData['time_missing'] ?? ''); // Fetch date and time
                 
                 echo "<div class='message-box'>";
                 
@@ -136,17 +163,17 @@ $result = $stmt->get_result();
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 
-                if (!empty($msgData['images'])) {
+                if (!empty($itemData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
-                    foreach ($msgData['images'] as $imagePath) {
-                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
+                    foreach ($itemData['images'] as $imagePath) {
+                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='item-" . htmlspecialchars($itemId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
                     }
                     echo "</div>";
                 }
-
+                
                 // Add Claim Request Button
-                echo "<a href='claim_request.php?id=" . urlencode($row['id']) . "' class='claim-button'>Claim Request</a>";
+                echo "<a href='claim_request.php?id=" . urlencode($itemId) . "' class='claim-button'>Claim Request</a>";
                 
                 echo "</div>";
             }
