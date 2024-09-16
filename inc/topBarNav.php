@@ -33,13 +33,13 @@
         flex-direction: column;
     }
     .header-nav ul li:hover {
-        background-color: #F6B825; 
+        background-color: #fff; 
         color: white; 
         padding: 2px;
         border-radius: 4px;
     }
     .nav-item:hover .nav-link {
-        background-color: #F6B825; 
+        background-color: #Fff; 
     }
     title {
         padding: 10px;
@@ -135,7 +135,7 @@
 }
 
 .dropdown-button:hover {
-    background-color: #F6B825; /* Background color on hover */
+    background-color: #fff; /* Background color on hover */
     color: white; /* Text color on hover */
 }
 
