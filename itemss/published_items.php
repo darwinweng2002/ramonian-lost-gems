@@ -39,6 +39,7 @@ $result = $stmt->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Published Item Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -183,6 +184,10 @@ $result = $stmt->get_result();
         ?>
     </div>
     <?php require_once('../inc/footer.php') ?>
+    <script src="../js/jquery.min.js"></script> <!-- Ensure this path is correct -->
+    <script src="../js/bootstrap.min.js"></script> <!-- Ensure this path is correct -->
+    <script src="../js/custom.js"></script> <!-- Ensure this path is correct -->
+    <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 </body>
 </html>
 
