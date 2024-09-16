@@ -19,11 +19,12 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get published item details
-$sql = "SELECT mh.id, mh.message, mh.status, mi.image_path, mh.title, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar 
+$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar 
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN user_member um ON mh.user_id = um.id
-        ORDER BY mh.id DESC"
+        WHERE mh.is_published = 1 AND mh.id = ?
+        ORDER BY mh.id DESC";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
@@ -38,7 +39,6 @@ $result = $stmt->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Published Item Details</title>
-    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -147,7 +147,6 @@ $result = $stmt->get_result();
                 $message = htmlspecialchars($msgData['message'] ?? '');
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
                 $timeFound = htmlspecialchars($msgData['time_found'] ?? ''); // Fetch date and time
-                $status = htmlspecialchars($row['status']);
                 
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
@@ -162,7 +161,6 @@ $result = $stmt->get_result();
                 echo "<p><strong>Date and Time Found:</strong> " . $timeFound . "</p>"; // Display date and time
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
-                echo "<p><strong>Status:</strong> " . $status . "</p>";
                 
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
@@ -185,10 +183,6 @@ $result = $stmt->get_result();
         ?>
     </div>
     <?php require_once('../inc/footer.php') ?>
-    <script src="../js/jquery.min.js"></script> <!-- Ensure this path is correct -->
-    <script src="../js/bootstrap.min.js"></script> <!-- Ensure this path is correct -->
-    <script src="../js/custom.js"></script> <!-- Ensure this path is correct -->
-    <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 </body>
 </html>
 
