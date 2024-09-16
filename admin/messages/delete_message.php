@@ -1,33 +1,31 @@
 <?php
 include '../../config.php';
+error_reporting(0);
 
-// Check if ID is set
-if (isset($_POST['id'])) {
-    $user_id = $_POST['id'];
+$response = array('success' => false, 'error' => '');
 
-    // Start by deleting any activities the user performed in the system
-    // Example: Deleting user's posts from found_items table
-    $deletePostsSql = "DELETE FROM message_history WHERE user_id = ?";
-    $stmt = $conn->prepare($deletePostsSql);
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-
-    // Now, delete the user from the user_member table
-    $deleteUserSql = "DELETE FROM user_member WHERE id = ?";
-    $stmt = $conn->prepare($deleteUserSql);
-    $stmt->bind_param("i", $user_id);
-    if ($stmt->execute()) {
-        // Send success response
-        echo '1';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['id'])) {
+        $messageId = intval($_POST['id']);
+        $sql = "DELETE FROM message_history WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $messageId);
+        
+        if ($stmt->execute()) {
+            $response['success'] = true;
+        } else {
+            $response['error'] = 'Failed to delete the message.';
+        }
+        $stmt->close();
     } else {
-        // Send error response
-        echo '0';
+        $response['error'] = 'Invalid request.';
     }
-
-    $stmt->close();
-    $conn->close();
 } else {
-    // No ID provided
-    echo '0';
+    $response['error'] = 'Invalid request method.';
 }
-?>
+
+// Ensure nothing else is output before the JSON
+header('Content-Type: application/json');
+echo json_encode($response);
+
+$conn->close();

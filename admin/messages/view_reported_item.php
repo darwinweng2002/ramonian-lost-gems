@@ -14,13 +14,12 @@ $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($message_id > 0) {
     // SQL query to fetch the details of the selected message by its ID
-    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.time_found, c.name as category_name, mh.status
-    FROM message_history mh
-    LEFT JOIN message_images mi ON mh.id = mi.message_id
-    LEFT JOIN user_member um ON mh.user_id = um.id
-    LEFT JOIN categories c ON mh.category_id = c.id
-    WHERE mh.id = $message_id";
-
+    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.time_found, c.name as category_name
+        FROM message_history mh
+        LEFT JOIN message_images mi ON mh.id = mi.message_id
+        LEFT JOIN user_member um ON mh.user_id = um.id
+        LEFT JOIN categories c ON mh.category_id = c.id
+        WHERE mh.id = $message_id";
 
 
 
@@ -183,8 +182,7 @@ if ($message_id > 0) {
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
                         'time_found' => $row['time_found'],
-                        'category_name' => $row['category_name'],
-                        'status' => $row['status'] // Add status to the message data
+                        'category_name' => $row['category_name']  // Add this line to include category name
                     ];
                 }
                 if ($row['image_path']) {
@@ -220,18 +218,7 @@ if ($message_id > 0) {
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>"; // Display category name
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Time Found:</strong> " . $timeFound . "</p>";
-                echo "<p><strong>Status:</strong> " . htmlspecialchars($msgData['status'] ?? 'pending') . "</p>";  // Display the current status
                 
-                echo "<label for='status-" . htmlspecialchars($msgId) . "'><strong>Change Status:</strong></label>";
-                echo "<select class='status-dropdown' data-id='" . htmlspecialchars($msgId) . "' id='status-" . htmlspecialchars($msgId) . "'>";
-                $statusOptions = ['published', 'claimed', 'surrendered', 'pending'];
-                foreach ($statusOptions as $statusOption) {
-                    $selected = ($msgData['status'] === $statusOption) ? "selected" : "";
-                    echo "<option value='" . htmlspecialchars($statusOption) . "' $selected>" . htmlspecialchars(ucfirst($statusOption)) . "</option>";
-                }
-                echo "</select>";
-
-
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
@@ -307,33 +294,6 @@ if ($message_id > 0) {
         });
 
       });
-      $(document).ready(function() {
-    $('.status-dropdown').on('change', function() {
-        var messageId = $(this).data('id');
-        var newStatus = $(this).val();
-        if (confirm('Are you sure you want to change the status to ' + newStatus + '?')) {
-            $.ajax({
-                url: 'update_status.php',
-                type: 'POST',
-                data: { id: messageId, status: newStatus },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        alert('Status updated successfully.');
-                        location.reload();
-                    } else {
-                        alert('Failed to update the status: ' + response.error);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX error:", status, error);
-                    alert('An error occurred: ' + error);
-                }
-            });
-        }
-    });
-});
-
     </script>
 </body>
 <?php require_once('../inc/footer.php') ?>
