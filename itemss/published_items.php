@@ -117,6 +117,9 @@ $result = $stmt->get_result();
         <br>
         <br>
         <br>
+        <br>
+        <br>
+        <br>
         <?php
         if ($result->num_rows > 0) {
             $messages = [];
