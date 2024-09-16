@@ -1,3 +1,10 @@
+<?php
+include '../../config.php';
+
+// Database connection
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
+
+?>
 <h1 class="pageTitle text-center">Our Contact Information</h1>
 <hr class="mx-auto bg-primary border-primary opacity-100" style="width:50px">
 <div class="row">
