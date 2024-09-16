@@ -130,9 +130,8 @@ $stmt->bind_param("sisssssss", $email, $category_id, $fullname, $title, $contact
             $('.err-msg').remove();
             setTimeout(() => {
                 start_loader();
-
                 $.ajax({
-                    url: _base_url_ + "classes/Master.php?f=save_item",
+                    url: "https://ramonianlostgems.com/classes/Master.php?f=save_item",
                     data: new FormData($(this)[0]),
                     cache: false,
                     contentType: false,
