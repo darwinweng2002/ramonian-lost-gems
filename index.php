@@ -91,7 +91,7 @@ if (isset($_POST['guest_login'])) {
               <div class="d-flex justify-content-center py-4">
                 <a href="#" class="logo d-flex align-items-center w-auto">
                   <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
-                  <span class="d-none d-lg-block text-center"><?= $_settings->info('name') ?></span>
+                  <span class=""><?= $_settings->info('name') ?></span>
                 </a>
               </div><!-- End Logo -->
               <div class="card mb-3">
