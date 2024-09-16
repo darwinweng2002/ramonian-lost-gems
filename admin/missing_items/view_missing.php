@@ -195,7 +195,7 @@ if (isset($_GET['id'])) {
             var messageId = $(this).data('id');
             if (confirm('Are you sure you want to delete this missing item?')) {
                 $.ajax({
-                    url: '../delete_message.php',
+                    url: 'delete_message.php',
                     type: 'POST',
                     data: { id: messageId },
                     dataType: 'json',
@@ -218,7 +218,7 @@ if (isset($_GET['id'])) {
             var messageId = $(this).data('id');
             if (confirm('Are you sure you want to publish this missing item?')) {
                 $.ajax({
-                    url: '../publish_message.php',
+                    url: 'publish_message.php',
                     type: 'POST',
                     data: { id: messageId },
                     dataType: 'json',
