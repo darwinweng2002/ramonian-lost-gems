@@ -183,7 +183,8 @@ if ($message_id > 0) {
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
                         'time_found' => $row['time_found'],
-                        'category_name' => $row['category_name']  // Add this line to include category name
+                        'category_name' => $row['category_name'],
+                        'status' => $row['status'] // Add status to the message data
                     ];
                 }
                 if ($row['image_path']) {

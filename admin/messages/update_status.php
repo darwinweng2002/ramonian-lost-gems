@@ -9,25 +9,31 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get the POST data
+// Fetch the ID and status from the request
 $message_id = isset($_POST['id']) ? intval($_POST['id']) : 0;
-$new_status = isset($_POST['status']) ? $_POST['status'] : '';
+$status = isset($_POST['status']) ? $_POST['status'] : '';
 
-if ($message_id > 0 && in_array($new_status, ['published', 'claimed', 'surrendered', 'pending'])) {
-    // Prepare and bind statement
-    $stmt = $conn->prepare("UPDATE message_history SET status = ? WHERE id = ?");
-    $stmt->bind_param('si', $new_status, $message_id);
-
+if ($message_id > 0 && !empty($status)) {
+    // SQL query to update the status in the message_history table
+    $sql = "UPDATE message_history SET status = ? WHERE id = ?";
+    
+    // Prepare and bind parameters
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('si', $status, $message_id);
+    
+    // Execute the query and check if it was successful
     if ($stmt->execute()) {
         echo json_encode(['success' => true]);
     } else {
-        echo json_encode(['success' => false, 'error' => $stmt->error]);
+        echo json_encode(['success' => false, 'error' => 'Failed to update status.']);
     }
-
+    
+    // Close the statement
     $stmt->close();
 } else {
-    echo json_encode(['success' => false, 'error' => 'Invalid request.']);
+    echo json_encode(['success' => false, 'error' => 'Invalid message ID or status.']);
 }
 
+// Close the connection
 $conn->close();
 ?>
