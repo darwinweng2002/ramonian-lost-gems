@@ -135,6 +135,15 @@ $result = $stmt->get_result();
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 
+                if (!empty($msgData['images'])) {
+                    echo "<p><strong>Images:</strong></p>";
+                    echo "<div class='image-grid'>";
+                    foreach ($msgData['images'] as $imagePath) {
+                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
+                    }
+                    echo "</div>";
+                }
+
                 // Add Claim Request Button
                 echo "<a href='claim_request.php?id=" . urlencode($row['id']) . "' class='claim-button'>Claim Request</a>";
                 
