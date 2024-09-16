@@ -127,6 +127,7 @@ if (isset($_POST['guest_login'])) {
                   </form>
                   <div class="text-center mt-3">
                   <p>Don't have an account? 
+                  <br>
                       <a href="https://ramonianlostgems.com/register.php/" class="btn btn-primary">Register account here</a>
                   </p>
               </div>
