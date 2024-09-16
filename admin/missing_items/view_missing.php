@@ -190,53 +190,53 @@ if (isset($_GET['id'])) {
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 
     <script>
-      $(document).ready(function() {
         $('.delete-btn').on('click', function() {
-            var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to delete this missing item?')) {
-                $.ajax({
-                    url: 'delete_message.php',
-                    type: 'POST',
-                    data: { id: messageId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            alert('Missing item deleted successfully.');
-                            location.reload();
-                        } else {
-                            alert('Failed to delete the missing item: ' + response.error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX error:", status, error);
-                    }
-                });
+    var messageId = $(this).data('id');
+    if (confirm('Are you sure you want to delete this missing item?')) {
+        $.ajax({
+            url: 'delete_message.php',
+            type: 'POST',
+            data: { id: messageId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert('Missing item deleted successfully.');
+                    location.reload();
+                } else {
+                    alert('Failed to delete the missing item: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX error:", status, error);
             }
         });
+    }
+});
 
-        $('.publish-btn').on('click', function() {
-            var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to publish this missing item?')) {
-                $.ajax({
-                    url: 'publish_message.php',
-                    type: 'POST',
-                    data: { id: messageId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            alert('Missing item published successfully.');
-                            location.reload();
-                        } else {
-                            alert('Failed to publish the missing item: ' + response.error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX error:", status, error);
-                    }
-                });
+
+$('.publish-btn').on('click', function() {
+    var messageId = $(this).data('id');
+    if (confirm('Are you sure you want to publish this missing item?')) {
+        $.ajax({
+            url: 'publish_message.php',
+            type: 'POST',
+            data: { id: messageId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert('Missing item published successfully.');
+                    location.reload();
+                } else {
+                    alert('Failed to publish the missing item: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX error:", status, error);
             }
         });
-      });
+    }
+});
+
     </script>
 </body>
 </html>

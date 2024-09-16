@@ -2,33 +2,34 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli('localhost','u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if the ID is set in the POST request
-if (isset($_POST['id'])) {
-    $messageId = intval($_POST['id']);
+// Initialize response
+$response = ['success' => false, 'error' => ''];
 
-    // Update the message's is_published status to 1
-    $sql = "UPDATE missing_items SET is_published = 1 WHERE id = ?";
-    
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('i', $messageId);
+// Check if id is set
+if (isset($_POST['id'])) {
+    $itemId = intval($_POST['id']); // Ensure id is an integer
+
+    // Prepare the SQL statement
+    $stmt = $conn->prepare("UPDATE missing_items SET status = 'Published' WHERE id = ?");
+    $stmt->bind_param('i', $itemId);
 
     if ($stmt->execute()) {
-        echo json_encode(['success' => true]);
+        $response['success'] = true;
     } else {
-        echo json_encode(['success' => false, 'error' => $stmt->error]);
+        $response['error'] = $stmt->error;
     }
 
     $stmt->close();
-} else {
-    echo json_encode(['success' => false, 'error' => 'No ID provided']);
 }
 
 $conn->close();
+
+echo json_encode($response);
 ?>

@@ -1,31 +1,35 @@
 <?php
 include '../../config.php';
-error_reporting(0);
 
-$response = array('success' => false, 'error' => '');
+// Database connection
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['id'])) {
-        $messageId = intval($_POST['id']);
-        $sql = "DELETE FROM missing_items WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $messageId);
-        
-        if ($stmt->execute()) {
-            $response['success'] = true;
-        } else {
-            $response['error'] = 'Failed to delete the message.';
-        }
-        $stmt->close();
-    } else {
-        $response['error'] = 'Invalid request.';
-    }
-} else {
-    $response['error'] = 'Invalid request method.';
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// Ensure nothing else is output before the JSON
-header('Content-Type: application/json');
-echo json_encode($response);
+// Initialize response
+$response = ['success' => false, 'error' => ''];
+
+// Check if id is set
+if (isset($_POST['id'])) {
+    $itemId = intval($_POST['id']); // Ensure id is an integer
+
+    // Prepare the SQL statement
+    $stmt = $conn->prepare("DELETE FROM missing_items WHERE id = ?");
+    $stmt->bind_param('i', $itemId);
+
+    if ($stmt->execute()) {
+        $response['success'] = true;
+    } else {
+        $response['error'] = $stmt->error;
+    }
+
+    $stmt->close();
+}
 
 $conn->close();
+
+echo json_encode($response);
+?>
