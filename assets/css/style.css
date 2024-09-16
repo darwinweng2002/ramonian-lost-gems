@@ -459,10 +459,7 @@ h6 {
 }
 
 /* CSS for Navigation Hover Effect */
-.header-nav ul li:hover {
-    background-color: #F6B825; /* Change background color on hover */
-    border-bottom: solid 3px #0d6efd;
-}
+
 
 .header-nav ul li:hover a {
     color: #fff; /* Change text color of links on hover */
