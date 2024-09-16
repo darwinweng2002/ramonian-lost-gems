@@ -351,7 +351,7 @@
                 </li>
 
                 <li class="nav-item pe-3">
-                    <a href="<?= base_url.'?page=contact' ?>" class="nav-link" title="Message">
+                    <a href="https://ramonianlostgems.com/contact.php" class="nav-link" title="Message">
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mails">
                             <rect width="16" height="13" x="6" y="4" rx="2"/>
                             <path d="m22 7-7.1 3.78c-.57.3-1.23.3-1.8 0L6 7"/>
