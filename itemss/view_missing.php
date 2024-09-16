@@ -113,7 +113,10 @@ $result = $stmt->get_result();
 <body>
 <?php require_once('../inc/topBarNav.php') ?>
     <div class="container">
-        <h1>Missing Items</h1>
+        <h1>Missing item details.</h1>
+        <br>
+        <br>
+        <br>
         <?php
         if ($result->num_rows > 0) {
             $items = [];

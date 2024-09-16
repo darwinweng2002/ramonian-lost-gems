@@ -38,7 +38,7 @@ $result = $stmt->get_result();
 <?php require_once('../inc/header.php') ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Published Item Details</title>
+    <title>Found Item Details</title>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
         body {
@@ -113,7 +113,10 @@ $result = $stmt->get_result();
 <body>
 <?php require_once('../inc/topBarNav.php') ?>
     <div class="container">
-        <h1>Found Items</h1>
+        <h1>Found item details.</h1>
+        <br>
+        <br>
+        <br>
         <?php
         if ($result->num_rows > 0) {
             $messages = [];
