@@ -125,6 +125,9 @@ if (isset($_POST['guest_login'])) {
                       <button class="btn btn-secondary w-100" type="submit" name="guest_login" value="1">Login as Guest</button>
                     </div>
                   </form>
+                  <div class="text-center mt-3">
+                    <p>Don't have an account? <a href="https://ramonianlostgems.com/register.php/">Register account here</a></p>
+                  </div>
                   <br>
                   <br>
                   <div id="g_id_onload"
