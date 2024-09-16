@@ -6,6 +6,7 @@ $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284
 
 ?>
 <h1 class="pageTitle text-center">Our Contact Information</h1>
+<?php require_once('inc/topBarNav.php') ?>
 <hr class="mx-auto bg-primary border-primary opacity-100" style="width:50px">
 <div class="row">
     <div class="col-lg-7 col-md-6 col-sm-12 col-12">
