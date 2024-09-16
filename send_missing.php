@@ -1,11 +1,11 @@
 <?php
 include('config.php');
 
-if (!isset($_SESSION['user_id'])) {
-    die("User not logged in");
-} else {
-    echo "User is logged in with ID: " . $_SESSION['user_id'];
-}
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Check if user is logged in and user_id is set in session
+    if (!isset($_SESSION['user_id'])) {
+        die("User not logged in");
+    }
 
     // Retrieve user inputs
     $title = $_POST['title'];
