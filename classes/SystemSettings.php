@@ -49,7 +49,7 @@ class SystemSettings extends DBConnection{
 		}
 		if(!empty($_FILES['img']['tmp_name'])){
 			$ext = pathinfo($_FILES['img']['name'], PATHINFO_EXTENSION);
-			$fname = "uploads/logosss.png";
+			$fname = "uploads/logoss.png";
 			$accept = array('image/jpeg','image/png');
 			if(!in_array($_FILES['img']['type'],$accept)){
 				$err = "Image file type is invalid";
