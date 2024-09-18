@@ -194,56 +194,56 @@ $result = $stmt->get_result();
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 
     <script>
-      $(document).ready(function() {
-        $('.delete-btn').on('click', function() {
-            var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to delete this message?')) {
-                $.ajax({
-                    url: 'delete_message.php',
-                    type: 'POST',
-                    data: { id: messageId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            alert('Message deleted successfully.');
-                            location.reload();
-                        } else {
-                            alert('Failed to delete the message: ' + response.error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX error:", status, error);
-                        alert('An error occurred: ' + error);
+     $(document).ready(function() {
+    $('.delete-btn').on('click', function() {
+        var messageId = $(this).data('id');
+        if (confirm('Are you sure you want to delete this message?')) {
+            $.ajax({
+                url: 'delete_message.php',
+                type: 'POST',
+                data: { id: messageId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        alert('Message deleted successfully.');
+                        location.reload();
+                    } else {
+                        alert('Failed to delete the message: ' + response.error);
                     }
-                });
-            }
-        });
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX error:", status, error);
+                    alert('An error occurred: ' + error);
+                }
+            });
+        }
+    });
 
-        $('.publish-btn').on('click', function() {
-            var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to publish this message?')) {
-                $.ajax({
-                    url: 'publish_message.php',
-                    type: 'POST',
-                    data: { id: messageId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            alert('Message published successfully.');
-                            location.reload();
-                        } else {
-                            alert('Failed to publish the message: ' + response.error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX error:", status, error);
-                        alert('An error occurred: ' + error);
+    $('.publish-btn').on('click', function() {
+        var messageId = $(this).data('id');
+        if (confirm('Are you sure you want to publish this message?')) {
+            $.ajax({
+                url: 'publish_message.php',
+                type: 'POST',
+                data: { id: messageId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        alert('Message published successfully.');
+                        location.reload();
+                    } else {
+                        alert('Failed to publish the message: ' + response.error);
                     }
-                });
-            }
-        });
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX error:", status, error);
+                    alert('An error occurred: ' + error);
+                }
+            });
+        }
+    });
+});
 
-      });
     </script>
 </body>
 </html>

@@ -1,35 +1,27 @@
 <?php
 include '../../config.php';
 
-// Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Initialize response
-$response = ['success' => false, 'error' => ''];
-
-// Check if id is set
 if (isset($_POST['id'])) {
-    $itemId = intval($_POST['id']); // Ensure id is an integer
-
+    $id = intval($_POST['id']);
+    
     // Prepare the SQL statement
-    $stmt = $conn->prepare("UPDATE missing_items SET status = 'Published' WHERE id = ?");
-    $stmt->bind_param('i', $itemId);
-
+    $stmt = $conn->prepare("UPDATE missing_items SET published = 1 WHERE id = ?");
+    $stmt->bind_param('i', $id);
+    
     if ($stmt->execute()) {
-        $response['success'] = true;
+        echo json_encode(['success' => true]);
     } else {
-        $response['error'] = $stmt->error;
+        echo json_encode(['success' => false, 'error' => $conn->error]);
     }
 
     $stmt->close();
 }
 
 $conn->close();
-
-echo json_encode($response);
 ?>
