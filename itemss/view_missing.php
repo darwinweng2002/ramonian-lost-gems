@@ -96,7 +96,7 @@ $result = $stmt->get_result();
             padding: 10px 20px;
             font-size: 16px;
             color: #fff;
-            background-color: #3498db; /* Blue color */
+            background-color: #E63946; /* Blue color */
             border: none;
             border-radius: 5px;
             text-align: center;
@@ -184,7 +184,7 @@ $result = $stmt->get_result();
                 }
                 
                 // Add Claim Request Button
-                echo "<a href='claim_request.php?id=" . urlencode($itemId) . "' class='claim-button'>Claim Request</a>";
+                echo "<a href='https://ramonianlostgems.com/send_message.php' class='claim-button'>Report if you want this item.</a>";
                 
                 echo "</div>";
             }
