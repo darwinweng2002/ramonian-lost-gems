@@ -2,7 +2,7 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
 
 // Check connection
 if ($conn->connect_error) {
@@ -15,17 +15,28 @@ $result = null;
 if (isset($_GET['id'])) {
     $itemId = $_GET['id'];
 
-// SQL query to get missing item details and associated images
-$sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi.title, um.first_name, um.college, um.email, um.avatar, imi.image_path
-        FROM missing_items mi
-        LEFT JOIN user_member um ON mi.user_id = um.id
-        LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
-        WHERE mi.id = ?";
-
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('i', $itemId);
-$stmt->execute();
-$result = $stmt->get_result();
+    // Prepare the SQL statement
+    $stmt = $conn->prepare("SELECT 
+                mi.id, 
+                mi.title, 
+                mi.description, 
+                mi.last_seen_location, 
+                mi.time_missing, 
+                mi.status, 
+                mi.created_at, 
+                um.email, 
+                um.college,
+                um.avatar, 
+                GROUP_CONCAT(mii.image_path) AS images 
+            FROM missing_items mi
+            LEFT JOIN user_member um ON mi.user_id = um.id
+            LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
+            WHERE mi.id = ?
+            GROUP BY mi.id, um.email, um.college, um.avatar"); // Group by all non-aggregated columns
+    
+    $stmt->bind_param('i', $itemId); // Bind the integer value
+    $stmt->execute();
+    $result = $stmt->get_result();
 }
 
 ?>
@@ -168,8 +179,6 @@ $result = $stmt->get_result();
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
                 echo "</div>";
             }
-        } else {
-            echo "<p>No details available for this item.</p>";
         }
         ?>
     </div>
@@ -181,10 +190,10 @@ $result = $stmt->get_result();
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 
     <script>
-     $(document).ready(function() {
+      $(document).ready(function() {
         $('.delete-btn').on('click', function() {
             var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to delete this missing item?')) {
+            if (confirm('Are you sure you want to delete this message?')) {
                 $.ajax({
                     url: 'delete_message.php',
                     type: 'POST',
@@ -192,14 +201,15 @@ $result = $stmt->get_result();
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
-                            alert('Missing item deleted successfully.');
+                            alert('Message deleted successfully.');
                             location.reload();
                         } else {
-                            alert('Failed to delete the missing item: ' + response.error);
+                            alert('Failed to delete the message: ' + response.error);
                         }
                     },
                     error: function(xhr, status, error) {
                         console.error("AJAX error:", status, error);
+                        alert('An error occurred: ' + error);
                     }
                 });
             }
@@ -207,31 +217,33 @@ $result = $stmt->get_result();
 
         $('.publish-btn').on('click', function() {
             var messageId = $(this).data('id');
-            $.ajax({
-                url: 'publish_message.php',
-                type: 'POST',
-                data: { id: messageId },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        alert('Missing item published successfully.');
-                        location.reload();
-                    } else {
-                        alert('Failed to publish the missing item: ' + response.error);
+            if (confirm('Are you sure you want to publish this message?')) {
+                $.ajax({
+                    url: 'publish_message.php',
+                    type: 'POST',
+                    data: { id: messageId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Message published successfully.');
+                            location.reload();
+                        } else {
+                            alert('Failed to publish the message: ' + response.error);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX error:", status, error);
+                        alert('An error occurred: ' + error);
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX error:", status, error);
-                }
-            });
+                });
+            }
         });
+
       });
     </script>
-<?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
-
+<?php require_once('../inc/footer.php') ?>
 <?php
-$stmt->close();
 $conn->close();
 ?>
