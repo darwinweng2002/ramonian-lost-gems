@@ -106,7 +106,7 @@ $result = $stmt->get_result();
             margin-top: 10px;
         }
         .claim-button:hover {
-            background-color: #E63981; /* Darker blue */
+            background-color: #E63940; /* Darker blue */
             color: #fff;
         }
     </style>
