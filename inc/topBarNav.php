@@ -66,7 +66,7 @@
 
 }
 .logo img {
- 
+    margin-top: 10px;
     margin-right: 0;
 }
  .dropdown {
