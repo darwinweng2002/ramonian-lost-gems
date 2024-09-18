@@ -192,10 +192,10 @@ if (isset($_GET['id'])) {
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 
     <script>
-      $(document).ready(function() {
+     $(document).ready(function() {
         $('.delete-btn').on('click', function() {
             var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to delete this item?')) {
+            if (confirm('Are you sure you want to delete this missing item?')) {
                 $.ajax({
                     url: 'delete_message.php',
                     type: 'POST',
@@ -238,6 +238,7 @@ if (isset($_GET['id'])) {
         });
       });
     </script>
+<?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
 
