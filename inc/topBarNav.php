@@ -68,8 +68,8 @@
 .logo img {
     margin-top: 2px;
     margin-right: 0;
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
 }
  .dropdown {
             position: relative;
