@@ -15,28 +15,17 @@ $result = null;
 if (isset($_GET['id'])) {
     $itemId = $_GET['id'];
 
-    // Prepare the SQL statement
-    $stmt = $conn->prepare("SELECT 
-                mi.id, 
-                mi.title, 
-                mi.description, 
-                mi.last_seen_location, 
-                mi.time_missing, 
-                mi.status, 
-                mi.created_at, 
-                um.email, 
-                um.college,
-                um.avatar, 
-                GROUP_CONCAT(mii.image_path) AS images 
-            FROM missing_items mi
-            LEFT JOIN user_member um ON mi.user_id = um.id
-            LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
-            WHERE mi.id = ?
-            GROUP BY mi.id, um.email, um.college, um.avatar");
+// SQL query to get missing item details and associated images
+$sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi.title, um.first_name, um.college, um.email, um.avatar, imi.image_path
+        FROM missing_items mi
+        LEFT JOIN user_member um ON mi.user_id = um.id
+        LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
+        WHERE mi.id = ?";
 
-    $stmt->bind_param('i', $itemId); // Bind the integer value
-    $stmt->execute();
-    $result = $stmt->get_result();
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $itemId);
+$stmt->execute();
+$result = $stmt->get_result();
 }
 
 ?>
