@@ -184,7 +184,7 @@ $result = $stmt->get_result();
                 }
                 
                 // Add Claim Request Button
-                echo "<a href='https://ramonianlostgems.com/send_message.php' class='claim-button'>Report if you want this item.</a>";
+                echo "<a href='https://ramonianlostgems.com/send_message.php' class='claim-button'>Report if you found this item.</a>";
                 
                 echo "</div>";
             }
