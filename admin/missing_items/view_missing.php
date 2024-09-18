@@ -151,7 +151,7 @@ if (isset($_GET['id'])) {
                 $timeMissing = htmlspecialchars($row['time_missing'] ?? '');
                 
                 if ($avatar) {
-                    $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
+                    $fullAvatar = 'ramonianlostgems.com/uploads/avatars/' . $avatar;
                     echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                 } else {
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
@@ -163,18 +163,12 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
-                echo "<p>Image path: " . htmlspecialchars($fullImagePath) . "</p>";
 
-                if (!empty($images)) {
+                if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
-                    foreach ($images as $imagePath) {
-                        // Define a full path without relying on base_url
-                        $fullImagePath = '/uploads/items/' . htmlspecialchars($imagePath);
-                        // Output the image element with the Lightbox attributes
-                        echo "<a href='" . $fullImagePath . "' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Image'>
-                                <img src='" . $fullImagePath . "' alt='Image'>
-                              </a>";
+                    foreach ($msgData['images'] as $imagePath) {
+                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
                     }
                     echo "</div>";
                 }
