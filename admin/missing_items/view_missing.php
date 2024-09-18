@@ -33,7 +33,10 @@ if (isset($_GET['id'])) {
             LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
             WHERE mi.id = ?
             GROUP BY mi.id, um.email, um.college, um.avatar"); // Group by all non-aggregated columns
-    
+     if ($row['image_path']) {
+        $fullImagePath = base_url . 'uploads/items/' . $row['image_path'];
+        $messages[$row['id']]['images'][] = $fullImagePath;
+    }
     $stmt->bind_param('i', $itemId); // Bind the integer value
     $stmt->execute();
     $result = $stmt->get_result();
@@ -151,7 +154,7 @@ if (isset($_GET['id'])) {
                 $timeMissing = htmlspecialchars($row['time_missing'] ?? '');
                 
                 if ($avatar) {
-                    $fullAvatar = 'ramonianlostgems.com/uploads/avatars/' . $avatar;
+                    $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                     echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                 } else {
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
