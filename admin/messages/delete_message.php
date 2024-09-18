@@ -1,31 +1,26 @@
 <?php
 include '../../config.php';
-error_reporting(0);
 
-$response = array('success' => false, 'error' => '');
+// Check if the request is a POST request and the ID is set
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
+    $message_id = intval($_POST['id']);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['id'])) {
-        $messageId = intval($_POST['id']);
-        $sql = "DELETE FROM message_history WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $messageId);
-        
-        if ($stmt->execute()) {
-            $response['success'] = true;
-        } else {
-            $response['error'] = 'Failed to delete the message.';
-        }
-        $stmt->close();
+    // Prepare and execute the delete query
+    $stmt = $conn->prepare("DELETE FROM message_history WHERE id = ?");
+    $stmt->bind_param("i", $message_id);
+
+    if ($stmt->execute()) {
+        // If delete was successful, return a JSON response
+        echo json_encode(['success' => true]);
     } else {
-        $response['error'] = 'Invalid request.';
+        // If delete failed, return a JSON error message
+        echo json_encode(['success' => false, 'error' => 'Failed to delete the message']);
     }
-} else {
-    $response['error'] = 'Invalid request method.';
-}
 
-// Ensure nothing else is output before the JSON
-header('Content-Type: application/json');
-echo json_encode($response);
+    $stmt->close();
+} else {
+    // If the request method is incorrect or ID is not set, return an error
+    echo json_encode(['success' => false, 'error' => 'Invalid request']);
+}
 
 $conn->close();
