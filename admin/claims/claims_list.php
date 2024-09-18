@@ -2,10 +2,6 @@
 include '../../config.php';
 
 // Check if admin is logged in
-if (!isset($_SESSION['admin_id'])) {
-    header('Location: admin_login.php');
-    exit();
-}
 
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
