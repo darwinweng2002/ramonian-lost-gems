@@ -43,20 +43,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     // Handle file uploads
-    foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-        $fileName = basename($_FILES['images']['name'][$key]);
-        $targetFilePath = $uploadDir . $fileName;
-
-        if (move_uploaded_file($tmpName, $targetFilePath)) {
-            $stmt = $conn->prepare("INSERT INTO message_images (message_id, image_path) VALUES (?, ?)");
-            $stmt->bind_param("is", $messageId, $fileName); // Store just the filename in DB
-            $stmt->execute();
-            $stmt->close();
-            $uploadedFiles[] = $targetFilePath;
-        } else {
-            $error = "Failed to upload file: " . $fileName;
-        }
+    $maxFileSize = 50 * 1024 * 1024; // 50MB
+foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+    $fileName = basename($_FILES['images']['name'][$key]);
+    $fileSize = $_FILES['images']['size'][$key];
+    $fileType = $_FILES['images']['type'][$key];
+    $targetFilePath = $uploadDir . $fileName;
+    if ($fileSize > $maxFileSize) {
+        $error = "File " . $fileName . " exceeds the maximum file size of 50MB.";
+        break;
     }
+
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!in_array($fileType, $allowedTypes)) {
+        $error = "File type not allowed for file " . $fileName;
+        break;
+    }
+    if (move_uploaded_file($tmpName, $targetFilePath)) {
+        $stmt = $conn->prepare("INSERT INTO message_images (message_id, image_path) VALUES (?, ?)");
+        $stmt->bind_param("is", $messageId, $fileName); // Store just the filename in DB
+        $stmt->execute();
+        $stmt->close();
+        $uploadedFiles[] = $targetFilePath;
+    } else {
+        $error = "Failed to upload file: " . $fileName;
+    }
+}
 
     // Success or error message for SweetAlert
     $alertMessage = isset($error) ? $error : "Your report has been successfully submitted!";
