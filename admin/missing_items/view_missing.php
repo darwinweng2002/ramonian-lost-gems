@@ -141,7 +141,6 @@ if (isset($_GET['id'])) {
                 $images = explode(',', $row['images']); // Convert image paths to an array
 
                 echo "<div class='message-box'>";
-                $firstName = htmlspecialchars($row['first_name'] ?? '');
                 $email = htmlspecialchars($row['email'] ?? '');
                 $college = htmlspecialchars($row['college'] ?? '');
                 $title = htmlspecialchars($row['title'] ?? '');
@@ -149,45 +148,42 @@ if (isset($_GET['id'])) {
                 $description = htmlspecialchars($row['description'] ?? '');
                 $avatar = htmlspecialchars($row['avatar'] ?? '');
                 $timeMissing = htmlspecialchars($row['time_missing'] ?? '');
-                if ($row['image_path']) {
-                    $fullImagePath = base_url . 'uploads/items/' . $row['image_path'];
-                    $messages[$row['id']]['images'][] = $fullImagePath;
-                }
-            }
-            
+
+                // Avatar logic
                 if ($avatar) {
-                    $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
+                    $fullAvatar = '/uploads/avatars/' . $avatar;
                     echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                 } else {
-                    echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                    echo "<img src='/uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
-                
-                echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
+
+                echo "<p><strong>Email:</strong> " . $email . "</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
-                
+
+                // Image grid for missing item images
                 if (!empty($images)) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
                     foreach ($images as $imagePath) {
-                        $fullImagePath = '/uploads/items/' . htmlspecialchars($imagePath);  // Directly construct the image path
-                        echo "<a href='" . htmlspecialchars($fullImagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'>
+                        $fullImagePath = '/uploads/items/' . htmlspecialchars($imagePath);
+                        echo "<a href='" . htmlspecialchars($fullImagePath) . "' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Image'>
                                 <img src='" . htmlspecialchars($fullImagePath) . "' alt='Image'>
                               </a>";
                     }
                     echo "</div>";
                 }
-                
-                
-                
-                // Add both buttons
+
+                // Publish and Delete buttons
                 echo "<button class='publish-btn' data-id='" . htmlspecialchars($row['id']) . "'>Publish</button>";
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
                 echo "</div>";
             }
+        } else {
+            echo "<p>No missing item found.</p>";
         }
         ?>
     </div>
