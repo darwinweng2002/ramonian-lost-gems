@@ -35,12 +35,11 @@ $result = $stmt->get_result();
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Open Sans', sans-serif;
-            font: 16px;
-            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            color: #333;
+            padding-top: 70px; /* Adjust this according to the height of your navbar */
+            background-color: #f4f4f4;
         }
         .container {
             margin: 30px auto;
@@ -71,6 +70,39 @@ $result = $stmt->get_result();
         .message-box img:hover {
             transform: scale(1.1);
         }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .publish-btn {
+            background-color: #28a745; /* Green background color */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            right: 80px; /* Position it to the left of the delete button */
+        }
+        .publish-btn:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
         .container .avatar {
             width: 100px; /* Set the width of the avatar */
             height: 100px; /* Set the height of the avatar to the same value as width for a circle */
@@ -78,29 +110,6 @@ $result = $stmt->get_result();
             object-fit: cover; /* Ensures the image covers the circle without distortion */
             display: block; /* Ensures the image is displayed as a block element */
             margin-bottom: 10px; /* Adds space below the image if needed */
-        }
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-        }
-        .claim-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #3498db; /* Blue color */
-            border: none;
-            border-radius: 5px;
-            text-align: center;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-            margin-top: 10px;
-        }
-        .claim-button:hover {
-            background-color: #2980b9; /* Darker blue */
-            color: #fff;
         }
     </style>
 </head>
@@ -169,14 +178,11 @@ $result = $stmt->get_result();
                     }
                     echo "</div>";
                 }
-                
-                // Add Claim Request Button
-                echo "<a href='claim_request.php?id=" . urlencode($itemId) . "' class='claim-button'>Claim Request</a>";
-                
+                // Add both buttons
+                echo "<button class='publish-btn' data-id='" . htmlspecialchars($row['id']) . "'>Publish</button>";
+                echo "<button class='delete-btn' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
                 echo "</div>";
             }
-        } else {
-            echo "<p>No details available for this item.</p>";
         }
         ?>
     </div>
