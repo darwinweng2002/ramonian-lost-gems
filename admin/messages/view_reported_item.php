@@ -212,7 +212,7 @@ if ($message_id > 0) {
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
-                            alert('Message deleted successfully.');
+                            alert('Found item deleted successfully.');
                             location.reload();
                         } else {
                             alert('Failed to delete the message: ' + response.error);
@@ -236,7 +236,7 @@ if ($message_id > 0) {
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
-                            alert('Message published successfully.');
+                            alert('Found item published successfully.');
                             location.reload();
                         } else {
                             alert('Failed to publish the message: ' + response.error);
