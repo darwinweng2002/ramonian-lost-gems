@@ -149,7 +149,12 @@ if (isset($_GET['id'])) {
                 $description = htmlspecialchars($row['description'] ?? '');
                 $avatar = htmlspecialchars($row['avatar'] ?? '');
                 $timeMissing = htmlspecialchars($row['time_missing'] ?? '');
-                
+                if ($row['image_path']) {
+                    $fullImagePath = base_url . 'uploads/items/' . $row['image_path'];
+                    $messages[$row['id']]['images'][] = $fullImagePath;
+                }
+            }
+            
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                     echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
