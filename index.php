@@ -50,7 +50,7 @@ if (isset($_POST['guest_login'])) {
     $_SESSION['email'] = 'guest@example.com';  // This can be any guest identifier
 
     // Redirect guest user to the main page
-    header("Location: https://ramonianlostgems.com/lostgemramonian/");
+    header("Location: https://ramonianlostgems.com/main.php");
     exit();
 }
 ?>
