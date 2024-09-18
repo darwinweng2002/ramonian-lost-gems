@@ -156,11 +156,7 @@ if (isset($_GET['id'])) {
                 $timeMissing = htmlspecialchars($row['time_missing'] ?? '');
                 $contact = htmlspecialchars($row['contact'] ?? '');
                 $categoryName = htmlspecialchars($row['category_name'] ?? '');
-                if ($row['image_path']) {
-                    // Construct the correct URL to the image
-                    $fullImagePath = base_url . 'uploads/missing_items/' . $row['image_path'];
-                    $items[$row['id']]['images'][] = $fullImagePath;
-                } 
+                
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                     echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
