@@ -274,29 +274,40 @@ if (isset($_SESSION['user_id'])) {
     <?php require_once('inc/footer.php') ?>
 
     <script>
-       function previewImages() {
-        const previewContainer = document.getElementById('imagePreviewContainer');
-        const validationMessage = document.getElementById('fileValidationMessage');
-        const files = document.getElementById('images').files;
-        
-        previewContainer.innerHTML = ''; // Clear previous previews
-        validationMessage.style.display = 'none'; // Hide validation message
+       // Add this JavaScript function to validate the file size before upload
+function previewImages() {
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const validationMessage = document.getElementById('fileValidationMessage');
+    const files = document.getElementById('images').files;
+    const maxSize = 50 * 1024 * 1024; // 50MB in bytes
 
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const img = document.createElement('img');
-                    img.src = event.target.result;
-                    previewContainer.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                validationMessage.style.display = 'block'; // Show validation message if file type is not supported
-            }
+    previewContainer.innerHTML = ''; // Clear previous previews
+    validationMessage.style.display = 'none'; // Hide validation message
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        // Check file size
+        if (file.size > maxSize) {
+            validationMessage.textContent = `File ${file.name} is too large. Maximum size is 50MB.`;
+            validationMessage.style.display = 'block';
+            return; // Stop further processing if file is too large
+        }
+
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            validationMessage.style.display = 'block'; // Show validation message if file type is not supported
         }
     }
+}
+
 
         <?php if (isset($alertMessage)): ?>
             Swal.fire({
