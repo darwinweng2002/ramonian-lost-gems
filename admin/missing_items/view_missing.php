@@ -2,7 +2,7 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
 
 // Check connection
 if ($conn->connect_error) {
@@ -26,19 +26,21 @@ if (isset($_GET['id'])) {
                 mi.created_at, 
                 um.email, 
                 um.college,
-                um.avatar, 
+                um.avatar,
+                mi.contact,
+                c.name AS category_name,
                 GROUP_CONCAT(mii.image_path) AS images 
             FROM missing_items mi
             LEFT JOIN user_member um ON mi.user_id = um.id
+            LEFT JOIN categories c ON mi.category_id = c.id
             LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
             WHERE mi.id = ?
-            GROUP BY mi.id, um.email, um.college, um.avatar");
-
+            GROUP BY mi.id, um.email, um.college, um.avatar, mi.contact, c.name"); // Group by all non-aggregated columns
+    
     $stmt->bind_param('i', $itemId); // Bind the integer value
     $stmt->execute();
     $result = $stmt->get_result();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -149,6 +151,8 @@ if (isset($_GET['id'])) {
                 $description = htmlspecialchars($row['description'] ?? '');
                 $avatar = htmlspecialchars($row['avatar'] ?? '');
                 $timeMissing = htmlspecialchars($row['time_missing'] ?? '');
+                $contact = htmlspecialchars($row['contact'] ?? '');
+                $categoryName = htmlspecialchars($row['category_name'] ?? '');
                 
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
@@ -163,6 +167,8 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
+                echo "<p><strong>Contact:</strong> " . $contact . "</p>";
+                echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 
                 if (!empty($images)) {
                     echo "<p><strong>Images:</strong></p>";
@@ -179,8 +185,6 @@ if (isset($_GET['id'])) {
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
                 echo "</div>";
             }
-        } else {
-            echo "<p>No details available for this item.</p>";
         }
         ?>
     </div>
@@ -195,7 +199,7 @@ if (isset($_GET['id'])) {
       $(document).ready(function() {
         $('.delete-btn').on('click', function() {
             var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to delete this item?')) {
+            if (confirm('Are you sure you want to delete this missing item?')) {
                 $.ajax({
                     url: 'delete_message.php',
                     type: 'POST',
@@ -238,6 +242,7 @@ if (isset($_GET['id'])) {
         });
       });
     </script>
+    <?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
 
