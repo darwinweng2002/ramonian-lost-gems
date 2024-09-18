@@ -46,10 +46,10 @@ if (isset($_GET['id'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php require_once('../inc/header.php') ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Missing Item Details</title>
+    <title>Missing Items - Admin View</title>
+    <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
         body {
@@ -132,48 +132,35 @@ if (isset($_GET['id'])) {
     </style>
 </head>
 <body>
-<?php require_once('../inc/topBarNav.php') ?>
+    <?php require_once('../inc/topBarNav.php'); ?>
+    <?php require_once('../inc/navigation.php'); ?>
+
     <div class="container">
-        <br>
-        <br>
-        <br>
-        <h1>Missing item details.</h1>
+        <h1>View Missing Item Details</h1>
         <?php
-        if ($result->num_rows > 0) {
-            $items = [];
+
+
+        
+        if ($result && $result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                if (!isset($items[$row['id']])) {
-                    $items[$row['id']] = [
-                        'description' => $row['description'],
-                        'last_seen_location' => $row['last_seen_location'],
-                        'time_missing' => $row['time_missing'],
-                        'title' => $row['title'],
-                        'first_name' => $row['first_name'],
-                        'college' => $row['college'],
-                        'email' => $row['email'],
-                        'avatar' => $row['avatar'],
-                        'images' => []
-                    ];
-                }
+                $images = explode(',', $row['images']); // Convert image paths to an array
+
+                echo "<div class='message-box'>";
+                $firstName = htmlspecialchars($row['first_name'] ?? '');
+                $email = htmlspecialchars($row['email'] ?? '');
+                $college = htmlspecialchars($row['college'] ?? '');
+                $title = htmlspecialchars($row['title'] ?? '');
+                $lastSeenLocation = htmlspecialchars($row['last_seen_location'] ?? '');
+                $description = htmlspecialchars($row['description'] ?? '');
+                $avatar = htmlspecialchars($row['avatar'] ?? '');
+                $timeMissing = htmlspecialchars($row['time_missing'] ?? '');
+                $contact = htmlspecialchars($row['contact'] ?? '');
+                $categoryName = htmlspecialchars($row['category_name'] ?? '');
                 if ($row['image_path']) {
                     // Construct the correct URL to the image
                     $fullImagePath = base_url . 'uploads/missing_items/' . $row['image_path'];
                     $items[$row['id']]['images'][] = $fullImagePath;
-                }
-            }
-            
-            foreach ($items as $itemId => $itemData) {
-                $firstName = htmlspecialchars($itemData['first_name'] ?? '');
-                $email = htmlspecialchars($itemData['email'] ?? '');
-                $college = htmlspecialchars($itemData['college'] ?? '');
-                $title = htmlspecialchars($itemData['title'] ?? '');
-                $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
-                $description = htmlspecialchars($itemData['description'] ?? '');
-                $avatar = htmlspecialchars($itemData['avatar'] ?? '');
-                $timeMissing = htmlspecialchars($itemData['time_missing'] ?? ''); // Fetch date and time
-                
-                echo "<div class='message-box'>";
-                
+                } 
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                     echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
@@ -181,18 +168,22 @@ if (isset($_GET['id'])) {
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
                 
-                echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
+                echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
-                echo "<p><strong>Date and Time Missing:</strong> " . $timeMissing . "</p>"; // Display date and time
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
+                echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
+                echo "<p><strong>Contact:</strong> " . $contact . "</p>";
+                echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 
-                if (!empty($itemData['images'])) {
+                if (!empty($images)) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
-                    foreach ($itemData['images'] as $imagePath) {
-                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='item-" . htmlspecialchars($itemId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
+                    foreach ($images as $imagePath) {
+                        $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($imagePath);
+                        // Add Lightbox attributes
+                        echo "<a href='" . $fullImagePath . "' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Image'></a>";
                     }
                     echo "</div>";
                 }
@@ -215,7 +206,7 @@ if (isset($_GET['id'])) {
       $(document).ready(function() {
         $('.delete-btn').on('click', function() {
             var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to delete this message?')) {
+            if (confirm('Are you sure you want to delete this missing item?')) {
                 $.ajax({
                     url: 'delete_message.php',
                     type: 'POST',
@@ -223,15 +214,14 @@ if (isset($_GET['id'])) {
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
-                            alert('Message deleted successfully.');
+                            alert('Missing item deleted successfully.');
                             location.reload();
                         } else {
-                            alert('Failed to delete the message: ' + response.error);
+                            alert('Failed to delete the missing item: ' + response.error);
                         }
                     },
                     error: function(xhr, status, error) {
                         console.error("AJAX error:", status, error);
-                        alert('An error occurred: ' + error);
                     }
                 });
             }
@@ -239,33 +229,31 @@ if (isset($_GET['id'])) {
 
         $('.publish-btn').on('click', function() {
             var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to publish this message?')) {
-                $.ajax({
-                    url: 'publish_message.php',
-                    type: 'POST',
-                    data: { id: messageId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            alert('Message published successfully.');
-                            location.reload();
-                        } else {
-                            alert('Failed to publish the message: ' + response.error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX error:", status, error);
-                        alert('An error occurred: ' + error);
+            $.ajax({
+                url: 'publish_message.php',
+                type: 'POST',
+                data: { id: messageId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        alert('Missing item published successfully.');
+                        location.reload();
+                    } else {
+                        alert('Failed to publish the missing item: ' + response.error);
                     }
-                });
-            }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX error:", status, error);
+                }
+            });
         });
-
       });
     </script>
+    <?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
-<?php require_once('../inc/footer.php') ?>
+
 <?php
+$stmt->close();
 $conn->close();
 ?>
