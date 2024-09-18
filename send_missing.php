@@ -256,7 +256,8 @@ if (isset($_SESSION['user_id'])) {
         </form>
     </div>
     <script>
-      function previewImages() {
+       // Add this JavaScript function to validate the file size before upload
+function previewImages() {
     const previewContainer = document.getElementById('imagePreviewContainer');
     const validationMessage = document.getElementById('fileValidationMessage');
     const files = document.getElementById('images').files;
@@ -289,6 +290,7 @@ if (isset($_SESSION['user_id'])) {
     }
 }
 
+
         <?php if (isset($alertMessage)): ?>
             Swal.fire({
                 icon: '<?php echo isset($error) ? 'error' : 'success'; ?>',
@@ -297,6 +299,9 @@ if (isset($_SESSION['user_id'])) {
                 confirmButtonText: 'OK'
             });
         <?php endif; ?>
+        document.getElementById('category_id').addEventListener('change', function() {
+    document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
+});
     </script>
     <?php require_once('inc/footer.php') ?>
 </body>
