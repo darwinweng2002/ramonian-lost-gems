@@ -26,21 +26,19 @@ if (isset($_GET['id'])) {
                 mi.created_at, 
                 um.email, 
                 um.college,
-                um.avatar,
-                mi.contact,
-                c.name AS category_name,
+                um.avatar, 
                 GROUP_CONCAT(mii.image_path) AS images 
             FROM missing_items mi
             LEFT JOIN user_member um ON mi.user_id = um.id
-            LEFT JOIN categories c ON mi.category_id = c.id
             LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
             WHERE mi.id = ?
-            GROUP BY mi.id, um.email, um.college, um.avatar, mi.contact, c.name"); // Group by all non-aggregated columns
+            GROUP BY mi.id, um.email, um.college, um.avatar"); // Group by all non-aggregated columns
     
     $stmt->bind_param('i', $itemId); // Bind the integer value
     $stmt->execute();
     $result = $stmt->get_result();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -151,8 +149,6 @@ if (isset($_GET['id'])) {
                 $description = htmlspecialchars($row['description'] ?? '');
                 $avatar = htmlspecialchars($row['avatar'] ?? '');
                 $timeMissing = htmlspecialchars($row['time_missing'] ?? '');
-                $contact = htmlspecialchars($row['contact'] ?? '');
-                $categoryName = htmlspecialchars($row['category_name'] ?? '');
                 
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
@@ -167,8 +163,6 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
-                echo "<p><strong>Contact:</strong> " . $contact . "</p>";
-                echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 
                 if (!empty($images)) {
                     echo "<p><strong>Images:</strong></p>";
@@ -199,7 +193,7 @@ if (isset($_GET['id'])) {
       $(document).ready(function() {
         $('.delete-btn').on('click', function() {
             var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to delete this missing item?')) {
+            if (confirm('Are you sure you want to delete this message?')) {
                 $.ajax({
                     url: 'delete_message.php',
                     type: 'POST',
@@ -207,14 +201,15 @@ if (isset($_GET['id'])) {
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
-                            alert('Missing item deleted successfully.');
+                            alert('Message deleted successfully.');
                             location.reload();
                         } else {
-                            alert('Failed to delete the missing item: ' + response.error);
+                            alert('Failed to delete the message: ' + response.error);
                         }
                     },
                     error: function(xhr, status, error) {
                         console.error("AJAX error:", status, error);
+                        alert('An error occurred: ' + error);
                     }
                 });
             }
@@ -222,31 +217,33 @@ if (isset($_GET['id'])) {
 
         $('.publish-btn').on('click', function() {
             var messageId = $(this).data('id');
-            $.ajax({
-                url: 'publish_message.php',
-                type: 'POST',
-                data: { id: messageId },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        alert('Missing item published successfully.');
-                        location.reload();
-                    } else {
-                        alert('Failed to publish the missing item: ' + response.error);
+            if (confirm('Are you sure you want to publish this message?')) {
+                $.ajax({
+                    url: 'publish_message.php',
+                    type: 'POST',
+                    data: { id: messageId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Message published successfully.');
+                            location.reload();
+                        } else {
+                            alert('Failed to publish the message: ' + response.error);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX error:", status, error);
+                        alert('An error occurred: ' + error);
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX error:", status, error);
-                }
-            });
+                });
+            }
         });
+
       });
     </script>
-    <?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
-
+<?php require_once('../inc/footer.php') ?>
 <?php
-$stmt->close();
 $conn->close();
 ?>
