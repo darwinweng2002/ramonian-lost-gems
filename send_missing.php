@@ -29,11 +29,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->execute();
     $missingItemId = $stmt->insert_id;
     $stmt->close();
-
-    // Handle file uploads
-    foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-        $fileName = basename($_FILES['images']['name'][$key]);
-        $targetFilePath = $uploadDir . $fileName;
+ // Handle file uploads
+ $maxFileSize = 50 * 1024 * 1024; // 50MB
+ foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+     $fileName = basename($_FILES['images']['name'][$key]);
+     $fileSize = $_FILES['images']['size'][$key];
+     $fileType = $_FILES['images']['type'][$key];
+     $targetFilePath = $uploadDir . $fileName;
+     if ($fileSize > $maxFileSize) {
+         $error = "File " . $fileName . " exceeds the maximum file size of 50MB.";
+         break;
+     }
+ 
+     $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+     if (!in_array($fileType, $allowedTypes)) {
+         $error = "File type not allowed for file " . $fileName;
+         break;
+     }
 
         if (move_uploaded_file($tmpName, $targetFilePath)) {
             $stmt = $conn->prepare("INSERT INTO missing_item_images (missing_item_id, image_path) VALUES (?, ?)");
@@ -204,29 +216,38 @@ if (isset($_SESSION['user_id'])) {
         </form>
     </div>
     <script>
-       function previewImages() {
-        const previewContainer = document.getElementById('imagePreviewContainer');
-        const validationMessage = document.getElementById('fileValidationMessage');
-        const files = document.getElementById('images').files;
-        
-        previewContainer.innerHTML = ''; // Clear previous previews
-        validationMessage.style.display = 'none'; // Hide validation message
+      function previewImages() {
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const validationMessage = document.getElementById('fileValidationMessage');
+    const files = document.getElementById('images').files;
+    const maxSize = 50 * 1024 * 1024; // 50MB in bytes
 
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const img = document.createElement('img');
-                    img.src = event.target.result;
-                    previewContainer.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                validationMessage.style.display = 'block'; // Show validation message if file type is not supported
-            }
+    previewContainer.innerHTML = ''; // Clear previous previews
+    validationMessage.style.display = 'none'; // Hide validation message
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        // Check file size
+        if (file.size > maxSize) {
+            validationMessage.textContent = `File ${file.name} is too large. Maximum size is 50MB.`;
+            validationMessage.style.display = 'block';
+            return; // Stop further processing if file is too large
+        }
+
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            validationMessage.style.display = 'block'; // Show validation message if file type is not supported
         }
     }
+}
 
         <?php if (isset($alertMessage)): ?>
             Swal.fire({
