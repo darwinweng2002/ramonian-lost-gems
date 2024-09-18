@@ -125,39 +125,41 @@ if ($message_id > 0) {
         <h1>View Details</h1>
         <?php
         if ($result->num_rows > 0) {
-            $items = [];
+            $messages = [];
             while ($row = $result->fetch_assoc()) {
-                if (!isset($items[$row['id']])) {
-                    $items[$row['id']] = [
-                        'description' => $row['description'],
-                        'last_seen_location' => $row['last_seen_location'],
-                        'time_missing' => $row['time_missing'],
-                        'title' => $row['title'],
+                if (!isset($messages[$row['id']])) {
+                    $messages[$row['id']] = [
+                        'message' => $row['message'], 
+                        'images' => [],
                         'first_name' => $row['first_name'],
+                        'landmark' => $row['landmark'],
+                        'title' => $row['title'],
                         'college' => $row['college'],
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
-                        'images' => []
+                        'contact' => $row['contact'],
+                        'time_found' => $row['time_found'],
+                        'category_name' => $row['category_name']  // Add this line to include category name
                     ];
                 }
                 if ($row['image_path']) {
-                    // Construct the correct URL to the image
-                    $fullImagePath = base_url . 'uploads/missing_items/' . $row['image_path'];
-                    $items[$row['id']]['images'][] = $fullImagePath;
+                    $fullImagePath = base_url . 'uploads/items/' . $row['image_path'];
+                    $messages[$row['id']]['images'][] = $fullImagePath;
                 }
             }
             
-            foreach ($items as $itemId => $itemData) {
-                $firstName = htmlspecialchars($itemData['first_name'] ?? '');
-                $email = htmlspecialchars($itemData['email'] ?? '');
-                $college = htmlspecialchars($itemData['college'] ?? '');
-                $title = htmlspecialchars($itemData['title'] ?? '');
-                $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
-                $description = htmlspecialchars($itemData['description'] ?? '');
-                $avatar = htmlspecialchars($itemData['avatar'] ?? '');
-                $timeMissing = htmlspecialchars($itemData['time_missing'] ?? ''); // Fetch date and time
-                
+            foreach ($messages as $msgId => $msgData) {
                 echo "<div class='message-box'>";
+                $firstName = htmlspecialchars($msgData['first_name'] ?? '');
+                $email = htmlspecialchars($msgData['email'] ?? '');
+                $college = htmlspecialchars($msgData['college'] ?? '');
+                $title = htmlspecialchars($msgData['title'] ?? '');
+                $landmark = htmlspecialchars($msgData['landmark'] ?? '');
+                $message = htmlspecialchars($msgData['message'] ?? '');
+                $avatar = htmlspecialchars($msgData['avatar'] ?? '');
+                $contact = htmlspecialchars($msgData['contact'] ?? '');
+                $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
+                $categoryName = htmlspecialchars($msgData['category_name'] ?? ''); // Add this line to display category name
                 
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
@@ -166,18 +168,20 @@ if ($message_id > 0) {
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
                 
-                echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
+                echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
-                echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
-                echo "<p><strong>Date and Time Missing:</strong> " . $timeMissing . "</p>"; // Display date and time
+                echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
-                echo "<p><strong>Description:</strong> " . $description . "</p>";
+                echo "<p><strong>Category:</strong> " . $categoryName . "</p>"; // Display category name
+                echo "<p><strong>Description:</strong> " . $message . "</p>";
+                echo "<p><strong>Contact:</strong> " . $contact . "</p>"; // Display contact number
+                echo "<p><strong>Time Found:</strong> " . $timeFound . "</p>";
                 
-                if (!empty($itemData['images'])) {
+                if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
-                    foreach ($itemData['images'] as $imagePath) {
-                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='item-" . htmlspecialchars($itemId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
+                    foreach ($msgData['images'] as $imagePath) {
+                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
                     }
                     echo "</div>";
                 }
@@ -199,29 +203,28 @@ if ($message_id > 0) {
     <script>
       $(document).ready(function() {
         $('.delete-btn').on('click', function() {
-    var messageId = $(this).data('id');
-    if (confirm('Are you sure you want to delete this message?')) {
-        $.ajax({
-            url: 'delete_message.php',
-            type: 'POST',
-            data: { id: messageId },
-            dataType: 'json', // Expect a JSON response from the server
-            success: function(response) {
-                if (response.success) {
-                    alert('Message deleted successfully.');
-                    location.reload(); // Reload the page to reflect the deletion
-                } else {
-                    alert('Failed to delete the message: ' + response.error);
-                }
-            },
-            error: function(xhr, status, error) {
-                // Handle cases where the server returns an error
-                console.error("AJAX error:", status, error);
-                alert('An error occurred: ' + error);
+            var messageId = $(this).data('id');
+            if (confirm('Are you sure you want to delete this message?')) {
+                $.ajax({
+                    url: 'delete_message.php',
+                    type: 'POST',
+                    data: { id: messageId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Message deleted successfully.');
+                            location.reload();
+                        } else {
+                            alert('Failed to delete the message: ' + response.error);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX error:", status, error);
+                        alert('An error occurred: ' + error);
+                    }
+                });
             }
         });
-    }
-});
 
         $('.publish-btn').on('click', function() {
             var messageId = $(this).data('id');
