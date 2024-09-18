@@ -66,7 +66,7 @@
 
 }
 .logo img {
-    margin-top: 5px;
+    margin-top: 2px;
     margin-right: 0;
     width: 60px;
     height: 60px;
