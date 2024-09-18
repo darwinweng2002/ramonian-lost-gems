@@ -2,27 +2,45 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli('localhost','u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get item ID from URL
-$itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+// Initialize $result as null
+$result = null;
 
-// SQL query to get missing item details and associated images
-$sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi.title, um.first_name, um.college, um.email, um.avatar, imi.image_path
-        FROM missing_items mi
-        LEFT JOIN user_member um ON mi.user_id = um.id
-        LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
-        WHERE mi.id = ?";
+if (isset($_GET['id'])) {
+    $itemId = $_GET['id'];
 
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('i', $itemId);
-$stmt->execute();
-$result = $stmt->get_result();
+    // Prepare the SQL statement
+    $stmt = $conn->prepare("SELECT 
+                mi.id, 
+                mi.title, 
+                mi.description, 
+                mi.last_seen_location, 
+                mi.time_missing, 
+                mi.status, 
+                mi.created_at, 
+                um.email, 
+                um.college,
+                um.avatar,
+                mi.contact,
+                c.name AS category_name,
+                GROUP_CONCAT(mii.image_path) AS images 
+            FROM missing_items mi
+            LEFT JOIN user_member um ON mi.user_id = um.id
+            LEFT JOIN categories c ON mi.category_id = c.id
+            LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
+            WHERE mi.id = ?
+            GROUP BY mi.id, um.email, um.college, um.avatar, mi.contact, c.name"); // Group by all non-aggregated columns
+    
+    $stmt->bind_param('i', $itemId); // Bind the integer value
+    $stmt->execute();
+    $result = $stmt->get_result();
+}
 ?>
 
 <!DOCTYPE html>
