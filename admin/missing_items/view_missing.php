@@ -164,16 +164,16 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
                 
-
-                if (!empty($msgData['images'])) {
+                if (!empty($images)) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
-                    foreach ($msgData['images'] as $imagePath) {
-                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
+                    foreach ($images as $imagePath) {
+                        $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($imagePath);
+                        // Add Lightbox attributes
+                        echo "<a href='" . $fullImagePath . "' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Image'></a>";
                     }
                     echo "</div>";
                 }
-                
                 // Add both buttons
                 echo "<button class='publish-btn' data-id='" . htmlspecialchars($row['id']) . "'>Publish</button>";
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
