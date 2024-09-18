@@ -21,29 +21,35 @@ if (isset($_GET['search'])) {
     $searchTerm = trim($conn->real_escape_string($_GET['search']));
 }
 
-// SQL queries for found items with search functionality
-$sqlFound = "SELECT mh.id, mh.title, GROUP_CONCAT(mi.image_path) AS image_paths
+// SQL query for found items with extended search functionality
+$sqlFound = "SELECT mh.id, mh.title, mh.category_name, mh.time_found, mh.message, GROUP_CONCAT(mi.image_path) AS image_paths
              FROM message_history mh
              LEFT JOIN message_images mi ON mh.id = mi.message_id
              WHERE mh.is_published = 1";
 
-// Only filter by title (removed description)
+// Search across title, category, time_found, and description
 if ($searchTerm) {
-    $sqlFound .= " AND mh.title LIKE '%$searchTerm%'";
+    $sqlFound .= " AND (mh.title LIKE '%$searchTerm%' 
+                      OR mh.category_name LIKE '%$searchTerm%'
+                      OR mh.time_found LIKE '%$searchTerm%'
+                      OR mh.message LIKE '%$searchTerm%')";
 }
 
 $sqlFound .= " GROUP BY mh.id
                ORDER BY mh.id DESC";
 
-// SQL queries for missing items with search functionality
-$sqlMissing = "SELECT mi.id, mi.title, GROUP_CONCAT(mii.image_path) AS image_paths
+// SQL query for missing items with extended search functionality
+$sqlMissing = "SELECT mi.id, mi.title, mi.category_name, mi.time_last_seen, mi.description, GROUP_CONCAT(mii.image_path) AS image_paths
                FROM missing_items mi
                LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
                WHERE mi.status = 'Published'";
 
-// Only filter by title (removed description)
+// Search across title, category, time_last_seen, and description
 if ($searchTerm) {
-    $sqlMissing .= " AND mi.title LIKE '%$searchTerm%'";
+    $sqlMissing .= " AND (mi.title LIKE '%$searchTerm%'
+                       OR mi.category_name LIKE '%$searchTerm%'
+                       OR mi.time_last_seen LIKE '%$searchTerm%'
+                       OR mi.description LIKE '%$searchTerm%')";
 }
 
 $sqlMissing .= " GROUP BY mi.id
