@@ -1,5 +1,11 @@
 <?php
-include '../../config.php';
+include '../config.php';
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to login page if not logged in
+    header('Location: login.php'); // Adjust this path if necessary
+    exit();
+}
 
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
@@ -9,53 +15,38 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Initialize $result as null
-$result = null;
+// Get item ID from URL
+$itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-if (isset($_GET['id'])) {
-    $itemId = $_GET['id'];
+// SQL query to get missing item details and associated images
+$sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi.title, um.first_name, um.college, um.email, um.avatar, imi.image_path
+        FROM missing_items mi
+        LEFT JOIN user_member um ON mi.user_id = um.id
+        LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
+        WHERE mi.id = ?";
 
-    // Prepare the SQL statement
-    $stmt = $conn->prepare("SELECT 
-                mi.id, 
-                mi.title, 
-                mi.description, 
-                mi.last_seen_location, 
-                mi.time_missing, 
-                mi.status, 
-                mi.created_at, 
-                um.email, 
-                um.college,
-                um.avatar, 
-                GROUP_CONCAT(mii.image_path) AS images 
-            FROM missing_items mi
-            LEFT JOIN user_member um ON mi.user_id = um.id
-            LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
-            WHERE mi.id = ?
-            GROUP BY mi.id, um.email, um.college, um.avatar"); // Group by all non-aggregated columns
-    
-    $stmt->bind_param('i', $itemId); // Bind the integer value
-    $stmt->execute();
-    $result = $stmt->get_result();
-}
-
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $itemId);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<?php require_once('../inc/header.php') ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Missing Items - Admin View</title>
-    <?php require_once('../inc/header.php'); ?>
+    <title>Missing Item Details</title>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Open Sans', sans-serif;
+            font: 16px;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            padding-top: 70px; /* Adjust this according to the height of your navbar */
-            background-color: #f4f4f4;
+            color: #333;
         }
         .container {
             margin: 30px auto;
@@ -86,39 +77,6 @@ if (isset($_GET['id'])) {
         .message-box img:hover {
             transform: scale(1.1);
         }
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-        }
-        .delete-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-        }
-        .delete-btn:hover {
-            background-color: #c82333;
-        }
-        .publish-btn {
-            background-color: #28a745; /* Green background color */
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            position: absolute;
-            bottom: 20px;
-            right: 80px; /* Position it to the left of the delete button */
-        }
-        .publish-btn:hover {
-            background-color: #218838; /* Darker green on hover */
-        }
         .container .avatar {
             width: 100px; /* Set the width of the avatar */
             height: 100px; /* Set the height of the avatar to the same value as width for a circle */
@@ -127,17 +85,40 @@ if (isset($_GET['id'])) {
             display: block; /* Ensures the image is displayed as a block element */
             margin-bottom: 10px; /* Adds space below the image if needed */
         }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .claim-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #3498db; /* Blue color */
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        .claim-button:hover {
+            background-color: #2980b9; /* Darker blue */
+            color: #fff;
+        }
     </style>
 </head>
 <body>
-    <?php require_once('../inc/topBarNav.php'); ?>
-    <?php require_once('../inc/navigation.php'); ?>
-
+<?php require_once('../inc/topBarNav.php') ?>
     <div class="container">
-        <h1>View Missing Item Details</h1>
-        
+        <br>
+        <br>
+        <br>
+        <h1>Missing item details.</h1>
         <?php
-        if ($result->num_rows > 0) 
+        if ($result->num_rows > 0) {
             $items = [];
             while ($row = $result->fetch_assoc()) {
                 if (!isset($items[$row['id']])) {
@@ -159,54 +140,49 @@ if (isset($_GET['id'])) {
                     $items[$row['id']]['images'][] = $fullImagePath;
                 }
             }
-        if ($result && $result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $images = explode(',', $row['images']); // Convert image paths to an array
-
+            
+            foreach ($items as $itemId => $itemData) {
+                $firstName = htmlspecialchars($itemData['first_name'] ?? '');
+                $email = htmlspecialchars($itemData['email'] ?? '');
+                $college = htmlspecialchars($itemData['college'] ?? '');
+                $title = htmlspecialchars($itemData['title'] ?? '');
+                $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
+                $description = htmlspecialchars($itemData['description'] ?? '');
+                $avatar = htmlspecialchars($itemData['avatar'] ?? '');
+                $timeMissing = htmlspecialchars($itemData['time_missing'] ?? ''); // Fetch date and time
+                
                 echo "<div class='message-box'>";
-                $email = htmlspecialchars($row['email'] ?? '');
-                $college = htmlspecialchars($row['college'] ?? '');
-                $title = htmlspecialchars($row['title'] ?? '');
-                $lastSeenLocation = htmlspecialchars($row['last_seen_location'] ?? '');
-                $description = htmlspecialchars($row['description'] ?? '');
-                $avatar = htmlspecialchars($row['avatar'] ?? '');
-                $timeMissing = htmlspecialchars($row['time_missing'] ?? '');
-
-                // Avatar logic
+                
                 if ($avatar) {
-                    $fullAvatar = '/uploads/avatars/' . $avatar;
+                    $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                     echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                 } else {
-                    echo "<img src='/uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                    echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
-
-                echo "<p><strong>Email:</strong> " . $email . "</p>";
+                
+                echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
+                echo "<p><strong>Date and Time Missing:</strong> " . $timeMissing . "</p>"; // Display date and time
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
-                echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
-
-                // Image grid for missing item images
-                if (!empty($images)) {
+                
+                if (!empty($itemData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
-                    foreach ($images as $imagePath) {
-                        $fullImagePath = '/uploads/items/' . htmlspecialchars($imagePath);
-                        echo "<a href='" . htmlspecialchars($fullImagePath) . "' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Image'>
-                                <img src='" . htmlspecialchars($fullImagePath) . "' alt='Image'>
-                              </a>";
+                    foreach ($itemData['images'] as $imagePath) {
+                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='item-" . htmlspecialchars($itemId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
                     }
                     echo "</div>";
                 }
-
-                // Publish and Delete buttons
-                echo "<button class='publish-btn' data-id='" . htmlspecialchars($row['id']) . "'>Publish</button>";
-                echo "<button class='delete-btn' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
+                
+                // Add Claim Request Button
+                echo "<a href='claim_request.php?id=" . urlencode($itemId) . "' class='claim-button'>Claim Request</a>";
+                
                 echo "</div>";
             }
         } else {
-            echo "<p>No missing item found.</p>";
+            echo "<p>No details available for this item.</p>";
         }
         ?>
     </div>
