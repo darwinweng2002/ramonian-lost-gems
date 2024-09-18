@@ -168,15 +168,14 @@ if (isset($_GET['id'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
                     foreach ($images as $imagePath) {
-                        // Construct the full path manually (make sure the path points to your images folder)
-                        $fullImagePath = '/uploads/items/' . htmlspecialchars($imagePath);
-                        // Output the image element with the Lightbox attributes
+                        $fullImagePath = '/uploads/items/' . htmlspecialchars($imagePath);  // Directly construct the image path
                         echo "<a href='" . htmlspecialchars($fullImagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'>
                                 <img src='" . htmlspecialchars($fullImagePath) . "' alt='Image'>
                               </a>";
                     }
                     echo "</div>";
                 }
+                
                 
                 
                 // Add both buttons
