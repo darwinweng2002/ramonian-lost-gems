@@ -248,12 +248,10 @@ if (isset($_SESSION['user_id'])) {
             <label for="last_seen_location">Last Seen Location:</label>
             <input type="text" name="last_seen_location" id="last_seen_location" placeholder="Location where the item was last seen" required>
             <label for="contact">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone">
-                <path d="M22 16.77a7.41 7.41 0 0 0-1.63-1.92c-.54-.54-1.18-1.09-1.92-1.63-1.12-.77-2.37-1.27-3.65-1.27s-2.53.5-3.65 1.27a14.1 14.1 0 0 1-3.25-3.25C3.58 11.59 3.09 10.34 2.33 9.22a8.06 8.06 0 0 1 .3-6.64c.51-.81 1.06-1.59 1.74-2.27.28-.27.5-.59.69-.95.18-.36.24-.76.2-1.17-.05-.42-.21-.83-.46-1.16-2.54-2.54-6.23-2.54-8.77 0-.49.49-.68 1.24-.5 1.87s.82 1.22 1.37 1.66a14.04 14.04 0 0 1 1.72 1.68c.48.46 1.02.78 1.6.99a1.14 1.14 0 0 1 1.1-.3 6.76 6.76 0 0 1 2.06-2.07c.53-.44 1.09-.76 1.72-.98s1.31-.25 1.95-.06a1.14 1.14 0 0 1 .59 1.14c.03.41.09.83.2 1.24.09.26.22.49.4.71.48.48.68 1.12.54 1.78s-.68 1.22-1.23 1.56c-1.41.79-2.87 1.19-4.35 1.28-.54.03-1.09.1-1.62.23-.16.02-.32.06-.48.08a1.04 1.04 0 0 1-.44.05c-.29.03-.58.09-.85.17s-.54.14-.79.27c-.27.13-.55.31-.76.53s-.36.45-.46.71c-.09.29-.14.6-.14.92 0 .52.1 1.04.29 1.54.39 1.05.97 2.05 1.71 2.91a8.18 8.18 0 0 1 .68 1.13c.44.83.9 1.63 1.41 2.38s1.03 1.42 1.62 2.1c.52.62 1.08 1.21 1.7 1.76s1.23 1.18 1.8 1.77c.67.59 1.31 1.21 2.02 1.81.6.53 1.23 1.02 1.83 1.52s1.21.96 1.79 1.46a2.32 2.32 0 0 0 3.28-.62 2.32 2.32 0 0 0-.62-3.28c-.5-.58-1.02-1.15-1.5-1.69a13.84 13.84 0 0 0-1.61-1.74c-.73-.61-1.48-1.14-2.24-1.67-.8-.56-1.56-1.17-2.27-1.82a1.14 1.14 0 0 1-.38-.9c.04-.46.2-.93.45-1.3s.59-.72 1-.99a10.13 10.13 0 0 1 1.68-.7c.55-.09 1.11-.17 1.66-.17a7.41 7.41 0 0 0 5.32-2.05z"/>
-            </svg> Contact Information:
-        </label>
-        <input type="text" name="contact" id="contact" placeholder="Enter contact information" maxlength="11" required>
-        <div class="error" id="contactError">Please enter a valid mobile number.</div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone">
+                    <path d="M22 16.77a7.41 7.41 0 0 0-1.63-1.92c-.54-.54-1.18-1.09-1.92-1.63-1.12-.77-2.37-1.27-3.65-1.27s-2.53.5-3.65 1.27a14.1 14.1 0 0 1-3.25-3.25C3.58 11.59 3.09 10.34 2.33 9.22a8.06 8.06 0 0 1 .3-6.64c.51-.81 1.06-1.59 1.74-2.27.28-.27.5-.59.69-.95.18-.36.24-.76.2-1.17-.05-.42-.21-.83-.46-1.16-2.54-2.54-6.23-2.54-8.77 0-.49.49-.68 1.24-.5 1.87s.82 1.22 1.37 1.66a14.04 14.04 0 0 1 1.72 1.68c.48.46 1.02.78 1.6.99a1.14 1.14 0 0 1 1.1-.3 6.76 6.76 0 0 1 2.06-2.07c.53-.44 1.09-.76 1.72-.98s1.31-.25 1.95-.06a1.14 1.14 0 0 1 .59 1.14c.03.41.09.83.2 1.24.09.26.22.49.4.71.48.48.68 1.12.54 1.78s-.68 1.22-1.23 1.56c-1.41.79-2.87 1.19-4.35 1.28-.54.03-1.09.1-1.62.23-.16.02-.32.06-.48.08a1.04 1.04 0 0 1-.44.05c-.29.03-.58.09-.85.17s-.54.14-.79.27c-.27.13-.55.31-.76.53s-.36.45-.46.71c-.09.29-.14.6-.14.92 0 .52.1 1.04.29 1.54.39 1.05.97 2.05 1.71 2.91a8.18 8.18 0 0 1 .68 1.13c.44.83.9 1.63 1.41 2.38s1.03 1.42 1.62 2.1c.52.62 1.08 1.21 1.7 1.76s1.23 1.18 1.8 1.77c.67.59 1.31 1.21 2.02 1.81.6.53 1.23 1.02 1.83 1.52s1.21.96 1.79 1.46a2.32 2.32 0 0 0 3.28-.62 2.32 2.32 0 0 0-.62-3.28c-.5-.58-1.02-1.15-1.5-1.69a13.84 13.84 0 0 0-1.61-1.74c-.73-.61-1.48-1.14-2.24-1.67-.8-.56-1.56-1.17-2.27-1.82a1.14 1.14 0 0 1-.38-.9c.04-.46.2-.93.45-1.3s.59-.72 1-.99a10.13 10.13 0 0 1 1.68-.7c.55-.09 1.11-.17 1.66-.17a7.41 7.41 0 0 0 5.32-2.05z"/>
+                </svg> Contact Information:
+            </label>
             <input type="text" name="contact" id="contact" placeholder="Enter contact information" required>
             <label for="time_missing">Time Missing:</label>
             <input type="datetime-local" name="time_missing" id="time_missing" required>
@@ -311,18 +309,6 @@ function previewImages() {
         document.getElementById('category_id').addEventListener('change', function() {
     document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
 });
-document.getElementById('contactForm').addEventListener('submit', function(event) {
-            const contactInput = document.getElementById('contact');
-            const errorDiv = document.getElementById('contactError');
-            const phoneRegex = /^(\+63|0)[1-9]\d{9}$/; // Adjust this regex if needed
-            
-            if (!phoneRegex.test(contactInput.value)) {
-                errorDiv.style.display = 'block';
-                event.preventDefault(); // Prevent form submission
-            } else {
-                errorDiv.style.display = 'none';
-            }
-        });
     </script>
     <?php require_once('inc/footer.php') ?>
 </body>
