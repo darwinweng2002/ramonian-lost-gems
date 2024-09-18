@@ -1,31 +1,35 @@
 <?php
 include '../config.php';
 // Check if user is logged in
-
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to login page if not logged in
+    header('Location: login.php'); // Adjust this path if necessary
+    exit();
+}
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');// Replace with your actual DB connection details
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-if (isset($_GET['id'])) {
-    $itemId = $_GET['id'];
+// Get item ID from URL
+$itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get missing item details and associated images
-$sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi.title, um.first_name, um.college, um.email, um.avatar, imi.image_path
+$sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi.title, um.first_name, um.college, um.email, um.avatar, mi.contact, c.name as category_name, imi.image_path
         FROM missing_items mi
         LEFT JOIN user_member um ON mi.user_id = um.id
         LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
+        LEFT JOIN categories c ON mi.category_id = c.id
         WHERE mi.id = ?";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
 $stmt->execute();
 $result = $stmt->get_result();
-}
 ?>
 
 <!DOCTYPE html>
@@ -128,7 +132,9 @@ $result = $stmt->get_result();
                         'college' => $row['college'],
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
-                        'images' => []
+                        'images' => [],
+                        'contact' => $row['contact'],
+                        'category_name' => $row['category_name']
                     ];
                 }
                 if ($row['image_path']) {
@@ -147,6 +153,8 @@ $result = $stmt->get_result();
                 $description = htmlspecialchars($itemData['description'] ?? '');
                 $avatar = htmlspecialchars($itemData['avatar'] ?? '');
                 $timeMissing = htmlspecialchars($itemData['time_missing'] ?? ''); // Fetch date and time
+                $contact = htmlspecialchars($itemData['contact'] ?? '');
+                $categoryName = htmlspecialchars($itemData['category_name'] ?? '');
                 
                 echo "<div class='message-box'>";
                 
@@ -163,6 +171,8 @@ $result = $stmt->get_result();
                 echo "<p><strong>Date and Time Missing:</strong> " . $timeMissing . "</p>"; // Display date and time
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
+                echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
+                echo "<p><strong>Contact:</strong> " . $contact . "</p>";
                 
                 if (!empty($itemData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
@@ -183,60 +193,11 @@ $result = $stmt->get_result();
         }
         ?>
     </div>
-    
+    <?php require_once('../inc/footer.php') ?>
     <script src="../js/jquery.min.js"></script> <!-- Ensure this path is correct -->
     <script src="../js/bootstrap.min.js"></script> <!-- Ensure this path is correct -->
     <script src="../js/custom.js"></script> <!-- Ensure this path is correct -->
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
-
-    <script>
-      $(document).ready(function() {
-        $('.delete-btn').on('click', function() {
-            var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to delete this missing item?')) {
-                $.ajax({
-                    url: 'delete_message.php',
-                    type: 'POST',
-                    data: { id: messageId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            alert('Missing item deleted successfully.');
-                            location.reload();
-                        } else {
-                            alert('Failed to delete the missing item: ' + response.error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX error:", status, error);
-                    }
-                });
-            }
-        });
-
-        $('.publish-btn').on('click', function() {
-            var messageId = $(this).data('id');
-            $.ajax({
-                url: 'publish_message.php',
-                type: 'POST',
-                data: { id: messageId },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        alert('Missing item published successfully.');
-                        location.reload();
-                    } else {
-                        alert('Failed to publish the missing item: ' + response.error);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX error:", status, error);
-                }
-            });
-        });
-      });
-    </script>
-    <?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
 
