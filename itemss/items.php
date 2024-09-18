@@ -27,9 +27,9 @@ $sqlFound = "SELECT mh.id, mh.title, GROUP_CONCAT(mi.image_path) AS image_paths
              LEFT JOIN message_images mi ON mh.id = mi.message_id
              WHERE mh.is_published = 1";
 
-// Add search filter if a search term exists
+// Only filter by title (removed description)
 if ($searchTerm) {
-    $sqlFound .= " AND (mh.title LIKE '%$searchTerm%' OR mh.description LIKE '%$searchTerm%')";
+    $sqlFound .= " AND mh.title LIKE '%$searchTerm%'";
 }
 
 $sqlFound .= " GROUP BY mh.id
@@ -41,8 +41,9 @@ $sqlMissing = "SELECT mi.id, mi.title, GROUP_CONCAT(mii.image_path) AS image_pat
                LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
                WHERE mi.status = 'Published'";
 
+// Only filter by title (removed description)
 if ($searchTerm) {
-    $sqlMissing .= " AND (mi.title LIKE '%$searchTerm%' OR mi.description LIKE '%$searchTerm%')";
+    $sqlMissing .= " AND mi.title LIKE '%$searchTerm%'";
 }
 
 $sqlMissing .= " GROUP BY mi.id
