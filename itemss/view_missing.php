@@ -1,11 +1,7 @@
 <?php
 include '../config.php';
 // Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    // Redirect to login page if not logged in
-    header('Location: login.php'); // Adjust this path if necessary
-    exit();
-}
+
 
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
@@ -15,8 +11,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get item ID from URL
-$itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+if (isset($_GET['id'])) {
+    $itemId = $_GET['id'];
 
 // SQL query to get missing item details and associated images
 $sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi.title, um.first_name, um.college, um.email, um.avatar, imi.image_path
@@ -29,6 +25,7 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
 $stmt->execute();
 $result = $stmt->get_result();
+}
 ?>
 
 <!DOCTYPE html>
