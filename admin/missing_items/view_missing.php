@@ -135,7 +135,30 @@ if (isset($_GET['id'])) {
 
     <div class="container">
         <h1>View Missing Item Details</h1>
+        
         <?php
+        if ($result->num_rows > 0) 
+            $items = [];
+            while ($row = $result->fetch_assoc()) {
+                if (!isset($items[$row['id']])) {
+                    $items[$row['id']] = [
+                        'description' => $row['description'],
+                        'last_seen_location' => $row['last_seen_location'],
+                        'time_missing' => $row['time_missing'],
+                        'title' => $row['title'],
+                        'first_name' => $row['first_name'],
+                        'college' => $row['college'],
+                        'email' => $row['email'],
+                        'avatar' => $row['avatar'],
+                        'images' => []
+                    ];
+                }
+                if ($row['image_path']) {
+                    // Construct the correct URL to the image
+                    $fullImagePath = base_url . 'uploads/missing_items/' . $row['image_path'];
+                    $items[$row['id']]['images'][] = $fullImagePath;
+                }
+            }
         if ($result && $result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $images = explode(',', $row['images']); // Convert image paths to an array
