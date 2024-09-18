@@ -33,10 +33,7 @@ if (isset($_GET['id'])) {
             LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
             WHERE mi.id = ?
             GROUP BY mi.id, um.email, um.college, um.avatar"); // Group by all non-aggregated columns
-     if ($row['image_path']) {
-        $fullImagePath = base_url . 'uploads/items/' . $row['image_path'];
-        $messages[$row['id']]['images'][] = $fullImagePath;
-    }
+    
     $stmt->bind_param('i', $itemId); // Bind the integer value
     $stmt->execute();
     $result = $stmt->get_result();
@@ -166,6 +163,7 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
+                
 
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
