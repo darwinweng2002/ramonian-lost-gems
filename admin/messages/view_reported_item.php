@@ -14,23 +14,20 @@ $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($message_id > 0) {
     // SQL query to fetch the details of the selected message by its ID
-    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.time_found, c.name as category_name
+    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.time_found, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN user_member um ON mh.user_id = um.id
         LEFT JOIN categories c ON mh.category_id = c.id
         WHERE mh.id = $message_id";
 
-
-
-// Fetch only the selected message
+    // Fetch only the selected message
     $result = $conn->query($sql);
 } else {
     echo "Invalid message ID.";
     exit;
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -41,7 +38,7 @@ if ($message_id > 0) {
     <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
-         body {
+        body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -97,68 +94,27 @@ if ($message_id > 0) {
             background-color: #c82333;
         }
         .publish-btn {
-    background-color: #28a745; /* Green background color */
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    position: absolute;
-    bottom: 20px;
-    right: 80px; /* Position it to the left of the delete button */
-}
-.publish-btn:hover {
-    background-color: #218838; /* Darker green on hover */
-}
-.message-box {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-    position: relative;
-}
-
-.delete-btn, .publish-btn {
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    position: absolute;
-    bottom: 20px;
-}
-
-.delete-btn {
-    background-color: #dc3545;
-    color: white;
-    right: 20px; /* Position the delete button */
-}
-
-.delete-btn:hover {
-    background-color: #c82333;
-}
-
-.publish-btn {
-    background-color: #28a745;
-    color: white;
-    right: 90px; /* Adjust this value to create space between buttons */
-}
-
-.publish-btn:hover {
-    background-color: #218838;
-}
-/* CSS for the avatar images */
-/* CSS for the avatar images */
-/* Ensure that your avatar images are styled correctly */
-.container .avatar {
-    width: 100px; /* Set the width of the avatar */
-    height: 100px; /* Set the height of the avatar to the same value as width for a circle */
-    border-radius: 100%; /* Makes the image circular */
-    object-fit: cover; /* Ensures the image covers the circle without distortion */
-    display: block; /* Ensures the image is displayed as a block element */
-    margin-bottom: 10px; /* Adds space below the image if needed */
-}
-
-
+            background-color: #28a745; /* Green background color */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            right: 80px; /* Position it to the left of the delete button */
+        }
+        .publish-btn:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+        .container .avatar {
+            width: 100px; /* Set the width of the avatar */
+            height: 100px; /* Set the height of the avatar to the same value as width for a circle */
+            border-radius: 100%; /* Makes the image circular */
+            object-fit: cover; /* Ensures the image covers the circle without distortion */
+            display: block; /* Ensures the image is displayed as a block element */
+            margin-bottom: 10px; /* Adds space below the image if needed */
+        }
     </style>
 </head>
 <body>
@@ -181,6 +137,7 @@ if ($message_id > 0) {
                         'college' => $row['college'],
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
+                        'contact' => $row['contact'],
                         'time_found' => $row['time_found'],
                         'category_name' => $row['category_name']  // Add this line to include category name
                     ];
@@ -191,7 +148,6 @@ if ($message_id > 0) {
                 }
             }
             
-            
             foreach ($messages as $msgId => $msgData) {
                 echo "<div class='message-box'>";
                 $firstName = htmlspecialchars($msgData['first_name'] ?? '');
@@ -201,6 +157,7 @@ if ($message_id > 0) {
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                 $message = htmlspecialchars($msgData['message'] ?? '');
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
+                $contact = htmlspecialchars($msgData['contact'] ?? '');
                 $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
                 $categoryName = htmlspecialchars($msgData['category_name'] ?? ''); // Add this line to display category name
                 
@@ -217,6 +174,7 @@ if ($message_id > 0) {
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>"; // Display category name
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
+                echo "<p><strong>Contact:</strong> " . $contact . "</p>"; // Display contact number
                 echo "<p><strong>Time Found:</strong> " . $timeFound . "</p>";
                 
                 if (!empty($msgData['images'])) {
@@ -231,7 +189,6 @@ if ($message_id > 0) {
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($msgId) . "'>Delete</button>";
                 echo "</div>";
             }
-            
             
         }
         ?>

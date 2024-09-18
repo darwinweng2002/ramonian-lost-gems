@@ -19,10 +19,12 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get published item details
-$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar 
+$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar, 
+        mh.contact, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN user_member um ON mh.user_id = um.id
+        LEFT JOIN categories c ON mh.category_id = c.id
         WHERE mh.is_published = 1 AND mh.id = ?
         ORDER BY mh.id DESC";
 
@@ -38,8 +40,7 @@ $result = $stmt->get_result();
 <?php require_once('../inc/header.php') ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Found Item Details</title>
-    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
+    <title>Published Item Details</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -113,10 +114,7 @@ $result = $stmt->get_result();
 <body>
 <?php require_once('../inc/topBarNav.php') ?>
     <div class="container">
-        <br>
-        <br>
-        <br>
-        <h1>Found item details.</h1>
+        <h1>Found Items</h1>
         <?php
         if ($result->num_rows > 0) {
             $messages = [];
@@ -131,7 +129,9 @@ $result = $stmt->get_result();
                         'college' => $row['college'],
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
-                        'time_found' => $row['time_found']
+                        'time_found' => $row['time_found'],
+                        'contact' => $row['contact'],
+                        'category_name' => $row['category_name']
                     ];
                 }
                 if ($row['image_path']) {
@@ -150,21 +150,24 @@ $result = $stmt->get_result();
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                 $message = htmlspecialchars($msgData['message'] ?? '');
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
-                $timeFound = htmlspecialchars($msgData['time_found'] ?? ''); // Fetch date and time
-                
+                $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
+                $contact = htmlspecialchars($msgData['contact'] ?? '');
+                $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
+
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                     echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                 } else {
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
-                
+                echo "<p><strong>Title:</strong> " . $title . "</p>";
+                echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
-                echo "<p><strong>Date and Time Found:</strong> " . $timeFound . "</p>"; // Display date and time
-                echo "<p><strong>Title:</strong> " . $title . "</p>";
+                echo "<p><strong>Date and Time Found:</strong> " . $timeFound . "</p>";
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
+                echo "<p><strong>Contact:</strong> " . $contact . "</p>";
                 
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
@@ -178,7 +181,6 @@ $result = $stmt->get_result();
                 // Add Claim Request Button
                 echo "<a href='claim_request.php?id=" . urlencode($msgId) . "' class='claim-button'>Claim Request</a>";
 
-                
                 echo "</div>";
             }
         } else {
@@ -187,10 +189,6 @@ $result = $stmt->get_result();
         ?>
     </div>
     <?php require_once('../inc/footer.php') ?>
-    <script src="../js/jquery.min.js"></script> <!-- Ensure this path is correct -->
-    <script src="../js/bootstrap.min.js"></script> <!-- Ensure this path is correct -->
-    <script src="../js/custom.js"></script> <!-- Ensure this path is correct -->
-    <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 </body>
 </html>
 
