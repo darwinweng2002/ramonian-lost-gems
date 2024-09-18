@@ -163,17 +163,22 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
-                
+                echo "<p>Image path: " . htmlspecialchars($fullImagePath) . "</p>";
+
                 if (!empty($images)) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
                     foreach ($images as $imagePath) {
-                        $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($imagePath);
-                        // Add Lightbox attributes
-                        echo "<a href='" . $fullImagePath . "' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Image'></a>";
+                        // Define a full path without relying on base_url
+                        $fullImagePath = '/uploads/items/' . htmlspecialchars($imagePath);
+                        // Output the image element with the Lightbox attributes
+                        echo "<a href='" . $fullImagePath . "' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Image'>
+                                <img src='" . $fullImagePath . "' alt='Image'>
+                              </a>";
                     }
                     echo "</div>";
                 }
+                
                 // Add both buttons
                 echo "<button class='publish-btn' data-id='" . htmlspecialchars($row['id']) . "'>Publish</button>";
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
