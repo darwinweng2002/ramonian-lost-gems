@@ -2,7 +2,7 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
 // Check connection
 if ($conn->connect_error) {
@@ -32,8 +32,8 @@ if (isset($_GET['id'])) {
             LEFT JOIN user_member um ON mi.user_id = um.id
             LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
             WHERE mi.id = ?
-            GROUP BY mi.id, um.email, um.college, um.avatar"); // Group by all non-aggregated columns
-    
+            GROUP BY mi.id, um.email, um.college, um.avatar");
+
     $stmt->bind_param('i', $itemId); // Bind the integer value
     $stmt->execute();
     $result = $stmt->get_result();
@@ -179,6 +179,8 @@ if (isset($_GET['id'])) {
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
                 echo "</div>";
             }
+        } else {
+            echo "<p>No details available for this item.</p>";
         }
         ?>
     </div>
@@ -193,7 +195,7 @@ if (isset($_GET['id'])) {
       $(document).ready(function() {
         $('.delete-btn').on('click', function() {
             var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to delete this message?')) {
+            if (confirm('Are you sure you want to delete this item?')) {
                 $.ajax({
                     url: 'delete_message.php',
                     type: 'POST',
@@ -201,15 +203,14 @@ if (isset($_GET['id'])) {
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
-                            alert('Message deleted successfully.');
+                            alert('Missing item deleted successfully.');
                             location.reload();
                         } else {
-                            alert('Failed to delete the message: ' + response.error);
+                            alert('Failed to delete the missing item: ' + response.error);
                         }
                     },
                     error: function(xhr, status, error) {
                         console.error("AJAX error:", status, error);
-                        alert('An error occurred: ' + error);
                     }
                 });
             }
@@ -217,33 +218,30 @@ if (isset($_GET['id'])) {
 
         $('.publish-btn').on('click', function() {
             var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to publish this message?')) {
-                $.ajax({
-                    url: 'publish_message.php',
-                    type: 'POST',
-                    data: { id: messageId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            alert('Message published successfully.');
-                            location.reload();
-                        } else {
-                            alert('Failed to publish the message: ' + response.error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX error:", status, error);
-                        alert('An error occurred: ' + error);
+            $.ajax({
+                url: 'publish_message.php',
+                type: 'POST',
+                data: { id: messageId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        alert('Missing item published successfully.');
+                        location.reload();
+                    } else {
+                        alert('Failed to publish the missing item: ' + response.error);
                     }
-                });
-            }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX error:", status, error);
+                }
+            });
         });
-
       });
     </script>
 </body>
 </html>
-<?php require_once('../inc/footer.php') ?>
+
 <?php
+$stmt->close();
 $conn->close();
 ?>
