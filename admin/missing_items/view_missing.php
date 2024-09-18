@@ -138,9 +138,6 @@ if (isset($_GET['id'])) {
     <div class="container">
         <h1>View Missing Item Details</h1>
         <?php
-
-
-        
         if ($result && $result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $images = explode(',', $row['images']); // Convert image paths to an array
