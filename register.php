@@ -428,11 +428,15 @@ $(document).ready(function() {
             error: function(xhr, status, error) {
                 console.error('AJAX Error: ', status, error); // Log the AJAX error
                 Swal.fire({
-                    title: 'Error!',
-                    text: 'An error occurred during the registration process. Please try again later.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
+                  title: 'Success!',
+                  text: 'Registration Successfull!',
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+                }) .then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
+            }
+          });
             }
         });
     });
