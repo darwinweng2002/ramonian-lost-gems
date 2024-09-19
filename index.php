@@ -122,7 +122,7 @@ if (isset($_POST['guest_login'])) {
                   <form method="POST" action="">
                     <div class="col-12">
                       <br>
-                      <p>Want to skip the sign-in? Proceed as guest.
+                      <p style="text-align: center;">Guest access: For visitors and non-university users.
                       <button class="btn btn-secondary w-100" type="submit" name="guest_login" value="1">Login as Guest</button>
                       </p>
                     </div>
