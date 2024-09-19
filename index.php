@@ -82,6 +82,33 @@ if (isset($_POST['guest_login'])) {
       color: #fff;
       text-shadow: 0px 0px 10px #000;
     }
+     /* Loader CSS */
+  .loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+  }
+  
+  .loader {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
   </style>
   <main>
     <div class="container">
@@ -179,6 +206,9 @@ if (isset($_POST['guest_login'])) {
         </div>
       </section>
     </div>
+    <div id="loader" class="loader-wrapper" style="display:none;">
+  <div class="loader"></div>
+</div>
   </main>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
   <script src="<?= base_url ?>assets/js/jquery-3.6.4.min.js"></script>
@@ -203,10 +233,20 @@ if (isset($_POST['guest_login'])) {
           confirmButtonText: 'OK'
         });
       <?php endif; ?>
+      
+      // Show loader on form submission
+      $('form').on('submit', function(e) {
+          // Show the loader
+          $('#loader').show();
+      });
     });
+
     function handleCredentialResponse(response) {
         // This function handles the response from Google Sign-In
         const data = jwt_decode(response.credential);
+
+        // Show the loader
+        $('#loader').show();
 
         // Send the Google ID token to your server for verification and user registration/login
         $.post("google-signin.php", {
@@ -215,6 +255,7 @@ if (isset($_POST['guest_login'])) {
             last_name: data.family_name,
             email: data.email
         }, function(result) {
+            $('#loader').hide();  // Hide the loader after response
             if (result.success) {
                 // Redirect or notify the user
                 window.location.href = "dashboard.php";
@@ -228,11 +269,8 @@ if (isset($_POST['guest_login'])) {
             }
         });
     }
-  </script>
-  <script>
-  $(document).ready(function(){
-    end_loader();
-  })
 </script>
+
+ 
 </body>
 </html>
