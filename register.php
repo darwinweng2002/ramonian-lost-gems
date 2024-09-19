@@ -403,6 +403,7 @@ $(document).ready(function() {
             data: formData,
             dataType: 'json',
             success: function(response) {
+                console.log(response); // Log the response for debugging
                 if (response.success) {
                     Swal.fire({
                         title: 'Success!',
@@ -417,16 +418,17 @@ $(document).ready(function() {
                 } else {
                     Swal.fire({
                         title: 'Error!',
-                        text: response.message,
+                        text: response.message || 'An error occurred.',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
                 }
             },
             error: function(xhr, status, error) {
+                console.error('AJAX Error: ', status, error); // Log the AJAX error
                 Swal.fire({
                     title: 'Error!',
-                    text: 'An error occurred. Please try again.',
+                    text: 'An error occurred. Please try again later.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
@@ -434,6 +436,7 @@ $(document).ready(function() {
         });
     });
 });
+
 
 </script>
 
