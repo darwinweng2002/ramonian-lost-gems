@@ -238,10 +238,10 @@
 #sidebar-toggle-button {
     position: fixed;
     left: 0;
-    top: 20px; /* Adjust to align with your design */
+    top: 10px; /* Adjust to align with your design */
     background-color: #3498db; /* Professional color */
     color: white;
-    padding: 10px 20px;
+    padding: 20px 30px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
