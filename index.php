@@ -229,5 +229,10 @@ if (isset($_POST['guest_login'])) {
         });
     }
   </script>
+  <script>
+  $(document).ready(function(){
+    end_loader();
+  })
+</script>
 </body>
 </html>
