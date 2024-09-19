@@ -1,5 +1,5 @@
 <?php
-// Start the session at the very beginning
+session_start(); // Start the session at the very beginning
 
 // Include the database configuration file
 include 'config.php'; // Adjust the path if necessary
@@ -10,12 +10,12 @@ $error_message = '';
 // Check if the form is submitted for regular login
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
     // Get form data
-    $email = $_POST['email'] ?? ''; // Using null coalescing operator to avoid undefined array key notice
+    $username = $_POST['email'] ?? ''; // Using null coalescing operator to avoid undefined array key notice
     $password = $_POST['password'] ?? '';
 
     // Prepare and execute query
-    if ($stmt = $conn->prepare("SELECT id, password FROM user_member WHERE email = ?")) {
-        $stmt->bind_param("s", $email);
+    if ($stmt = $conn->prepare("SELECT id, password FROM user_member WHERE email = ?")) { // 'email' column is still used for usernames
+        $stmt->bind_param("s", $username);
         $stmt->execute();
         $stmt->store_result();
 
@@ -27,16 +27,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
             if (password_verify($password, $hashed_password)) {
                 // Password is correct, start a session
                 $_SESSION['user_id'] = $user_id;
-                $_SESSION['email'] = $email;  
+                $_SESSION['email'] = $username;  // Store the username in the session (same variable for compatibility)
 
                 // Redirect to a protected page
                 header("Location: https://ramonianlostgems.com/main.php");
                 exit();
             } else {
-                $error_message = 'Invalid email or password.';
+                $error_message = 'Invalid username or password.'; // Update message to reflect username
             }
         } else {
-            $error_message = 'No user found with that email.';
+            $error_message = 'No user found with that username.'; // Update message to reflect username
         }
     } else {
         $error_message = 'Error preparing statement: ' . $conn->error;
@@ -54,6 +54,7 @@ if (isset($_POST['guest_login'])) {
     exit();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
