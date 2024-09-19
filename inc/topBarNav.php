@@ -241,9 +241,9 @@
     top: 0; /* Adjust to align with your design */
     background-color: #3498db; /* Professional color */
     color: white;
-    padding: 15px 30px;
+    padding: 12px 30px;
     border: none;
-    border-radius: 4px;
+    border-radius: 2px;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     z-index: 10000; /* Make sure it's above other elements */
