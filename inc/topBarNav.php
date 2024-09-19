@@ -236,6 +236,7 @@
 
 /* Sidebar toggle button */
 #sidebar-toggle-button {
+    font-size: 20px;
     position: fixed;
     left: 0;
     top: 0; /* Adjust to align with your design */
