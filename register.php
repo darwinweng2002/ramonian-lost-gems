@@ -9,12 +9,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $course = $_POST['course'];
   $year = $_POST['year'];
   $section = $_POST['section'];
-  $email = $_POST['email'];
-  $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Encrypt the password
+  $username = $_POST['email']; // This is now the username field, but keep the variable name as 'email'
+  
+  // Check if passwords match
+  if ($_POST['password'] !== $_POST['confirm_password']) {
+      $response = ['success' => false, 'message' => 'Passwords do not match.'];
+      echo json_encode($response);
+      exit;
+  }
+
+  // Hash the password (limit length to 8 characters)
+  $password = password_hash(substr($_POST['password'], 0, 8), PASSWORD_BCRYPT); 
 
   // Prepare the SQL statement
   $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("ssssssss", $first_name, $last_name, $college, $course, $year, $section, $email, $password);
+  $stmt->bind_param("ssssssss", $first_name, $last_name, $college, $course, $year, $section, $username, $password);
 
   // Execute the query and check for success
   if ($stmt->execute()) {
@@ -30,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   echo json_encode($response);
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -346,78 +356,90 @@ function handleCredentialResponse(response) {
     }
   });
 }
- $(document).ready(function() {
+$(document).ready(function() {
     $('form').on('submit', function(e) {
-      e.preventDefault(); // Prevent the default form submission
+        e.preventDefault(); // Prevent the default form submission
 
-      // Check if all required fields are filled
-      var isValid = true;
-      $(this).find('input[required], select[required]').each(function() {
-        if ($.trim($(this).val()) === '') {
-          isValid = false;
-          $(this).addClass('is-invalid'); // Add bootstrap invalid class
-        } else {
-          $(this).removeClass('is-invalid'); // Remove bootstrap invalid class
-        }
-      });
-
-      if (!isValid) {
-        Swal.fire({
-          title: 'Error!',
-          text: 'Please fill all required fields.',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
-        return; // Exit the function if validation fails
-      }
-
-      // Collect form data
-      var formData = $(this).serialize();
-
-      // Submit form data using AJAX  
-      $.ajax({
-        url: 'register_process.php',
-        type: 'POST',
-        data: formData,
-        dataType: 'json',
-        success: function(response) {
-          console.log(response); // Log the response to check
-          if (response.success) {
-            Swal.fire({
-              title: 'Success!',
-              text: 'Registration successful!',
-              icon: 'success',
-              confirmButtonText: 'OK'
-            }).then((result) => {
-              if (result.isConfirmed) {
-                window.location.href = 'https://ramonianlostgems.com/login.php'; // Redirect or do something else
-              }
-            });
-          } else {
-            Swal.fire({
-              title: 'Error!',
-              text: response.message,
-              icon: 'error',
-              confirmButtonText: 'OK'
-            });
-          }
-        },
-        error: function(xhr, status, error) {
-          console.error('AJAX Error: ', status, error); // Log the AJAX error
-          Swal.fire({
-            title: 'Success!',
-            text: 'Registration Successfull!',
-            icon: 'success',
-            confirmButtonText: 'OK'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = 'https://ramonianlostgems.com/login.php'; // Redirect or do something else
+        // Check if all required fields are filled
+        var isValid = true;
+        $(this).find('input[required], select[required]').each(function() {
+            if ($.trim($(this).val()) === '') {
+                isValid = false;
+                $(this).addClass('is-invalid'); // Add bootstrap invalid class
+            } else {
+                $(this).removeClass('is-invalid'); // Remove bootstrap invalid class
             }
-          });
+        });
+
+        // Password confirmation validation
+        var password = $('#password').val();
+        var confirmPassword = $('#confirm_password').val();
+        if (password !== confirmPassword) {
+            isValid = false;
+            $('#confirm_password').addClass('is-invalid');
+            Swal.fire({
+                title: 'Error!',
+                text: 'Passwords do not match.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        } else {
+            $('#confirm_password').removeClass('is-invalid');
         }
-      });
+
+        if (!isValid) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please fill all required fields.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return; // Exit the function if validation fails
+        }
+
+        // Collect form data
+        var formData = $(this).serialize();
+
+        // Submit form data using AJAX  
+        $.ajax({
+            url: 'register_process.php',
+            type: 'POST',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Registration successful!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'https://ramonianlostgems.com/login.php';
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An error occurred. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
     });
-  });
+});
+
 </script>
 
 </body>
