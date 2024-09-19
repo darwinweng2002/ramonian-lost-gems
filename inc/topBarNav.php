@@ -259,23 +259,7 @@
 .header-nav .nav-link {
     text-decoration: none;
 }
-.logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
-.logo img {
-    margin-right: 8px;
-    width: 55px;
-    height: 55px;
-}
-
-.short_name {
-    font-size: 18px;
-    font-weight: bold;
-    color: #012970;
-}
 /* Responsive adjustments for sidebar */
 @media (max-width: 512px) {
     .container-lg {
