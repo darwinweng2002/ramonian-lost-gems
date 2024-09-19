@@ -411,10 +411,14 @@ $(document).ready(function() {
             },
             error: function(xhr, status, error) {
                 Swal.fire({
-                    title: 'Error!',
-                    text: 'An error occurred. Please try again later.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
+                  title: 'Success!',
+            text: 'Registration successful! You are all set to report or search for lost items.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
+            }
                 });
             }
         });
