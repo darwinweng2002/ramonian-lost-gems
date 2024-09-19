@@ -40,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,20 +54,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
   <style>
   .swal2-popup {
-    position: fixed !important; /* Fix position relative to viewport */
-    top: 50% !important;        /* Center vertically */
-    left: 50% !important;       /* Center horizontally */
-    transform: translate(-50%, -50%) !important; /* Adjust for exact center */
-    z-index: 9999 !important;   /* Ensure it appears above other elements */
-    overflow: auto;              /* Allow scrolling within the popup if needed */
+    position: fixed !important; 
+    top: 50% !important;        
+    left: 50% !important;       
+    transform: translate(-50%, -50%) !important; 
+    z-index: 9999 !important;   
+    overflow: auto;             
 }
 
-/* Optional: To ensure that the page content can be scrolled while the popup is visible */
-
-
-/* Optional: If you have any styles that could impact the body overflow */
 .swal2-overlay {
-    overflow: auto;             /* Allow scrolling of the page if necessary */
+    overflow: auto;             
 }
 body {
       overflow: auto;
@@ -100,118 +95,105 @@ body {
                     <h5 class="card-title text-center pb-0 fs-4">User Registration</h5>
                     <p class="text-center small">Fill in the form to create an account</p>
                   </div>
+                  
+                  <!-- Updated registration form -->
                   <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php">
-    <div class="col-12">
-        <label for="firstName" class="form-label">First Name</label>
-        <input type="text" name="first_name" class="form-control" id="firstName" required>
-        <div class="invalid-feedback">Please enter your first name.</div>
-    </div>
-    <div class="col-12">
-        <label for="lastName" class="form-label">Last Name</label>
-        <input type="text" name="last_name" class="form-control" id="lastName" required>
-        <div class="invalid-feedback">Please enter your last name.</div>
-    </div>
-    <div class="col-12">
-    <label for="college" class="form-label">College</label>
-    <select name="college" class="form-control" id="college" required>
-        <option value="" disabled selected>Select your college</option>
-        <option value="CABA">College of Accountancy and Business Administration</option>
-        <option value="CAS">College of Arts and Sciences</option>
-        <option value="CCIT">College of Communication and Information Technology</option>
-        <option value="CTE">College of Teacher Education</option>
-        <option value="CE">College of Engineering</option>
-        <option value="CIT">College of Industrial Technology</option>
-        <option value="CAF">College of Agriculture and Forestry</option>
-        <option value="NUR">College of Nursing</option>
-        <option value="CTHM">College of Tourism and Hospitality Management</option>
-    </select>
-    <div class="invalid-feedback">Please select your college.</div>
-</div>
-<div class="col-12">
-    <label for="course" class="form-label">Course</label>
-    <select name="course" class="form-control" id="course" required>
-        <option value="" disabled selected>Select your course</option>
-    </select>
-    <div class="invalid-feedback">Please select your course.</div>
-</div>
-
-    <div class="col-12">
-        <label for="year" class="form-label">Year</label>
-        <select name="year" class="form-control" id="year" required>
-            <option value="" disabled selected>Select your year</option>
-            <option value="1st - year">1st - year</option>
-            <option value="2nd - year">2nd - year</option>
-            <option value="3rd - year">3rd - year</option>
-            <option value="4th - year">4th - year</option>
-        </select>
-        <div class="invalid-feedback">Please select your year.</div>
-    </div>
-    <div class="col-12">
-        <label for="section" class="form-label">Section</label>
-        <select name="section" class="form-control" id="section" required>
-            <option value="" disabled selected>Select your section</option>
-            <option value="Section A">Section A</option>
-            <option value="Section B">Section B</option>
-            <option value="Section C">Section C</option>
-            <option value="Section D">Section D</option>
-            <option value="Section E">Section E</option>
-            <option value="Section F">Section F</option>
-        </select>
-        <div class="invalid-feedback">Please select your section.</div>
-    </div>
-    <div class="col-12">
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="verified" id="verified" required>
-            <label class="form-check-label" for="verified">Verified Student in PRMSU IBA Main Campus</label>
-            <div class="invalid-feedback">You must verify your student status.</div>
-        </div>
-    </div>
-    <div class="col-12">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" name="email" class="form-control" id="email" required>
-        <div class="invalid-feedback">Please enter a valid email address.</div>
-    </div>
-    <div class="col-12">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" name="password" class="form-control" id="password" required>
-        <div class="invalid-feedback">Please enter your password.</div>
-    </div>
-    <div class="col-12">
-        <button class="btn btn-primary w-100" type="submit">Register</button>
-    </div>
-</form>
+                      <div class="col-12">
+                          <label for="firstName" class="form-label">First Name</label>
+                          <input type="text" name="first_name" class="form-control" id="firstName" required>
+                          <div class="invalid-feedback">Please enter your first name.</div>
+                      </div>
+                      <div class="col-12">
+                          <label for="lastName" class="form-label">Last Name</label>
+                          <input type="text" name="last_name" class="form-control" id="lastName" required>
+                          <div class="invalid-feedback">Please enter your last name.</div>
+                      </div>
+                      <div class="col-12">
+                          <label for="college" class="form-label">College</label>
+                          <select name="college" class="form-control" id="college" required>
+                              <option value="" disabled selected>Select your college</option>
+                              <!-- Add your college options here -->
+                          </select>
+                          <div class="invalid-feedback">Please select your college.</div>
+                      </div>
+                      <div class="col-12">
+                          <label for="course" class="form-label">Course</label>
+                          <select name="course" class="form-control" id="course" required>
+                              <option value="" disabled selected>Select your course</option>
+                          </select>
+                          <div class="invalid-feedback">Please select your course.</div>
+                      </div>
+                      <div class="col-12">
+                          <label for="year" class="form-label">Year</label>
+                          <select name="year" class="form-control" id="year" required>
+                              <option value="" disabled selected>Select your year</option>
+                              <option value="1st - year">1st - year</option>
+                              <option value="2nd - year">2nd - year</option>
+                              <option value="3rd - year">3rd - year</option>
+                              <option value="4th - year">4th - year</option>
+                          </select>
+                          <div class="invalid-feedback">Please select your year.</div>
+                      </div>
+                      <div class="col-12">
+                          <label for="section" class="form-label">Section</label>
+                          <select name="section" class="form-control" id="section" required>
+                              <option value="" disabled selected>Select your section</option>
+                              <!-- Add your section options here -->
+                          </select>
+                          <div class="invalid-feedback">Please select your section.</div>
+                      </div>
+                      <!-- Updated username field -->
+                      <div class="col-12">
+                          <label for="email" class="form-label">Username</label> 
+                          <input type="text" name="email" class="form-control" id="email" pattern="[a-zA-Z0-9]+" required>
+                          <div class="invalid-feedback">Please enter a valid username (alphanumeric characters only).</div>
+                      </div>
+                      <!-- Updated password fields -->
+                      <div class="col-12">
+                          <label for="password" class="form-label">Password (Max 8 characters)</label>
+                          <input type="password" name="password" class="form-control" id="password" maxlength="8" required>
+                          <div class="invalid-feedback">Please enter a password (maximum 8 characters).</div>
+                      </div>
+                      <div class="col-12">
+                          <label for="confirm_password" class="form-label">Confirm Password</label>
+                          <input type="password" name="confirm_password" class="form-control" id="confirm_password" maxlength="8" required>
+                          <div class="invalid-feedback">Please confirm your password.</div>
+                      </div>
+                      <div class="col-12">
+                          <button class="btn btn-primary w-100" type="submit">Register</button>
+                      </div>
+                  </form>
+                  <!-- End form -->
+                  
                   <div id="g_id_onload"
-         data-client_id="462546722729-vflluo934lv9qei2jbeaqcib5sllh9t6.apps.googleusercontent.com"
-         data-context="signin"
-         data-ux_mode="popup"
-         data-callback="handleCredentialResponse"
-         data-auto_prompt="false">
-    </div>
-    <div class="g_id_signin"
-         data-type="standard"
-         data-shape="rectangular"
-         data-theme="outline"
-         data-text="signin_with"
-         data-size="large"
-         data-logo_alignment="left">
-    </div>
-</div>
-                </div>
+                       data-client_id="462546722729-vflluo934lv9qei2jbeaqcib5sllh9t6.apps.googleusercontent.com"
+                       data-context="signin"
+                       data-ux_mode="popup"
+                       data-callback="handleCredentialResponse"
+                       data-auto_prompt="false">
+                  </div>
+                  <div class="g_id_signin"
+                       data-type="standard"
+                       data-shape="rectangular"
+                       data-theme="outline"
+                       data-text="signin_with"
+                       data-size="large"
+                       data-logo_alignment="left">
+                  </div>
               </div>
-              <div class="col-12">
-              <footer>
-                <div class="copyright">
-                  &copy; Copyright <strong><span>Ramonian LostGems</span></strong>. All Rights Reserved
-                </div>
-                <div class="credits">
-                  <p style="text-align: center;">Developed by BSINFOTECH 3-C <a href="http://lostgemramonian/login.php">prmsuramonianlostgems.com</a></p>
-                  <a href="<?= base_url ?>">
-                    <center><img style="height: 55px; width: 55px;" src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo"></center>
-                  </a>
-                </div>
-              </footer>
             </div>
           </div>
+          <footer>
+            <div class="copyright">
+              &copy; Copyright <strong><span>Ramonian LostGems</span></strong>. All Rights Reserved
+            </div>
+            <div class="credits">
+              <p style="text-align: center;"><a href="http://lostgemramonian/login.php">ramonianlostgems.com</a></p>
+              <a href="<?= base_url ?>">
+                <center><img style="height: 55px; width: 55px;" src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo"></center>
+              </a>
+            </div>
+          </footer>
         </div>
       </section>
     </div>
