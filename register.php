@@ -112,7 +112,15 @@ body {
                           <label for="college" class="form-label">College</label>
                           <select name="college" class="form-control" id="college" required>
                               <option value="" disabled selected>Select your college</option>
-                              <!-- Add your college options here -->
+                              <option value="CABA">College of Accountancy and Business Administration</option>
+                              <option value="CAS">College of Arts and Sciences</option>
+                              <option value="CCIT">College of Communication and Information Technology</option>
+                              <option value="CTE">College of Teacher Education</option>
+                              <option value="CE">College of Engineering</option>
+                              <option value="CIT">College of Industrial Technology</option>
+                              <option value="CAF">College of Agriculture and Forestry</option>
+                              <option value="NUR">College of Nursing</option>
+                              <option value="CTHM">College of Tourism and Hospitality Management</option>
                           </select>
                           <div class="invalid-feedback">Please select your college.</div>
                       </div>
@@ -138,7 +146,12 @@ body {
                           <label for="section" class="form-label">Section</label>
                           <select name="section" class="form-control" id="section" required>
                               <option value="" disabled selected>Select your section</option>
-                              <!-- Add your section options here -->
+                              <option value="Section A">Section A</option>
+                              <option value="Section B">Section B</option>
+                              <option value="Section C">Section C</option>
+                              <option value="Section D">Section D</option>
+                              <option value="Section E">Section E</option>
+                              <option value="Section F">Section F</option>
                           </select>
                           <div class="invalid-feedback">Please select your section.</div>
                       </div>
