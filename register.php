@@ -157,24 +157,23 @@ body {
                       </div>
                       <!-- Updated username field -->
                       <div class="col-12">
-                          <label for="email" class="form-label">Username</label> 
-                          <input type="text" name="email" class="form-control" id="email" pattern="[a-zA-Z0-9]+" required>
-                          <div class="invalid-feedback">Please enter a valid username (alphanumeric characters only).</div>
+                      <label for="email" class="form-label">Username</label> 
+                      <input type="text" name="email" class="form-control" id="email" pattern="^[a-zA-Z0-9]+$" required>
+                      <div class="invalid-feedback">Please enter a valid username (alphanumeric characters only, no "@" or email-like formats).</div>
                       </div>
-                      <!-- Updated password fields -->
+                      <!-- Password and Confirm Password Fields -->
                       <div class="col-12">
-                      <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
-                      <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
-                      <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
-                  </div>
-                  <div class="col-12">
-                      <label for="confirm_password" class="form-label">Confirm Password</label>
-                      <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
-                      <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
-                  </div>
-                  <div class="col-12">
-                      <button class="btn btn-primary w-100" type="submit">Register</button>
-                  </div>
+                          <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
+                          <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
+                          <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
+                      </div>
+                      <div class="col-12">
+                          <label for="confirm_password" class="form-label">Confirm Password</label>
+                          <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
+                          <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
+                      </div>
+                      <div class="col-12">
+                          <button class="btn btn-primary w-100" type="submit">Register</button>
                   </form>
                   <!-- End form -->
                   
@@ -225,206 +224,224 @@ body {
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> <!-- Ensure jQuery is included -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-    // Define the courses for each college
-    const coursesByCollege = {
-        "CABA": [
-            "Bachelor of Science in Accountancy",
-            "Bachelor of Science in Accounting and Information System",
-            "Bachelor of Science in Business Administration - Marketing",
-            "Bachelor of Science in Business Administration - Financial Management",
-            "Bachelor of Science in Business Administration - Human Resource Development Management",
-            "Bachelor of Public Administration"
-        ],
-        "CAS": [
-            "Bachelor of Science in Biology",
-            "Bachelor of Science in Psychology"
-        ],
-        "CCIT": [
-            "Bachelor of Science in Computer Science",
-            "Bachelor of Science in Information Technology"
-        ],
-        "CTE": [
-            "Bachelor of Secondary Education - English Education",
-            "Bachelor of Secondary Education - Filipino Education",
-            "Bachelor of Secondary Education - Mathematics Education",
-            "Bachelor of Secondary Education - Science Education",
-            "Bachelor of Secondary Education - Social Studies Education",
-            "Bachelor of Elementary Education",
-            "Bachelor of Physical Education",
-            "Bachelor of Professional Education"
-        ],
-        "CE": [
-            "Bachelor of Science in Civil Engineering",
-            "Bachelor of Science in Electrical Engineering",
-            "Bachelor of Science in Mechanical Engineering",
-            "Bachelor of Science in Computer Engineering",
-            "Bachelor of Science in Mining Engineering"
-        ],
-        "CIT": [
-            "Bachelor of Technology and Livelihood Education - Industrial Arts",
-            "Bachelor of Technical Vocational Teacher Education - Computer Programming",
-            "Bachelor of Technical Vocational Teacher Education - Drafting Technology",
-            "Bachelor of Technical Vocational Teacher Education - Mechanical Technology (Machine)",
-            "Bachelor of Technical Vocational Teacher Education - Electrical Technology",
-            "Bachelor of Technical Vocational Teacher Education - Food and Service Management Technology",
-            "Bachelor of Technical Vocational Teacher Education - Automotive Technology",
-            "Bachelor of Technical Vocational Teacher Education - Electronics Technology",
-            "Bachelor of Technical Vocational Teacher Education - Welding and Fabrication Technology",
-            "Bachelor of Science in Industrial Technology - Automotive Technology",
-            "Bachelor of Science in Industrial Technology - Computer Technology",
-            "Bachelor of Science in Industrial Technology - Drafting Technology",
-            "Bachelor of Science in Industrial Technology - Electrical Technology",
-            "Bachelor of Science in Industrial Technology - Electronics Technology",
-            "Bachelor of Science in Industrial Technology - Food Technology",
-            "Bachelor of Science in Industrial Technology - Furniture and Cabinet Marketing Technology",
-            "Bachelor of Science in Industrial Technology - Mechanical Technology"
-        ],
-        "CAF": [
-            "Bachelor of Science in Environmental Science"
-        ],
-        "NUR": [
-            "Bachelor of Science in Nursing"
-        ],
-        "CTHM": [
-            "Bachelor of Science in Hospitality Management",
-            "Bachelor of Science in Tourism Management"
-        ]
-    };
+        // Define the courses for each college
+        const coursesByCollege = {
+            "CABA": [
+                "Bachelor of Science in Accountancy",
+                "Bachelor of Science in Accounting and Information System",
+                "Bachelor of Science in Business Administration - Marketing",
+                "Bachelor of Science in Business Administration - Financial Management",
+                "Bachelor of Science in Business Administration - Human Resource Development Management",
+                "Bachelor of Public Administration"
+            ],
+            "CAS": [
+                "Bachelor of Science in Biology",
+                "Bachelor of Science in Psychology"
+            ],
+            "CCIT": [
+                "Bachelor of Science in Computer Science",
+                "Bachelor of Science in Information Technology"
+            ],
+            "CTE": [
+                "Bachelor of Secondary Education - English Education",
+                "Bachelor of Secondary Education - Filipino Education",
+                "Bachelor of Secondary Education - Mathematics Education",
+                "Bachelor of Secondary Education - Science Education",
+                "Bachelor of Secondary Education - Social Studies Education",
+                "Bachelor of Elementary Education",
+                "Bachelor of Physical Education",
+                "Bachelor of Professional Education"
+            ],
+            "CE": [
+                "Bachelor of Science in Civil Engineering",
+                "Bachelor of Science in Electrical Engineering",
+                "Bachelor of Science in Mechanical Engineering",
+                "Bachelor of Science in Computer Engineering",
+                "Bachelor of Science in Mining Engineering"
+            ],
+            "CIT": [
+                "Bachelor of Technology and Livelihood Education - Industrial Arts",
+                "Bachelor of Technical Vocational Teacher Education - Computer Programming",
+                "Bachelor of Technical Vocational Teacher Education - Drafting Technology",
+                "Bachelor of Technical Vocational Teacher Education - Mechanical Technology (Machine)",
+                "Bachelor of Technical Vocational Teacher Education - Electrical Technology",
+                "Bachelor of Technical Vocational Teacher Education - Food and Service Management Technology",
+                "Bachelor of Technical Vocational Teacher Education - Automotive Technology",
+                "Bachelor of Technical Vocational Teacher Education - Electronics Technology",
+                "Bachelor of Technical Vocational Teacher Education - Welding and Fabrication Technology",
+                "Bachelor of Science in Industrial Technology - Automotive Technology",
+                "Bachelor of Science in Industrial Technology - Computer Technology",
+                "Bachelor of Science in Industrial Technology - Drafting Technology",
+                "Bachelor of Science in Industrial Technology - Electrical Technology",
+                "Bachelor of Science in Industrial Technology - Electronics Technology",
+                "Bachelor of Science in Industrial Technology - Food Technology",
+                "Bachelor of Science in Industrial Technology - Furniture and Cabinet Marketing Technology",
+                "Bachelor of Science in Industrial Technology - Mechanical Technology"
+            ],
+            "CAF": [
+                "Bachelor of Science in Environmental Science"
+            ],
+            "NUR": [
+                "Bachelor of Science in Nursing"
+            ],
+            "CTHM": [
+                "Bachelor of Science in Hospitality Management",
+                "Bachelor of Science in Tourism Management"
+            ]
+        };
 
-    const collegeSelect = document.getElementById('college');
-    const courseSelect = document.getElementById('course');
+        const collegeSelect = document.getElementById('college');
+        const courseSelect = document.getElementById('course');
 
-    collegeSelect.addEventListener('change', function() {
-        const selectedCollege = this.value;
-        const courses = coursesByCollege[selectedCollege] || [];
+        collegeSelect.addEventListener('change', function() {
+            const selectedCollege = this.value;
+            const courses = coursesByCollege[selectedCollege] || [];
 
-        // Clear existing options
-        courseSelect.innerHTML = '<option value="" disabled selected>Select your course</option>';
+            // Clear existing options
+            courseSelect.innerHTML = '<option value="" disabled selected>Select your course</option>';
 
-        // Populate new options
-        courses.forEach(function(course) {
-            const option = document.createElement('option');
-            option.value = course;
-            option.textContent = course;
-            courseSelect.appendChild(option);
+            // Populate new options
+            courses.forEach(function(course) {
+                const option = document.createElement('option');
+                option.value = course;
+                option.textContent = course;
+                courseSelect.appendChild(option);
+            });
         });
     });
-});
-function handleCredentialResponse(response) {
-  const id_token = response.credential;
 
-  // Send the ID token to your server
-  $.ajax({
-    url: 'google_login_process.php',
-    type: 'POST',
-    data: { id_token: id_token },
-    dataType: 'json',
-    success: function(response) {
-      if (response.success) {
-        Swal.fire({
-          title: 'Success!',
-          text: 'Login successful!',
-          icon: 'success',
-          confirmButtonText: 'OK'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = 'dashboard.php'; // Redirect or do something else
-          }
-        });
-      } else {
-        Swal.fire({
-          title: 'Error!',
-          text: response.message,
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
-      }
-    },
-    error: function(xhr, status, error) {
-      console.error('AJAX Error: ', status, error); // Log the AJAX error
-      Swal.fire({
-        title: 'Error!',
-        text: 'An error occurred during Google sign-in.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    }
-  });
-}
-$(document).ready(function() {
-    $('form').on('submit', function(e) {
-        e.preventDefault(); // Prevent form submission
+    function handleCredentialResponse(response) {
+        const id_token = response.credential;
 
-        // Trim password fields to remove leading/trailing spaces
-        var password = $('#yourPassword').val().trim();
-        var confirmPassword = $('#confirm_password').val().trim();
-
-        // Password length validation (min 8, max 16)
-        if (password.length < 8 || password.length > 16) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Password must be between 8 and 16 characters long.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
-
-        // Confirm password match validation
-        if (password !== confirmPassword) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Passwords do not match.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
-
-        // If validation passes, submit the form using AJAX
-        var formData = $(this).serialize();
+        // Send the ID token to your server
         $.ajax({
-            url: 'register_process.php',
+            url: 'google_login_process.php',
             type: 'POST',
-            data: formData,
+            data: { id_token: id_token },
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
                     Swal.fire({
                         title: 'Success!',
-                        text: 'Registration successful!',
+                        text: 'Login successful!',
                         icon: 'success',
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = 'https://ramonianlostgems.com/login.php';
+                            window.location.href = 'dashboard.php'; // Redirect or do something else
                         }
                     });
                 } else {
                     Swal.fire({
                         title: 'Error!',
-                        text: response.message || 'An error occurred.',
+                        text: response.message,
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
                 }
             },
             error: function(xhr, status, error) {
+                console.error('AJAX Error: ', status, error); // Log the AJAX error
                 Swal.fire({
-                  title: 'Success!',
-            text: 'Registration successful! You are all set to report or search for lost items.',
-            icon: 'success',
-            confirmButtonText: 'OK'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
-            }
+                    title: 'Error!',
+                    text: 'An error occurred during Google sign-in.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
                 });
             }
         });
+    }
+
+    $(document).ready(function() {
+        $('form').on('submit', function(e) {
+            e.preventDefault(); // Prevent form submission
+
+            // Trim password fields to remove leading/trailing spaces
+            var password = $('#yourPassword').val().trim();
+            var confirmPassword = $('#confirm_password').val().trim();
+
+            // Get the username value
+            const username = $('#email').val().trim();
+
+            // Disallow email-like formats in the username
+            const emailRegex = /@|\.com|\.net|\.org|\.edu/i;
+            if (emailRegex.test(username)) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Usernames cannot contain "@" or resemble email addresses.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // Password length validation (min 8, max 16)
+            if (password.length < 8 || password.length > 16) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Password must be between 8 and 16 characters long.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // Confirm password match validation
+            if (password !== confirmPassword) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Passwords do not match.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // If validation passes, submit the form using AJAX
+            var formData = $(this).serialize();
+            $.ajax({
+                url: 'register_process.php',
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Registration successful!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'https://ramonianlostgems.com/login.php';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: response.message || 'An error occurred.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Registration successful! You are all set to report or search for lost items.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
+                        }
+                    });
+                }
+            });
+        });
     });
-});
 </script>
+
 
 </body>
 </html>
