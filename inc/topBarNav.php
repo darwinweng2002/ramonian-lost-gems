@@ -256,53 +256,6 @@
 .header-nav .nav-link {
     text-decoration: none;
 }
-/* Hamburger Menu Styling */
-.hamburger {
-    position: relative;
-    width: 30px;
-    height: 3px;
-    background-color: #fff;
-    border-radius: 2px;
-    transition: all 0.3s ease-in-out;
-}
-
-.hamburger::before,
-.hamburger::after {
-    content: '';
-    position: absolute;
-    width: 30px;
-    height: 3px;
-    background-color: #fff;
-    border-radius: 2px;
-    transition: all 0.3s ease-in-out;
-}
-
-.hamburger::before {
-    top: -8px;
-}
-
-.hamburger::after {
-    bottom: -8px;
-}
-
-/* Toggle the hamburger to X */
-.is-active .hamburger {
-    background-color: transparent;
-}
-
-.is-active .hamburger::before {
-    transform: translateY(8px) rotate(45deg);
-}
-
-.is-active .hamburger::after {
-    transform: translateY(-8px) rotate(-45deg);
-}
-
-/* Change background color of button when active */
-#sidebar-toggle-button.is-active {
-    background-color: #c0392b; /* A red shade for the active state */
-}
-
 /* Responsive adjustments for sidebar */
 @media (max-width: 512px) {
     #side-nav-bar {
@@ -326,9 +279,7 @@
     <!-- Sidebar -->
 
 <!-- Sidebar Trigger Button -->
-<button id="sidebar-toggle-button">
-    <div class="hamburger"></div>
-</button>
+    <button id="sidebar-toggle-button">☰</button>
 
     <!-- Sidebar -->
     <div id="side-nav-bar">
@@ -365,20 +316,19 @@
 </header>
 
 <script type="text/javascript">
-document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
+    document.getElementById('navbar-toggler').addEventListener('click', function() {
+        const navbarMenu = document.getElementById('navbar-menu');
+        navbarMenu.classList.toggle('show');
+    });
+    document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
     const sideNavBar = document.getElementById('side-nav-bar');
-    const sidebarToggleButton = document.getElementById('sidebar-toggle-button');
-
+    
     if (sideNavBar.style.left === '0px' || sideNavBar.style.left === '') {
         sideNavBar.style.left = '-250px'; // Hide the sidebar
     } else {
         sideNavBar.style.left = '0'; // Show the sidebar
     }
-
-    // Toggle the hamburger menu animation
-    sidebarToggleButton.classList.toggle('is-active');
 });
-
 
 document.getElementById('navbar-toggler').addEventListener('click', function() {
     const navbarMenu = document.getElementById('navbar-menu');
