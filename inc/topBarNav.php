@@ -308,6 +308,10 @@
                 <span class="d-none d-lg-block"><?= $_settings->info('short_name') ?></span>
             </a>
         </div>
+
+        <button class="navbar-toggler d-lg-none" id="navbar-toggler" type="button" aria-expanded="false">
+            <span class="navbar-toggler-icon"></span>
+        </button>
     </div>
 </header>
 
