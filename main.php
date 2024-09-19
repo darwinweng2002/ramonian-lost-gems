@@ -64,7 +64,6 @@ $stmt->close();
               <div class="header-content">
                 <div class="siteTitle"><?= $_settings->info('name') ?></div>
                 <hr class="border-light opacity-100 mx-auto" style="width:100px;border-width:3px">
-                <a href="<?= base_url.'?page=items' ?>" class="btn btn-lg btn-primary rounded-pill col-lg-3 col-md-5 col-sm-7 col-10 mx-auto d-block">Find Item</a>
               </div>
             </div>
           </div>
