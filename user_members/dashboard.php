@@ -413,7 +413,7 @@ $missing_stmt->close();
 
                                             <div class="text-center mt-4 d-flex justify-content-center">
                                         <button id="logout-btn" class="btn btn-primary mx-2">Logout</button>
-                                        <a href="https://ramonianlostgems.com/" class="btn btn-secondary mx-2">Back</a>
+                                        <a href="https://ramonianlostgems.com/main.php" class="btn btn-secondary mx-2">Back</a>
                                     </div>
                                         </div>
                                     <?php endif; ?>
