@@ -403,7 +403,7 @@ $(document).ready(function() {
             data: formData,
             dataType: 'json',
             success: function(response) {
-                console.log(response); // Log the response for debugging
+                // Check if the registration was successful
                 if (response.success) {
                     Swal.fire({
                         title: 'Success!',
@@ -412,13 +412,14 @@ $(document).ready(function() {
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = 'https://ramonianlostgems.com/login.php';
+                            window.location.href = 'https://ramonianlostgems.com/login.php'; // Redirect to the login page
                         }
                     });
                 } else {
+                    // Display error message from the server response
                     Swal.fire({
                         title: 'Error!',
-                        text: response.message || 'An error occurred.',
+                        text: response.message || 'An error occurred. Please try again later.',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
@@ -428,7 +429,7 @@ $(document).ready(function() {
                 console.error('AJAX Error: ', status, error); // Log the AJAX error
                 Swal.fire({
                     title: 'Error!',
-                    text: 'An error occurred. Please try again later.',
+                    text: 'An error occurred during the registration process. Please try again later.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
@@ -436,6 +437,7 @@ $(document).ready(function() {
         });
     });
 });
+
 
 
 </script>
