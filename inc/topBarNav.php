@@ -259,30 +259,14 @@
 .header-nav .nav-link {
     text-decoration: none;
 }
-
 /* Responsive adjustments for sidebar */
 @media (max-width: 512px) {
-    .container-lg {
-        display: flex;
-        justify-content: center; /* Center align the container */
-        width: 100%;
+    #side-nav-bar {
+        width: 50%; /* Adjust width for small screens */
+        left: -100%; /* Initially hide the sidebar */
     }
-
-    /* Ensure short_name is visible on smaller screens */
-    .short_name {
-        display: block !important; /* Ensure it is shown */
-        font-size: 16px; /* Adjust the font size if needed */
-    }
-
-    .logo {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    /* Ensure alignment in the header for smaller screens */
-    #header {
-        justify-content: center;
+    #sidebar-toggle-button {
+        display: block;
     }
 }
 /* Hide the sidebar toggle button when the sidebar is open */
@@ -314,11 +298,12 @@
     </div>
 
     <div class="container-lg d-flex justify-content-between px-4">
-        <a href="<?= base_url ?>" class="logo d-flex align-items-center justify-content-center">
-            <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
-            <span class="short_name"><?= $_settings->info('short_name') ?></span>
-        </a>
-    </div>
+        <div class="d-flex align-items-center justify-content-between" style="margin-left: 0;">
+            <a href="<?= base_url ?>" class="logo d-flex align-items-center">
+                <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
+                <span class="d-none d-lg-block"><?= $_settings->info('short_name') ?></span>
+            </a>
+        </div>
 
         <button class="navbar-toggler d-lg-none" id="navbar-toggler" type="button" aria-expanded="false">
             <span class="navbar-toggler-icon"></span>
