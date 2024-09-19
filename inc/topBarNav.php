@@ -65,8 +65,9 @@
     }
 
 }
+
 .logo img {
-    margin-top: 5px;
+    margin-top: 3px;
     margin-left: 100%;
     width: 55px;
     height: 55px;
@@ -263,14 +264,40 @@
     #sidebar-toggle-button {
         display: block;
     }
+    .header {
+        flex-direction: column;
+    }
+
+    .logo {
+        justify-content: center; /* Ensure logo and title are centered on small screens */
+        text-align: center;
+    }
+
+    /* Sidebar adjustments */
+    #side-nav-bar {
+        width: 100%; /* Full width on small screens */
+        left: -100%;
+    }
+
+    #sidebar-toggle-button {
+        display: block;
+    }
+
+    /* Navbar toggle button for smaller screens */
+    #navbar-toggler {
+        display: block;
+    }
 }
+
 /* Hide the sidebar toggle button when the sidebar is open */
 #sidebar-toggle-button.hidden {
     display: none;
 }
 
-
-
+/* Hide the sidebar toggle button when the sidebar is open */
+#sidebar-toggle-button.hidden {
+    display: none;
+}
 </style>
 
 <header id="header" class="header fixed-top d-flex align-items-center">
