@@ -161,7 +161,7 @@ if (isset($_POST['guest_login'])) {
                   <!-- Credits Section -->
                   <div class="credits">
                     <p>
-                      <a href="http://localhost/lostgemramonian/register.php">prmsuramonianlostgems.com</a>
+                      <a href="https://ramonianlostgems.com/">ramonianlostgems.com</a>
                     </p>
                   </div>
                   <!-- Logo Section -->
