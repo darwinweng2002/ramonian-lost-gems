@@ -170,7 +170,7 @@ body {
                   <div class="col-12">
                       <label for="confirm_password" class="form-label">Confirm Password</label>
                       <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
-                      <div class="invalid-feedback">Please confirm your password (8-16 characters).</div>
+                      <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
                   </div>
                   <div class="col-12">
                       <button class="btn btn-primary w-100" type="submit">Register</button>
@@ -353,25 +353,25 @@ function handleCredentialResponse(response) {
 }
 $(document).ready(function() {
     $('form').on('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission
+        e.preventDefault(); // Prevent form submission
 
-        // Check if all required fields are filled
-        var isValid = true;
-        $(this).find('input[required], select[required]').each(function() {
-            if ($.trim($(this).val()) === '') {
-                isValid = false;
-                $(this).addClass('is-invalid'); // Add bootstrap invalid class
-            } else {
-                $(this).removeClass('is-invalid'); // Remove bootstrap invalid class
-            }
-        });
+        // Trim password fields to remove leading/trailing spaces
+        var password = $('#yourPassword').val().trim();
+        var confirmPassword = $('#confirm_password').val().trim();
 
-        // Password confirmation validation
-        var password = $('#password').val();
-        var confirmPassword = $('#confirm_password').val();
+        // Password length validation (min 8, max 16)
+        if (password.length < 8 || password.length > 16) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Password must be between 8 and 16 characters long.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        // Confirm password match validation
         if (password !== confirmPassword) {
-            isValid = false;
-            $('#confirm_password').addClass('is-invalid');
             Swal.fire({
                 title: 'Error!',
                 text: 'Passwords do not match.',
@@ -379,31 +379,16 @@ $(document).ready(function() {
                 confirmButtonText: 'OK'
             });
             return;
-        } else {
-            $('#confirm_password').removeClass('is-invalid');
         }
 
-        if (!isValid) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Please fill all required fields.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-            return; // Exit the function if validation fails
-        }
-
-        // Collect form data
+        // If validation passes, submit the form using AJAX
         var formData = $(this).serialize();
-
-        // Submit form data using AJAX  
         $.ajax({
             url: 'register_process.php',
             type: 'POST',
             data: formData,
             dataType: 'json',
             success: function(response) {
-                // Check if the registration was successful
                 if (response.success) {
                     Swal.fire({
                         title: 'Success!',
@@ -412,38 +397,29 @@ $(document).ready(function() {
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = 'https://ramonianlostgems.com/login.php'; // Redirect to the login page
+                            window.location.href = 'https://ramonianlostgems.com/login.php';
                         }
                     });
                 } else {
-                    // Display error message from the server response
                     Swal.fire({
                         title: 'Error!',
-                        text: response.message || 'An error occurred. Please try again later.',
+                        text: response.message || 'An error occurred.',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
                 }
             },
             error: function(xhr, status, error) {
-                console.error('AJAX Error: ', status, error); // Log the AJAX error
                 Swal.fire({
-                  title: 'Success!',
-                  text: 'Registration Successfull!',
-                  icon: 'success',
-                  confirmButtonText: 'OK'
-                }) .then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
-            }
-          });
+                    title: 'Error!',
+                    text: 'An error occurred. Please try again later.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             }
         });
     });
 });
-
-
-
 </script>
 
 </body>
