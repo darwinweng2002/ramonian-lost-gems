@@ -52,7 +52,7 @@ $stmt->close();
       $pageSplit[1] = (strtolower($pageSplit[1]) == 'list') ? $pageSplit[0].' List' : $pageSplit[1];
      ?>
      
-     <?php require_once('inc/topBarNav.php') ?>
+     <?php require_once('inc/topBarNavs.php') ?>
       <!-- Content Wrapper. Contains page content -->
        <main>
     
