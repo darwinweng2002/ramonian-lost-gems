@@ -270,7 +270,7 @@
 .ramon h1 {
     margin: 0;
     font-size: 24px;
-    color: #fff; /* Adjust color for visibility */
+    color: #ccc; /* Adjust color for visibility */
     text-align: center;
 }
 /* Responsive adjustments for sidebar */
