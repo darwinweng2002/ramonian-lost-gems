@@ -73,6 +73,7 @@ if (isset($_POST['guest_login'])) {
       background-repeat: no-repeat;
       backdrop-filter: brightness(.7);
       overflow-x: hidden;
+      overflow: auto;
     }
     .logo img {
       max-height: 55px;
@@ -115,6 +116,9 @@ if (isset($_POST['guest_login'])) {
     left: 50% !important;       
     transform: translate(-50%, -50%) !important; 
     z-index: 9999 !important;   
+    overflow: auto;             
+}
+.swal2-overlay {
     overflow: auto;             
 }
   </style>
