@@ -2,11 +2,11 @@
 <style type="text/css">
     /* Styling for the logo and header */
     .logo img {
-    width: 55px; /* Logo size */
-    height: 55px;
-    object-fit: contain; /* Ensure the logo fits within its container */
-    margin-top: 10px;
-}
+        width: 55px; /* Logo size */
+        height: 55px;
+        object-fit: contain; /* Ensure the logo fits within its container */
+        margin-top: 10px;
+    }
 
     /* Aligning content inside the header */
     .container-lg {
@@ -15,22 +15,24 @@
         align-items: center;
         width: 100%;
     }
+
     .header {
-    height: 60px; /* Adjust this as needed based on your logo size */
-    background-color: #fff; /* Optional: set background color */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: add shadow for better visibility */
-    padding: 0;
-}
+        height: 60px; /* Adjust this as needed based on your logo size */
+        background-color: #fff; /* Optional: set background color */
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: add shadow for better visibility */
+        padding: 0;
+    }
+
     /* Sidebar styling */
     #side-nav-bar {
         position: fixed;
-        right: -250px; /* Initially hide the sidebar */
+        left: -250px; /* Initially hide the sidebar on the left */
         top: 0;
         width: 250px;
         height: 100%;
         background-color: #2c3e50;
         color: #ecf0f1;
-        transition: right 0.3s ease;
+        transition: left 0.3s ease; /* Smooth transition when showing/hiding */
         z-index: 9999;
         overflow-y: auto;
         padding-top: 20px;
@@ -65,17 +67,16 @@
     /* Sidebar toggle button styling */
     #sidebar-toggle-button {
         position: fixed;
-    right: 0;
-    top: 0; /* Adjust to align with your design */
-    background-color: #3498db; /* Professional color */
-    color: white;
-    padding: 21px 30px;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    z-index: 10000; /* Make sure it's above other elements */
-        
+        right: 20px; /* Keep the button on the right */
+        top: 15px; /* Adjust to align with your design */
+        background-color: #3498db; /* Professional color */
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        z-index: 10000; /* Make sure it's above other elements */
     }
 
     #sidebar-toggle-button:hover {
@@ -96,12 +97,12 @@
 
     /* Centering and aligning logo and button */
     .logo {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Align logo to the left */
-    padding-left: 15px; /* Add some padding for spacing from the left */
-    height: 100%; /* Ensure the logo container fills the height of the header */
-}
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* Align logo to the left */
+        padding-left: 15px; /* Add some padding for spacing from the left */
+        height: 100%; /* Ensure the logo container fills the height of the header */
+    }
 
     /* Push sidebar toggle button to the right */
     .navbar-toggler {
@@ -146,13 +147,15 @@
 </header>
 
 <script type="text/javascript">
+    // Toggle Sidebar Visibility
     document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
         const sideNavBar = document.getElementById('side-nav-bar');
 
-        if (sideNavBar.style.left === '0px' || sideNavBar.style.left === '') {
-            sideNavBar.style.left = '-250px'; // Hide the sidebar
+        // Show or hide the sidebar
+        if (sideNavBar.style.left === '0px') {
+            sideNavBar.style.left = '-250px'; // Hide sidebar
         } else {
-            sideNavBar.style.left = '0'; // Show the sidebar
+            sideNavBar.style.left = '0'; // Show sidebar
         }
     });
 </script>
