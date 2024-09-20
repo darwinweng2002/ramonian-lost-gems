@@ -78,7 +78,6 @@
                     </div>
                   </form>
                   <br>
-                  <button  class="btn btn-primary w-100"><a style="color: #fff;" href="https://ramonianlostgems.com/login.php">Login as User</a></button>
                 </div>
               </div>
 
