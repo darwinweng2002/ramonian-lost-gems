@@ -72,7 +72,6 @@ if (isset($_POST['guest_login'])) {
       background-size: cover;
       background-repeat: no-repeat;
       backdrop-filter: brightness(.7);
-      overflow-x: hidden;
       overflow: auto;
     }
     .logo img {
