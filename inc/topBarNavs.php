@@ -57,7 +57,7 @@
     color: #ecf0f1;
     display: block;
     font-size: 16px;
-    padding: 10px 15px; /* Ensures padding applies only to the left and right within the sidebar */
+    padding: 5px 10px; /* Ensures padding applies only to the left and right within the sidebar */
     transition: background-color 0.3s ease, padding-left 0.3s ease;
 }
 
@@ -73,7 +73,7 @@
     top: 0; /* Adjust to align with your design */
     background-color: #3498db; /* Professional color */
     color: white;
-    padding: 17px 30px;
+    padding: 21.5px 30px;
     border: none;
     border-radius: 2px;
     cursor: pointer;
