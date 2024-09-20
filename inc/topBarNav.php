@@ -67,7 +67,7 @@
 }
 .logo img {
     margin-top: 4px;
-    margin-left: 80%;
+    margin-left: 100%;
     width: 55px;
     height: 55px;
 }
@@ -269,7 +269,7 @@
 
 .ramon h1 {
     margin: 0;
-    margin-left: 20px;
+    margin-left: 40px;
     font-size: 20px;
     color: #00274D; /* Adjust color for visibility */
     text-align: center;
