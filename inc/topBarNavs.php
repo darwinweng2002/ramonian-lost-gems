@@ -126,6 +126,7 @@
             <li><a href="https://ramonianlostgems.com/send_missing.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-search"><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M4.268 21a2 2 0 0 0 1.727 1H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"/><path d="m9 18-1.5-1.5"/><circle cx="5" cy="14" r="3"/></svg> Report Missing Items</a></li>
             <li><a href="https://ramonianlostgems.com/itemss/items.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg> Browse  Items</a></li>
             <li style="position: absolute; bottom: 0;"><a href="#" id="logout-button" class="btn btn-primary mx-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="30" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>Logout</a></li>
+            <a href="#" id="logout-button" class="btn btn-primary mx-2">Logout</a>
         </ul>
 
 
@@ -158,8 +159,8 @@
             sideNavBar.style.right = '0'; // Show sidebar
         }
     });
-    // Add event listener for the logout button
-    document.getElementById('logout-button').addEventListener('click', function(event) {
+       // Add event listener for the logout button
+       document.getElementById('logout-button').addEventListener('click', function(event) {
         event.preventDefault(); // Prevent the default behavior of the anchor tag
 
         // Trigger SweetAlert confirmation
