@@ -1,63 +1,53 @@
 <?php
-include '../../config.php';
+include '../config.php';
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to login page if not logged in
+    header('Location: login.php'); // Adjust this path if necessary
+    exit();
+}
 
 // Database connection
-$conn = new mysqli('localhost', 'root', '1234', 'lost_db'); // Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Initialize $result as null
-$result = null;
+// Get item ID from URL
+$itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-if (isset($_GET['id'])) {
-    $itemId = $_GET['id'];
+// SQL query to get missing item details and associated images
+$sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi.title, mi.status, um.first_name, um.college, um.email, um.avatar, mi.contact, c.name as category_name, imi.image_path
+        FROM missing_items mi
+        LEFT JOIN user_member um ON mi.user_id = um.id
+        LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
+        LEFT JOIN categories c ON mi.category_id = c.id
+        WHERE mi.id = ?";
 
-    // Prepare the SQL statement
-    $stmt = $conn->prepare("SELECT 
-                mi.id, 
-                mi.title, 
-                mi.description, 
-                mi.last_seen_location, 
-                mi.time_missing, 
-                mi.status,  /* Status field is fetched */
-                mi.created_at, 
-                um.email, 
-                um.college,
-                um.avatar,
-                mi.contact,
-                c.name AS category_name,
-                GROUP_CONCAT(mii.image_path) AS images 
-            FROM missing_items mi
-            LEFT JOIN user_member um ON mi.user_id = um.id
-            LEFT JOIN categories c ON mi.category_id = c.id
-            LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
-            WHERE mi.id = ?
-            GROUP BY mi.id, um.email, um.college, um.avatar, mi.contact, c.name"); // Group by all non-aggregated columns
-    
-    $stmt->bind_param('i', $itemId); // Bind the integer value
-    $stmt->execute();
-    $result = $stmt->get_result();
-}
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $itemId);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<?php require_once('../inc/header.php') ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Missing Items - Admin View</title>
-    <?php require_once('../inc/header.php'); ?>
+    <title>Missing Item Details</title>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
-       body {
-            font-family: Arial, sans-serif;
+        body {
+            font-family: 'Open Sans', sans-serif;
+            font: 16px;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            padding-top: 70px; /* Adjust this according to the height of your navbar */
-            background-color: #f4f4f4;
+            color: #333;
         }
         .container {
             margin: 30px auto;
@@ -88,39 +78,6 @@ if (isset($_GET['id'])) {
         .message-box img:hover {
             transform: scale(1.1);
         }
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-        }
-        .delete-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-        }
-        .delete-btn:hover {
-            background-color: #c82333;
-        }
-        .publish-btn {
-            background-color: #28a745; /* Green background color */
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            position: absolute;
-            bottom: 20px;
-            right: 80px; /* Position it to the left of the delete button */
-        }
-        .publish-btn:hover {
-            background-color: #218838; /* Darker green on hover */
-        }
         .container .avatar {
             width: 100px; /* Set the width of the avatar */
             height: 100px; /* Set the height of the avatar to the same value as width for a circle */
@@ -129,33 +86,89 @@ if (isset($_GET['id'])) {
             display: block; /* Ensures the image is displayed as a block element */
             margin-bottom: 10px; /* Adds space below the image if needed */
         }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .claim-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #3498db; /* Blue color */
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        .claim-button:hover {
+            background-color: #2980b9; /* Darker blue */
+            color: #fff;
+        }
+        .badge {
+            font-size: 14px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+        .badge-published { background-color: #28a745; color: white; }
+        .badge-claimed { background-color: #ffc107; color: white; }
+        .badge-surrendered { background-color: #6c757d; color: white; }
+        .badge-pending { background-color: #007bff; color: white; }
     </style>
 </head>
 <body>
-    <?php require_once('../inc/topBarNav.php'); ?>
-    <?php require_once('../inc/navigation.php'); ?>
-
+<?php require_once('../inc/topBarNav.php') ?>
     <div class="container">
-        <h1>View Missing Item Details</h1>
+        <br>
+        <br>
+        <br>
+        <h1>Missing Item Details</h1>
         <?php
-        if ($result && $result->num_rows > 0) {
+        if ($result->num_rows > 0) {
+            $items = [];
             while ($row = $result->fetch_assoc()) {
-                // Assign the status field to the variable
-                $status = $row['status'];  // Assign the status value from the result
-
-                $images = explode(',', $row['images']); // Convert image paths to an array
+                if (!isset($items[$row['id']])) {
+                    $items[$row['id']] = [
+                        'description' => $row['description'],
+                        'last_seen_location' => $row['last_seen_location'],
+                        'time_missing' => $row['time_missing'],
+                        'title' => $row['title'],
+                        'status' => $row['status'], // Fetch the status
+                        'first_name' => $row['first_name'],
+                        'college' => $row['college'],
+                        'email' => $row['email'],
+                        'avatar' => $row['avatar'],
+                        'images' => [],
+                        'contact' => $row['contact'],
+                        'category_name' => $row['category_name']
+                    ];
+                }
+                if ($row['image_path']) {
+                    // Construct the correct URL to the image
+                    $fullImagePath = base_url . 'uploads/missing_items/' . $row['image_path'];
+                    $items[$row['id']]['images'][] = $fullImagePath;
+                }
+            }
+            
+            foreach ($items as $itemId => $itemData) {
+                $firstName = htmlspecialchars($itemData['first_name'] ?? '');
+                $email = htmlspecialchars($itemData['email'] ?? '');
+                $college = htmlspecialchars($itemData['college'] ?? '');
+                $title = htmlspecialchars($itemData['title'] ?? '');
+                $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
+                $description = htmlspecialchars($itemData['description'] ?? '');
+                $avatar = htmlspecialchars($itemData['avatar'] ?? '');
+                $timeMissing = htmlspecialchars($itemData['time_missing'] ?? ''); // Fetch date and time
+                $contact = htmlspecialchars($itemData['contact'] ?? '');
+                $categoryName = htmlspecialchars($itemData['category_name'] ?? '');
+                $status = intval($itemData['status']); // Get the correct status
 
                 echo "<div class='message-box'>";
-                $firstName = htmlspecialchars($row['first_name'] ?? '');
-                $email = htmlspecialchars($row['email'] ?? '');
-                $college = htmlspecialchars($row['college'] ?? '');
-                $title = htmlspecialchars($row['title'] ?? '');
-                $lastSeenLocation = htmlspecialchars($row['last_seen_location'] ?? '');
-                $description = htmlspecialchars($row['description'] ?? '');
-                $avatar = htmlspecialchars($row['avatar'] ?? '');
-                $timeMissing = htmlspecialchars($row['time_missing'] ?? '');
-                $contact = htmlspecialchars($row['contact'] ?? '');
-                $categoryName = htmlspecialchars($row['category_name'] ?? '');
                 
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
@@ -164,27 +177,18 @@ if (isset($_GET['id'])) {
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
                 
-                echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
+                echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
+                echo "<p><strong>Date and Time Missing:</strong> " . $timeMissing . "</p>"; // Display date and time
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
-                echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
-                echo "<p><strong>Contact:</strong> " . $contact . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
-                echo "<div class='form-group col-lg-12 col-md-12 col-sm-12 col-xs-12'>";
-                echo "<label for='status' class='control-label'>Status</label>";
-                echo "<select name='status' id='status-".$row['id']."' class='form-select form-select-sm rounded-0' required='required'>";
-                echo "<option value='0' " . ($status == 0 ? 'selected' : '') . ">Pending</option>";
-                echo "<option value='1' " . ($status == 1 ? 'selected' : '') . ">Published</option>";
-                echo "<option value='2' " . ($status == 2 ? 'selected' : '') . ">Claimed</option>";
-                echo "<option value='3' " . ($status == 3 ? 'selected' : '') . ">Surrendered</option>";
-                echo "</select>";
-                echo "<button class='btn btn-primary save-status-btn' data-id='" . $row['id'] . "'>Save Status</button>";
+                echo "<p><strong>Contact:</strong> " . $contact . "</p>";
 
-                // Close message box div
-                echo "</div>";
+                // Add Status Display using the new status indicator code
                 echo "<dt class='text-muted'>Status</dt>";
+                echo "<dd class='ps-4'>";
                 if ($status == 1) {
                     echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
                 } elseif ($status == 2) {
@@ -192,115 +196,34 @@ if (isset($_GET['id'])) {
                 } elseif ($status == 3) {
                     echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
                 } else {
-                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";   
                 }
-                
+                echo "</dd>";
 
-                if (!empty($images)) {
+                if (!empty($itemData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
-                    foreach ($images as $imagePath) {
-                        $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($imagePath);
-                        // Add Lightbox attributes
-                        echo "<a href='" . $fullImagePath . "' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Image'></a>";
+                    foreach ($itemData['images'] as $imagePath) {
+                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='item-" . htmlspecialchars($itemId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
                     }
                     echo "</div>";
                 }
-
-                echo "<button class='publish-btn' data-id='" . htmlspecialchars($row['id']) . "'>Publish</button>";
-                echo "<button class='delete-btn' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
+                
+                // Add Claim Request Button
+                echo "<a href='claim_request.php?id=" . urlencode($itemId) . "' class='claim-button'>Claim Request</a>";
+                
                 echo "</div>";
             }
+        } else {
+            echo "<p>No details available for this item.</p>";
         }
         ?>
     </div>
-
-    <!-- Include JavaScript files -->
-    <script src="../js/jquery.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
+    <?php require_once('../inc/footer.php') ?>
+    <script src="../js/jquery.min.js"></script> <!-- Ensure this path is correct -->
+    <script src="../js/bootstrap.min.js"></script> <!-- Ensure this path is correct -->
+    <script src="../js/custom.js"></script> <!-- Ensure this path is correct -->
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
-
-    <script>
-      $(document).ready(function() {
-    // Delete button functionality
-    $('.delete-btn').on('click', function() {
-        var itemId = $(this).data('id');
-        if (confirm('Are you sure you want to delete this missing item?')) {
-            $.ajax({
-                url: 'delete_message.php', // Make sure this path is correct
-                type: 'POST',
-                data: { id: itemId },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        alert('Missing item deleted successfully.');
-                        location.reload(); // Reload the page
-                    } else {
-                        alert('Failed to delete the missing item: ' + response.error);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX error:", status, error);
-                }
-            });
-        }
-    });
-
-    // Publish button functionality
-    $('.publish-btn').on('click', function() {
-        var itemId = $(this).data('id');
-        $.ajax({
-            url: 'publish_message.php', // Make sure this path is correct
-            type: 'POST',
-            data: { id: itemId },
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    alert('Missing item published successfully.');
-                    location.reload(); // Reload the page
-                } else {
-                    alert('Failed to publish the missing item: ' + response.error);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("AJAX error:", status, error);
-            }
-        });
-    });
-});
-$(document).ready(function() {
-    // Handle status update
-    $('.save-status-btn').on('click', function() {
-        var itemId = $(this).data('id');
-        var selectedStatus = $('#status-' + itemId).val(); // Get the selected status
-
-        // Send an AJAX request to update the status
-        $.ajax({
-            url: 'update_status.php', // Backend URL to handle status updates
-            type: 'POST',
-            data: {
-                id: itemId,
-                status: selectedStatus
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    alert('Status updated successfully.');
-                    location.reload();  // Reload the page to reflect status update
-                } else {
-                    alert('Failed to update status: ' + response.error);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("AJAX error:", status, error);
-            }
-        });
-    });
-});
-
-
-    </script>
-    <?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
 
