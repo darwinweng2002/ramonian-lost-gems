@@ -2,7 +2,7 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'root', '1234', 'lost_db'); // Replace with your actual DB connection details
 
 // Check connection
 if ($conn->connect_error) {
@@ -22,7 +22,7 @@ if (isset($_GET['id'])) {
                 mi.description, 
                 mi.last_seen_location, 
                 mi.time_missing, 
-                mi.status, 
+                mi.status,  /* Status field is fetched */
                 mi.created_at, 
                 um.email, 
                 um.college,
@@ -52,7 +52,7 @@ if (isset($_GET['id'])) {
     <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
-        body {
+       body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -140,6 +140,9 @@ if (isset($_GET['id'])) {
         <?php
         if ($result && $result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
+                // Assign the status field to the variable
+                $status = $row['status'];  // Assign the status value from the result
+
                 $images = explode(',', $row['images']); // Convert image paths to an array
 
                 echo "<div class='message-box'>";
@@ -169,7 +172,30 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
+                echo "<div class='form-group col-lg-12 col-md-12 col-sm-12 col-xs-12'>";
+                echo "<label for='status' class='control-label'>Status</label>";
+                echo "<select name='status' id='status-".$row['id']."' class='form-select form-select-sm rounded-0' required='required'>";
+                echo "<option value='0' " . ($status == 0 ? 'selected' : '') . ">Pending</option>";
+                echo "<option value='1' " . ($status == 1 ? 'selected' : '') . ">Published</option>";
+                echo "<option value='2' " . ($status == 2 ? 'selected' : '') . ">Claimed</option>";
+                echo "<option value='3' " . ($status == 3 ? 'selected' : '') . ">Surrendered</option>";
+                echo "</select>";
+                echo "<button class='btn btn-primary save-status-btn' data-id='" . $row['id'] . "'>Save Status</button>";
+
+                // Close message box div
+                echo "</div>";
+                echo "<dt class='text-muted'>Status</dt>";
+                if ($status == 1) {
+                    echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
+                } elseif ($status == 2) {
+                    echo "<span class='badge bg-success px-3 rounded-pill'>Claimed</span>";
+                } elseif ($status == 3) {
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
+                } else {
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
+                }
                 
+
                 if (!empty($images)) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
@@ -180,7 +206,7 @@ if (isset($_GET['id'])) {
                     }
                     echo "</div>";
                 }
-                // Add both buttons
+
                 echo "<button class='publish-btn' data-id='" . htmlspecialchars($row['id']) . "'>Publish</button>";
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
                 echo "</div>";
@@ -192,55 +218,87 @@ if (isset($_GET['id'])) {
     <!-- Include JavaScript files -->
     <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/custom.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 
     <script>
       $(document).ready(function() {
-        $('.delete-btn').on('click', function() {
-            var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to delete this missing item?')) {
-                $.ajax({
-                    url: 'delete_message.php',
-                    type: 'POST',
-                    data: { id: messageId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            alert('Missing item deleted successfully.');
-                            location.reload();
-                        } else {
-                            alert('Failed to delete the missing item: ' + response.error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX error:", status, error);
-                    }
-                });
-            }
-        });
-
-        $('.publish-btn').on('click', function() {
-            var messageId = $(this).data('id');
+    // Delete button functionality
+    $('.delete-btn').on('click', function() {
+        var itemId = $(this).data('id');
+        if (confirm('Are you sure you want to delete this missing item?')) {
             $.ajax({
-                url: 'publish_message.php',
+                url: 'delete_message.php', // Make sure this path is correct
                 type: 'POST',
-                data: { id: messageId },
+                data: { id: itemId },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        alert('Missing item published successfully.');
-                        location.reload();
+                        alert('Missing item deleted successfully.');
+                        location.reload(); // Reload the page
                     } else {
-                        alert('Failed to publish the missing item: ' + response.error);
+                        alert('Failed to delete the missing item: ' + response.error);
                     }
                 },
                 error: function(xhr, status, error) {
                     console.error("AJAX error:", status, error);
                 }
             });
+        }
+    });
+
+    // Publish button functionality
+    $('.publish-btn').on('click', function() {
+        var itemId = $(this).data('id');
+        $.ajax({
+            url: 'publish_message.php', // Make sure this path is correct
+            type: 'POST',
+            data: { id: itemId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert('Missing item published successfully.');
+                    location.reload(); // Reload the page
+                } else {
+                    alert('Failed to publish the missing item: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX error:", status, error);
+            }
         });
-      });
+    });
+});
+$(document).ready(function() {
+    // Handle status update
+    $('.save-status-btn').on('click', function() {
+        var itemId = $(this).data('id');
+        var selectedStatus = $('#status-' + itemId).val(); // Get the selected status
+
+        // Send an AJAX request to update the status
+        $.ajax({
+            url: 'update_status.php', // Backend URL to handle status updates
+            type: 'POST',
+            data: {
+                id: itemId,
+                status: selectedStatus
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert('Status updated successfully.');
+                    location.reload();  // Reload the page to reflect status update
+                } else {
+                    alert('Failed to update status: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX error:", status, error);
+            }
+        });
+    });
+});
+
+
     </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>

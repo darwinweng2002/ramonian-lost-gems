@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');// Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
 
 // Check connection
 if ($conn->connect_error) {
@@ -19,7 +19,7 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get missing item details and associated images
-$sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi.title, um.first_name, um.college, um.email, um.avatar, mi.contact, c.name as category_name, imi.image_path
+$sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi.title, mi.status, um.first_name, um.college, um.email, um.avatar, mi.contact, c.name as category_name, imi.image_path
         FROM missing_items mi
         LEFT JOIN user_member um ON mi.user_id = um.id
         LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
@@ -96,7 +96,7 @@ $result = $stmt->get_result();
             padding: 10px 20px;
             font-size: 16px;
             color: #fff;
-            background-color: #E63946; /* Blue color */
+            background-color: #3498db; /* Blue color */
             border: none;
             border-radius: 5px;
             text-align: center;
@@ -106,9 +106,19 @@ $result = $stmt->get_result();
             margin-top: 10px;
         }
         .claim-button:hover {
-            background-color: #E63940; /* Darker blue */
+            background-color: #2980b9; /* Darker blue */
             color: #fff;
         }
+        .badge {
+            font-size: 14px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+        .badge-published { background-color: #28a745; color: white; }
+        .badge-claimed { background-color: #ffc107; color: white; }
+        .badge-surrendered { background-color: #6c757d; color: white; }
+        .badge-pending { background-color: #007bff; color: white; }
     </style>
 </head>
 <body>
@@ -117,7 +127,7 @@ $result = $stmt->get_result();
         <br>
         <br>
         <br>
-        <h1>Missing item details.</h1>
+        <h1>Missing Item Details</h1>
         <?php
         if ($result->num_rows > 0) {
             $items = [];
@@ -128,6 +138,7 @@ $result = $stmt->get_result();
                         'last_seen_location' => $row['last_seen_location'],
                         'time_missing' => $row['time_missing'],
                         'title' => $row['title'],
+                        'status' => $row['status'], // Fetch the status
                         'first_name' => $row['first_name'],
                         'college' => $row['college'],
                         'email' => $row['email'],
@@ -155,7 +166,8 @@ $result = $stmt->get_result();
                 $timeMissing = htmlspecialchars($itemData['time_missing'] ?? ''); // Fetch date and time
                 $contact = htmlspecialchars($itemData['contact'] ?? '');
                 $categoryName = htmlspecialchars($itemData['category_name'] ?? '');
-                
+                $status = intval($itemData['status']); // Get the correct status
+
                 echo "<div class='message-box'>";
                 
                 if ($avatar) {
@@ -173,7 +185,21 @@ $result = $stmt->get_result();
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
-                
+
+                // Add Status Display using the new status indicator code
+                echo "<dt class='text-muted'>Status</dt>";
+                echo "<dd class='ps-4'>";
+                if ($status == 1) {
+                    echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
+                } elseif ($status == 2) {
+                    echo "<span class='badge bg-success px-3 rounded-pill'>Claimed</span>";
+                } elseif ($status == 3) {
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
+                } else {
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";   
+                }
+                echo "</dd>";
+
                 if (!empty($itemData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
@@ -184,7 +210,7 @@ $result = $stmt->get_result();
                 }
                 
                 // Add Claim Request Button
-                echo "<a href='https://ramonianlostgems.com/send_message.php' class='claim-button'>Report if you found this item.</a>";
+                echo "<a href='claim_request.php?id=" . urlencode($itemId) . "' class='claim-button'>Claim Request</a>";
                 
                 echo "</div>";
             }

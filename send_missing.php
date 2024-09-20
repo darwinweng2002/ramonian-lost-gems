@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lastSeenLocation = $_POST['last_seen_location'];
     $timeMissing = $_POST['time_missing'];
     $userId = $_SESSION['user_id'];
-    $status = 'Pending';
+    $status = 0; // Set to 0 for 'Pending' (assuming 0 is for 'Pending')
     $contact = isset($_POST['contact']) ? $_POST['contact'] : '';
     $category_id = $_POST['category_id'];
     $new_category = $_POST['new_category'];
@@ -62,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Success or error message for SweetAlert
     $alertMessage = isset($error) ? $error : "Your missing item report has been successfully submitted!";
 }
+
 // Retrieve user information
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
@@ -73,6 +74,7 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -194,7 +196,7 @@ if (isset($_SESSION['user_id'])) {
         </div>
         <?php endif; ?>
 
-        <form action="send_missing.php" method="post" enctype="multipart/form-data" class="message-form">
+        <form action="post_missing_item.php" method="post" enctype="multipart/form-data" class="message-form">
             <label for="title">Title of the Missing Item:</label>
             <input type="text" name="title" id="title" placeholder="Enter item title" required>
             <label for="category">

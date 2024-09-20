@@ -52,7 +52,7 @@ $sqlFound .= " GROUP BY mh.id
 $sqlMissing = "SELECT mi.id, mi.title, mi.category_id, mi.time_missing, mi.description, GROUP_CONCAT(mii.image_path) AS image_paths
                FROM missing_items mi
                LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
-               WHERE mi.status = 'Published'";
+               WHERE mi.status = 1"; 
 
 // Search and filter by category
 if ($searchTerm) {
