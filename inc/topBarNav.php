@@ -302,8 +302,10 @@
         <div class="d-flex align-items-center justify-content-between" style="margin-left: 0;">
             <a href="<?= base_url ?>" class="logo d-flex align-items-center">
                 <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
-                <span class="short_name">Ramonian Lost Gems</span>
             </a>
+        </div>
+        <div>
+            <h1>Ramonian Lost Gems</h1>
         </div>
 
         <button class="navbar-toggler d-lg-none" id="navbar-toggler" type="button" aria-expanded="false">
