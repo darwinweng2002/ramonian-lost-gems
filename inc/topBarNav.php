@@ -66,11 +66,10 @@
 
 }
 .logo img {
-    margin-top: 5px;
+    margin-top: 4px;
     margin-left: 100%;
     width: 55px;
     height: 55px;
-    border: yellow;
 }
  .dropdown {
             position: relative;
@@ -270,7 +269,8 @@
 
 .ramon h1 {
     margin: 0;
-    font-size: 24px;
+    margin-left: 5px;
+    font-size: 20px;
     color: #00274D; /* Adjust color for visibility */
     text-align: center;
 }
