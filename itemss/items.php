@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); 
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
 // Check connection
 if ($conn->connect_error) {
@@ -28,17 +28,15 @@ if (isset($_GET['category_id'])) {
 // Fetch categories for dropdown
 $categoriesResult = $conn->query("SELECT id, name FROM categories");
 
-// SQL query for found items with extended search functionality
+// SQL query for found items
 $sqlFound = "SELECT mh.id, mh.title, mh.category_id, mh.time_found, mh.message, GROUP_CONCAT(mi.image_path) AS image_paths
              FROM message_history mh
              LEFT JOIN message_images mi ON mh.id = mi.message_id
              WHERE mh.is_published = 1";
 
-// Search and filter by category
+// Search and filter by category for found items
 if ($searchTerm) {
     $sqlFound .= " AND (mh.title LIKE '%$searchTerm%' 
-                      OR mh.category_id LIKE '%$searchTerm%'
-                      OR mh.time_found LIKE '%$searchTerm%'
                       OR mh.message LIKE '%$searchTerm%')";
 }
 if ($selectedCategory) {
@@ -48,17 +46,15 @@ if ($selectedCategory) {
 $sqlFound .= " GROUP BY mh.id
                ORDER BY mh.id DESC";
 
-// SQL query for missing items with extended search functionality
+// SQL query for missing items (using numerical status values)
 $sqlMissing = "SELECT mi.id, mi.title, mi.category_id, mi.time_missing, mi.description, GROUP_CONCAT(mii.image_path) AS image_paths
                FROM missing_items mi
                LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
-               WHERE mi.status = 1"; 
+               WHERE mi.status = 1";  // '1' corresponds to 'Published'
 
-// Search and filter by category
+// Search and filter by category for missing items
 if ($searchTerm) {
     $sqlMissing .= " AND (mi.title LIKE '%$searchTerm%'
-                         OR mi.category_id LIKE '%$searchTerm%'
-                         OR mi.time_missing LIKE '%$searchTerm%'
                          OR mi.description LIKE '%$searchTerm%')";
 }
 if ($selectedCategory) {
@@ -98,95 +94,65 @@ $resultMissing = $conn->query($sqlMissing);
             color: #333;
             margin-bottom: 20px;
         }
-        ..search-bar {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.search-bar form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-
-.search-bar input[type="text"],
-.search-bar select {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    width: 100%;
-    max-width: 400px;
-    box-sizing: border-box;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
-}
-
-.search-bar input[type="text"]:focus,
-.search-bar select:focus {
-    border-color: #333;
-    outline: none;
-}
-
-.search-bar button {
-    padding: 12px 20px;
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-.search-bar button:hover {
-    background-color: #008BFF;
-}
-
-/* Gallery Grid Styling */
-/* Gallery Grid Styling */
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-}
-
-.gallery-item {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    text-align: center;
-    position: relative; /* Ensure positioning context for title */
-    overflow: hidden; /* Ensure content doesn't overflow */
-    height: 300px; /* Fixed height for consistency */
-}
-
-.gallery-item img {
-    width: 100%; /* Make the image cover the width of the container */
-    height: 100%; /* Make the image cover the height of the container */
-    object-fit: cover; /* Ensure the image covers the container while preserving aspect ratio */
-    border-radius: 5px;
-}
-
-.gallery-item h3 {
-    position: absolute; /* Position title absolutely within the container */
-    bottom: 10px; /* Distance from the bottom */
-    left: 0; /* Align to the left */
-    right: 0; /* Align to the right */
-    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background for readability */
-    color: #fff; /* White text color */
-    padding: 5px; /* Space around text */
-    text-align: center; /* Center-align text */
-    border-radius: 0 0 8px 8px; /* Rounded corners at the bottom */
-}
-
-.gallery-item a {
-    text-decoration: none;
-    color: #333;
-}
-
-
+        .search-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-bar form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-bar input[type="text"],
+        .search-bar select {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            width: 100%;
+            max-width: 400px;
+            font-size: 16px;
+        }
+        .search-bar button {
+            padding: 12px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .gallery-item {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            height: 300px;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .gallery-item h3 {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 5px;
+            text-align: center;
+            border-radius: 0 0 8px 8px;
+        }
     </style>
 </head>
 <body>
@@ -228,7 +194,7 @@ $resultMissing = $conn->query($sqlMissing);
 
                 echo "<div class='gallery-item'>";
                 echo "<a href='published_items.php?id=" . $itemId . "'>";
-                if (!empty($images)) {
+                if (!empty($images) && $images[0] !== '') {
                     echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
                 } else {
                     echo "<img src='uploads/items/default-image.png' alt='No Image'>";
@@ -255,7 +221,7 @@ $resultMissing = $conn->query($sqlMissing);
 
                 echo "<div class='gallery-item'>";
                 echo "<a href='view_missing.php?id=" . $itemId . "'>";
-                if (!empty($images)) {
+                if (!empty($images) && $images[0] !== '') {
                     echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
                 } else {
                     echo "<img src='uploads/items/default-image.png' alt='No Image'>";
