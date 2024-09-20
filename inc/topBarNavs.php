@@ -149,10 +149,10 @@
     document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
         const sideNavBar = document.getElementById('side-nav-bar');
 
-        if (sideNavBar.style.left === '0px' || sideNavBar.style.left === '') {
-            sideNavBar.style.left = '-250px'; // Hide the sidebar
+        if (sideNavBar.style.right === '0px' || sideNavBar.style.left === '') {
+            sideNavBar.style.right = '-250px'; // Hide the sidebar
         } else {
-            sideNavBar.style.left = '0'; // Show the sidebar
+            sideNavBar.style.right = '0'; // Show the sidebar
         }
     });
 </script>
