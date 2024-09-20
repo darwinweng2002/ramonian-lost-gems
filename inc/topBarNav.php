@@ -319,7 +319,8 @@
             </a>
         </div>
         <div class="ramon">
-            <h1>Ramonian Lost Gems</h1>
+            <h1>Ramonian 
+                Lost Gems</h1>
         </div>
 
         <button class="navbar-toggler d-lg-none" id="navbar-toggler" type="button" aria-expanded="false">
