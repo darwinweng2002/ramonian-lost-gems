@@ -65,11 +65,6 @@
     }
 
 }
-
-.short_name {
-    margin-top: 3px;
-    text-decoration: none;
-}
 .logo img {
     margin-top: 3px;
     margin-left: 80%;
