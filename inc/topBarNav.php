@@ -65,6 +65,37 @@
     }
 
 }
+/* Profile Icon Styling */
+.profile-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 20px;
+}
+
+.profile-icon a {
+    text-decoration: none;
+    color: #fff; /* Change color to fit your theme */
+    font-size: 20px;
+    transition: color 0.3s ease;
+}
+
+.profile-icon a:hover {
+    color: #F6B825; /* Change color on hover */
+}
+
+/* For the profile icon SVG */
+.profile-icon svg {
+    width: 30px;
+    height: 30px;
+    fill: #fff; /* Profile icon color */
+    transition: fill 0.3s ease;
+}
+
+.profile-icon svg:hover {
+    fill: #F6B825; /* Change icon color on hover */
+}
+
 .logo img {
     margin-top: 4px;
     margin-left: 120%;
@@ -269,7 +300,7 @@
 
 .ramon h1 {
     margin: 0;
-    margin-left: 40px;
+    margin-left: 50px;
     font-size: 20px;
     color: #00274D; /* Adjust color for visibility */
     text-align: center;
@@ -321,6 +352,11 @@
         <div class="ramon">
             <h1>Ramonian 
                 Lost Gems</h1>
+        </div>
+        <div class="profile-icon">
+            <a href="https://ramonianlostgems.com/user_members/profile.php" title="Profile">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-user"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/></svg>
+            </a>
         </div>
 
         <button class="navbar-toggler d-lg-none" id="navbar-toggler" type="button" aria-expanded="false">
