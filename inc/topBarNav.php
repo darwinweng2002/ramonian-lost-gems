@@ -2,10 +2,10 @@
 <style type="text/css">
     /* Styling for the logo and header */
     .logo img {
-        width: 55px;
-        height: 55px;
-        top: 10px;
-    }
+    width: 55px; /* Logo size */
+    height: 55px;
+    object-fit: contain; /* Ensure the logo fits within its container */
+}
 
     /* Aligning content inside the header */
     .container-lg {
@@ -14,7 +14,12 @@
         align-items: center;
         width: 100%;
     }
-
+    .header {
+    height: 60px; /* Adjust this as needed based on your logo size */
+    background-color: #fff; /* Optional: set background color */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: add shadow for better visibility */
+    padding: 0;
+}
     /* Sidebar styling */
     #side-nav-bar {
         position: fixed;
@@ -85,8 +90,12 @@
 
     /* Centering and aligning logo and button */
     .logo {
-        margin-left: 0;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align logo to the left */
+    padding-left: 15px; /* Add some padding for spacing from the left */
+    height: 100%; /* Ensure the logo container fills the height of the header */
+}
 
     /* Push sidebar toggle button to the right */
     .navbar-toggler {
