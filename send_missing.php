@@ -196,7 +196,7 @@ if (isset($_SESSION['user_id'])) {
         </div>
         <?php endif; ?>
 
-        <form action="post_missing_item.php" method="post" enctype="multipart/form-data" class="message-form">
+        <form action="send_missing.php" method="post" enctype="multipart/form-data" class="message-form">
             <label for="title">Title of the Missing Item:</label>
             <input type="text" name="title" id="title" placeholder="Enter item title" required>
             <label for="category">
