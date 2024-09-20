@@ -128,6 +128,7 @@ if (isset($_POST['guest_login'])) {
                     <h5 class="card-title text-center pb-0 fs-4">User Account Login</h5>
                     <p class="text-center small">Enter your email & password to login</p>
                   </div>
+                  <form class="row g-3 needs-validation" novalidate method="POST">
                               <div class="col-12">
                   <label for="yourEmail" class="form-label">Username</label>
                   <div class="input-group has-validation">
