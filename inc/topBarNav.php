@@ -66,15 +66,15 @@
 
 }
 
-.logo {
-    display: flex;
-    align-items: center; /* Align logo and system name in the center vertically */
-}
-
 .short_name {
-    margin-left: 10px; /* Add some space between the logo and the system name */
-    font-size: 18px; /* Adjust the font size for the system name */
-    color: #fff; /* Ensure the system name is visible */
+    margin-top: 3px;
+    margin-left: 100%;
+}
+.logo img {
+    margin-top: 3px;
+    margin-left: 100%;
+    width: 55px;
+    height: 55px;
 }
  .dropdown {
             position: relative;
@@ -259,17 +259,7 @@
 .header-nav .nav-link {
     text-decoration: none;
 }
-@media (max-width: 768px) {
-    .short_name {
-        display: inline-block; /* Ensure the system name shows up on smaller screens */
-        font-size: 16px; /* Optionally, reduce the font size slightly for small screens */
-    }
 
-    .logo img {
-        width: 55px; /* Keep the logo size intact */
-        height: 55px; /* Keep the logo size intact */
-    }
-}
 /* Responsive adjustments for sidebar */
 @media (max-width: 512px) {
     .logo img {
