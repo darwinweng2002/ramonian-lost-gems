@@ -5,7 +5,7 @@
         width: 55px; /* Logo size */
         height: 55px;
         object-fit: contain; /* Ensure the logo fits within its container */
-        margin-top: 5px;
+        margin-top: 3px;
     }
 
     /* Aligning content inside the header */
@@ -15,6 +15,7 @@
         align-items: center;
         width: 100%;
     }
+
     .header {
         height: 60px; /* Adjust this as needed based on your logo size */
         background-color: #fff; /* Optional: set background color */
@@ -23,76 +24,79 @@
     }
 
     /* Sidebar styling */
-    #side-nav-bar {
-        position: fixed;
-        left: -250px; /* Initially hide the sidebar */
-        top: 0;
-        width: 250px;
-        height: 100%;
-        background-color: #2c3e50;
-        color: #ecf0f1;
-        transition: left 0.3s ease;
-        z-index: 9999;
-        overflow-y: auto;
-        padding-top: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-    }
+    /* Sidebar styling */
+#side-nav-bar {
+    position: fixed;
+    right: 250px; /* Initially hide the sidebar */
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    transition: right 0.3s ease;
+    z-index: 9999;
+    overflow-y: auto;
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+}
 
-    /* Sidebar links */
-    #side-nav-bar ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-    }
+/* Sidebar links */
+#side-nav-bar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
 
-    #side-nav-bar ul li {
-        padding: 10px;
-        border-bottom: 1px solid #34495e;
-    }
+#side-nav-bar ul li {
+    padding: 10px;
+    border-bottom: 1px solid #34495e;
+}
 
-    #side-nav-bar ul li a {
-        text-decoration: none;
-        color: #ecf0f1;
-        display: block;
-        font-size: 16px;
-        transition: background-color 0.3s ease, padding-left 0.3s ease;
-    }
+#side-nav-bar ul li a {
+    text-decoration: none;
+    color: #ecf0f1;
+    display: block;
+    font-size: 16px;
+    padding: 10px 15px; /* Ensures padding applies only to the left and right within the sidebar */
+    transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
 
-    #side-nav-bar ul li a:hover {
-        background-color: #34495e;
-        padding-left: 20px;
-    }
+#side-nav-bar ul li a:hover {
+    background-color: #34495e;
+    padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
+}
 
-    /* Sidebar toggle button styling */
+/* Sidebar toggle button styling */
+#sidebar-toggle-button {
+    position: fixed;
+    right: 20px; /* Keep the button on the right */
+    top: 15px; /* Adjust to align with your design */
+    background-color: #3498db; /* Professional color */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    z-index: 10000; /* Make sure it's above other elements */
+}
+
+#sidebar-toggle-button:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
     #sidebar-toggle-button {
-        position: fixed;
-        right: 0;
-        top: 0; /* Adjust to align with your design */
-        background-color: #3498db; /* Professional color */
-        color: white;
-        padding: 21px 30px;
-        border: none;
-        border-radius: 2px;
-        cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        z-index: 10000; /* Make sure it's above other elements */
+        display: block;
     }
 
-    #sidebar-toggle-button:hover {
-        background-color: #2980b9;
+    #side-nav-bar {
+        width: 50%;
+        right: -100%;
     }
+}
 
-    /* Responsive adjustments for smaller screens */
-    @media (max-width: 768px) {
-        #sidebar-toggle-button {
-            display: block;
-        }
-
-        #side-nav-bar {
-            width: 50%;
-            left: -100%;
-        }
-    }
 
     /* Centering and aligning logo and button */
     .logo {
@@ -152,10 +156,11 @@
     document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
         const sideNavBar = document.getElementById('side-nav-bar');
 
-        if (sideNavBar.style.left === '0px' || sideNavBar.style.left === '') {
-            sideNavBar.style.left = '-250px'; // Hide the sidebar
+        // Show or hide the sidebar
+        if (sideNavBar.style.right === '0px') {
+            sideNavBar.style.right = '-250px'; // Hide sidebar
         } else {
-            sideNavBar.style.left = '0'; // Show the sidebar
+            sideNavBar.style.right = '0'; // Show sidebar
         }
     });
 
