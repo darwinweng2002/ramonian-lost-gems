@@ -68,7 +68,6 @@
 
 .short_name {
     margin-top: 3px;
-    margin-left: 100%;
     text-decoration: none;
 }
 .logo img {
