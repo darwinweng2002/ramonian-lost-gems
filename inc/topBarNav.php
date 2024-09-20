@@ -4,6 +4,7 @@
     .logo img {
         width: 55px;
         height: 55px;
+        top: 10px;
     }
 
     /* Aligning content inside the header */
