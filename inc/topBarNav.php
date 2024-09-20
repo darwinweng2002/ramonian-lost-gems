@@ -66,10 +66,11 @@
 
 }
 .logo img {
-    margin-top: 55px;
-    margin-left: 110%;
+    margin-top: 5px;
+    margin-left: 100%;
     width: 55px;
     height: 55px;
+    border: yellow;
 }
  .dropdown {
             position: relative;
@@ -264,7 +265,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 15px; /* Space between the logo and the text */
+    margin-right: 10px; /* Space between the logo and the text */
 }
 
 .ramon h1 {
