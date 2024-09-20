@@ -259,6 +259,27 @@
 .header-nav .nav-link {
     text-decoration: none;
 }
+@media (max-width: 768px) {
+    .logo img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .short_name {
+        display: block; /* Show the system name on smaller screens */
+        font-size: 18px; /* Adjust the font size for the system name */
+        color: #fff; /* Ensure the system name is visible */
+        margin-left: 10px; /* Add some space between logo and text */
+        text-align: center; /* Center the text under the logo */
+    }
+    
+    /* Ensure the logo and text are centered */
+    .logo {
+        display: flex;
+        flex-direction: column; /* Stack logo and system name vertically */
+        align-items: center; /* Center the items */
+    }
+}
 /* Responsive adjustments for sidebar */
 @media (max-width: 512px) {
     #side-nav-bar {
@@ -301,7 +322,7 @@
         <div class="d-flex align-items-center justify-content-between" style="margin-left: 0;">
             <a href="<?= base_url ?>" class="logo d-flex align-items-center">
                 <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
-                <span class="d-none d-lg-block"><?= $_settings->info('short_name') ?></span>
+                <span class="short_name"><?= $_settings->info('short_name') ?></span>
             </a>
         </div>
 
