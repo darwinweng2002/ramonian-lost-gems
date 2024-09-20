@@ -96,7 +96,7 @@ $result = $stmt->get_result();
             padding: 10px 20px;
             font-size: 16px;
             color: #fff;
-            background-color: #3498db; /* Blue color */
+            background-color: #E63946; /* Blue color */
             border: none;
             border-radius: 5px;
             text-align: center;
@@ -106,19 +106,9 @@ $result = $stmt->get_result();
             margin-top: 10px;
         }
         .claim-button:hover {
-            background-color: #2980b9; /* Darker blue */
+            background-color: #E63940; /* Darker blue */
             color: #fff;
         }
-        .badge {
-            font-size: 14px;
-            padding: 8px 12px;
-            border-radius: 20px;
-            margin-top: 10px;
-        }
-        .badge-published { background-color: #28a745; color: white; }
-        .badge-claimed { background-color: #ffc107; color: white; }
-        .badge-surrendered { background-color: #6c757d; color: white; }
-        .badge-pending { background-color: #007bff; color: white; }
     </style>
 </head>
 <body>
@@ -210,7 +200,7 @@ $result = $stmt->get_result();
                 }
                 
                 // Add Claim Request Button
-                echo "<a href='claim_request.php?id=" . urlencode($itemId) . "' class='claim-button'>Claim Request</a>";
+                echo "<a href='https://ramonianlostgems.com/send_message.php' class='claim-button'>Report if you found this item.</a>";
                 
                 echo "</div>";
             }
