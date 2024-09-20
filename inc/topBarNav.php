@@ -5,6 +5,7 @@
     width: 55px; /* Logo size */
     height: 55px;
     object-fit: contain; /* Ensure the logo fits within its container */
+    margin-top: 10px;
 }
 
     /* Aligning content inside the header */
