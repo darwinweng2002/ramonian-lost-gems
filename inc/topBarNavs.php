@@ -27,7 +27,7 @@
     /* Sidebar styling */
 #side-nav-bar {
     position: fixed;
-    left: 250px; /* Initially hide the sidebar */
+    right: 250px; /* Initially hide the sidebar */
     top: 0;
     width: 250px;
     height: 100%;
@@ -58,12 +58,12 @@
     display: block;
     font-size: 16px;
     padding: 10px 15px; /* Ensures padding applies only to the left and right within the sidebar */
-    transition: background-color 0.3s ease, padding-right 0.3s ease;
+    transition: background-color 0.3s ease, padding-left 0.3s ease;
 }
 
 #side-nav-bar ul li a:hover {
     background-color: #34495e;
-    padding-right: 30px; /* Increase padding slightly on hover for a sliding effect */
+    padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
 }
 
 /* Sidebar toggle button styling */
@@ -155,10 +155,10 @@
         const sideNavBar = document.getElementById('side-nav-bar');
 
         // Show or hide the sidebar
-        if (sideNavBar.style.left === '0px') {
-            sideNavBar.style.left = '-250px'; // Hide sidebar
+        if (sideNavBar.style.right === '0px') {
+            sideNavBar.style.right = '-250px'; // Hide sidebar
         } else {
-            sideNavBar.style.left = '0'; // Show sidebar
+            sideNavBar.style.right = '0'; // Show sidebar
         }
     });
 </script>
