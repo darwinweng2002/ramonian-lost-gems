@@ -254,7 +254,25 @@
 .header-nav .nav-link {
     text-decoration: none;
 }
+.container-lg {
+    display: flex;
+    justify-content: center; /* Center align the entire content */
+    align-items: center; /* Vertically center the logo and text */
+}
 
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px; /* Space between the logo and the text */
+}
+
+.ramon h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #fff; /* Adjust color for visibility */
+    text-align: center;
+}
 /* Responsive adjustments for sidebar */
 @media (max-width: 512px) {
     #side-nav-bar {
@@ -264,11 +282,6 @@
     #sidebar-toggle-button {
         display: block;
     }
-    .short_name {
-    margin-top: 3px;
-    margin-left: 100%;
-    text-decoration: none;
-}
 }
 /* Hide the sidebar toggle button when the sidebar is open */
 #sidebar-toggle-button.hidden {
@@ -299,12 +312,12 @@
     </div>
 
     <div class="container-lg d-flex justify-content-between px-4">
-        <div class="d-flex align-items-center justify-content-between" style="margin-left: 0;">
-            <a href="<?= base_url ?>" class="logo d-flex align-items-center">
+        <div class="logo d-flex align-items-center">
+            <a href="<?= base_url ?>">
                 <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
             </a>
         </div>
-        <div>
+        <div class="ramon">
             <h1>Ramonian Lost Gems</h1>
         </div>
 
