@@ -69,6 +69,7 @@
 .short_name {
     margin-top: 3px;
     margin-left: 100%;
+    text-decoration: none;
 }
 .logo img {
     margin-top: 3px;
@@ -302,7 +303,7 @@
         <div class="d-flex align-items-center justify-content-between" style="margin-left: 0;">
             <a href="<?= base_url ?>" class="logo d-flex align-items-center">
                 <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
-                <span class="short_name"><?= $_settings->info('short_name') ?></span>
+                <span class="short_name">Ramonian Lost Gems</span>
             </a>
         </div>
 
