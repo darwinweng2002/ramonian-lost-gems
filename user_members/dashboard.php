@@ -404,7 +404,21 @@ $missing_stmt->close();
                 <tr>
                     <td><?= htmlspecialchars($missing_item['title']) ?></td>
                     <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
-                    <td><?= htmlspecialchars($missing_item['status']) ?></td>
+                    <td>
+                        <?php
+                            if ($missing_item['status'] == 0) {
+                                echo 'Pending';
+                            } elseif ($missing_item['status'] == 1) {
+                                echo 'Published';
+                            } elseif ($missing_item['status'] == 2) {
+                                echo 'Claimed';
+                            } elseif ($missing_item['status'] == 3) {
+                                echo 'Surrendered';
+                            } else {
+                                echo 'Unknown Status'; // Optional fallback
+                            }
+                        ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
