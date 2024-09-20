@@ -259,7 +259,9 @@
 .header-nav .nav-link {
     text-decoration: none;
 }
-@media (max-width: 768px) {
+
+/* Responsive adjustments for sidebar */
+@media (max-width: 512px) {
     .logo img {
         width: 40px;
         height: 40px;
@@ -278,16 +280,6 @@
         display: flex;
         flex-direction: column; /* Stack logo and system name vertically */
         align-items: center; /* Center the items */
-    }
-}
-/* Responsive adjustments for sidebar */
-@media (max-width: 512px) {
-    #side-nav-bar {
-        width: 50%; /* Adjust width for small screens */
-        left: -100%; /* Initially hide the sidebar */
-    }
-    #sidebar-toggle-button {
-        display: block;
     }
 }
 /* Hide the sidebar toggle button when the sidebar is open */
