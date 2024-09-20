@@ -75,7 +75,7 @@
 
 .profile-icon a {
     text-decoration: none;
-    color: #fff; /* Change color to fit your theme */
+    color: #ccc; /* Change color to fit your theme */
     font-size: 20px;
     transition: color 0.3s ease;
 }
@@ -98,7 +98,7 @@
 
 .logo img {
     margin-top: 4px;
-    margin-left: 120%;
+    margin-left: 100%;
     width: 55px;
     height: 55px;
 }
