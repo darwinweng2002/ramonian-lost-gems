@@ -120,6 +120,15 @@ if (isset($_POST['guest_login'])) {
 .swal2-overlay {
     overflow: auto;             
 }
+.swal2-centered-popup {
+  max-height: 90vh; /* Ensure the modal doesn't exceed 90% of viewport height */
+  overflow-y: auto; /* Enable scrolling within the modal if content exceeds the height */
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
   </style>
   <main>
     <div class="container">
@@ -237,11 +246,15 @@ if (isset($_POST['guest_login'])) {
       // Check if there's an error message
       <?php if ($error_message): ?>
         Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: '<?php echo $error_message; ?>',
-          confirmButtonText: 'OK'
-        });
+  icon: 'error',
+  title: 'Oops...',
+  text: '<?php echo $error_message; ?>',
+  confirmButtonText: 'OK',
+  position: 'center',  // Ensure it's centered
+  customClass: {
+    popup: 'swal2-centered-popup' // Add a custom class to override styles
+  }
+});
       <?php endif; ?>
       
       // Show loader on form submission
