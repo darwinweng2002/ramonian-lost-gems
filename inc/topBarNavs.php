@@ -24,7 +24,7 @@
     /* Sidebar styling */
     #side-nav-bar {
         position: fixed;
-        left: -250px; /* Initially hide the sidebar */
+        right: -250px; /* Initially hide the sidebar */
         top: 0;
         width: 250px;
         height: 100%;
