@@ -67,9 +67,10 @@
 }
 .logo img {
     margin-top: 3px;
-    margin-left: 100%;
+    margin-left: 110%;
     width: 55px;
     height: 55px;
+    top: 3px;
 }
  .dropdown {
             position: relative;
