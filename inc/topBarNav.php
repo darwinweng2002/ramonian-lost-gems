@@ -88,7 +88,7 @@
 .profile-icon svg {
     width: 30px;
     height: 30px;
-    fill: #fff; /* Profile icon color */
+    fill: #ccc; /* Profile icon color */
     transition: fill 0.3s ease;
 }
 
@@ -98,7 +98,7 @@
 
 .logo img {
     margin-top: 4px;
-    margin-left: 100%;
+    margin-left: 110%;
     width: 55px;
     height: 55px;
 }
