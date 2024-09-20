@@ -2,11 +2,11 @@
 <style type="text/css">
     /* Styling for the logo and header */
     .logo img {
-    width: 55px; /* Logo size */
-    height: 55px;
-    object-fit: contain; /* Ensure the logo fits within its container */
-    margin-top: 3px;
-}
+        width: 55px; /* Logo size */
+        height: 55px;
+        object-fit: contain; /* Ensure the logo fits within its container */
+        margin-top: 10px;
+    }
 
     /* Aligning content inside the header */
     .container-lg {
@@ -16,11 +16,12 @@
         width: 100%;
     }
     .header {
-    height: 60px; /* Adjust this as needed based on your logo size */
-    background-color: #fff; /* Optional: set background color */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: add shadow for better visibility */
-    padding: 0;
-}
+        height: 60px; /* Adjust this as needed based on your logo size */
+        background-color: #fff; /* Optional: set background color */
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: add shadow for better visibility */
+        padding: 0;
+    }
+
     /* Sidebar styling */
     #side-nav-bar {
         position: fixed;
@@ -64,18 +65,17 @@
 
     /* Sidebar toggle button styling */
     #sidebar-toggle-button {
-    position: fixed;
-    right: 0;
-    top: 0; /* Adjust to align with your design */
-    background-color: #3498db; /* Professional color */
-    color: white;
-    padding: 17px 30px;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    z-index: 10000; /* Make sure it's above other elements */
-        
+        position: fixed;
+        right: 0;
+        top: 0; /* Adjust to align with your design */
+        background-color: #3498db; /* Professional color */
+        color: white;
+        padding: 21px 30px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        z-index: 10000; /* Make sure it's above other elements */
     }
 
     #sidebar-toggle-button:hover {
@@ -96,12 +96,12 @@
 
     /* Centering and aligning logo and button */
     .logo {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Align logo to the left */
-    padding-left: 15px; /* Add some padding for spacing from the left */
-    height: 100%; /* Ensure the logo container fills the height of the header */
-}
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* Align logo to the left */
+        padding-left: 15px; /* Add some padding for spacing from the left */
+        height: 100%; /* Ensure the logo container fills the height of the header */
+    }
 
     /* Push sidebar toggle button to the right */
     .navbar-toggler {
@@ -125,7 +125,7 @@
             <li><a href="https://ramonianlostgems.com/send_missing.php">Report Missing Items</a></li>
             <li><a href="https://ramonianlostgems.com/itemss/items.php">Browse Items</a></li>
             <li style="position: absolute; bottom: 0;">
-                <a href="https://ramonianlostgems.com/logout.php" class="btn btn-primary mx-2">Logout</a>
+                <a href="#" id="logout-button" class="btn btn-primary mx-2">Logout</a> <!-- Add id="logout-button" -->
             </li>
         </ul>
     </div>
@@ -145,6 +145,9 @@
     </div>
 </header>
 
+<!-- Include SweetAlert library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script type="text/javascript">
     document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
         const sideNavBar = document.getElementById('side-nav-bar');
@@ -154,5 +157,27 @@
         } else {
             sideNavBar.style.left = '0'; // Show the sidebar
         }
+    });
+
+    // Add event listener for the logout button
+    document.getElementById('logout-button').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default behavior of the anchor tag
+
+        // Trigger SweetAlert confirmation
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You are about to log out.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, log out',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Perform the logout action if confirmed
+                window.location.href = "https://ramonianlostgems.com/logout.php";
+            }
+        });
     });
 </script>
