@@ -270,6 +270,11 @@
     #sidebar-toggle-button {
         display: block;
     }
+    .short_name {
+    margin-top: 3px;
+    margin-left: 100%;
+    text-decoration: none;
+}
 }
 /* Hide the sidebar toggle button when the sidebar is open */
 #sidebar-toggle-button.hidden {
