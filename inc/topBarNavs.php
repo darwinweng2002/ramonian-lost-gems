@@ -27,7 +27,7 @@
     /* Sidebar styling */
 #side-nav-bar {
     position: fixed;
-    left: -250px; /* Initially hide the sidebar */
+    left: 250px; /* Initially hide the sidebar */
     top: 0;
     width: 250px;
     height: 100%;
@@ -156,7 +156,7 @@
 
         // Show or hide the sidebar
         if (sideNavBar.style.left === '0px') {
-            sideNavBar.style.left = '250px'; // Hide sidebar
+            sideNavBar.style.left = '-250px'; // Hide sidebar
         } else {
             sideNavBar.style.left = '0'; // Show sidebar
         }
