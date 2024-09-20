@@ -269,7 +269,7 @@
 
 .ramon h1 {
     margin: 0;
-    margin-left: 100px;
+    margin-left: 20px;
     font-size: 20px;
     color: #00274D; /* Adjust color for visibility */
     text-align: center;
