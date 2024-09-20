@@ -109,6 +109,14 @@ if (isset($_POST['guest_login'])) {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+  .swal2-popup {
+    position: fixed !important; 
+    top: 50% !important;        
+    left: 50% !important;       
+    transform: translate(-50%, -50%) !important; 
+    z-index: 9999 !important;   
+    overflow: auto;             
+}
   </style>
   <main>
     <div class="container">
