@@ -156,7 +156,7 @@
 
         // Show or hide the sidebar
         if (sideNavBar.style.left === '0px') {
-            sideNavBar.style.left = '-250px'; // Hide sidebar
+            sideNavBar.style.left = '250px'; // Hide sidebar
         } else {
             sideNavBar.style.left = '0'; // Show sidebar
         }
