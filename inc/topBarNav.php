@@ -56,7 +56,7 @@
     text-decoration: none;
     color: #ecf0f1;
     display: block;
-    font-size: 16px;
+    font-size: 14px;
     padding: 5px 10px; /* Ensures padding applies only to the left and right within the sidebar */
     transition: background-color 0.3s ease, padding-left 0.3s ease;
 }
