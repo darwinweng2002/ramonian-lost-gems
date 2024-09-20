@@ -58,12 +58,12 @@
     display: block;
     font-size: 16px;
     padding: 10px 15px; /* Ensures padding applies only to the left and right within the sidebar */
-    transition: background-color 0.3s ease, padding-left 0.3s ease;
+    transition: background-color 0.3s ease, padding-right 0.3s ease;
 }
 
 #side-nav-bar ul li a:hover {
     background-color: #34495e;
-    padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
+    padding-right: 30px; /* Increase padding slightly on hover for a sliding effect */
 }
 
 /* Sidebar toggle button styling */
@@ -156,7 +156,7 @@
 
         // Show or hide the sidebar
         if (sideNavBar.style.left === '0px') {
-            sideNavBar.style.left = '250px'; // Hide sidebar
+            sideNavBar.style.left = '-250px'; // Hide sidebar
         } else {
             sideNavBar.style.left = '0'; // Show sidebar
         }
