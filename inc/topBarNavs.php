@@ -69,11 +69,11 @@
 /* Sidebar toggle button styling */
 #sidebar-toggle-button {
     position: fixed;
-    right: 20px; /* Keep the button on the right */
-    top: 15px; /* Adjust to align with your design */
+    right: 0; /* Keep the button on the right */
+    top: 0; /* Adjust to align with your design */
     background-color: #3498db; /* Professional color */
     color: white;
-    padding: 12px 20px;
+    padding: 17px 30px;
     border: none;
     border-radius: 2px;
     cursor: pointer;
