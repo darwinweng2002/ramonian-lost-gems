@@ -64,12 +64,12 @@
 
     /* Sidebar toggle button styling */
     #sidebar-toggle-button {
-        position: fixed;
+    position: fixed;
     right: 0;
     top: 0; /* Adjust to align with your design */
     background-color: #3498db; /* Professional color */
     color: white;
-    padding: 17px 30px;
+    padding: 19px 30px;
     border: none;
     border-radius: 2px;
     cursor: pointer;
