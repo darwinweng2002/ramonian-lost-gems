@@ -426,7 +426,6 @@ $missing_stmt->close();
 </div>
 
                                             <div class="text-center mt-4 d-flex justify-content-center">
-                                        <button id="logout-btn" class="btn btn-primary mx-2">Logout</button>
                                         <a href="https://ramonianlostgems.com/main.php" class="btn btn-secondary mx-2">Back</a>
                                     </div>
                                         </div>
