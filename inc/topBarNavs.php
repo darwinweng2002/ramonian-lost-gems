@@ -33,7 +33,7 @@
     height: 100%;
     background-color: #2c3e50;
     color: #ecf0f1;
-    transition: left 0.3s ease;
+    transition: right 0.3s ease;
     z-index: 9999;
     overflow-y: auto;
     padding-top: 20px;
@@ -93,7 +93,7 @@
 
     #side-nav-bar {
         width: 50%;
-        left: -100%;
+        right: -100%;
     }
 }
 
