@@ -125,7 +125,7 @@
             <li><a href="https://ramonianlostgems.com/send_missing.php">Report Missing Items</a></li>
             <li><a href="https://ramonianlostgems.com/itemss/items.php">Browse Items</a></li>
             <li style="position: absolute; bottom: 0;">
-                <a href="https://ramonianlostgems.com/logout.php" id="logout-btn" class="btn btn-primary mx-2">Logout</a>
+                <a href="https://ramonianlostgems.com/logout.php" class="btn btn-primary mx-2">Logout</a>
             </li>
         </ul>
     </div>
@@ -155,21 +155,4 @@
             sideNavBar.style.left = '0'; // Show the sidebar
         }
     });
-    document.getElementById('logout-btn').addEventListener('click', function (event) {
-            event.preventDefault(); // Prevent default link behavior
-            Swal.fire({
-                title: 'Are you sure you want to logout?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Redirect to logout URL
-                    window.location.href = 'logout.php';
-                }
-            });
-        });
 </script>
