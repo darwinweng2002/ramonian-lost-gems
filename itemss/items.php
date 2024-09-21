@@ -260,9 +260,24 @@ $resultMissing = $conn->query($sqlMissing);
                 $itemId = htmlspecialchars($row['id']);
                 $title = htmlspecialchars($row['title']);
                 $imagePaths = htmlspecialchars($row['image_paths']);
+                $status = htmlspecialchars($row['status']); // Get the status
                 $images = explode(',', $imagePaths);
 
                 echo "<div class='gallery-item'>";
+                // Status Badge
+                echo "<span class='status-badge ";
+                if ($status == 1) {
+                    echo "badge-published'>Published";
+                } elseif ($status == 2) {
+                    echo "badge-claimed'>Claimed";
+                } elseif ($status == 3) {
+                    echo "badge-surrendered'>Surrendered";
+                } else {
+                    echo "badge-pending'>Pending";
+                }
+                echo "</span>";
+
+                // Image and title
                 echo "<a href='published_items.php?id=" . $itemId . "'>";
                 if (!empty($images)) {
                     echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
