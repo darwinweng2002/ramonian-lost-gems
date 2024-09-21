@@ -11,9 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     
     $itemId = intval($_POST['id']);
     
-    // Prepare and execute delete statement
-    $stmt = $conn->prepare("DELETE FROM missing_items WHERE id = ?");
-    $stmt->bind_param('i', $itemId);
+    // Instead of deleting, update the status to mark it as removed from the Claim History
+    $newStatus = 3; // Assuming 3 is "removed" or "archived"
+    $stmt = $conn->prepare("UPDATE missing_items SET status = ? WHERE id = ?");
+    $stmt->bind_param('ii', $newStatus, $itemId);
 
     if ($stmt->execute()) {
         echo json_encode(['success' => true]);

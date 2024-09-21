@@ -10,6 +10,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch claimed items (status = 2)
+// Fetch claimed items (status = 2, i.e., claimed)
 $sql = "SELECT 
             mi.id, 
             mi.title, 
@@ -20,7 +21,8 @@ $sql = "SELECT
         FROM missing_items mi
         LEFT JOIN user_member um ON mi.user_id = um.id
         LEFT JOIN categories c ON mi.category_id = c.id
-        WHERE mi.status = 2";
+        WHERE mi.status = 2"; // Only show items with status '2' (claimed)
+
 
 $result = $conn->query($sql);
 ?>
@@ -132,21 +134,21 @@ $result = $conn->query($sql);
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    // Delete button functionality
+    // Delete button functionality (now just changes the status to "archived")
     $('.btn-delete').on('click', function() {
         var itemId = $(this).data('id');
-        if (confirm('Are you sure you want to delete this item?')) {
+        if (confirm('Are you sure you want to remove this item from the Claimed Items History?')) {
             $.ajax({
-                url: '../delete_claimed_item.php', // Ensure this is the correct path
+                url: 'delete_claimed_item.php', // Path to update status
                 type: 'POST',
                 data: { id: itemId },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        alert('Item deleted successfully.');
+                        alert('Item removed from Claim History successfully.');
                         location.reload(); // Reload the page to reflect changes
                     } else {
-                        alert('Failed to delete the item: ' + response.error);
+                        alert('Failed to remove the item: ' + response.error);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -156,6 +158,7 @@ $(document).ready(function() {
         }
     });
 });
+
 
 </script>
 <?php require_once('../inc/footer.php'); ?>
