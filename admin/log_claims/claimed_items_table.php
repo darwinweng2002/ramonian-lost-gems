@@ -53,8 +53,8 @@ $result = $conn->query($sql);
             margin-bottom: 20px;
         }
         .table thead {
-            background-color: #343a40;
-            color: #fff;
+            background-color: #f2f2f2;
+            color: #444444;
         }
         .table th, .table td {
             vertical-align: middle;
