@@ -197,15 +197,9 @@ if (isset($_SESSION['user_id'])) {
         <?php endif; ?>
 
         <form action="send_missing.php" method="post" enctype="multipart/form-data" class="message-form">
-            <label for="title">Title of the Missing Item:</label>
+            <label for="title">Item Name:</label>
             <input type="text" name="title" id="title" placeholder="Enter item title" required>
-            <label for="category">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag">
-        <path d="M6 9v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/>
-        <path d="M14 2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8z"/>
-        <path d="M4 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
-    </svg> Category:
-</label>
+            <label for="category">Category:</label>
 <select name="category_id" id="category_id" required>
     <option value="">Select a category</option>
     <?php
