@@ -2,7 +2,7 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
 
 // Check connection
 if ($conn->connect_error) {
@@ -38,7 +38,83 @@ if ($message_id > 0) {
     <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
-        /* Same styling as before */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 70px; /* Adjust this according to the height of your navbar */
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin: 30px auto;
+            width: 90%;
+            max-width: 1200px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .message-box {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .message-box p {
+            margin: 10px 0;
+        }
+        .message-box img {
+            max-width: 100%;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+        }
+        .message-box img:hover {
+            transform: scale(1.1);
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .publish-btn {
+            background-color: #28a745; /* Green background color */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            right: 80px; /* Position it to the left of the delete button */
+        }
+        .publish-btn:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+        .container .avatar {
+            width: 100px; /* Set the width of the avatar */
+            height: 100px; /* Set the height of the avatar to the same value as width for a circle */
+            border-radius: 100%; /* Makes the image circular */
+            object-fit: cover; /* Ensures the image covers the circle without distortion */
+            display: block; /* Ensures the image is displayed as a block element */
+            margin-bottom: 10px; /* Adds space below the image if needed */
+        }
     </style>
 </head>
 <body>
@@ -64,7 +140,7 @@ if ($message_id > 0) {
                         'contact' => $row['contact'],
                         'time_found' => $row['time_found'],
                         'category_name' => $row['category_name'],  
-                        'status' => $row['status']  // Include status field
+                        'status' => $row['status']  // Add this line to include status field
                     ];
                 }
                 if ($row['image_path']) {
@@ -106,6 +182,7 @@ if ($message_id > 0) {
                 echo "<div class='form-group'>";
                 echo "<label for='status' class='control-label'>Status</label>";
                 echo "<select name='status' id='status-".$msgId."' class='form-select form-select-sm rounded-0' required='required'>";
+                // Add options for the different statuses
                 echo "<option value='0' " . ($msgData['status'] == 0 ? 'selected' : '') . ">Pending</option>";
                 echo "<option value='1' " . ($msgData['status'] == 1 ? 'selected' : '') . ">Published</option>";
                 echo "<option value='2' " . ($msgData['status'] == 2 ? 'selected' : '') . ">Claimed</option>";
@@ -137,6 +214,7 @@ if ($message_id > 0) {
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($msgId) . "'>Delete</button>";
                 echo "</div>";
             }
+            
         }
         ?>
     </div>
@@ -214,12 +292,7 @@ if ($message_id > 0) {
                 success: function(response) {
                     if (response.success) {
                         alert('Status updated successfully.');
-                        if (selectedStatus == 2) { 
-                            // Redirect to the claim log page after setting to "Claimed"
-                            window.location.href = 'claim_log_table.php'; 
-                        } else {
-                            location.reload();  // Reload the page to reflect status update
-                        }
+                        location.reload();  // Reload the page to reflect status update
                     } else {
                         alert('Failed to update status: ' + response.error);
                     }
