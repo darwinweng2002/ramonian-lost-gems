@@ -137,7 +137,7 @@ $(document).ready(function() {
         var itemId = $(this).data('id');
         if (confirm('Are you sure you want to delete this item?')) {
             $.ajax({
-                url: 'delete_claimed_item.php', // Ensure this is the correct path
+                url: '../delete_claimed_item.php', // Ensure this is the correct path
                 type: 'POST',
                 data: { id: itemId },
                 dataType: 'json',
