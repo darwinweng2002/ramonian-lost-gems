@@ -445,19 +445,32 @@ $message_stmt->close();
 <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
     <h5 class="history-title">Posted Missing Items</h5>
     <table class="table table-striped post-history-table">
-        <thead>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Date Missing</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($missing_items as $missing_item): ?>
             <tr>
-                <th>Title</th>
-                <th>Date Missing</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($missing_items as $missing_item): ?>
-                <tr>
-                    <td><?= htmlspecialchars($missing_item['title']) ?></td>
-                    <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
-                    <td>
+                <td><?= htmlspecialchars($missing_item['title']) ?></td>
+                <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
+                <td>
+                    <?php
+                        $statusClass = ''; // Initialize the class for the status badge
+                        if ($missing_item['status'] == 0) {
+                            $statusClass = 'badge-pending';
+                        } elseif ($missing_item['status'] == 1) {
+                            $statusClass = 'badge-published';
+                        } elseif ($missing_item['status'] == 2) {
+                            $statusClass = 'badge-claimed';
+                        } elseif ($missing_item['status'] == 3) {
+                            $statusClass = 'badge-surrendered';
+                        }
+                    ?>
+                    <span class="badge-status <?= $statusClass ?>">
                         <?php
                             if ($missing_item['status'] == 0) {
                                 echo 'Pending';
@@ -471,11 +484,12 @@ $message_stmt->close();
                                 echo 'Unknown Status'; // Optional fallback
                             }
                         ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+                    </span>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
 </div>
 
                                             <div class="text-center mt-4 d-flex justify-content-center">
