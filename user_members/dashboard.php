@@ -389,38 +389,45 @@ $message_stmt->close();
                                             </div>
                                             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
     <h5 class="history-title">Posted Found Items</h5>
-    <table class="table table-striped post-history-table">
-        <thead>
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Date Posted</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        // Example items loop
+        foreach ($items as $item) {
+            $statusClass = '';
+            $statusText = '';
+
+            // Determine the class and text for the badge
+            if ($item['status'] == 'Pending') {
+                $statusClass = 'badge-pending';
+                $statusText = 'Pending';
+            } elseif ($item['status'] == 'Published') {
+                $statusClass = 'badge-published';
+                $statusText = 'Published';
+            } elseif ($item['status'] == 'Claimed') {
+                $statusClass = 'badge-claimed';
+                $statusText = 'Claimed';
+            } elseif ($item['status'] == 'Surrendered') {
+                $statusClass = 'badge-surrendered';
+                $statusText = 'Surrendered';
+            }
+            ?>
             <tr>
-                <th>Title</th>
-                <th>Date Posted</th>
-                <th>Status</th>
+                <td><?php echo htmlspecialchars($item['title']); ?></td>
+                <td><?php echo htmlspecialchars($item['date_posted']); ?></td>
+                <td><span class="badge-status <?php echo $statusClass; ?>"><?php echo $statusText; ?></span></td>
             </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($message_history as $message_history): ?>
-                <tr>
-                    <td><?= htmlspecialchars($message_history['title']) ?></td>
-                    <td><?= htmlspecialchars($message_history['time_found']) ?></td>
-                    <td>
-                        <?php
-                            if ($message_history['status'] == 0) {
-                                echo 'Pending';
-                            } elseif ($message_history['status'] == 1) {
-                                echo 'Published';
-                            } elseif ($message_history['status'] == 2) {
-                                echo 'Claimed';
-                            } elseif ($message_history['status'] == 3) {
-                                echo 'Surrendered';
-                            } else {
-                                echo 'Unknown Status'; // Optional fallback
-                            }
-                        ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+        <?php } ?>
+    </tbody>
+</table>
+
 </div>
 
                                             <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
