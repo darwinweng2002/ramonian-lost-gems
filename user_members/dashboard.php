@@ -257,26 +257,27 @@ $message_stmt->close();
         width: 100%; /* Ensure the tab content takes full width */
     }
     .badge-status {
-        padding: 5px 15px;
-        font-size: 14px;
-        border-radius: 20px; /* More rounded */
-        color: #fff;
-        display: inline-block;
-        min-width: 80px;
-        text-align: center;
-    }
-    .badge-pending {
-        background-color: #ffc107; /* Yellow for Pending */
-    }
-    .badge-published {
-        background-color: #28a745; /* Green for Published */
-    }
-    .badge-claimed {
-        background-color: #17a2b8; /* Cyan for Claimed */
-    }
-    .badge-surrendered {
-        background-color: #6c757d; /* Grey for Surrendered */
-    }
+    padding: 5px 15px;
+    font-size: 14px;
+    border-radius: 20px; /* Rounded for badge appearance */
+    color: #fff;
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+}
+.badge-pending {
+    background-color: #ffc107; /* Yellow for Pending */
+}
+.badge-published {
+    background-color: #28a745; /* Green for Published */
+}
+.badge-claimed {
+    background-color: #17a2b8; /* Cyan for Claimed */
+}
+.badge-surrendered {
+    background-color: #6c757d; /* Grey for Surrendered */
+}
+
     </style>
 </head>
 <body>
@@ -389,11 +390,47 @@ $message_stmt->close();
                                             </div>
                                             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
     <h5 class="history-title">Posted Found Items</h5>
-    <table class="table">
+    <table class="table table-striped post-history-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Date Posted</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($message_history as $message_history): ?>
+                <tr>
+                    <td><?= htmlspecialchars($message_history['title']) ?></td>
+                    <td><?= htmlspecialchars($message_history['time_found']) ?></td>
+                    <td>
+                        <?php
+                            if ($message_history['status'] == 0) {
+                                echo 'Pending';
+                            } elseif ($message_history['status'] == 1) {
+                                echo 'Published';
+                            } elseif ($message_history['status'] == 2) {
+                                echo 'Claimed';
+                            } elseif ($message_history['status'] == 3) {
+                                echo 'Surrendered';
+                            } else {
+                                echo 'Unknown Status'; // Optional fallback
+                            }
+                        ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+                                            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+    <h5 class="history-title">Posted Missing Items</h5>
+    <table class="table table-striped post-history-table">
     <thead>
         <tr>
             <th>Title</th>
-            <th>Date Posted</th>
+            <th>Date Missing</th>
             <th>Status</th>
         </tr>
     </thead>
@@ -421,48 +458,11 @@ $message_stmt->close();
             ?>
             <tr>
                 <td><?php echo htmlspecialchars($item['title']); ?></td>
-                <td><?php echo htmlspecialchars($item['date_posted']); ?></td>
+                <td><?php echo htmlspecialchars($item['date_missing']); ?></td>
                 <td><span class="badge-status <?php echo $statusClass; ?>"><?php echo $statusText; ?></span></td>
             </tr>
         <?php } ?>
     </tbody>
-</table>
-
-</div>
-
-                                            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
-    <h5 class="history-title">Posted Missing Items</h5>
-    <table class="table table-striped post-history-table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Date Missing</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($missing_items as $missing_item): ?>
-                <tr>
-                    <td><?= htmlspecialchars($missing_item['title']) ?></td>
-                    <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
-                    <td>
-                        <?php
-                            if ($missing_item['status'] == 0) {
-                                echo 'Pending';
-                            } elseif ($missing_item['status'] == 1) {
-                                echo 'Published';
-                            } elseif ($missing_item['status'] == 2) {
-                                echo 'Claimed';
-                            } elseif ($missing_item['status'] == 3) {
-                                echo 'Surrendered';
-                            } else {
-                                echo 'Unknown Status'; // Optional fallback
-                            }
-                        ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
     </table>
 </div>
 
