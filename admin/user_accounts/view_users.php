@@ -170,7 +170,6 @@ $result = $conn->query($sql);
                 <?php if ($result->num_rows > 0): ?>
                     <?php while($row = $result->fetch_assoc()): ?>
                         <tr>
-                            <td><?= htmlspecialchars($row['id']) ?></td>
                             <td><?= htmlspecialchars($row['first_name']) ?></td>
                             <td><?= htmlspecialchars($row['last_name']) ?></td>
                             <td><?= htmlspecialchars($row['college']) ?></td>
