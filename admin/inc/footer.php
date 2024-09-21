@@ -58,10 +58,9 @@
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
      <div class="credits" style="text-align: center;">
-                &copy; Copyright Ramonian LostGems
+                &copy; Copyright Ramonian Lost Gems
                 <br>
-                Developed by BSINFOTECH 3-C.
-                <a href="http://localhost/lostgemramonian/">prmsuramonianlostgems.com</a>
+                <a href="https://ramonianlostgems.com/">ramonianlostgems.com</a>
                 <a href="<?= base_url ?>">
             <img style="height: 25px; width: 25px;" src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
             </div>

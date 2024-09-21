@@ -37,6 +37,7 @@ $result = $conn->query($sql);
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             padding: 20px;
+            text-decoration: none;
         }
         .container {
             margin: 30px auto;
