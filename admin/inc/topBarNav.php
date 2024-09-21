@@ -6,7 +6,7 @@
       <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
       <span class="d-none d-lg-block"><?= $_settings->info('short_name') ?></span>
     </a>
-    <i class="bi bi-list toggle-sidebar-btn"></i>
+    <i style="margin-left: 50px;" class="bi bi-list toggle-sidebar-btn"></i>
   </div><!-- End Logo -->
 
   <!-- <div class="search-bar">
