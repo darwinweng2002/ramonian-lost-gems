@@ -223,7 +223,7 @@ $result = $stmt->get_result();
                 
                 // Add Claim Request Button
                 echo '<div class="claim-button-container">
-                <a href="https://ramonianlostgems.com/send_message.php" class="claim-button">Report if you found this item</a>
+                <a href="https://ramonianlostgems.com/send_message.php" class="claim-button">Send claim request."</a>
             </div>';
             
 
