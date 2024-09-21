@@ -31,6 +31,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claimed Items Table View</title>
+    <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -83,6 +84,9 @@ $result = $conn->query($sql);
     </style>
 </head>
 <body>
+<?php require_once('../inc/topBarNav.php'); ?>
+<?php require_once('../inc/navigation.php'); ?>
+
 
 <div class="container">
     <h1>Claimed Items History</h1>
@@ -91,7 +95,7 @@ $result = $conn->query($sql);
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Title</th>
+                <th>Item Name</th>
                 <th>Description</th>
                 <th>Time Missing</th>
                 <th>User Email</th>
@@ -153,7 +157,7 @@ $(document).ready(function() {
     });
 });
 </script>
-
+<?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
 
