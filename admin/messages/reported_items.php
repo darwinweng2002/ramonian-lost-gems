@@ -9,8 +9,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// SQL query to fetch reported items with category
-$sql = "SELECT mh.title, um.first_name, um.college, mh.time_found, c.name AS category_name
+// SQL query to fetch reported items with category and ID
+$sql = "SELECT mh.id, mh.title, um.first_name, um.college, mh.time_found, c.name AS category_name
         FROM message_history mh
         LEFT JOIN user_member um ON mh.user_id = um.id
         LEFT JOIN categories c ON mh.category_id = c.id
@@ -89,7 +89,7 @@ $result = $conn->query($sql);
                     <th>Title</th>
                     <th>User</th>
                     <th>College</th>
-                    <th>Category</th> <!-- Changed from ID to Category -->
+                    <th>Category</th> <!-- Display Category -->
                     <th>Time Found</th>
                     <th>Actions</th>
                 </tr>
@@ -104,7 +104,9 @@ $result = $conn->query($sql);
                         echo "<td>" . htmlspecialchars($row['college']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['category_name']) . "</td>"; // Display category name
                         echo "<td>" . htmlspecialchars($row['time_found']) . "</td>";
-                        echo "<td><a href='https://ramonianlostgems.com/admin/messages/view_reported_item.php?id=" . htmlspecialchars($row['id']) . "' class='action-btn'>View</a></td>";
+                        // Use the ID for the 'View' button link
+                        echo "<td><a href='https://ramonianlostgems.com/admin/messages/view_reported_item.php?id=" . urlencode($row['id']) . "' class='btn-view'>View</a></td>";
+                        echo "</tr>";
                     }
                 } else {
                     echo "<tr><td colspan='6' class='text-center'>No reported items found.</td></tr>";
