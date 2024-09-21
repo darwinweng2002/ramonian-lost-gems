@@ -269,14 +269,12 @@ if (isset($_GET['id'])) {
     });
 });
 $(document).ready(function() {
-    // Handle status update
     $('.save-status-btn').on('click', function() {
         var itemId = $(this).data('id');
-        var selectedStatus = $('#status-' + itemId).val(); // Get the selected status
+        var selectedStatus = $('#status-' + itemId).val();
 
-        // Send an AJAX request to update the status
         $.ajax({
-            url: 'update_status.php', // Backend URL to handle status updates
+            url: 'update_status.php',
             type: 'POST',
             data: {
                 id: itemId,
@@ -286,7 +284,7 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success) {
                     alert('Status updated successfully.');
-                    location.reload();  // Reload the page to reflect status update
+                    location.reload();  // Reflects the status update
                 } else {
                     alert('Failed to update status: ' + response.error);
                 }
@@ -297,6 +295,7 @@ $(document).ready(function() {
         });
     });
 });
+
 
 
     </script>
