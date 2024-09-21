@@ -68,50 +68,57 @@ if (isset($_GET['id'])) {
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f8fa;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f3f4f6;
             margin: 0;
             padding: 20px;
         }
         .container {
-            max-width: 1200px;
-            margin: auto;
+            max-width: 1000px;
+            margin: 20px auto;
             background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         h1 {
             text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
             color: #333;
+            font-weight: 700;
         }
         .item-details {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 40px;
         }
         .item-info, .user-info {
-            flex: 1;
-            margin: 20px;
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #ddd; /* Add border */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
-        .item-info {
-            max-width: 60%;
+        .item-info h2, .user-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #444;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
         }
-        .user-info {
-            max-width: 35%;
-        }
-        .user-info img {
-            max-width: 150px;
-            border-radius: 50%;
+        .item-info p, .user-info p {
             margin-bottom: 10px;
+            font-size: 1rem;
+            color: #555;
         }
-        .user-info p {
-            margin: 5px 0;
+        .item-info p strong {
+            color: #111;
         }
         .image-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
             margin-top: 20px;
         }
         .image-grid img {
@@ -119,10 +126,28 @@ if (isset($_GET['id'])) {
             height: 150px;
             object-fit: cover;
             border-radius: 8px;
+            border: 1px solid #ddd; /* Add border to images */
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
         }
         .image-grid img:hover {
             transform: scale(1.05);
+        }
+        .user-info img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .user-info p {
+            font-size: 1rem;
+            color: #666;
+        }
+        .user-info p strong {
+            color: #333;
         }
     </style>
 </head>
@@ -160,7 +185,7 @@ if (isset($_GET['id'])) {
         </div>
 
         <!-- User Information -->
-        <div class="user-info">
+        <div class="user-info text-center">
             <h2>User Information</h2>
             <!-- Avatar -->
             <?php if ($avatar): ?>
