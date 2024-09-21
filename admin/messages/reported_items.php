@@ -2,17 +2,18 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Update with your DB credentials
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// SQL query to fetch reported items
-$sql = "SELECT mh.id, mh.title, um.first_name, um.college, mh.time_found 
+// SQL query to fetch reported items with category
+$sql = "SELECT mh.title, um.first_name, um.college, mh.time_found, c.name AS category_name
         FROM message_history mh
         LEFT JOIN user_member um ON mh.user_id = um.id
+        LEFT JOIN categories c ON mh.category_id = c.id
         ORDER BY mh.id DESC";
 $result = $conn->query($sql);
 ?>
@@ -59,6 +60,7 @@ $result = $conn->query($sql);
             padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
+            text-decoration: none; /* Remove underline */
         }
         .btn-view:hover {
             background-color: #0056b3;
@@ -84,10 +86,10 @@ $result = $conn->query($sql);
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Title</th>
                     <th>User</th>
                     <th>College</th>
+                    <th>Category</th> <!-- Changed from ID to Category -->
                     <th>Time Found</th>
                     <th>Actions</th>
                 </tr>
@@ -97,12 +99,12 @@ $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['id']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['first_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['college']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['category_name']) . "</td>"; // Display category name
                         echo "<td>" . htmlspecialchars($row['time_found']) . "</td>";
-                        echo "<td><a href='https://ramonianlostgems.com/admin/messages/view_reported_item.php?id=" . htmlspecialchars($row['id']) . "' class='btn-view'>View</a></td>";
+                        echo "<td><a href='https://ramonianlostgems.com/admin/messages/view_reported_item.php?category=" . urlencode($row['category_name']) . "' class='btn-view'>View</a></td>";
                         echo "</tr>";
                     }
                 } else {
