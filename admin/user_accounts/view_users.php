@@ -90,19 +90,9 @@ $result = $conn->query($sql);
             color: #fff;
         }
 
-        .btn-edit {
-            background-color: #007bff;
-            border: none;
-        }
-
-        .btn-edit:hover {
-            background-color: #0056b3;
-        }
-
         .btn-delete {
             background-color: #dc3545;
             border: none;
-            position: relative;
         }
 
         .btn-delete:hover {
@@ -193,12 +183,8 @@ $result = $conn->query($sql);
                             <td><?= htmlspecialchars($row['email']) ?></td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <a href="https://ramonianlostgems.com/edit_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-edit btn-sm me-2">
-                                        <i class="fa fa-edit"></i> Edit
-                                    </a>
                                     <button class="btn btn-delete btn-sm" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
                                         <i class="fa fa-trash"></i> Delete
-                                        <span class="spinner-border spinner-border-sm"></span>
                                     </button>
                                 </div>
                             </td>
