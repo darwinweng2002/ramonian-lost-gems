@@ -221,7 +221,7 @@ if (isset($_SESSION['user_id'])) {
     </label>
     <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
 </div>
-            <label for="description">Description:</label>
+            <label for="description">Description of the missing item:</label>
             <textarea name="description" id="description" rows="4" placeholder="Describe the missing item" required></textarea>
 
             <label for="last_seen_location">Last Seen Location:</label>
