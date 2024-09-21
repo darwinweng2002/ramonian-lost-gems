@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); 
 
 // Check connection
 if ($conn->connect_error) {
@@ -76,6 +76,7 @@ $resultFound = $conn->query($sqlFound);
 $resultMissing = $conn->query($sqlMissing);
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -101,128 +102,93 @@ $resultMissing = $conn->query($sqlMissing);
             color: #333;
             margin-bottom: 20px;
         }
-        ..search-bar {
-    text-align: center;
-    margin-bottom: 20px;
-}
+        .search-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-bar form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-bar input[type="text"],
+        .search-bar select {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .search-bar input[type="text"]:focus,
+        .search-bar select:focus {
+            border-color: #333;
+            outline: none;
+        }
+        .search-bar button {
+            padding: 12px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .search-bar button:hover {
+            background-color: #008BFF;
+        }
 
-.search-bar form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-
-.search-bar input[type="text"],
-.search-bar select {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    width: 100%;
-    max-width: 400px;
-    box-sizing: border-box;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
-}
-
-.search-bar input[type="text"]:focus,
-.search-bar select:focus {
-    border-color: #333;
-    outline: none;
-}
-
-.search-bar button {
-    padding: 12px 20px;
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-.search-bar button:hover {
-    background-color: #008BFF;
-}
-
-/* Gallery Grid Styling */
-/* Gallery Grid Styling */
-.gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-}
-
-.gallery-item {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    text-align: center;
-    position: relative; /* Ensure positioning context for title */
-    overflow: hidden; /* Ensure content doesn't overflow */
-    height: 300px; /* Fixed height for consistency */
-}
-
-.gallery-item img {
-    width: 100%; /* Make the image cover the width of the container */
-    height: 100%; /* Make the image cover the height of the container */
-    object-fit: cover; /* Ensure the image covers the container while preserving aspect ratio */
-    border-radius: 5px;
-}
-
-.gallery-item h3 {
-    position: absolute; /* Position title absolutely within the container */
-    bottom: 10px; /* Distance from the bottom */
-    left: 0; /* Align to the left */
-    right: 0; /* Align to the right */
-    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background for readability */
-    color: #fff; /* White text color */
-    padding: 5px; /* Space around text */
-    text-align: center; /* Center-align text */
-    border-radius: 0 0 8px 8px; /* Rounded corners at the bottom */
-}
-
-.gallery-item a {
-    text-decoration: none;
-    color: #333;
-}
-.back-btn-container {
-    margin: 20px 0;
-    display: flex;
-    justify-content: center; /* Center the button */
-}
-
-.back-btn {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: #fff;
-    text-decoration: none;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    transition: background-color 0.3s ease;
-}
-
-.back-btn svg {
-    margin-right: 8px;
-}
-
-.back-btn:hover {
-    background-color: #0056b3;
-}
-
-.back-btn:focus {
-    outline: none;
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-}
-
+        /* Gallery Grid Styling */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .gallery-item {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            height: 350px; /* Adjusted for consistency */
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .gallery-item h3 {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 5px;
+            text-align: center;
+            border-radius: 0 0 8px 8px;
+        }
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 12px;
+            color: #fff;
+        }
+        .badge-published { background-color: #28a745; }
+        .badge-claimed { background-color: #ffc107; }
+        .badge-surrendered { background-color: #6c757d; }
+        .badge-pending { background-color: #007bff; }
+        
     </style>
 </head>
 <body>
@@ -339,15 +305,8 @@ $resultMissing = $conn->query($sqlMissing);
     ?>
 </div>
 
-    <div class="back-btn-container">
-    <a href="https://ramonianlostgems.com/main.php" class="back-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
-            <line x1="19" y1="12" x2="5" y2="12"/>
-            <polyline points="12 19 5 12 12 5"/>
-        </svg>
-        Home
-    </a>
-</div>
+
+
 
 </div>
 
