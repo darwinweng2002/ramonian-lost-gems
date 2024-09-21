@@ -256,6 +256,27 @@ $message_stmt->close();
     .tab-content {
         width: 100%; /* Ensure the tab content takes full width */
     }
+    .badge-status {
+        padding: 5px 15px;
+        font-size: 14px;
+        border-radius: 20px; /* More rounded */
+        color: #fff;
+        display: inline-block;
+        min-width: 80px;
+        text-align: center;
+    }
+    .badge-pending {
+        background-color: #ffc107; /* Yellow for Pending */
+    }
+    .badge-published {
+        background-color: #28a745; /* Green for Published */
+    }
+    .badge-claimed {
+        background-color: #17a2b8; /* Cyan for Claimed */
+    }
+    .badge-surrendered {
+        background-color: #6c757d; /* Grey for Surrendered */
+    }
     </style>
 </head>
 <body>
