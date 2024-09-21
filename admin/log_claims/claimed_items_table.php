@@ -9,22 +9,18 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch claimed items (status = 2 for claimed items) from both missing_items and found_items
-$sql = "
-    SELECT mi.id, mi.title, mi.description, mi.time_missing, um.email, c.name AS category_name, 'Missing' AS item_type
-    FROM missing_items mi
-    LEFT JOIN user_member um ON mi.user_id = um.id
-    LEFT JOIN categories c ON mi.category_id = c.id
-    WHERE mi.status = 2
-    UNION ALL
-    SELECT mh.id, mh.title, mh.message AS description, mh.time_found AS time_missing, um.email, c.name AS category_name, 'Found' AS item_type
-    FROM message_history mh
-    LEFT JOIN user_member um ON mh.user_id = um.id
-    LEFT JOIN categories c ON mh.category_id = c.id
-    WHERE mh.status = 2
-";
+// Fetch claimed items (status = 2)
+// Fetch claimed items (status = 2, i.e., claimed)
+$sql = "SELECT mi.id, mi.title, mi.description, mi.time_missing, um.email, c.name AS category_name
+FROM missing_items mi
+LEFT JOIN user_member um ON mi.user_id = um.id
+LEFT JOIN categories c ON mi.category_id = c.id
+WHERE mi.status = 2
+AND NOT EXISTS (
+    SELECT 1 FROM claim_history ch WHERE ch.item_id = mi.id AND ch.status = 'claimed'
+)"; // Only show items with status '2' (claimed)
 
-// Execute the query
+
 $result = $conn->query($sql);
 ?>
 
@@ -37,12 +33,60 @@ $result = $conn->query($sql);
     <title>Claimed Items Table View</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Your CSS */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-decoration: none;s
+        }
+        .container {
+            margin: 30px auto;
+            max-width: 1200px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .table thead {
+            background-color: #f2f2f2;
+            color: #444444;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .btn-view {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-view:hover {
+            background-color: #0056b3;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
 <?php require_once('../inc/topBarNav.php'); ?>
 <?php require_once('../inc/navigation.php'); ?>
+
 
 <div class="container">
     <h1>Claimed Items History</h1>
@@ -52,10 +96,9 @@ $result = $conn->query($sql);
             <tr>
                 <th>Item Name</th>
                 <th>Description</th>
-                <th>Time Missing/Found</th> <!-- Updated -->
+                <th>Time Missing</th>
                 <th>User Email</th>
                 <th>Category</th>
-                <th>Item Type</th> <!-- Added this column to distinguish Missing/Found -->
                 <th>Actions</th>
             </tr>
         </thead>
@@ -66,10 +109,9 @@ $result = $conn->query($sql);
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['description']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['time_missing']) . "</td>";  // Works for both missing and found
+                    echo "<td>" . htmlspecialchars($row['time_missing']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['email']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['item_type']) . "</td>"; // Displays either 'Missing' or 'Found'
                     echo "<td>";
                     echo "<a href='https://ramonianlostgems.com/admin/log_claims/claimed_items.php?id=" . urlencode($row['id']) . "' class='btn btn-view'>View</a>";
                     echo "<button class='btn btn-delete' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
@@ -112,6 +154,8 @@ $(document).ready(function() {
         }
     });
 });
+
+
 </script>
 <?php require_once('../inc/footer.php'); ?>
 </body>
