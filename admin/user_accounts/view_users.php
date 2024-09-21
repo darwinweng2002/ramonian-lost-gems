@@ -154,45 +154,50 @@ $result = $conn->query($sql);
 
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>College</th>
-                        <th>Course</th>
-                        <th>Year</th>
-                        <th>Section</th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php if ($result->num_rows > 0): ?>
-                    <?php while($row = $result->fetch_assoc()): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($row['first_name']) ?></td>
-                            <td><?= htmlspecialchars($row['last_name']) ?></td>
-                            <td><?= htmlspecialchars($row['college']) ?></td>
-                            <td><?= htmlspecialchars($row['course']) ?></td>
-                            <td><?= htmlspecialchars($row['year']) ?></td>
-                            <td><?= htmlspecialchars($row['section']) ?></td>
-                            <td><?= $row['verified'] ? 'Yes' : 'No' ?></td>
-                            <td><?= htmlspecialchars($row['email']) ?></td>
-                            <td>
-                                <div class="d-flex justify-content-center">
-                                    <button class="btn btn-delete btn-sm" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
-                                        <i class="fa fa-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="10" class="no-data"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-x"><path d="M2 21a8 8 0 0 1 11.873-7"/><circle cx="10" cy="8" r="5"/><path d="m17 17 5 5"/><path d="m22 17-5 5"/></svg> No registered users found.</td>
-                    </tr>
-                <?php endif; ?>
-                </tbody>
+            <thead>
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>College</th>
+        <th>Course</th>
+        <th>Year</th>
+        <th>Section</th>
+        <th>Email</th> <!-- Adjusted Email Header -->
+        <th>Actions</th> <!-- Adjusted Actions Header -->
+    </tr>
+</thead>
+<tbody>
+    <?php if ($result->num_rows > 0): ?>
+        <?php while($row = $result->fetch_assoc()): ?>
+            <tr>
+                <td><?= htmlspecialchars($row['first_name']) ?></td>
+                <td><?= htmlspecialchars($row['last_name']) ?></td>
+                <td><?= htmlspecialchars($row['college']) ?></td>
+                <td><?= htmlspecialchars($row['course']) ?></td>
+                <td><?= htmlspecialchars($row['year']) ?></td>
+                <td><?= htmlspecialchars($row['section']) ?></td>
+                <td><?= htmlspecialchars($row['email']) ?></td> <!-- Corrected Email Column -->
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-delete btn-sm" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </td> <!-- Corrected Actions Column -->
+            </tr>
+        <?php endwhile; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="8" class="no-data">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-x">
+                    <path d="M2 21a8 8 0 0 1 11.873-7"/><circle cx="10" cy="8" r="5"/><path d="m17 17 5 5"/><path d="m22 17-5 5"/>
+                </svg> 
+                No registered users found.
+            </td>
+        </tr>
+    <?php endif; ?>
+</tbody>
+
             </table>
         </div>
     </div>
