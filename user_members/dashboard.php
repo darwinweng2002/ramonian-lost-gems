@@ -267,7 +267,7 @@ $message_stmt->close();
 }
 
 .badge-pending {
-    background-color: #6c757d; /* Grey for Pending */
+    background-color: #ffc107; /* Yellow for Pending */
 }
 
 .badge-published {
@@ -392,7 +392,7 @@ $message_stmt->close();
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
     <h5 class="history-title">Posted Found Items</h5>
     <table class="table table-striped post-history-table">
     <thead>
@@ -431,7 +431,7 @@ $message_stmt->close();
                             } elseif ($message['status'] == 3) {
                                 echo 'Surrendered';
                             } else {
-                                echo 'Unknown Status';
+                                echo 'Unknown Status'; // Optional fallback
                             }
                         ?>
                     </span>
@@ -440,10 +440,8 @@ $message_stmt->close();
         <?php endforeach; ?>
     </tbody>
 </table>
-
 </div>
-
-                                            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+<div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
     <h5 class="history-title">Posted Missing Items</h5>
     <table class="table table-striped post-history-table">
         <thead>
