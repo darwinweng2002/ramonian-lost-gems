@@ -247,6 +247,17 @@ $message_stmt->close();
     line-height: 1.5;  /* Ensures consistent vertical alignment */
     white-space: nowrap;  /* Prevents text from wrapping */
 }
+.badge-status {
+    padding: 3px 10px;  /* Slightly reduced padding */
+    font-size: 14px;
+    border-radius: 20px; /* Rounded edges for the badges */
+    color: #fff;
+    display: inline-block;
+    min-width: 80px;  /* Set a minimum width to ensure all badges have the same width */
+    text-align: center;
+    line-height: 1.5;  /* Ensures consistent vertical alignment */
+    white-space: nowrap;  /* Prevents text from wrapping */
+}
 
 .badge-pending {
     background-color: #ffc107; /* Yellow for Pending */
@@ -263,7 +274,6 @@ $message_stmt->close();
 .badge-surrendered {
     background-color: #6c757d; /* Grey for Surrendered */
 }
-
 
     }
     .nav-tabs {
