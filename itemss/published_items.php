@@ -93,23 +93,31 @@ $result = $stmt->get_result();
             margin-bottom: 10px; /* Adds space below the image if needed */
         }
         .claim-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #3498db; /* Blue color */
-            border: none;
-            border-radius: 5px;
-            text-align: center;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-            margin-top: 10px;
-        }
-        .claim-button:hover {
-            background-color: #2980b9; /* Darker blue */
-            color: #fff;
-        }
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #28a745; /* Green color */
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.claim-button:hover {
+    background-color: #218838; /* Darker green */
+    color: #fff;
+}
+
+.claim-button-container {
+    display: flex;
+    justify-content: center; /* Center the button */
+    margin-top: 20px;
+}
+
         .back-btn-container {
     margin: 20px 0;
     display: flex;
@@ -214,7 +222,10 @@ $result = $stmt->get_result();
                 }
                 
                 // Add Claim Request Button
-                echo "<a href='claim_request.php?id=" . urlencode($msgId) . "' class='claim-button'>Claim Request</a>";
+                echo '<div class="claim-button-container">
+                <a href="https://ramonianlostgems.com/send_message.php" class="claim-button">Report if you found this item</a>
+            </div>';
+            
 
                 echo "</div>";
             }
