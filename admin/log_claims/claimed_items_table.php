@@ -88,53 +88,58 @@ $result = $conn->query($sql);
 
 <!-- Your SweetAlert logic -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.delete-form').forEach(function(form) {
-            form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Prevent the default form submission
-                const formElement = event.target;
-                const itemId = formElement.querySelector('input[name="id"]').value;
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-form').forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            const formElement = event.target;
+            const itemId = formElement.querySelector('input[name="id"]').value;
 
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'You won\'t be able to revert this!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // AJAX request to update the item's status (not delete it)
-                        $.ajax({
-                            url: 'delete_claimed_item.php', // Path to the file that updates the status
-                            type: 'POST',
-                            data: { id: itemId },
-                            dataType: 'json',
-                            success: function(response) {
-                                if (response.success) {
-                                    Swal.fire(
-                                        'Deleted!',
-                                        'The item has been removed from the view.',
-                                        'success'
-                                    ).then(() => {
-                                        location.reload(); // Reload the page after deletion
-                                    });
-                                } else {
-                                    Swal.fire('Error', response.error, 'error');
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('AJAX error:', status, error);
-                                Swal.fire('Error', 'An error occurred while processing the request.', 'error');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // AJAX request to update the item's status (not delete it)
+                    $.ajax({
+                        url: 'delete_claimed_item.php', // Path to the file that updates the status
+                        type: 'POST',
+                        data: { id: itemId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'The item has been removed from the view.',
+                                    'success'
+                                ).then(() => {
+                                    location.reload(); // Reload the page after deletion
+                                });
+                            } else {
+                                Swal.fire('Error', response.error, 'error');
                             }
-                        });
-                    }
-                });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX error:', {
+                                xhr: xhr.responseText, // Log the full response
+                                status: status,
+                                error: error
+                            });
+                            Swal.fire('Error', 'An error occurred while processing the request.', 'error');
+                        }
+                    });
+                }
             });
         });
     });
+});
+
 </script>
 
 <?php require_once('../inc/footer.php'); ?>
