@@ -27,15 +27,22 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <title>View Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f4f4f4;
-            color: #333;
             font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
         }
 
         .container {
-            margin-top: 30px;
+            margin: 30px auto;
+            max-width: 1200px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
@@ -62,8 +69,8 @@ $result = $conn->query($sql);
         }
 
         thead th {
-            background-color: #2C3E50;
-            color: white;
+            background-color: #f2f2f2;
+            color: #444;
         }
 
         tbody tr:nth-child(even) {
@@ -75,7 +82,7 @@ $result = $conn->query($sql);
         }
 
         .btn {
-            border-radius: 4px;
+            border-radius: 5px;
             padding: 8px 12px;
             font-size: 14px;
             cursor: pointer;
@@ -102,14 +109,6 @@ $result = $conn->query($sql);
             background-color: #c82333;
         }
 
-        .btn-delete .spinner-border {
-            display: none;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
         .search-form {
             margin-bottom: 20px;
             display: flex;
@@ -126,7 +125,7 @@ $result = $conn->query($sql);
         }
 
         .search-button {
-            border-radius: 4px;
+            border-radius: 5px;
             background-color: #28a745;
             color: #fff;
             border: none;
@@ -164,7 +163,7 @@ $result = $conn->query($sql);
         </form>
 
         <div class="table-responsive">
-            <table>
+            <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>ID</th>
