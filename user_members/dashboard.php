@@ -85,19 +85,19 @@ while ($missing_stmt->fetch()) {
 $missing_stmt->close();
 
 
-    $posts = [];
-    $post_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE user_id = ?");
-    $post_stmt->bind_param("i", $user_id);
-    $post_stmt->execute();
-    $post_stmt->bind_result($title, $time_found, $status);
-    while ($post_stmt->fetch()) {
-        $posts[] = [
-            'title' => $title, 
-            'time_found' => $time_found,
-            'status' => $status
-        ];
-    }
-    $post_stmt->close();
+$message_history = []; // Change $posts to $message_history
+$message_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE user_id = ?");
+$message_stmt->bind_param("i", $user_id);
+$message_stmt->execute();
+$message_stmt->bind_result($title, $time_found, $status);
+while ($message_stmt->fetch()) {
+    $message_history[] = [ // Update here too
+        'title' => $title, 
+        'time_found' => $time_found,
+        'status' => $status
+    ];
+}
+$message_stmt->close();
 }
 ?>
 
@@ -367,28 +367,41 @@ $missing_stmt->close();
                                                 </table>
                                             </div>
                                             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                                                <h5 class="history-title">Posted Items</h5>
-                                                <table class="table table-striped post-history-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Title</th>
-                                                            <th>Date Posted</th>
-                                                            <th>Status</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php foreach ($posts as $post): ?>
-                                                            <tr>
-                                                                <td><?= htmlspecialchars($post['title']) ?></td>
-                                                                <td><?= htmlspecialchars($post['time_found']) ?></td>
-                                                                <td class="<?= $post['status'] == 'Approved' ? 'status-approved' : '' ?>">
-                                                                    <?= htmlspecialchars($post['status']) ?>
-                                                                </td>
-                                                            </tr>
-                                                        <?php endforeach; ?>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+    <h5 class="history-title">Posted Found Items</h5>
+    <table class="table table-striped post-history-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Date Posted</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($message_history as $message_history): ?>
+                <tr>
+                    <td><?= htmlspecialchars($message_history['title']) ?></td>
+                    <td><?= htmlspecialchars($message_history['time_found']) ?></td>
+                    <td>
+                        <?php
+                            if ($message_history['status'] == 0) {
+                                echo 'Pending';
+                            } elseif ($message_history['status'] == 1) {
+                                echo 'Published';
+                            } elseif ($message_history['status'] == 2) {
+                                echo 'Claimed';
+                            } elseif ($message_history['status'] == 3) {
+                                echo 'Surrendered';
+                            } else {
+                                echo 'Unknown Status'; // Optional fallback
+                            }
+                        ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
                                             <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
     <h5 class="history-title">Posted Missing Items</h5>
     <table class="table table-striped post-history-table">
