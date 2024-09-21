@@ -203,11 +203,11 @@ $result = $stmt->get_result();
                 } else {
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
-                echo "<p><strong>Title:</strong> " . $title . "</p>";
+                echo "<p><strong>Item Name:</strong> " . $title . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
-                echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
+                echo "<p><strong>Location where the item was found:</strong> " . $landmark . "</p>";
                 echo "<p><strong>Date and Time Found:</strong> " . $timeFound . "</p>";
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";

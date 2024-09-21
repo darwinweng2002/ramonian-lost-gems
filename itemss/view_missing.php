@@ -200,11 +200,11 @@ $result = $stmt->get_result();
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
                 
+                echo "<p><strong>Title Name:</strong> " . $title . "</p>";
                 echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
-                echo "<p><strong>Date and Time Missing:</strong> " . $timeMissing . "</p>"; // Display date and time
-                echo "<p><strong>Title:</strong> " . $title . "</p>";
+                echo "<p><strong>Date and time the item was lost.</strong> " . $timeMissing . "</p>"; // Display date and time
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
@@ -225,12 +225,13 @@ $result = $stmt->get_result();
 
                 if (!empty($itemData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
+                    echo "<p>Upload multiple images if necessary.</p>"; // Added label here
                     echo "<div class='image-grid'>";
                     foreach ($itemData['images'] as $imagePath) {
                         echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='item-" . htmlspecialchars($itemId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
                     }
                     echo "</div>";
-                }
+                }                
                 
                 // Add Claim Request Button
                 echo "<a href='https://ramonianlostgems.com/send_message.php' class='claim-button'>Report if you found this item.</a>";
