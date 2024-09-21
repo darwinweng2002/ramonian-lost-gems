@@ -64,6 +64,7 @@ if (isset($_GET['id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Claimed Item</title>
+    <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
@@ -152,6 +153,8 @@ if (isset($_GET['id'])) {
     </style>
 </head>
 <body>
+<?php require_once('../inc/topBarNav.php'); ?>
+<?php require_once('../inc/navigation.php'); ?>
 
 <div class="container">
     <h1>Claimed Item: <?php echo $title; ?></h1>
@@ -202,6 +205,7 @@ if (isset($_GET['id'])) {
 
 <!-- Include Lightbox JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
+<?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
 
