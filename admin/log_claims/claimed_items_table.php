@@ -94,7 +94,6 @@ $result = $conn->query($sql);
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Item Name</th>
                 <th>Description</th>
                 <th>Time Missing</th>
@@ -108,7 +107,6 @@ $result = $conn->query($sql);
             if ($result && $result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>";
-                    echo "<td>" . htmlspecialchars($row['id']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['description']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['time_missing']) . "</td>";
