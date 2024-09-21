@@ -115,7 +115,7 @@ $result = $conn->query($sql);
                     echo "<td>" . htmlspecialchars($row['email']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
                     echo "<td>";
-                    echo "<a href='https://ramonianlostgems.com/admin/log_claims/claimed_items.php?id=" . htmlspecialchars($row['id']) . "' class='btn btn-view'>View</a> ";
+                    echo "<a href='https://ramonianlostgems.com/admin/log_claims/claimed_items.php?id=" . urlencode($row['id']) . "' class='btn btn-view'>View</a>";
                     echo "<button class='btn btn-delete' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
                     echo "</td>";
                     echo "</tr>";
