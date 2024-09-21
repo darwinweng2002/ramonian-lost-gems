@@ -236,19 +236,8 @@ $message_stmt->close();
             height: 40px;
             font-size: 1rem;
         }
-        .badge-status {
-    padding: 5px 15px;  /* Equal padding for all badges */
-    font-size: 14px;
-    border-radius: 20px; /* Rounded edges for the badges */
-    color: #fff;
-    display: inline-block;
-    min-width: 100px;  /* Set a minimum width to ensure all badges have the same width */
-    text-align: center;
-    line-height: 1.5;  /* Ensures consistent vertical alignment */
-    white-space: nowrap;  /* Prevents text from wrapping */
-}
 .badge-status {
-    padding: 3px 10px;  /* Slightly reduced padding */
+    padding: 2px 6px;  /* Slightly reduced padding */
     font-size: 14px;
     border-radius: 20px; /* Rounded edges for the badges */
     color: #fff;
@@ -260,7 +249,7 @@ $message_stmt->close();
 }
 
 .badge-pending {
-    background-color: #ffc107; /* Yellow for Pending */
+    background-color: #6c757d;/* Yellow for Pending */
 }
 
 .badge-published {
