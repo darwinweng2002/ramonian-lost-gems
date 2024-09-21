@@ -2,7 +2,7 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli('localhost','u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
 
 // Check connection
 if ($conn->connect_error) {
@@ -14,7 +14,7 @@ $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($message_id > 0) {
     // SQL query to fetch the details of the selected message by its ID
-    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.time_found, c.name as category_name
+    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.time_found, mh.status, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN user_member um ON mh.user_id = um.id
@@ -139,7 +139,8 @@ if ($message_id > 0) {
                         'avatar' => $row['avatar'],
                         'contact' => $row['contact'],
                         'time_found' => $row['time_found'],
-                        'category_name' => $row['category_name']  // Add this line to include category name
+                        'category_name' => $row['category_name'],  
+                        'status' => $row['status']  // Add this line to include status field
                     ];
                 }
                 if ($row['image_path']) {
@@ -159,7 +160,7 @@ if ($message_id > 0) {
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
                 $contact = htmlspecialchars($msgData['contact'] ?? '');
                 $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
-                $categoryName = htmlspecialchars($msgData['category_name'] ?? ''); // Add this line to display category name
+                $categoryName = htmlspecialchars($msgData['category_name'] ?? ''); 
                 
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
@@ -172,11 +173,35 @@ if ($message_id > 0) {
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
-                echo "<p><strong>Category:</strong> " . $categoryName . "</p>"; // Display category name
+                echo "<p><strong>Category:</strong> " . $categoryName . "</p>"; 
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
-                echo "<p><strong>Contact:</strong> " . $contact . "</p>"; // Display contact number
+                echo "<p><strong>Contact:</strong> " . $contact . "</p>"; 
                 echo "<p><strong>Time Found:</strong> " . $timeFound . "</p>";
-                
+
+                // Status dropdown and status badge display
+                echo "<div class='form-group'>";
+                echo "<label for='status' class='control-label'>Status</label>";
+                echo "<select name='status' id='status-".$msgId."' class='form-select form-select-sm rounded-0' required='required'>";
+                // Add options for the different statuses
+                echo "<option value='0' " . ($msgData['status'] == 0 ? 'selected' : '') . ">Pending</option>";
+                echo "<option value='1' " . ($msgData['status'] == 1 ? 'selected' : '') . ">Published</option>";
+                echo "<option value='2' " . ($msgData['status'] == 2 ? 'selected' : '') . ">Claimed</option>";
+                echo "<option value='3' " . ($msgData['status'] == 3 ? 'selected' : '') . ">Surrendered</option>";
+                echo "</select>";
+                echo "<button class='btn btn-primary save-status-btn' data-id='" . $msgId . "'>Save Status</button>";
+                echo "</div>";
+
+                echo "<dt class='text-muted'>Status</dt>";
+                if ($msgData['status'] == 1) {
+                    echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
+                } elseif ($msgData['status'] == 2) {
+                    echo "<span class='badge bg-success px-3 rounded-pill'>Claimed</span>";
+                } elseif ($msgData['status'] == 3) {
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
+                } else {
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
+                }
+
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
@@ -195,9 +220,9 @@ if ($message_id > 0) {
     </div>
 
     <!-- Include JavaScript files -->
-    <script src="../js/jquery.min.js"></script> <!-- Ensure this path is correct -->
-    <script src="../js/bootstrap.min.js"></script> <!-- Ensure this path is correct -->
-    <script src="../js/custom.js"></script> <!-- Ensure this path is correct -->
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/custom.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 
     <script>
@@ -248,6 +273,35 @@ if ($message_id > 0) {
                     }
                 });
             }
+        });
+
+        // Handle status update
+        $('.save-status-btn').on('click', function() {
+            var messageId = $(this).data('id');
+            var selectedStatus = $('#status-' + messageId).val(); // Get the selected status
+
+            // Send an AJAX request to update the status
+            $.ajax({
+                url: 'update_status.php', // Backend URL to handle status updates
+                type: 'POST',
+                data: {
+                    id: messageId,
+                    status: selectedStatus
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        alert('Status updated successfully.');
+                        location.reload();  // Reload the page to reflect status update
+                    } else {
+                        alert('Failed to update status: ' + response.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX error:", status, error);
+                    alert('An error occurred: ' + error);
+                }
+            });
         });
 
       });
