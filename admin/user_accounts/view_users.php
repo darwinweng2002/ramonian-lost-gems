@@ -67,6 +67,9 @@ $result = $conn->query($sql);
             padding: 12px;
             text-align: center;
         }
+        th {
+    white-space: nowrap; /* Prevents wrapping */
+}
 
         thead th {
             background-color: #f2f2f2;
