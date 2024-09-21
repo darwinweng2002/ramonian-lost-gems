@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 if (isset($_GET['id'])) {
     $itemId = intval($_GET['id']);  // Make sure the ID is sanitized as an integer
 
-    // Fetch the claimed item by ID (Only this specific item)
+    // Fetch the claimed item by ID
     $stmt = $conn->prepare("SELECT 
                                 mi.id, 
                                 mi.title, 
@@ -31,7 +31,7 @@ if (isset($_GET['id'])) {
                             LEFT JOIN user_member um ON mi.user_id = um.id
                             LEFT JOIN categories c ON mi.category_id = c.id
                             LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
-                            WHERE mi.id = ?"); // Only get the item with the specific ID
+                            WHERE mi.id = ?");
     $stmt->bind_param('i', $itemId);  // Bind the ID as an integer
     $stmt->execute();
     $result = $stmt->get_result();
@@ -39,7 +39,7 @@ if (isset($_GET['id'])) {
     // Check if the item exists
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        // Your display logic here, for example:
+        // Extract necessary fields
         $title = htmlspecialchars($row['title']);
         $description = htmlspecialchars($row['description']);
         $lastSeenLocation = htmlspecialchars($row['last_seen_location']);
@@ -49,43 +49,138 @@ if (isset($_GET['id'])) {
         $college = htmlspecialchars($row['college']);
         $categoryName = htmlspecialchars($row['category_name']);
         $avatar = htmlspecialchars($row['avatar']);
-        
-        // Output the information for this specific item
-        echo "<h1>Viewing: " . $title . "</h1>";
-        echo "<p><strong>Description:</strong> " . $description . "</p>";
-        echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
-        echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
-        echo "<p><strong>Contact:</strong> " . $contact . "</p>";
-        echo "<p><strong>User Email:</strong> " . $email . "</p>";
-        echo "<p><strong>College:</strong> " . $college . "</p>";
-        echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
-
-        // Handle avatar image
-        if ($avatar) {
-            $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
-            echo "<img src='$fullAvatar' alt='Avatar' class='avatar'>";
-        } else {
-            echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
-        }
-
-        // Handle images
-        if (!empty($row['images'])) {
-            $images = explode(',', $row['images']);
-            echo "<div class='image-grid'>";
-            foreach ($images as $imagePath) {
-                $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($imagePath);
-                echo "<a href='$fullImagePath' data-lightbox='claimed-images' data-title='Image'><img src='$fullImagePath' alt='Image'></a>";
-            }
-            echo "</div>";
-        }
-    } else {
-        // If no item is found with this ID
-        echo "<p>No claimed item found with this ID.</p>";
+        $images = !empty($row['images']) ? explode(',', $row['images']) : [];
+        $createdAt = date("F j, Y, g:i a", strtotime($row['created_at']));
     }
 } else {
     echo "<p>No ID provided in the URL.</p>";
+    exit();
 }
+?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Claimed Item</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f8fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .item-details {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .item-info, .user-info {
+            flex: 1;
+            margin: 20px;
+        }
+        .item-info {
+            max-width: 60%;
+        }
+        .user-info {
+            max-width: 35%;
+        }
+        .user-info img {
+            max-width: 150px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .user-info p {
+            margin: 5px 0;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .image-grid img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        .image-grid img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Claimed Item: <?php echo $title; ?></h1>
+
+    <div class="item-details">
+        <!-- Item Information -->
+        <div class="item-info">
+            <h2>Item Information</h2>
+            <p><strong>Description:</strong> <?php echo $description; ?></p>
+            <p><strong>Last Seen Location:</strong> <?php echo $lastSeenLocation; ?></p>
+            <p><strong>Time Missing:</strong> <?php echo $timeMissing; ?></p>
+            <p><strong>Contact:</strong> <?php echo $contact; ?></p>
+            <p><strong>Category:</strong> <?php echo $categoryName; ?></p>
+            <p><strong>Date Created:</strong> <?php echo $createdAt; ?></p>
+
+            <!-- Images Grid -->
+            <h3>Item Images</h3>
+            <?php if (!empty($images)) : ?>
+            <div class="image-grid">
+                <?php foreach ($images as $imagePath): 
+                    $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($imagePath);
+                ?>
+                    <a href="<?php echo $fullImagePath; ?>" data-lightbox="item-images" data-title="Item Image">
+                        <img src="<?php echo $fullImagePath; ?>" alt="Image">
+                    </a>
+                <?php endforeach; ?>
+            </div>
+            <?php else: ?>
+                <p>No images available.</p>
+            <?php endif; ?>
+        </div>
+
+        <!-- User Information -->
+        <div class="user-info">
+            <h2>User Information</h2>
+            <!-- Avatar -->
+            <?php if ($avatar): ?>
+                <img src="<?php echo base_url . 'uploads/avatars/' . $avatar; ?>" alt="User Avatar">
+            <?php else: ?>
+                <img src="uploads/avatars/default-avatar.png" alt="Default Avatar">
+            <?php endif; ?>
+
+            <p><strong>Email:</strong> <?php echo $email; ?></p>
+            <p><strong>College:</strong> <?php echo $college; ?></p>
+        </div>
+    </div>
+</div>
+
+<!-- Include Lightbox JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
+</body>
+</html>
+
+<?php
 $stmt->close();
 $conn->close();
 ?>
