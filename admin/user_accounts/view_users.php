@@ -28,6 +28,7 @@ $result = $conn->query($sql);
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <title>View Users</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -102,34 +103,56 @@ $result = $conn->query($sql);
             background-color: #c82333;
         }
 
-        .search-form {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-        }
+        /* Style for the input group */
+.input-group {
+    display: flex;
+    align-items: center;
+    border-radius: 8px; /* Adds the border-radius to the entire group */
+    overflow: hidden;   /* Ensures the border-radius applies to all child elements */
+}
 
-        .search-input {
-            border-radius: 4px;
-            box-shadow: none;
-            border: 1px solid #ddd;
-            width: 200px;
-            margin-right: 10px;
-            padding: 8px;
-        }
+/* Search input field */
+.search-input {
+    border: 1px solid #ddd;
+    border-right: none;
+    border-radius: 0; /* Reset any default border radius */
+    padding: 10px;
+    outline: none;
+    box-shadow: none;
+    width: 200px;
+    flex-grow: 1;
+}
 
-        .search-button {
-            border-radius: 5px;
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+/* Button */
+.search-button {
+    border-radius: 0;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: -5px;
+}
 
-        .search-button:hover {
-            background-color: #218838;
-        }
+/* Button hover */
+.search-button:hover {
+    background-color: #218838;
+}
+
+/* Icon styling */
+.input-group-text {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-right: none;
+    color: #333;
+}
+
+.input-group-text i {
+    font-size: 14px;
+}
+
 
         .no-data {
             text-align: center;
@@ -150,10 +173,14 @@ $result = $conn->query($sql);
         <h2>Registered Users</h2>
 
         <!-- Search Form -->
-        <form class="search-form" method="GET" action="view_users.php">
-            <input type="text" name="search" class="search-input" placeholder="Search users..." value="<?= htmlspecialchars($searchTerm) ?>">
-            <button type="submit" class="search-button">Search</button>
-        </form>
+        
+<form class="search-form" method="GET" action="view_users.php">
+    <div class="input-group">
+        <span class="input-group-text"><i class="fas fa-search"></i></span>
+        <input type="text" name="search" class="search-input form-control" placeholder="Search users..." value="<?= htmlspecialchars($searchTerm) ?>">
+        <button type="submit" class="search-button">Search</button>
+    </div>
+</form>
 
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
