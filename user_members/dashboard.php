@@ -236,27 +236,7 @@ $message_stmt->close();
             height: 40px;
             font-size: 1rem;
         }
-    }
-    .nav-tabs {
-        display: flex;
-        flex-wrap: wrap; /* Allows the tabs to wrap to the next line if needed */
-        justify-content: space-around; /* Centers tabs and ensures even spacing */
-    }
-    
-    .nav-tabs .nav-item {
-        display: inline-block; /* Change from block to inline-block */
-        margin-bottom: 0; /* Remove bottom margin if any */
-    }
-
-    .nav-tabs .nav-link {
-        padding: 10px; /* Adjust padding as needed for better spacing */
-        font-size: 0.9rem; /* Adjust font size for better fit */
-    }
-    
-    .tab-content {
-        width: 100%; /* Ensure the tab content takes full width */
-    }
-    .badge-status {
+        .badge-status {
     padding: 5px 15px;
     font-size: 14px;
     border-radius: 20px;
@@ -282,6 +262,27 @@ $message_stmt->close();
     background-color: #6c757d; /* Grey for Surrendered */
 }
 
+    }
+    .nav-tabs {
+        display: flex;
+        flex-wrap: wrap; /* Allows the tabs to wrap to the next line if needed */
+        justify-content: space-around; /* Centers tabs and ensures even spacing */
+    }
+    
+    .nav-tabs .nav-item {
+        display: inline-block; /* Change from block to inline-block */
+        margin-bottom: 0; /* Remove bottom margin if any */
+    }
+
+    .nav-tabs .nav-link {
+        padding: 10px; /* Adjust padding as needed for better spacing */
+        font-size: 0.9rem; /* Adjust font size for better fit */
+    }
+    
+    .tab-content {
+        width: 100%; /* Ensure the tab content takes full width */
+    }
+   
     </style>
 </head>
 <body>
