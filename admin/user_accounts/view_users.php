@@ -156,14 +156,12 @@ $result = $conn->query($sql);
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>College</th>
                         <th>Course</th>
                         <th>Year</th>
                         <th>Section</th>
-                        <th>Verified</th>
                         <th>Email</th>
                         <th>Actions</th>
                     </tr>
