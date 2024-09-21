@@ -246,9 +246,10 @@ if (isset($_SESSION['user_id'])) {
             <input type="datetime-local" name="time_missing" id="time_missing" required>
            
             <label for="images">Upload Images:</label>
-            <input type="file" name="images[]" id="images" multiple onchange="previewImages()">
-            <div class="image-preview-container" id="imagePreviewContainer"></div>
-            <p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
+<p>Upload multiple images if necessary.</p> <!-- Added the text label here -->
+<input type="file" name="images[]" id="images" multiple onchange="previewImages()">
+<div class="image-preview-container" id="imagePreviewContainer"></div>
+<p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
             <button type="submit" class="submit-btn">Submit Report</button>
         </form>
     </div>
