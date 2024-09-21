@@ -2,9 +2,8 @@
 <header id="header" class="header fixed-top d-flex align-items-center">
 
   <div class="d-flex align-items-center justify-content-between">
-    <a href="<?= base_url.'admin' ?>" class="logo d-flex align-items-center" style="margin-right: 20px;">
+    <a href="<?= base_url.'admin' ?>" class="logo d-flex align-items-center" style="margin-right: 20px; color: #CCC;">
       <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
-      <span class="d-none d-lg-block"><?= $_settings->info('short_name') ?></span>
     </a>
     <i style="margin-left: 50px;" class="bi bi-list toggle-sidebar-btn"></i>
   </div><!-- End Logo -->
