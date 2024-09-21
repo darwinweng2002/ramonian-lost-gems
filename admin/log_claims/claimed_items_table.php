@@ -4,18 +4,22 @@ include '../../config.php';
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
 // Fetch claimed items (status = 2)
-$sql = "SELECT 
-            mi.id, 
-            mi.title, 
-            mi.description, 
-            mi.time_missing, 
-            um.email, 
-            c.name AS category_name
-        FROM missing_items mi
-        LEFT JOIN user_member um ON mi.user_id = um.id
-        LEFT JOIN categories c ON mi.category_id = c.id
-        WHERE mi.status = 2";
+// Fetch claimed items (status = 2, i.e., claimed)
+$sql = "SELECT mi.id, mi.title, mi.description, mi.time_missing, um.email, c.name AS category_name
+FROM missing_items mi
+LEFT JOIN user_member um ON mi.user_id = um.id
+LEFT JOIN categories c ON mi.category_id = c.id
+WHERE mi.status = 2
+AND NOT EXISTS (
+    SELECT 1 FROM claim_history ch WHERE ch.item_id = mi.id AND ch.status = 'claimed'
+)"; // Only show items with status '2' (claimed)
+
 
 $result = $conn->query($sql);
 ?>
@@ -28,14 +32,60 @@ $result = $conn->query($sql);
     <title>Claimed Items Table View</title>
     <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.5/dist/sweetalert2.min.css">
     <style>
-        /* Your existing styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            margin: 30px auto;
+            max-width: 1200px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .table thead {
+            background-color: #f2f2f2;
+            color: #444444;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .btn-view {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-view:hover {
+            background-color: #0056b3;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
 <?php require_once('../inc/topBarNav.php'); ?>
 <?php require_once('../inc/navigation.php'); ?>
+
 
 <div class="container">
     <h1>Claimed Items History</h1>
@@ -65,12 +115,7 @@ $result = $conn->query($sql);
                     echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
                     echo "<td>";
                     echo "<a href='https://ramonianlostgems.com/admin/log_claims/claimed_items.php?id=" . urlencode($row['id']) . "' class='btn btn-view'>View</a>";
-                    
-                    // Wrap the delete button with a form for SweetAlert confirmation
-                    echo "<form class='delete-form' method='POST'>";
-                    echo "<input type='hidden' name='id' value='" . htmlspecialchars($row['id']) . "' />";
-                    echo "<button type='submit' class='btn btn-delete'>Delete</button>";
-                    echo "</form>";
+                    echo "<button class='btn btn-delete' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
                     echo "</td>";
                     echo "</tr>";
                 }
@@ -82,66 +127,37 @@ $result = $conn->query($sql);
     </table>
 </div>
 
-<!-- Include SweetAlert and jQuery -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.5/dist/sweetalert2.min.js"></script>
+<!-- JavaScript for Delete Functionality -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Your SweetAlert logic -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.delete-form').forEach(function(form) {
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the default form submission
-            const formElement = event.target;
-            const itemId = formElement.querySelector('input[name="id"]').value;
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'You won\'t be able to revert this!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // AJAX request to update the item's status (not delete it)
-                    $.ajax({
-                        url: 'delete_claimed_item.php', // Path to the file that updates the status
-                        type: 'POST',
-                        data: { id: itemId },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire(
-                                    'Deleted!',
-                                    'The item has been removed from the view.',
-                                    'success'
-                                ).then(() => {
-                                    location.reload(); // Reload the page after deletion
-                                });
-                            } else {
-                                Swal.fire('Error', response.error, 'error');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('AJAX error:', {
-                                xhr: xhr.responseText, // Log the full response
-                                status: status,
-                                error: error
-                            });
-                            Swal.fire('Error', 'An error occurred while processing the request.', 'error');
-                        }
-                    });
+$(document).ready(function() {
+    // Delete button functionality (now just changes the status to "archived")
+    $('.btn-delete').on('click', function() {
+        var itemId = $(this).data('id');
+        if (confirm('Are you sure you want to remove this item from the Claimed Items History?')) {
+            $.ajax({
+                url: 'delete_claimed_item.php', // Path to update status
+                type: 'POST',
+                data: { id: itemId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        alert('Item removed from Claim History successfully.');
+                        location.reload(); // Reload the page to reflect changes
+                    } else {
+                        alert('Failed to remove the item: ' + response.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX error:', status, error);
                 }
             });
-        });
+        }
     });
 });
 
-</script>
 
+</script>
 <?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
