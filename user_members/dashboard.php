@@ -51,15 +51,15 @@ if (isset($_POST['upload_avatar']) && !$is_guest) {
 $claimer = [];
 if (!$is_guest) {
     $claimer_stmt = $conn->prepare("
-        SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
+        SELECT c.item_id, mh.title AS item_name, c.claim_date, c.status 
         FROM claimer c 
-        JOIN item_list i ON c.item_id = i.id 
+        JOIN message_history mh ON c.item_id = mh.id 
         WHERE c.user_id = ?
     ");
     $claimer_stmt->bind_param("i", $user_id);
     $claimer_stmt->execute();
     $claimer_stmt->bind_result($item_id, $item_name, $claim_date, $status);
-    while ($claim_stmt->fetch()) {
+    while ($claimer_stmt->fetch()) {
         $claimer[] = [
             'item_id' => $item_id, 
             'item_name' => $item_name, 
