@@ -9,20 +9,14 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch claimed items (status = 2) from both message_history (found items) and missing_items (lost items)
-// We will UNION the results from both tables
-
+// Fetch items that are set to claimed (status = 2)
 $sql = "
-    -- Claimed missing items (lost items)
+    -- Claimed missing items
     SELECT mi.id, mi.title, mi.description, mi.time_missing AS time_recorded, um.email, c.name AS category_name, 'Missing' AS item_type
     FROM missing_items mi
     LEFT JOIN user_member um ON mi.user_id = um.id
     LEFT JOIN categories c ON mi.category_id = c.id
-    WHERE mi.status = 2
-    AND mi.status != 'archived'  -- Exclude archived items
-    AND NOT EXISTS (
-        SELECT 1 FROM claims ch WHERE ch.item_id = mi.id AND ch.status = 'claimed'
-    )
+    WHERE mi.status = 2  -- Only claimed items
     
     UNION
     
@@ -31,13 +25,8 @@ $sql = "
     FROM message_history mh
     LEFT JOIN user_member um ON mh.user_id = um.id
     LEFT JOIN categories c ON mh.category_id = c.id
-    WHERE mh.status = 2
-    AND mh.status != 'archived'  -- Exclude archived items
-    AND NOT EXISTS (
-        SELECT 1 FROM claims ch WHERE ch.item_id = mh.id AND ch.status = 'claimed'
-    )
+    WHERE mh.status = 2  -- Only claimed items
 ";
-
 
 $result = $conn->query($sql);
 ?>
@@ -48,7 +37,7 @@ $result = $conn->query($sql);
 <?php require_once('../inc/header.php'); ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claimed Items Table View</title>
+    <title>Claimed Items</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -105,7 +94,7 @@ $result = $conn->query($sql);
 <?php require_once('../inc/navigation.php'); ?>
 
 <div class="container">
-    <h1>Claimed Items History</h1>
+    <h1>Claimed Items</h1>
     
     <table class="table table-striped table-bordered">
         <thead>
@@ -131,7 +120,6 @@ $result = $conn->query($sql);
                     echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['item_type']) . "</td>"; // Show whether it's Found or Missing
                     echo "<td>";
-                    echo "<a href='https://ramonianlostgems.com/admin/log_claims/claimed_items.php?id=" . urlencode($row['id']) . "' class='btn btn-view'>View</a>";
                     echo "<button class='btn btn-delete' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
                     echo "</td>";
                     echo "</tr>";
@@ -143,25 +131,24 @@ $result = $conn->query($sql);
         </tbody>
     </table>
 </div>
+
 <!-- JavaScript for Delete Functionality -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
     // Delete button functionality
     $('.btn-delete').on('click', function() {
-        var claimId = $(this).data('id');
-        console.log("Claim ID: " + claimId);  // Add this line to check the ID
-
-        if (confirm('Are you sure you want to remove this item from the Claimed Items History?')) {
+        var itemId = $(this).data('id');
+        if (confirm('Are you sure you want to remove this item from the Claimed Items?')) {
             $.ajax({
-                url: '../delete_claimed_item.php',
+                url: '../delete_claimed_item.php', // Path to update status or delete
                 type: 'POST',
-                data: { id: claimId },
+                data: { id: itemId },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        alert(response.message);
-                        location.reload();
+                        alert('Item removed successfully.');
+                        location.reload(); // Reload the page to reflect changes
                     } else {
                         alert('Failed to remove the item: ' + response.error);
                     }
@@ -173,8 +160,6 @@ $(document).ready(function() {
         }
     });
 });
-
-
 </script>
 
 <?php require_once('../inc/footer.php'); ?>
