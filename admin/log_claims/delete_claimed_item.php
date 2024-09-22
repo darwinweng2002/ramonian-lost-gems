@@ -20,7 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
         exit();
     }
 
-    // Update the status in the claims table to 'archived' (or any other appropriate value)
+    // Add debug to verify that the correct ID is being passed to the query
+    error_log("Attempting to update claim with ID: $claimId");
+
+    // Update the status in the claims table to 'archived'
     $stmt = $conn->prepare("UPDATE claims SET status = 'archived' WHERE id = ?");
     
     if (!$stmt) {
@@ -34,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
         if ($stmt->affected_rows > 0) {
             echo json_encode(['success' => true, 'message' => 'Claim archived successfully.']);
         } else {
+            error_log("No rows updated for claim with ID: $claimId");
             echo json_encode(['success' => false, 'error' => 'No rows were updated.']);
         }
     } else {

@@ -150,6 +150,8 @@ $(document).ready(function() {
     // Delete button functionality (now just changes the status to "archived")
     $('.btn-delete').on('click', function() {
         var claimId = $(this).data('id'); // Use claim ID from the claims table
+        console.log("Claim ID: " + claimId);  // Add this line to check the ID
+
         if (confirm('Are you sure you want to remove this item from the Claimed Items History?')) {
             $.ajax({
                 url: '../delete_claimed_item.php', // Ensure the correct relative path
@@ -171,6 +173,7 @@ $(document).ready(function() {
         }
     });
 });
+
 </script>
 
 <?php require_once('../inc/footer.php'); ?>
