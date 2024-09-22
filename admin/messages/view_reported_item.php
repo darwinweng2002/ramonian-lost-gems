@@ -224,128 +224,127 @@ if ($message_id > 0) {
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/custom.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-     <script>
-    $(document).ready(function() {
-        // Delete button functionality
-        $('.delete-btn').on('click', function() {
-            var itemId = $(this).data('id');
-            // Use SweetAlert2 to show a confirmation dialog
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "Do you really want to delete this missing item?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Perform the AJAX request to delete the item
-                    $.ajax({
-                        url: 'delete_message.php', // Ensure this path is correct
-                        type: 'POST',
-                        data: { id: itemId },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire(
-                                    'Deleted!',
-                                    'The missing item has been deleted.',
-                                    'success'
-                                ).then(() => {
-                                    location.reload(); // Reload the page after deletion
-                                });
-                            } else {
-                                Swal.fire('Error', 'Failed to delete the missing item: ' + response.error, 'error');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("AJAX error:", status, error);
-                            Swal.fire('Error', 'An error occurred while deleting the item.', 'error');
+  $(document).ready(function() {
+    // Delete button functionality with SweetAlert2
+    $('.delete-btn').on('click', function() {
+        var messageId = $(this).data('id');
+        // SweetAlert2 confirmation dialog
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: 'delete_message.php',
+                    type: 'POST',
+                    data: { id: messageId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire(
+                                'Deleted!',
+                                'The message has been deleted.',
+                                'success'
+                            ).then(() => {
+                                location.reload(); // Reload the page after deletion
+                            });
+                        } else {
+                            Swal.fire('Error', 'Failed to delete the message: ' + response.error, 'error');
                         }
-                    });
-                }
-            });
-        });
-
-        // Publish button functionality
-        $('.publish-btn').on('click', function() {
-            var itemId = $(this).data('id');
-            // Use SweetAlert2 to show the confirmation
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "Do you want to publish this missing item?",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, publish it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: 'publish_message.php', // Ensure this path is correct
-                        type: 'POST',
-                        data: { id: itemId },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire(
-                                    'Published!',
-                                    'The missing item has been published.',
-                                    'success'
-                                ).then(() => {
-                                    location.reload(); // Reload the page after publishing
-                                });
-                            } else {
-                                Swal.fire('Error', 'Failed to publish the missing item: ' + response.error, 'error');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("AJAX error:", status, error);
-                            Swal.fire('Error', 'An error occurred while publishing the item.', 'error');
-                        }
-                    });
-                }
-            });
-        });
-
-        // Save status button functionality
-        $('.save-status-btn').on('click', function() {
-            var itemId = $(this).data('id');
-            var selectedStatus = $('#status-' + itemId).val();
-
-            $.ajax({
-                url: 'update_status.php',
-                type: 'POST',
-                data: {
-                    id: itemId,
-                    status: selectedStatus
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire(
-                            'Success',
-                            'The status has been updated successfully.',
-                            'success'
-                        ).then(() => {
-                            location.reload();  // Reflect the status update
-                        });
-                    } else {
-                        Swal.fire('Error', 'Failed to update status: ' + response.error, 'error');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX error:", status, error);
+                        Swal.fire('Error', 'An error occurred: ' + error, 'error');
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX error:", status, error);
-                    Swal.fire('Error', 'An error occurred while updating the status.', 'error');
-                }
-            });
+                });
+            }
         });
     });
-</script>
 
-    </script>
+    // Publish button functionality with SweetAlert2
+    $('.publish-btn').on('click', function() {
+        var messageId = $(this).data('id');
+        // SweetAlert2 confirmation dialog
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to publish this message?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, publish it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: 'publish_message.php',
+                    type: 'POST',
+                    data: { id: messageId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire(
+                                'Published!',
+                                'The message has been published.',
+                                'success'
+                            ).then(() => {
+                                location.reload(); // Reload the page after publishing
+                            });
+                        } else {
+                            Swal.fire('Error', 'Failed to publish the message: ' + response.error, 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("AJAX error:", status, error);
+                        Swal.fire('Error', 'An error occurred: ' + error, 'error');
+                    }
+                });
+            }
+        });
+    });
+
+    // Handle status update with SweetAlert2
+    $('.save-status-btn').on('click', function() {
+        var messageId = $(this).data('id');
+        var selectedStatus = $('#status-' + messageId).val(); // Get the selected status
+
+        // Send an AJAX request to update the status
+        $.ajax({
+            url: 'update_status.php',
+            type: 'POST',
+            data: {
+                id: messageId,
+                status: selectedStatus
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    Swal.fire(
+                        'Updated!',
+                        'The status has been updated successfully.',
+                        'success'
+                    ).then(() => {
+                        location.reload();  // Reload the page to reflect status update
+                    });
+                } else {
+                    Swal.fire('Error', 'Failed to update status: ' + response.error, 'error');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX error:", status, error);
+                Swal.fire('Error', 'An error occurred: ' + error, 'error');
+            }
+        });
+    });
+
+  });
+</script>
 </body>
 <?php require_once('../inc/footer.php') ?>
 </html>
