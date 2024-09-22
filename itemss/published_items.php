@@ -19,7 +19,7 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get published item details
-$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar, 
+$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.status, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar, 
         mh.contact, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
@@ -169,6 +169,7 @@ $result = $stmt->get_result();
                         'first_name' => $row['first_name'],
                         'landmark' => $row['landmark'],
                         'title' => $row['title'],
+                        'status' => $row['status'], // Fetch the status
                         'college' => $row['college'],
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
@@ -196,6 +197,7 @@ $result = $stmt->get_result();
                 $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
                 $contact = htmlspecialchars($msgData['contact'] ?? '');
                 $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
+                $status = intval($itemData['status']); // Get the correct status
 
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
@@ -212,6 +214,19 @@ $result = $stmt->get_result();
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
                 
+                echo "<dt class='text-muted'>Status</dt>";
+                echo "<dd class='ps-4'>";
+                if ($status == 1) {
+                    echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
+                } elseif ($status == 2) {
+                    echo "<span class='badge bg-success px-3 rounded-pill'>Claimed</span>";
+                } elseif ($status == 3) {
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
+                } else {
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";   
+                }
+                echo "</dd>";
+
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
