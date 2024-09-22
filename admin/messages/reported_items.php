@@ -155,7 +155,7 @@ $result = $conn->query($sql);
         <h1>Reported Found Items</h1>
 
         <!-- Search Form -->
-        <form class="search-form" method="GET" action="found_items.php">
+        <form class="search-form" method="GET" action="reported_items.php">
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
                 <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
