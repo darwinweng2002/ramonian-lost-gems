@@ -18,11 +18,12 @@ if ($conn->connect_error) {
 // Get item ID from URL
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Fetch item details, similar to the reference code
-$sql = "SELECT mh.id, mh.title, mh.message, mh.landmark, mh.time_found, mh.contact, c.name as category_name, um.first_name, um.last_name, um.email 
+// Use the correct query based on the one that works in the viewing page
+$sql = "SELECT mh.id, mh.title, mh.message, mh.landmark, mh.time_found, mh.contact, 
+        um.first_name, um.last_name, um.email, um.college, c.name AS category_name
         FROM message_history mh
-        LEFT JOIN categories c ON mh.category_id = c.id
         LEFT JOIN user_member um ON mh.user_id = um.id
+        LEFT JOIN categories c ON mh.category_id = c.id
         WHERE mh.id = ? AND mh.is_published = 1";
 
 $stmt = $conn->prepare($sql);
@@ -32,7 +33,7 @@ $itemResult = $stmt->get_result();
 $itemData = $itemResult->fetch_assoc();
 
 // Fetch claimant's user info
-$claimantId = $_SESSION['user_id']; // Assuming the logged-in user is the claimant
+$claimantId = $_SESSION['user_id'];
 $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, section FROM user_member WHERE id = ?";
 $stmtClaimant = $conn->prepare($sqlClaimant);
 $stmtClaimant->bind_param('i', $claimantId);
