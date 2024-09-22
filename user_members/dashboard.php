@@ -48,19 +48,19 @@ if (isset($_POST['upload_avatar']) && !$is_guest) {
 }
 
 // Fetch the user's claim history
-$claimer = [];
+$claims = [];
 if (!$is_guest) {
-    $claimer_stmt = $conn->prepare("
-        SELECT c.item_id, mh.title AS item_name, c.claim_date, c.status 
-        FROM claimer c 
-        JOIN message_history mh ON c.item_id = mh.id 
+    $claim_stmt = $conn->prepare("
+        SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
+        FROM claims c 
+        JOIN item_list i ON c.item_id = i.id 
         WHERE c.user_id = ?
     ");
-    $claimer_stmt->bind_param("i", $user_id);
-    $claimer_stmt->execute();
-    $claimer_stmt->bind_result($item_id, $item_name, $claim_date, $status);
-    while ($claimer_stmt->fetch()) {
-        $claimer[] = [
+    $claim_stmt->bind_param("i", $user_id);
+    $claim_stmt->execute();
+    $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
+    while ($claim_stmt->fetch()) {
+        $claims[] = [
             'item_id' => $item_id, 
             'item_name' => $item_name, 
             'claim_date' => $claim_date, 
@@ -383,12 +383,12 @@ $message_stmt->close();
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <?php foreach ($claimer as $claimer): ?>
+                                                        <?php foreach ($claims as $claim): ?>
                                                             <tr>
-                                                            <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claimer['item_name']) ?></a></td>
+                                                            <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
                                                                 <td><?= htmlspecialchars($claim['claim_date']) ?></td>
-                                                                <td class="<?= $claimer['status'] == 'Approved' ? 'status-approved' : '' ?>">
-                                                                    <?= htmlspecialchars($claimer['status']) ?>
+                                                                <td class="<?= $claim['status'] == 'Approved' ? 'status-approved' : '' ?>">
+                                                                    <?= htmlspecialchars($claim['status']) ?>
                                                                 </td>
                                                             </tr>
                                                         <?php endforeach; ?>
@@ -543,9 +543,9 @@ $message_stmt->close();
                 data.forEach(claim => {
                     tableBody.append(`
                         <tr>
-                            <td><a href="view_item.php?id=${claimer.item_id}">${claimer.item_name}</a></td>
-                            <td>${claimer.claim_date}</td>
-                            <td class="${claimer.status === 'Approved' ? 'status-approved' : ''}">${claimer.status}</td>
+                            <td><a href="view_item.php?id=${claim.item_id}">${claim.item_name}</a></td>
+                            <td>${claim.claim_date}</td>
+                            <td class="${claim.status === 'Approved' ? 'status-approved' : ''}">${claim.status}</td>
                         </tr>
                     `);
                 });
