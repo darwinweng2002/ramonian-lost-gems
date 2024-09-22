@@ -198,7 +198,7 @@ if (isset($_SESSION['user_id'])) {
 
         <form action="send_missing.php" method="post" enctype="multipart/form-data" class="message-form">
             <label for="title">Item Name:</label>
-            <input type="text" name="title" id="title" placeholder="Enter item title" required>
+            <input type="text" name="title" id="title" placeholder="Enter item name" required>
             <label for="category">Category:</label>
 <select name="category_id" id="category_id" required>
     <option value="">Select a category</option>
