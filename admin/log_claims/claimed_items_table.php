@@ -150,7 +150,7 @@ $(document).ready(function() {
         var itemId = $(this).data('id');
         if (confirm('Are you sure you want to remove this item from the Claimed Items History?')) {
             $.ajax({
-                url: '../delete_claimed_item.php', // Path to update status
+                url: 'delete_claimed_item.php', // Path to update status
                 type: 'POST',
                 data: { id: itemId },
                 dataType: 'json',
