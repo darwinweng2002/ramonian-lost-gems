@@ -9,30 +9,57 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if 'id' is present in the URL
-if (isset($_GET['id'])) {
-    $itemId = intval($_GET['id']);  // Make sure the ID is sanitized as an integer
+// Check if 'id' and 'item_type' are present in the URL (item_type can be 'found' or 'missing')
+if (isset($_GET['id']) && isset($_GET['item_type'])) {
+    $itemId = intval($_GET['id']);
+    $itemType = $_GET['item_type'];  // 'found' or 'missing'
 
-    // Fetch the claimed item by ID
-    $stmt = $conn->prepare("SELECT 
-                                mi.id, 
-                                mi.title, 
-                                mi.description, 
-                                mi.last_seen_location, 
-                                mi.time_missing, 
-                                mi.created_at, 
-                                um.email, 
-                                um.college,
-                                um.avatar,
-                                mi.contact,
-                                c.name AS category_name,
-                                GROUP_CONCAT(mii.image_path) AS images 
-                            FROM missing_items mi
-                            LEFT JOIN user_member um ON mi.user_id = um.id
-                            LEFT JOIN categories c ON mi.category_id = c.id
-                            LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
-                            WHERE mi.id = ?");
-    $stmt->bind_param('i', $itemId);  // Bind the ID as an integer
+    if ($itemType === 'missing') {
+        // Fetch missing item details
+        $stmt = $conn->prepare("SELECT 
+                                    mi.id, 
+                                    mi.title, 
+                                    mi.description, 
+                                    mi.last_seen_location, 
+                                    mi.time_missing, 
+                                    mi.created_at, 
+                                    um.email, 
+                                    um.college,
+                                    um.avatar,
+                                    mi.contact,
+                                    c.name AS category_name,
+                                    GROUP_CONCAT(mii.image_path) AS images 
+                                FROM missing_items mi
+                                LEFT JOIN user_member um ON mi.user_id = um.id
+                                LEFT JOIN categories c ON mi.category_id = c.id
+                                LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
+                                WHERE mi.id = ?");
+    } elseif ($itemType === 'found') {
+        // Fetch found item details
+        $stmt = $conn->prepare("SELECT 
+                                    mh.id, 
+                                    mh.title, 
+                                    mh.message AS description, 
+                                    mh.landmark AS last_seen_location, 
+                                    mh.time_found AS time_missing, 
+                                    mh.created_at, 
+                                    um.email, 
+                                    um.college,
+                                    um.avatar,
+                                    mh.contact,
+                                    c.name AS category_name,
+                                    GROUP_CONCAT(mi.image_path) AS images 
+                                FROM message_history mh
+                                LEFT JOIN user_member um ON mh.user_id = um.id
+                                LEFT JOIN categories c ON mh.category_id = c.id
+                                LEFT JOIN message_images mi ON mh.id = mi.message_id
+                                WHERE mh.id = ?");
+    } else {
+        echo "<p>Invalid item type provided.</p>";
+        exit();
+    }
+
+    $stmt->bind_param('i', $itemId);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -53,7 +80,7 @@ if (isset($_GET['id'])) {
         $createdAt = date("F j, Y, g:i a", strtotime($row['created_at']));
     }
 } else {
-    echo "<p>No ID provided in the URL.</p>";
+    echo "<p>No ID or item type provided in the URL.</p>";
     exit();
 }
 ?>
@@ -98,7 +125,7 @@ if (isset($_GET['id'])) {
             background-color: #f9fafb;
             padding: 20px;
             border-radius: 12px;
-            border: 1px solid #ddd; /* Add border */
+            border: 1px solid #ddd;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         .item-info h2, .user-info h2 {
@@ -127,7 +154,7 @@ if (isset($_GET['id'])) {
             height: 150px;
             object-fit: cover;
             border-radius: 8px;
-            border: 1px solid #ddd; /* Add border to images */
+            border: 1px solid #ddd;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
         }

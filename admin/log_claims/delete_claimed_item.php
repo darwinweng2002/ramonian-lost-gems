@@ -13,24 +13,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
         exit();
     }
 
-    // Get the item ID and user ID (assuming the user is logged in and their ID is stored in session)
+    // Get the item ID
     $itemId = intval($_POST['id']);
-    $userId = intval($_SESSION['user_id']); // Assuming you have user sessions
 
-    if ($itemId <= 0 || $userId <= 0) {
-        echo json_encode(['success' => false, 'error' => 'Invalid item or user ID']);
+    if ($itemId <= 0) {
+        echo json_encode(['success' => false, 'error' => 'Invalid item ID']);
         exit();
     }
 
-    // Insert into claim_history
-    $stmt = $conn->prepare("INSERT INTO claim_history (item_id, user_id, status) VALUES (?, ?, 'claimed')");
+    // Instead of deleting, we update the status of the item to "archived"
+    $stmt = $conn->prepare("UPDATE claim_history SET status = 'archived' WHERE item_id = ?");
     
     if (!$stmt) {
         echo json_encode(['success' => false, 'error' => 'Failed to prepare statement: ' . $conn->error]);
         exit();
     }
 
-    $stmt->bind_param('ii', $itemId, $userId);
+    $stmt->bind_param('i', $itemId);
 
     if ($stmt->execute()) {
         echo json_encode(['success' => true]);
