@@ -272,6 +272,7 @@ if (isset($_SESSION['user_id'])) {
 <input type="file" name="images[]" id="images" multiple onchange="previewImages()">
 <div class="image-preview-container" id="imagePreviewContainer"></div>
 <p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
+<p>Upload multiple images if necessary.</p>
 <button type="submit" class="submit-btn">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
         <line x1="22" x2="11" y1="2" y2="13"/>

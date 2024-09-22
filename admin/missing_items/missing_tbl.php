@@ -2,99 +2,174 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Update with your DB credentials
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// SQL query to fetch reported items
-$sql = "SELECT mi.id, mi.title, um.first_name, um.college, mi.time_missing 
+// SQL query to fetch reported items, including the category
+$sql = "SELECT mi.id, mi.title, um.first_name, um.college, mi.time_missing, c.name AS category
         FROM missing_items mi
         LEFT JOIN user_member um ON mi.user_id = um.id
+        LEFT JOIN categories c ON mi.category_id = c.id
         ORDER BY mi.id DESC";
 $result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+<?php require_once('../inc/header.php') ?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <title>Reported Items List</title>
-    <?php require_once('../inc/header.php'); ?>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            margin: 30px auto;
+            max-width: 1200px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .table-responsive {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
         }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
+
         th, td {
             padding: 12px;
-            text-align: left;
+            text-align: center;
         }
         th {
+            white-space: nowrap; /* Prevents wrapping */
+        }
+
+        thead th {
             background-color: #f2f2f2;
+            color: #444;
         }
-        .action-btn {
-            padding: 8px 12px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn {
             border-radius: 5px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: #fff;
         }
-        .action-btn:hover {
+
+        .btn-view {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-view:hover {
             background-color: #0056b3;
+        }
+
+        .no-data {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #333;
+            padding: 30px 0;
         }
     </style>
 </head>
 <body>
-    <?php require_once('../inc/topBarNav.php'); ?>
-    <?php require_once('../inc/navigation.php'); ?>
-    <div class="card card-outline rounded-0 card-navy">
+<?php require_once('../inc/topBarNav.php') ?>
+<?php require_once('../inc/navigation.php') ?> 
+<br>
+<br>
+<section class="section">
     <div class="container">
-        <h1>Reported Items List</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>User</th>
-                    <th>College</th>
-                    <th>Last Seen</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['id']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['title']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['first_name']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['college']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['time_missing']) . "</td>";
-                        echo "<td><a href='https://ramonianlostgems.com/admin/missing_items/view_missing.php?id=" . htmlspecialchars($row['id']) . "' class='action-btn'>View</a></td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='6'>No reported items found.</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
-    </div>
-    </div>
+        <h2>Reported Missing Items</h2>
 
-    <?php require_once('../inc/footer.php'); ?>
-</body>
-</html>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>User</th>
+                        <th>College</th>
+                        <th>Category</th> <!-- Added Category Column -->
+                        <th>Last Seen</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($result->num_rows > 0): ?>
+                        <?php while($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($row['id']) ?></td>
+                                <td><?= htmlspecialchars($row['title']) ?></td>
+                                <td><?= htmlspecialchars($row['first_name']) ?></td>
+                                <td><?= htmlspecialchars($row['college']) ?></td>
+                                <td><?= htmlspecialchars($row['category']) ?></td> <!-- Displaying Category -->
+                                <td><?= htmlspecialchars($row['time_missing']) ?></td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <a href="https://ramonianlostgems.com/admin/missing_items/view_missing.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-view">
+                                            <i class="fa fa-eye"></i> View
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="7" class="no-data">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-x">
+                                    <path d="M2 21a8 8 0 0 1 11.873-7"/><circle cx="10" cy="8" r="5"/><path d="m17 17 5 5"/><path d="m22 17-5 5"/>
+                                </svg> 
+                                No reported items found.
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
 <?php
 $conn->close();
 ?>
+<?php require_once('../inc/footer.php') ?>
+</body>
+</html>

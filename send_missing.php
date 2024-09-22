@@ -228,7 +228,7 @@ if (isset($_SESSION['user_id'])) {
             <label for="contact">
                 </svg> Contact Information:
             </label>
-            <input type="text" name="contact" id="contact" placeholder="Enter contact information" required>
+            <input type="text" id="contact" name="contact" pattern="[0-9]{10,11}" placeholder="Enter contact information" required>
             <label for="time_missing">Time Missing:</label>
             <input type="datetime-local" name="time_missing" id="time_missing" required>
            
@@ -237,7 +237,10 @@ if (isset($_SESSION['user_id'])) {
 <div class="image-preview-container" id="imagePreviewContainer"></div>
 <p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
 <p>Upload multiple images if necessary.</p>
-            <button type="submit" class="submit-btn">Submit Report</button>
+            <button type="submit" class="submit-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
+        <line x1="22" x2="11" y1="2" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+    </svg>Submit Report</button>
         </form>
     </div>
     <script>
