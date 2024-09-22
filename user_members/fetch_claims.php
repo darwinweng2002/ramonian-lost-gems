@@ -31,5 +31,5 @@ while ($stmt->fetch()) {
 $stmt->close();
 
 header('Content-Type: application/json');
-echo json_encode($claims);
+echo json_encode($claimer);
 ?>

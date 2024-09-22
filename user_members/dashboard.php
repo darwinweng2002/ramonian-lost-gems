@@ -385,10 +385,10 @@ $message_stmt->close();
                                                     <tbody>
                                                         <?php foreach ($claimer as $claimer): ?>
                                                             <tr>
-                                                            <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
+                                                            <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claimer['item_name']) ?></a></td>
                                                                 <td><?= htmlspecialchars($claim['claim_date']) ?></td>
-                                                                <td class="<?= $claim['status'] == 'Approved' ? 'status-approved' : '' ?>">
-                                                                    <?= htmlspecialchars($claim['status']) ?>
+                                                                <td class="<?= $claimer['status'] == 'Approved' ? 'status-approved' : '' ?>">
+                                                                    <?= htmlspecialchars($claimer['status']) ?>
                                                                 </td>
                                                             </tr>
                                                         <?php endforeach; ?>
