@@ -128,7 +128,7 @@ $result = $conn->query($sql);
                     echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['item_type']) . "</td>"; // Show whether it's Found or Missing
                     echo "<td>";
-                    echo "<a href='https://ramonianlostgems.com/admin/log_claims/claimed_items.php?id=" . urlencode($row['id']) . "' class='btn btn-view'>View</a>";
+                    echo "<a href='view_claimed_item.php?id=" . urlencode($row['id']) . "&item_type=" . urlencode($row['item_type']) . "' class='btn btn-view'>View</a>";
                     echo "<button class='btn btn-delete' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
                     echo "</td>";
                     echo "</tr>";
@@ -145,21 +145,20 @@ $result = $conn->query($sql);
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    // Delete button functionality (now just changes the status to "archived")
     $('.btn-delete').on('click', function() {
         var itemId = $(this).data('id');
-        if (confirm('Are you sure you want to remove this item from the Claimed Items History?')) {
+        if (confirm('Are you sure you want to remove this item from the Claim History?')) {
             $.ajax({
-                url: '../delete_claimed_item.php', // Path to update status
+                url: '../delete_claimed_item.php',
                 type: 'POST',
                 data: { id: itemId },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        alert('Item removed from Claim History successfully.');
+                        alert(response.message);
                         location.reload(); // Reload the page to reflect changes
                     } else {
-                        alert('Failed to remove the item: ' + response.error);
+                        alert('Failed to delete the item: ' + response.error);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -169,6 +168,7 @@ $(document).ready(function() {
         }
     });
 });
+
 </script>
 
 <?php require_once('../inc/footer.php'); ?>
