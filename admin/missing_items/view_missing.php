@@ -170,7 +170,7 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
-                echo "<p><strong>Title:</strong> " . $title . "</p>";
+                echo "<p><strong>Item Name:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";

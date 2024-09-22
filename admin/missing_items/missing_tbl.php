@@ -124,7 +124,7 @@ $result = $conn->query($sql);
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Title</th>
+                        <th>Item Name</th>
                         <th>User</th>
                         <th>College</th>
                         <th>Category</th> <!-- Added Category Column -->

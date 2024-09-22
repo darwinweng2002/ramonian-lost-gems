@@ -86,7 +86,7 @@ $result = $conn->query($sql);
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <th>Title</th>
+                    <th>Item Name</th>
                     <th>User</th>
                     <th>College</th>
                     <th>Category</th> <!-- Display Category -->
