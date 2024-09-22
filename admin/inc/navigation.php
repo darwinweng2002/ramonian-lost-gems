@@ -14,47 +14,41 @@
   </li><!-- End Dashboard Nav -->
 
   <li class="nav-item">
-    <a class="nav-link <?= !in_array($page, ['categories', 'categories/manage_category', 'categories/view_category']) ? 'collapsed' : '' ?>" data-bs-target="#categories-nav" data-bs-toggle="collapse" href="#" data-bs-collapse="<?= in_array($page, ['categories', 'categories/manage_category', 'categories/view_category']) ? 'true' : 'false' ?>">
-      <i class="bi bi-menu-button-wide"></i><span>Categories</span><i class="bi bi-chevron-down ms-auto"></i>
+    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="https://ramonianlostgems.com/admin/messages/reported_items.php">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
+      <span>Reported Found Items</span>
+      <?php 
+      $message = $conn->query("SELECT * FROM `message_history` where `status` = 1")->num_rows;
+      ?>
+      <?php if($message > 0): ?>
+        <span class="badge rounded-pill bg-danger text-light ms-4"><?= format_num($message) ?></span>
+      <?php endif; ?>
     </a>
-    <ul id="categories-nav" class="nav-content collapse <?= in_array($page, ['categories', 'categories/manage_category', 'categories/view_category']) ? 'show' : '' ?> " data-bs-parent="#sidebar-nav">
-      <li>
-        <a href="<?= base_url.'admin/?page=categories/manage_category' ?>" class="<?= $page == 'categories/manage_category' ? 'active' : '' ?>">
-          <i class="bi bi-plus-lg" style="font-size:.9rem"></i><span>Add New</span>
-        </a>
-      </li>
-      <li>
-        <a href="<?= base_url.'admin/?page=categories' ?>" class="<?= $page == 'categories' ? 'active' : '' ?>">
-          <i class="bi bi-circle"></i><span>List</span>
-        </a>
-      </li>
-    </ul>
+  </li>
   </li><!-- End Components Nav -->
   <li class="nav-item">
-    <a class="nav-link <?= !in_array($page, ['items', 'items/manage_item', 'items/view_item']) ? 'collapsed' : '' ?>" data-bs-target="#items-nav" data-bs-toggle="collapse" href="#" data-bs-collapse="<?= in_array($page, ['items', 'items/manage_item', 'items/view_item']) ? 'true' : 'false' ?>">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
-      <span>Items</span>
+    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="https://ramonianlostgems.com/admin/missing_items/missing_tbl.php">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
+      <span>Reported Missing Items</span>
       <?php 
-      $pitem = $conn->query("SELECT * FROM `item_list` where `status` = 0")->num_rows;
+      $message = $conn->query("SELECT * FROM `message_history` where `status` = 1")->num_rows;
       ?>
-      <?php if($pitem > 0): ?>
-        <span class="badge rounded-pill bg-danger text-light ms-4"><?= format_num($pitem) ?></span>
+      <?php if($message > 0): ?>
+        <span class="badge rounded-pill bg-danger text-light ms-4"><?= format_num($message) ?></span>
       <?php endif; ?>
-      
-      <i class="bi bi-chevron-down ms-auto"></i>
     </a>
-    <ul id="items-nav" class="nav-content collapse <?= in_array($page, ['items', 'items/manage_item', 'items/view_item']) ? 'show' : '' ?> " data-bs-parent="#sidebar-nav">
-      <li>
-        <a href="<?= base_url.'admin/?page=items/manage_item' ?>" class="<?= $page == 'items/manage_item' ? 'active' : '' ?>">
-          <i class="bi bi-plus-lg" style="font-size:.9rem"></i><span>Add New</span>
-        </a>
-      </li>
-      <li>
-        <a href="<?= base_url.'admin/?page=items' ?>" class="<?= $page == 'items' ? 'active' : '' ?>">
-          <i class="bi bi-circle"></i><span>List</span>
-        </a>
-      </li>
-    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="https://ramonianlostgems.com/admin/messages/admin_messages.php">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
+      <span>All Reported Items</span>
+      <?php 
+      $message = $conn->query("SELECT * FROM `message_history` where `status` = 1")->num_rows;
+      ?>
+      <?php if($message > 0): ?>
+        <span class="badge rounded-pill bg-danger text-light ms-4"><?= format_num($message) ?></span>
+      <?php endif; ?>
+    </a>
   </li>
   <li class="nav-item">
     <a class="nav-link <?= $page != 'inquiries' ? 'collapsed' : '' ?> nav-users" href="<?= base_url."admin?page=inquiries" ?>">
@@ -114,42 +108,6 @@
     </a>
   </li>
   <?php endif; ?>
-  <li class="nav-item">
-    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="https://ramonianlostgems.com/admin/messages/reported_items.php">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
-      <span>Reported Found Items</span>
-      <?php 
-      $message = $conn->query("SELECT * FROM `message_history` where `status` = 1")->num_rows;
-      ?>
-      <?php if($message > 0): ?>
-        <span class="badge rounded-pill bg-danger text-light ms-4"><?= format_num($message) ?></span>
-      <?php endif; ?>
-    </a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="https://ramonianlostgems.com/admin/missing_items/missing_tbl.php">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
-      <span>Reported Missing Items</span>
-      <?php 
-      $message = $conn->query("SELECT * FROM `message_history` where `status` = 1")->num_rows;
-      ?>
-      <?php if($message > 0): ?>
-        <span class="badge rounded-pill bg-danger text-light ms-4"><?= format_num($message) ?></span>
-      <?php endif; ?>
-    </a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="https://ramonianlostgems.com/admin/messages/admin_messages.php">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
-      <span>All Reported Items</span>
-      <?php 
-      $message = $conn->query("SELECT * FROM `message_history` where `status` = 1")->num_rows;
-      ?>
-      <?php if($message > 0): ?>
-        <span class="badge rounded-pill bg-danger text-light ms-4"><?= format_num($message) ?></span>
-      <?php endif; ?>
-    </a>
-  </li>
 </ul>
 
 </aside><!-- End Sidebar-->

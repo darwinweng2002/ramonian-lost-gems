@@ -58,10 +58,9 @@
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
     <div class="copyright">
-      &copy; Copyright <strong><span>Ramonian LostGems</span></strong>. All Rights Reserved
+      &copy; Copyright <strong><span>Ramonian Lost Gems</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
-    <a href="https://ramonianlostgems.com/">ramonianlostgems.com</a>
     <a href="<?= base_url ?>">
      <img style="height: 25px; width: 25px;" src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
     </div>

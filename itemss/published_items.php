@@ -240,7 +240,7 @@ $result = $stmt->get_result();
 
                 // Add Claim Request Button
                 echo '<div class="claim-button-container">';
-                echo '<a href="https://ramonianlostgems.com/itemss/claim.php?id=' . htmlspecialchars($msgId) . '" class="claim-button">Send claim request.</a>';
+                echo '<a href="#' . htmlspecialchars($msgId) . '" class="claim-button">Send claim request.</a>';
                 echo '</div>';
 
                 echo "</div>";
