@@ -53,6 +53,9 @@ $result = $conn->query($sql);
             vertical-align: middle;
             padding: 12px;
         }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
         .btn-view {
             background-color: #007bff;
             color: #fff;

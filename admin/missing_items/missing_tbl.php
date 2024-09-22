@@ -9,11 +9,15 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// SQL query to fetch reported items, including the category
+// Initialize search term
+$searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
+
+// SQL query to fetch reported items, with search functionality
 $sql = "SELECT mi.id, mi.title, um.first_name, um.college, mi.time_missing, c.name AS category
         FROM missing_items mi
         LEFT JOIN user_member um ON mi.user_id = um.id
         LEFT JOIN categories c ON mi.category_id = c.id
+        WHERE CONCAT_WS(' ', mi.title, um.first_name, um.college, c.name) LIKE '%$searchTerm%'
         ORDER BY mi.id DESC";
 $result = $conn->query($sql);
 ?>
@@ -108,6 +112,56 @@ $result = $conn->query($sql);
             color: #333;
             padding: 30px 0;
         }
+
+        /* Style for the input group */
+        .input-group {
+            display: flex;
+            align-items: center;
+            border-radius: 8px; /* Adds the border-radius to the entire group */
+            overflow: hidden;   /* Ensures the border-radius applies to all child elements */
+        }
+
+        /* Search input field */
+        .search-input {
+            border: 1px solid #ddd;
+            border-right: none;
+            border-radius: 0; /* Reset any default border radius */
+            padding: 10px;
+            outline: none;
+            box-shadow: none;
+            width: 200px;
+            flex-grow: 1;
+        }
+
+        /* Button */
+        .search-button {
+            border-radius: 0;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left: -5px;
+        }
+
+        /* Button hover */
+        .search-button:hover {
+            background-color: #218838;
+        }
+
+        /* Icon styling */
+        .input-group-text {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-right: none;
+            color: #333;
+        }
+
+        .input-group-text i {
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -119,12 +173,21 @@ $result = $conn->query($sql);
     <div class="container">
         <h2>Reported Missing Items</h2>
 
+        <!-- Search Form -->
+        <form class="search-form" method="GET" action="missing_items.php">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
+                <button type="submit" class="search-button">Search</button>
+            </div>
+        </form>
+
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Item Name</th>
+                        <th>Title</th>
                         <th>User</th>
                         <th>College</th>
                         <th>Category</th> <!-- Added Category Column -->
