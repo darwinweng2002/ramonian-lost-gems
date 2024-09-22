@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
 // Check connection
 if ($conn->connect_error) {
@@ -93,64 +93,64 @@ $result = $stmt->get_result();
             margin-bottom: 10px; /* Adds space below the image if needed */
         }
         .claim-button {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #28a745; /* Green color */
-    border: none;
-    border-radius: 5px;
-    text-align: center;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-    margin-top: 10px;
-}
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #28a745; /* Green color */
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
 
-.claim-button:hover {
-    background-color: #218838; /* Darker green */
-    color: #fff;
-}
+        .claim-button:hover {
+            background-color: #218838; /* Darker green */
+            color: #fff;
+        }
 
-.claim-button-container {
-    display: flex;
-    justify-content: center; /* Center the button */
-    margin-top: 20px;
-}
+        .claim-button-container {
+            display: flex;
+            justify-content: center; /* Center the button */
+            margin-top: 20px;
+        }
 
         .back-btn-container {
-    margin: 20px 0;
-    display: flex;
-    justify-content: flex-start;
-}
+            margin: 20px 0;
+            display: flex;
+            justify-content: flex-start;
+        }
 
-.back-btn {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    transition: background-color 0.3s ease;
-}
+        .back-btn {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            transition: background-color 0.3s ease;
+        }
 
-.back-btn svg {
-    margin-right: 8px;
-}
+        .back-btn svg {
+            margin-right: 8px;
+        }
 
-.back-btn:hover {
-    background-color: #0056b3;
-}
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
 
-.back-btn:focus {
-    outline: none;
-    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-}
+        .back-btn:focus {
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+        }
 
     </style>
 </head>
@@ -184,7 +184,7 @@ $result = $stmt->get_result();
                     $messages[$row['id']]['images'][] = $fullImagePath;
                 }
             }
-            
+
             foreach ($messages as $msgId => $msgData) {
                 echo "<div class='message-box'>";
                 $firstName = htmlspecialchars($msgData['first_name'] ?? '');
@@ -214,7 +214,7 @@ $result = $stmt->get_result();
                 echo "<p><strong>Date and Time Found:</strong> " . $timeFound . "</p>";
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
-                
+
                 echo "<dt class='text-muted'>Status</dt>";
                 echo "<dd class='ps-4'>";
                 if ($status == 1) {
@@ -227,7 +227,7 @@ $result = $stmt->get_result();
                     echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";   
                 }
                 echo "</dd>";
-                
+
 
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
@@ -237,12 +237,11 @@ $result = $stmt->get_result();
                     }
                     echo "</div>";
                 }
-                
+
                 // Add Claim Request Button
-                echo '<div class="claim-button-container">
-                <a href="https://ramonianlostgems.com/itemss/claim.php?id=" class="claim-button">Send claim request.</a>
-            </div>';
-            
+                echo '<div class="claim-button-container">';
+                echo '<a href="https://ramonianlostgems.com/itemss/claim.php?id=' . htmlspecialchars($msgId) . '" class="claim-button">Send claim request.</a>';
+                echo '</div>';
 
                 echo "</div>";
             }
