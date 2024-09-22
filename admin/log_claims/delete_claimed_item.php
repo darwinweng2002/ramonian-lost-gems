@@ -1,10 +1,9 @@
 <?php
-include '../../config.php'; // Adjust path if necessary
+include '../../config.php'; // Adjust the path as necessary
 
-header('Content-Type: application/json'); // Ensure JSON response
+header('Content-Type: application/json'); // Ensure the response is JSON
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-    
     // Database connection
     $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
     
@@ -13,29 +12,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
         exit();
     }
 
-    // Get the item ID and user ID (assuming the user is logged in and their ID is stored in session)
+    // Get the item ID
     $itemId = intval($_POST['id']);
-    $userId = intval($_SESSION['user_id']); // Assuming you have user sessions
 
-    if ($itemId <= 0 || $userId <= 0) {
-        echo json_encode(['success' => false, 'error' => 'Invalid item or user ID']);
+    if ($itemId <= 0) {
+        echo json_encode(['success' => false, 'error' => 'Invalid item ID']);
         exit();
     }
 
-    // Insert into claim_history
-    $stmt = $conn->prepare("INSERT INTO claim_history (item_id, user_id, status) VALUES (?, ?, 'claimed')");
+    // Update the status in the claim_history table to 'archived'
+    $stmt = $conn->prepare("UPDATE claim_history SET status = 'archived' WHERE item_id = ?");
     
     if (!$stmt) {
         echo json_encode(['success' => false, 'error' => 'Failed to prepare statement: ' . $conn->error]);
         exit();
     }
 
-    $stmt->bind_param('ii', $itemId, $userId);
+    $stmt->bind_param('i', $itemId);
 
     if ($stmt->execute()) {
-        echo json_encode(['success' => true]);
+        echo json_encode(['success' => true, 'message' => 'Item archived successfully.']);
     } else {
-        echo json_encode(['success' => false, 'error' => 'Failed to execute statement: ' . $stmt->error]);
+        echo json_encode(['success' => false, 'error' => 'Failed to update the status: ' . $stmt->error]);
     }
 
     $stmt->close();
