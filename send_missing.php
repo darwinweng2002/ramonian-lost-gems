@@ -187,10 +187,9 @@ if (isset($_SESSION['user_id'])) {
     <br>
     <br>
     <div class="container">
-        <!-- Display user information -->
+    <h2 class="user-info">Report Missing Item</h2>
         <?php if (isset($first_name) && isset($email) && isset($college)): ?>
         <div class="user-info">
-            <h2>Report Missing Item</h2>
             <p>College: <?php echo htmlspecialchars($college); ?></p>
             <p>Email: <?php echo htmlspecialchars($email); ?></p>
         </div>
