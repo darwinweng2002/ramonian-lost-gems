@@ -20,7 +20,7 @@ $stmt->fetch();
 $stmt->close();
 
 // Determine if the user is a guest
-$is_guest = ($user_type === 'guest');
+
 
 // Handle avatar upload
 if (isset($_POST['upload_avatar']) && !$is_guest) {
@@ -52,7 +52,7 @@ $claims = [];
 if (!$is_guest) {
     $claim_stmt = $conn->prepare("
         SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
-        FROM claims c 
+        FROM claimss c 
         JOIN item_list i ON c.item_id = i.id 
         WHERE c.user_id = ?
     ");
