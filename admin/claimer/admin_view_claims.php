@@ -103,24 +103,32 @@ $result = $conn->query($sql);
             <?php
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
-                    // Get file extensions to check if it's an image or PDF
-                    $proofExt = pathinfo($row['proof_of_ownership'], PATHINFO_EXTENSION);
-                    $idExt = pathinfo($row['personal_id'], PATHINFO_EXTENSION);
+                    // File paths
+                    $proofFilePath = '/uploads/claims/' . htmlspecialchars($row['proof_of_ownership']);
+                    $idFilePath = '/uploads/claims/' . htmlspecialchars($row['personal_id']);
 
-                    // Check if proof of ownership is an image or a PDF
-                    $proofFilePath = '../uploads/claims/' . htmlspecialchars($row['proof_of_ownership']);
-                    if (in_array(strtolower($proofExt), ['jpg', 'jpeg', 'png', 'gif'])) {
-                        $proofOutput = "<img src='$proofFilePath' alt='Proof of Ownership' />";
+                    // Display proof of ownership (image or link to PDF)
+                    if (!empty($row['proof_of_ownership'])) {
+                        $proofExt = pathinfo($row['proof_of_ownership'], PATHINFO_EXTENSION);
+                        if (in_array(strtolower($proofExt), ['jpg', 'jpeg', 'png', 'gif'])) {
+                            $proofOutput = "<img src='$proofFilePath' alt='Proof of Ownership' />";
+                        } else {
+                            $proofOutput = "<a href='$proofFilePath' target='_blank'>View Proof</a>";
+                        }
                     } else {
-                        $proofOutput = "<a href='$proofFilePath' target='_blank'>View Proof</a>";
+                        $proofOutput = "No proof uploaded";
                     }
 
-                    // Check if personal ID is an image or a PDF
-                    $idFilePath = '/uploads/claims/' . htmlspecialchars($row['personal_id']);
-                    if (in_array(strtolower($idExt), ['jpg', 'jpeg', 'png', 'gif'])) {
-                        $idOutput = "<img src='$idFilePath' alt='Personal ID' />";
+                    // Display personal ID (image or link to PDF)
+                    if (!empty($row['personal_id'])) {
+                        $idExt = pathinfo($row['personal_id'], PATHINFO_EXTENSION);
+                        if (in_array(strtolower($idExt), ['jpg', 'jpeg', 'png', 'gif'])) {
+                            $idOutput = "<img src='$idFilePath' alt='Personal ID' />";
+                        } else {
+                            $idOutput = "<a href='$idFilePath' target='_blank'>View ID</a>";
+                        }
                     } else {
-                        $idOutput = "<a href='$idFilePath' target='_blank'>View ID</a>";
+                        $idOutput = "No ID uploaded";
                     }
 
                     echo "<tr>";
