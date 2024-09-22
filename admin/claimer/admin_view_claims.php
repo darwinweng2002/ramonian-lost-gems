@@ -109,6 +109,8 @@ $result = $conn->query($sql);
 
                     // Check if proof of ownership is an image or a PDF
                     $proofFilePath = '../uploads/claims/' . htmlspecialchars($row['proof_of_ownership']);
+                    echo "<td>$proofFilePath</td>"; // This will print out the file path being generated
+                    
                     if (in_array(strtolower($proofExt), ['jpg', 'jpeg', 'png', 'gif'])) {
                         $proofOutput = "<img src='$proofFilePath' alt='Proof of Ownership' />";
                     } else {
