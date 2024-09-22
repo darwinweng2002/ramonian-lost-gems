@@ -115,12 +115,7 @@ $result = $conn->query($sql);
 
         .btn-view {
             background-color: #007bff;
-            color: #fff;
             border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
         }
 
         .btn-view:hover {
