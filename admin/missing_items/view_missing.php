@@ -289,7 +289,7 @@ if (isset($_GET['id'])) {
                         if (response.success) {
                             Swal.fire(
                                 'Published!',
-                                'The missing item has been published.',
+                                'The missing item has been successfully published.',
                                 'success'
                             ).then(() => {
                                 location.reload(); // Reload the page after publishing

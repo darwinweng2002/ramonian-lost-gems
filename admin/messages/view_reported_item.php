@@ -291,7 +291,7 @@ if ($message_id > 0) {
                         if (response.success) {
                             Swal.fire(
                                 'Published!',
-                                'The message has been published.',
+                                'The found item has been successfully published.',
                                 'success'
                             ).then(() => {
                                 location.reload(); // Reload the page after publishing
