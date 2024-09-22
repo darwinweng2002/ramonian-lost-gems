@@ -94,7 +94,7 @@ $result = $conn->query($sql);
 <?php require_once('../inc/navigation.php'); ?>
 
 <div class="container">
-    <h1>Claimed Items</h1>
+    <h2>Claimed Items</h2>
     
     <table class="table table-striped table-bordered">
         <thead>
