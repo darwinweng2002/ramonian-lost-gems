@@ -108,7 +108,7 @@ $result = $conn->query($sql);
                     $idExt = pathinfo($row['personal_id'], PATHINFO_EXTENSION);
 
                     // Check if proof of ownership is an image or a PDF
-                    $proofFilePath = '/uploads/claims/' . htmlspecialchars($row['proof_of_ownership']);
+                    $proofFilePath = '../uploads/claims/' . htmlspecialchars($row['proof_of_ownership']);
                     if (in_array(strtolower($proofExt), ['jpg', 'jpeg', 'png', 'gif'])) {
                         $proofOutput = "<img src='$proofFilePath' alt='Proof of Ownership' />";
                     } else {
