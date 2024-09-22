@@ -197,7 +197,8 @@ $result = $stmt->get_result();
                 $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
                 $contact = htmlspecialchars($msgData['contact'] ?? '');
                 $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
-                $status = intval($itemData['status']); // Get the correct status
+                $status = intval($msgData['status']); // Get the correct status
+
 
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
@@ -226,6 +227,7 @@ $result = $stmt->get_result();
                     echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";   
                 }
                 echo "</dd>";
+                
 
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
