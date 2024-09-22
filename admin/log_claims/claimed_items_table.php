@@ -147,32 +147,33 @@ $result = $conn->query($sql);
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    // Delete button functionality (now just changes the status to "archived")
+    // Delete button functionality
     $('.btn-delete').on('click', function() {
-        var claimId = $(this).data('id'); // Use claim ID from the claims table
+        var claimId = $(this).data('id');
         console.log("Claim ID: " + claimId);  // Add this line to check the ID
 
         if (confirm('Are you sure you want to remove this item from the Claimed Items History?')) {
             $.ajax({
-                url: '../delete_claimed_item.php', // Ensure the correct relative path
+                url: '../delete_claimed_item.php',
                 type: 'POST',
                 data: { id: claimId },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        alert(response.message); // Show success message from PHP
-                        location.reload(); // Reload the page to reflect changes
+                        alert(response.message);
+                        location.reload();
                     } else {
-                        alert('Failed to remove the item: ' + response.error); // Show error message from PHP
+                        alert('Failed to remove the item: ' + response.error);
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('AJAX error:', status, error); // Log AJAX errors for debugging
+                    console.error('AJAX error:', status, error);
                 }
             });
         }
     });
 });
+
 
 </script>
 
