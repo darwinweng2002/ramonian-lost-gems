@@ -11,7 +11,7 @@ if ($conn->connect_error) {
 // Fetch all claims
 $sql = "SELECT c.id, c.item_id, mh.title AS item_name, um.first_name, um.last_name, c.item_description, c.date_lost, 
         c.location_lost, c.proof_of_ownership, c.security_question, c.personal_id, c.status, c.claim_date
-        FROM claims c
+        FROM claimer c
         LEFT JOIN message_history mh ON c.item_id = mh.id
         LEFT JOIN user_member um ON c.user_id = um.id
         ORDER BY c.claim_date DESC";
