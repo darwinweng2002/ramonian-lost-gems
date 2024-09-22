@@ -72,6 +72,10 @@ $result = $conn->query($sql);
             background-color: #dc3545;
             color: white;
         }
+        img {
+            max-width: 100px;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -99,6 +103,26 @@ $result = $conn->query($sql);
             <?php
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
+                    // Get file extensions to check if it's an image or PDF
+                    $proofExt = pathinfo($row['proof_of_ownership'], PATHINFO_EXTENSION);
+                    $idExt = pathinfo($row['personal_id'], PATHINFO_EXTENSION);
+
+                    // Check if proof of ownership is an image or a PDF
+                    $proofFilePath = '../uploads/claims/' . htmlspecialchars($row['proof_of_ownership']);
+                    if (in_array(strtolower($proofExt), ['jpg', 'jpeg', 'png', 'gif'])) {
+                        $proofOutput = "<img src='$proofFilePath' alt='Proof of Ownership' />";
+                    } else {
+                        $proofOutput = "<a href='$proofFilePath' target='_blank'>View Proof</a>";
+                    }
+
+                    // Check if personal ID is an image or a PDF
+                    $idFilePath = '../uploads/claims/' . htmlspecialchars($row['personal_id']);
+                    if (in_array(strtolower($idExt), ['jpg', 'jpeg', 'png', 'gif'])) {
+                        $idOutput = "<img src='$idFilePath' alt='Personal ID' />";
+                    } else {
+                        $idOutput = "<a href='$idFilePath' target='_blank'>View ID</a>";
+                    }
+
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($row['id']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['item_name']) . "</td>";
@@ -106,9 +130,9 @@ $result = $conn->query($sql);
                     echo "<td>" . htmlspecialchars($row['item_description']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['date_lost']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['location_lost']) . "</td>";
-                    echo "<td><a href='../uploads/claims/" . htmlspecialchars($row['proof_of_ownership']) . "' target='_blank'>View Proof</a></td>";
+                    echo "<td>$proofOutput</td>";
                     echo "<td>" . htmlspecialchars($row['security_question']) . "</td>";
-                    echo "<td><a href='../uploads/claims/" . htmlspecialchars($row['personal_id']) . "' target='_blank'>View ID</a></td>";
+                    echo "<td>$idOutput</td>";
                     echo "<td>" . htmlspecialchars($row['claim_date']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['status']) . "</td>";
                     echo "<td>
