@@ -20,7 +20,7 @@ $stmt->fetch();
 $stmt->close();
 
 // Determine if the user is a guest
-
+$is_guest = ($user_type === 'guest');
 
 // Handle avatar upload
 if (isset($_POST['upload_avatar']) && !$is_guest) {
