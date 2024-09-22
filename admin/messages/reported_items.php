@@ -155,7 +155,7 @@ $result = $conn->query($sql);
         <h1>Reported Found Items</h1>
 
         <!-- Search Form -->
-        <form class="search-form" method="GET" action="found_items.php">
+        <form class="search-form" method="GET" action="reported_items.php">
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
                 <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
@@ -185,7 +185,9 @@ $result = $conn->query($sql);
                         echo "<td>" . htmlspecialchars($row['category_name']) . "</td>"; // Display category name
                         echo "<td>" . htmlspecialchars($row['time_found']) . "</td>";
                         // Use the ID for the 'View' button link
-                        echo "<td><a href='https://ramonianlostgems.com/admin/messages/view_reported_item.php?id=" . urlencode($row['id']) . "' class='btn-view'>View</a></td>";
+                        echo "<td><a href='https://ramonianlostgems.com/admin/messages/view_reported_item.php?id=<?= urlencode($row['id']) ?>' class='btn btn-view'>
+    <i class='fas fa-eye'></i> View
+</a></td>";
                         echo "</tr>";
                     }
                 } else {
