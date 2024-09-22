@@ -10,10 +10,10 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Fetch the user's claim history
-$claims = [];
+$claimer = [];
 $stmt = $conn->prepare("
     SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
-    FROM claims c 
+    FROM claimer c 
     JOIN item_list i ON c.item_id = i.id 
     WHERE c.user_id = ?
 ");
@@ -21,7 +21,7 @@ $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $stmt->bind_result($item_id, $item_name, $claim_date, $status);
 while ($stmt->fetch()) {
-    $claims[] = [
+    $claimer[] = [
         'item_id' => $item_id, 
         'item_name' => $item_name, 
         'claim_date' => $claim_date, 
