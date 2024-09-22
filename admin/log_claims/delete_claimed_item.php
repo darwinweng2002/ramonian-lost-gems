@@ -12,28 +12,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
         exit();
     }
 
-    // Get the item ID
-    $itemId = intval($_POST['id']);
+    // Get the claim ID (from the claims table)
+    $claimId = intval($_POST['id']);
 
-    if ($itemId <= 0) {
-        echo json_encode(['success' => false, 'error' => 'Invalid item ID']);
+    if ($claimId <= 0) {
+        echo json_encode(['success' => false, 'error' => 'Invalid claim ID']);
         exit();
     }
 
-    // Update the status in the claim_history table to 'archived'
-    $stmt = $conn->prepare("UPDATE claim_history SET status = 'archived' WHERE item_id = ?");
+    // Update the status in the claims table to 'archived' (or any other appropriate value)
+    $stmt = $conn->prepare("UPDATE claims SET status = 'archived' WHERE id = ?");
     
     if (!$stmt) {
         echo json_encode(['success' => false, 'error' => 'Failed to prepare statement: ' . $conn->error]);
         exit();
     }
 
-    $stmt->bind_param('i', $itemId);
+    $stmt->bind_param('i', $claimId);
 
     if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Item archived successfully.']);
+        if ($stmt->affected_rows > 0) {
+            echo json_encode(['success' => true, 'message' => 'Claim archived successfully.']);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'No rows were updated.']);
+        }
     } else {
-        echo json_encode(['success' => false, 'error' => 'Failed to update the status: ' . $stmt->error]);
+        echo json_encode(['success' => false, 'error' => 'Failed to execute the update: ' . $stmt->error]);
     }
 
     $stmt->close();

@@ -19,8 +19,9 @@ $sql = "
     LEFT JOIN user_member um ON mi.user_id = um.id
     LEFT JOIN categories c ON mi.category_id = c.id
     WHERE mi.status = 2
+    AND mi.status != 'archived'  -- Exclude archived items
     AND NOT EXISTS (
-        SELECT 1 FROM claim_history ch WHERE ch.item_id = mi.id AND ch.status = 'claimed'
+        SELECT 1 FROM claims ch WHERE ch.item_id = mi.id AND ch.status = 'claimed'
     )
     
     UNION
@@ -31,10 +32,12 @@ $sql = "
     LEFT JOIN user_member um ON mh.user_id = um.id
     LEFT JOIN categories c ON mh.category_id = c.id
     WHERE mh.status = 2
+    AND mh.status != 'archived'  -- Exclude archived items
     AND NOT EXISTS (
-        SELECT 1 FROM claim_history ch WHERE ch.item_id = mh.id AND ch.status = 'claimed'
+        SELECT 1 FROM claims ch WHERE ch.item_id = mh.id AND ch.status = 'claimed'
     )
 ";
+
 
 $result = $conn->query($sql);
 ?>
@@ -140,30 +143,29 @@ $result = $conn->query($sql);
         </tbody>
     </table>
 </div>
-
 <!-- JavaScript for Delete Functionality -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
     // Delete button functionality (now just changes the status to "archived")
     $('.btn-delete').on('click', function() {
-        var itemId = $(this).data('id');
+        var claimId = $(this).data('id'); // Use claim ID from the claims table
         if (confirm('Are you sure you want to remove this item from the Claimed Items History?')) {
             $.ajax({
-                url: 'delete_claimed_item.php', // Path to update status
+                url: '../delete_claimed_item.php', // Ensure the correct relative path
                 type: 'POST',
-                data: { id: itemId },
+                data: { id: claimId },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        alert('Item removed from Claim History successfully.');
+                        alert(response.message); // Show success message from PHP
                         location.reload(); // Reload the page to reflect changes
                     } else {
-                        alert('Failed to remove the item: ' + response.error);
+                        alert('Failed to remove the item: ' + response.error); // Show error message from PHP
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('AJAX error:', status, error);
+                    console.error('AJAX error:', status, error); // Log AJAX errors for debugging
                 }
             });
         }
