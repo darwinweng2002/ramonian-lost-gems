@@ -52,7 +52,7 @@ $claims = [];
 if (!$is_guest) {
     $claim_stmt = $conn->prepare("
         SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
-        FROM claimss c 
+        FROM claims c 
         JOIN item_list i ON c.item_id = i.id 
         WHERE c.user_id = ?
     ");
