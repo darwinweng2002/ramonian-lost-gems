@@ -238,7 +238,7 @@ $message_stmt->close();
         }
 .badge-status {
     padding: 2px 6px;  /* Slightly reduced padding */
-    font-size: 14px;
+    font-size: 12px;
     border-radius: 20px; /* Rounded edges for the badges */
     color: #fff;
     display: inline-block;
