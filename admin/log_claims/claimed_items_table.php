@@ -9,32 +9,17 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch claimed items (status = 2) from both message_history (found items) and missing_items (lost items)
-// We will UNION the results from both tables
+// Fetch claimed items (status = 2)
+// Fetch claimed items (status = 2, i.e., claimed)
+$sql = "SELECT mi.id, mi.title, mi.description, mi.time_missing, um.email, c.name AS category_name
+FROM missing_items mi
+LEFT JOIN user_member um ON mi.user_id = um.id
+LEFT JOIN categories c ON mi.category_id = c.id
+WHERE mi.status = 2
+AND NOT EXISTS (
+    SELECT 1 FROM claim_history ch WHERE ch.item_id = mi.id AND ch.status = 'claimed'
+)"; // Only show items with status '2' (claimed)
 
-$sql = "
-    -- Claimed missing items (lost items)
-    SELECT mi.id, mi.title, mi.description, mi.time_missing AS time_recorded, um.email, c.name AS category_name, 'Missing' AS item_type
-    FROM missing_items mi
-    LEFT JOIN user_member um ON mi.user_id = um.id
-    LEFT JOIN categories c ON mi.category_id = c.id
-    WHERE mi.status = 2
-    AND NOT EXISTS (
-        SELECT 1 FROM claim_history ch WHERE ch.item_id = mi.id AND ch.status = 'claimed'
-    )
-    
-    UNION
-    
-    -- Claimed found items
-    SELECT mh.id, mh.title, mh.message AS description, mh.time_found AS time_recorded, um.email, c.name AS category_name, 'Found' AS item_type
-    FROM message_history mh
-    LEFT JOIN user_member um ON mh.user_id = um.id
-    LEFT JOIN categories c ON mh.category_id = c.id
-    WHERE mh.status = 2
-    AND NOT EXISTS (
-        SELECT 1 FROM claim_history ch WHERE ch.item_id = mh.id AND ch.status = 'claimed'
-    )
-";
 
 $result = $conn->query($sql);
 ?>
@@ -52,6 +37,7 @@ $result = $conn->query($sql);
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             padding: 20px;
+            text-decoration: none;s
         }
         .container {
             margin: 30px auto;
@@ -101,6 +87,7 @@ $result = $conn->query($sql);
 <?php require_once('../inc/topBarNav.php'); ?>
 <?php require_once('../inc/navigation.php'); ?>
 
+
 <div class="container">
     <h1>Claimed Items History</h1>
     
@@ -109,10 +96,9 @@ $result = $conn->query($sql);
             <tr>
                 <th>Item Name</th>
                 <th>Description</th>
-                <th>Time Recorded</th>
+                <th>Time Missing</th>
                 <th>User Email</th>
                 <th>Category</th>
-                <th>Item Type</th> <!-- Show whether it’s Found or Missing -->
                 <th>Actions</th>
             </tr>
         </thead>
@@ -123,12 +109,11 @@ $result = $conn->query($sql);
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['description']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['time_recorded']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['time_missing']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['email']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['item_type']) . "</td>"; // Show whether it's Found or Missing
                     echo "<td>";
-                    echo "<a href='view_claimed_item.php?id=" . urlencode($row['id']) . "&item_type=" . urlencode($row['item_type']) . "' class='btn btn-view'>View</a>";
+                    echo "<a href='https://ramonianlostgems.com/admin/log_claims/claimed_items.php?id=" . urlencode($row['id']) . "' class='btn btn-view'>View</a>";
                     echo "<button class='btn btn-delete' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
                     echo "</td>";
                     echo "</tr>";
@@ -145,20 +130,21 @@ $result = $conn->query($sql);
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
+    // Delete button functionality (now just changes the status to "archived")
     $('.btn-delete').on('click', function() {
         var itemId = $(this).data('id');
-        if (confirm('Are you sure you want to remove this item from the Claim History?')) {
+        if (confirm('Are you sure you want to remove this item from the Claimed Items History?')) {
             $.ajax({
-                url: '../delete_claimed_item.php',
+                url: '../delete_claimed_item.php', // Path to update status
                 type: 'POST',
                 data: { id: itemId },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        alert(response.message);
+                        alert('Item removed from Claim History successfully.');
                         location.reload(); // Reload the page to reflect changes
                     } else {
-                        alert('Failed to delete the item: ' + response.error);
+                        alert('Failed to remove the item: ' + response.error);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -169,8 +155,8 @@ $(document).ready(function() {
     });
 });
 
-</script>
 
+</script>
 <?php require_once('../inc/footer.php'); ?>
 </body>
 </html>

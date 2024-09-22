@@ -85,3 +85,159 @@ if (isset($_GET['id']) && isset($_GET['item_type'])) {
 }
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Claimed Item</title>
+    <?php require_once('../inc/header.php'); ?>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #333;
+            font-weight: 700;
+        }
+        .item-details {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 40px;
+        }
+        .item-info, .user-info {
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        .item-info h2, .user-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #444;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        .item-info p, .user-info p {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: #555;
+        }
+        .item-info p strong {
+            color: #111;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .image-grid img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .image-grid img:hover {
+            transform: scale(1.05);
+        }
+        .user-info img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .user-info p {
+            font-size: 1rem;
+            color: #666;
+        }
+        .user-info p strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<?php require_once('../inc/topBarNav.php'); ?>
+<?php require_once('../inc/navigation.php'); ?>
+
+<div class="container">
+    <h1>Claimed Item: <?php echo $title; ?></h1>
+
+    <div class="item-details">
+        <!-- Item Information -->
+        <div class="item-info">
+            <h2>Item Information</h2>
+            <p><strong>Description:</strong> <?php echo $description; ?></p>
+            <p><strong>Last Seen Location:</strong> <?php echo $lastSeenLocation; ?></p>
+            <p><strong>Time Missing:</strong> <?php echo $timeMissing; ?></p>
+            <p><strong>Contact:</strong> <?php echo $contact; ?></p>
+            <p><strong>Category:</strong> <?php echo $categoryName; ?></p>
+            <p><strong>Date Created:</strong> <?php echo $createdAt; ?></p>
+
+            <!-- Images Grid -->
+            <h3>Item Images</h3>
+            <?php if (!empty($images)) : ?>
+            <div class="image-grid">
+                <?php foreach ($images as $imagePath): 
+                    $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($imagePath);
+                ?>
+                    <a href="<?php echo $fullImagePath; ?>" data-lightbox="item-images" data-title="Item Image">
+                        <img src="<?php echo $fullImagePath; ?>" alt="Image">
+                    </a>
+                <?php endforeach; ?>
+            </div>
+            <?php else: ?>
+                <p>No images available.</p>
+            <?php endif; ?>
+        </div>
+
+        <!-- User Information -->
+        <div class="user-info text-center">
+            <h2>User Information</h2>
+            <!-- Avatar -->
+            <?php if ($avatar): ?>
+                <img src="<?php echo base_url . 'uploads/avatars/' . $avatar; ?>" alt="User Avatar">
+            <?php else: ?>
+                <img src="uploads/avatars/default-avatar.png" alt="Default Avatar">
+            <?php endif; ?>
+
+            <p><strong>Email:</strong> <?php echo $email; ?></p>
+            <p><strong>College:</strong> <?php echo $college; ?></p>
+        </div>
+    </div>
+</div>
+
+<!-- Include Lightbox JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
+<?php require_once('../inc/footer.php'); ?>
+</body>
+</html>
+
+<?php
+$stmt->close();
+$conn->close();
+?>
+s
