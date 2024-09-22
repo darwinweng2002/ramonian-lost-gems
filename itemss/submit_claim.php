@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     move_uploaded_file($personalId['tmp_name'], $personalIdPath);
 
     // Insert claim data into the database
-    $sql = "INSERT INTO claims (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id)
+    $sql = "INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('iissssss', $itemId, $_SESSION['user_id'], $itemDescription, $dateLost, $locationLost, $ownershipPath, $securityQuestion, $personalIdPath);
