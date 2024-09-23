@@ -299,6 +299,38 @@ if (isset($_GET['id'])) {
             });
         });
     });
+    $('.save-status-btn').on('click', function() {
+        var messageId = $(this).data('id');
+        var selectedStatus = $('#status-' + messageId).val(); // Get the selected status
+
+        // Send an AJAX request to update the status
+        $.ajax({
+            url: 'update_status.php',
+            type: 'POST',
+            data: {
+                id: messageId,
+                status: selectedStatus
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    Swal.fire(
+                        'Updated!',
+                        'The status has been updated successfully.',
+                        'success'
+                    ).then(() => {
+                        location.reload();  // Reload the page to reflect status update
+                    });
+                } else {
+                    Swal.fire('Error', 'Failed to update status: ' + response.error, 'error');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX error:", status, error);
+                Swal.fire('Error', 'An error occurred: ' + error, 'error');
+            }
+        });
+    });
     </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>
