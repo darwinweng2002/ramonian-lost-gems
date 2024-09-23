@@ -182,8 +182,20 @@
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Perform the logout action if confirmed
-                window.location.href = "https://ramonianlostgems.com/logout.php";
+                // Show SweetAlert loading spinner
+                Swal.fire({
+                    title: 'Logging out...',
+                    allowOutsideClick: false, // Prevent user from clicking outside
+                    didOpen: () => {
+                        Swal.showLoading(); // Show the loader animation
+                    }
+                });
+
+                // Simulate logout delay for demo purposes
+                setTimeout(function() {
+                    // Redirect to logout URL after delay
+                    window.location.href = "https://ramonianlostgems.com/logout.php";
+                }, 2000); // Adjust the delay as needed, here it is set to 2 seconds
             }
         });
     });
