@@ -171,11 +171,11 @@ if ($message_id > 0) {
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
                 
+                echo "<p><strong>Founder Name:</strong> " . $founder_name . "</p>";
                 echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
-                echo "<p><strong>Founder Name:</strong> " . $founder_name . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>"; 
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>"; 
