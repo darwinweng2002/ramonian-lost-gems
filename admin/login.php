@@ -16,14 +16,23 @@
       color: #fff4f4 !important;
       background: #8080801c;
     } */
-    .logo img {
-        max-height: 55px;
-        margin-right: 25px;
-    }
-    .logo span{
-      color: #fff;
-      text-shadow:0px 0px 10px #000;
-    }
+    .logo {
+  display: flex;
+  flex-direction: column; /* Stack logo and text */
+  align-items: center; /* Center items horizontally */
+  margin-bottom: 10px; /* Space below the logo */
+}
+
+.logo img {
+  max-height: 60px; /* Adjust height as needed */
+}
+
+.logo span {
+  color: #fff;
+  text-shadow: 0px 0px 10px #000;
+  text-align: center; /* Center the text */
+  font-size: 24px; /* Adjust font size as needed */
+}
   </style>
   <main>
     <div class="container">
@@ -33,12 +42,12 @@
           <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
-              <div class="d-flex justify-content-center py-4">
-                <a href="http://localhost/lostgemramonian/" class="logo d-flex align-items-center w-auto">
-                  <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
-                  <span class="d-none d-lg-block text-center"><?= $_settings->info('name') ?></span>
-                </a>
-              </div><!-- End Logo -->
+            <div class="d-flex justify-content-center py-4">
+            <a href="#" class="logo d-flex align-items-center w-auto">
+                <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
+                <span><?= $_settings->info('name') ?></span>
+            </a>
+            </div><!-- End Logo -->
 
               <div class="card mb-3">
 
