@@ -107,7 +107,10 @@ $result = $stmt->get_result();
 <body>
 <?php require_once('../inc/topBarNav.php'); ?>
 <?php require_once('../inc/navigation.php'); ?> 
+
 <div class="container">
+    <br>
+    <br>
     <h1>Claim Details</h1>
     <?php if ($result->num_rows > 0): ?>
         <div class="details">
