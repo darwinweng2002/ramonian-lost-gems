@@ -203,6 +203,9 @@ if (isset($_GET['id'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
                     foreach ($images as $imagePath) {
+                        // Debug: Print the image path to see what you're getting from the DB
+                        echo "Image path: " . htmlspecialchars($imagePath) . "<br>";
+                        
                         // Sanitize image path
                         $imagePath = trim($imagePath);
                 
@@ -219,6 +222,8 @@ if (isset($_GET['id'])) {
                         }
                     }
                     echo "</div>";
+                }
+                
                 }
             }
         }
