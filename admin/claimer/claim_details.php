@@ -21,12 +21,13 @@ $claimId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 // Fetch claim details along with associated images
 $sql = "SELECT c.id, c.item_id, mh.title AS item_name, um.first_name, um.last_name, c.item_description, c.date_lost, 
         c.location_lost, c.proof_of_ownership, c.security_question, c.personal_id, c.status, c.claim_date,
-        mi.image_path
+        GROUP_CONCAT(mi.image_path) AS image_paths
         FROM claimer c
         LEFT JOIN message_history mh ON c.item_id = mh.id
         LEFT JOIN user_member um ON c.user_id = um.id
         LEFT JOIN message_images mi ON mh.id = mi.message_id
-        WHERE c.id = ?";
+        WHERE c.id = ?
+        GROUP BY c.id";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $claimId);
@@ -37,7 +38,7 @@ $result = $stmt->get_result();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php require_once('../inc/header.php') ?>
+    <?php require_once('../inc/header.php'); ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claim Details</title>
@@ -83,13 +84,13 @@ $result = $stmt->get_result();
             transform: scale(1.05);
         }
         .image-container {
-            text-align: center; /* Center-align the images */
+            text-align: center;
         }
     </style>
 </head>
 <body>
-<?php require_once('../inc/topBarNav.php') ?>
-<?php require_once('../inc/navigation.php') ?> 
+<?php require_once('../inc/topBarNav.php'); ?>
+<?php require_once('../inc/navigation.php'); ?> 
 <div class="container">
     <h1>Claim Details</h1>
     <?php if ($result->num_rows > 0): ?>
@@ -130,12 +131,14 @@ $result = $stmt->get_result();
 
                 <!-- Display uploaded images -->
                 <?php
-                if (!empty($row['image_path'])) {
+                if (!empty($row['image_paths'])) {
+                    $images = explode(',', $row['image_paths']);
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
-                    // Construct the correct URL to the image
-                    $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($row['image_path']);
-                    echo "<a href='" . $fullImagePath . "' data-lightbox='claim-" . htmlspecialchars($claimId) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Claim Image'></a>";
+                    foreach ($images as $image) {
+                        $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($image);
+                        echo "<a href='" . $fullImagePath . "' data-lightbox='claim-" . htmlspecialchars($claimId) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Claim Image'></a>";
+                    }
                     echo "</div>";
                 }
                 ?>
@@ -146,7 +149,7 @@ $result = $stmt->get_result();
     <?php endif; ?>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
-<?php require_once('../inc/footer.php') ?>
+<?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
 
