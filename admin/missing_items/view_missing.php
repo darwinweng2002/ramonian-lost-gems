@@ -203,16 +203,23 @@ if (isset($_GET['id'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
                     foreach ($images as $imagePath) {
+                        // Sanitize image path
+                        $imagePath = trim($imagePath);
+                
+                        // Construct the full image path
                         $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($imagePath);
-                        // Add Lightbox attributes
-                        echo "<a href='" . $fullImagePath . "' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Image'></a>";
+                
+                        // Check if the file exists on the server
+                        if (!empty($imagePath) && file_exists('../uploads/items/' . $imagePath)) {
+                            // Add Lightbox attributes
+                            echo "<a href='" . $fullImagePath . "' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Image'></a>";
+                        } else {
+                            // Fallback to a default image if the file doesn't exist or the path is empty
+                            echo "<a href='uploads/items/default-image.png' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Default Image'><img src='uploads/items/default-image.png' alt='No Image Available'></a>";
+                        }
                     }
                     echo "</div>";
                 }
-
-                echo "<button class='publish-btn' data-id='" . htmlspecialchars($row['id']) . "'>Publish</button>";
-                echo "<button class='delete-btn' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
-                echo "</div>";
             }
         }
         ?>
