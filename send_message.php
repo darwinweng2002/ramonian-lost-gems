@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $contact = $_POST['contact'];
     $category_id = $_POST['category_id'];
     $new_category = $_POST['new_category'];
+    $founderName = $_POST['founder_name'];
     
 
     if ($category_id == 'add_new' && !empty($new_category)) {
@@ -35,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
      // Handle message saving
     // Handle message saving
     $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, founder_name, time_found, contact, category_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("isssssis", $userId, $message, $landmark, $title, $founder_name, $timeFound, $contact, $category_id, $status);
+    $stmt->bind_param("isssssis", $userId, $message, $landmark, $title, $founderName, $timeFound, $contact, $category_id, $status);
     $status = 'Pending'; // Set default status
     $stmt->execute();
     $messageId = $stmt->insert_id;
