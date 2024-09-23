@@ -66,14 +66,15 @@ $result = $stmt->get_result();
         .details p {
             margin: 10px 0;
         }
-        img {
-            max-width: 100px;
-            height: auto;
-        }
         .image-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 10px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -91,6 +92,22 @@ $result = $stmt->get_result();
                 <p><strong>Security Question:</strong> <?= htmlspecialchars($row['security_question']); ?></p>
                 <p><strong>Status:</strong> <?= htmlspecialchars($row['status']); ?></p>
                 <p><strong>Claim Date:</strong> <?= htmlspecialchars($row['claim_date']); ?></p>
+
+                <!-- Display claimant's proof of ownership -->
+                <p><strong>Proof of Ownership:</strong></p>
+                <?php if (!empty($row['proof_of_ownership'])): ?>
+                    <img src='/uploads/claims/<?= htmlspecialchars($row['proof_of_ownership']); ?>' alt='Proof of Ownership' />
+                <?php else: ?>
+                    <p>No proof uploaded.</p>
+                <?php endif; ?>
+
+                <!-- Display claimant's personal ID -->
+                <p><strong>Personal ID:</strong></p>
+                <?php if (!empty($row['personal_id'])): ?>
+                    <img src='/uploads/claims/<?= htmlspecialchars($row['personal_id']); ?>' alt='Personal ID' />
+                <?php else: ?>
+                    <p>No ID uploaded.</p>
+                <?php endif; ?>
 
                 <!-- Display uploaded images -->
                 <?php
