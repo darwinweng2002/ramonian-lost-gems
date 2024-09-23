@@ -74,14 +74,24 @@ if (isset($_POST['guest_login'])) {
       backdrop-filter: brightness(.7);
       overflow-x: hidden;
     }
-    .logo img {
-      max-height: 55px;
-      margin-right: 25px;
-    }
-    .logo span {
-      color: #fff;
-      text-shadow: 0px 0px 10px #000;
-    }
+    .logo {
+  display: flex;
+  flex-direction: column; /* Stack logo and text */
+  align-items: center; /* Center items horizontally */
+  margin-bottom: 20px; /* Space below the logo */
+}
+
+.logo img {
+  max-height: 80px; /* Adjust height as needed */
+}
+
+.logo span {
+  color: #fff;
+  text-shadow: 0px 0px 10px #000;
+  text-align: center; /* Center the text */
+  font-size: 24px; /* Adjust font size as needed */
+}
+
      /* Loader CSS */
   .loader-wrapper {
     position: fixed;
@@ -124,12 +134,13 @@ if (isset($_POST['guest_login'])) {
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-              <div class="d-flex justify-content-center py-4">
-                <a href="#" class="logo d-flex align-items-center w-auto">
-                  <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
-                  <span class=""><?= $_settings->info('name') ?></span>
-                </a>
-              </div><!-- End Logo -->
+            <div class="d-flex justify-content-center py-4">
+            <a href="#" class="logo d-flex align-items-center w-auto">
+              <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
+              <span><?= $_settings->info('name') ?></span>
+            </a>
+          </div><!-- End Logo -->
+><!-- End Logo -->  
               <div class="card mb-3">
                 <div class="card-body">
                   <div class="pt-4 pb-2">

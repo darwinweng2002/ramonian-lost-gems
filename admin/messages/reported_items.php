@@ -152,7 +152,7 @@ $result = $conn->query($sql);
     <?php require_once('../inc/topBarNav.php'); ?>
     <?php require_once('../inc/navigation.php'); ?>
     <div class="container">
-        <h1>Reported Found Items</h1>
+        <h2>Reported Found Items</h2>
 
         <!-- Search Form -->
         <form class="search-form" method="GET" action="reported_items.php">

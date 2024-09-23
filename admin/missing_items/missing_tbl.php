@@ -103,7 +103,7 @@ $result = $conn->query($sql);
         }
 
         .btn-view:hover {
-            background-color: #008bff;
+            background-color: #007bff;
         }
 
         .no-data {
