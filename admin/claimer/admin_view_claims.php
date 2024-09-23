@@ -158,7 +158,7 @@ $result = $conn->query($sql);
                             <button type='submit' name='action' value='approve' class='btn-approve'>Approve</button>
                             <button type='submit' name='action' value='reject' class='btn-reject'>Reject</button>
                         </form>
-                        <a href='https://ramonianlostgems.com/admin/claimer/admin_view_claims.php/claim_details.php?id=" . $row['id'] . "' class='btn-view'>View</a>
+                        <a href='https://ramonianlostgems.com/admin/claimer/claim_details.php?id=" . $row['id'] . "' class='btn-view'>View</a>
                     </td>";
                     echo "</tr>";
                 }
