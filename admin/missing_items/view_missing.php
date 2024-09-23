@@ -119,7 +119,8 @@ if (isset($_GET['id'])) {
     </style>
 </head>
 <body>
-    <?php require_once('../inc/topBarNav.php'); ?>
+<?php require_once('../inc/topBarNav.php') ?>
+<?php require_once('../inc/navigation.php') ?> 
     <div class="container">
         <h1>View Missing Item Details</h1>
         <?php
