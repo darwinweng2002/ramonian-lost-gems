@@ -97,6 +97,18 @@ $result = $stmt->get_result();
         <div class="details">
             <?php while ($row = $result->fetch_assoc()): ?>
                 <p><strong>Item Name:</strong> <?= htmlspecialchars($row['item_name']); ?></p>
+                <?php
+                if (!empty($row['image_paths'])) {
+                    $images = explode(',', $row['image_paths']);
+                    echo "<p><strong>Images:</strong></p>";
+                    echo "<div class='image-grid'>";
+                    foreach ($images as $image) {
+                        $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($image);
+                        echo "<a href='" . $fullImagePath . "' data-lightbox='claim-" . htmlspecialchars($claimId) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Claim Image'></a>";
+                    }
+                    echo "</div>";
+                }
+                ?>
                 <p><strong>Claimant Name:</strong> <?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></p>
                 <p><strong>Description:</strong> <?= htmlspecialchars($row['item_description']); ?></p>
                 <p><strong>Date Lost:</strong> <?= htmlspecialchars($row['date_lost']); ?></p>
@@ -130,18 +142,7 @@ $result = $stmt->get_result();
                 </div>
 
                 <!-- Display uploaded images -->
-                <?php
-                if (!empty($row['image_paths'])) {
-                    $images = explode(',', $row['image_paths']);
-                    echo "<p><strong>Images:</strong></p>";
-                    echo "<div class='image-grid'>";
-                    foreach ($images as $image) {
-                        $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($image);
-                        echo "<a href='" . $fullImagePath . "' data-lightbox='claim-" . htmlspecialchars($claimId) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Claim Image'></a>";
-                    }
-                    echo "</div>";
-                }
-                ?>
+               
             <?php endwhile; ?>
         </div>
     <?php else: ?>
