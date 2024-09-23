@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Handle message saving
    // Handle message saving
    $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, founder_name, time_found, contact, category_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-   $stmt->bind_param("isssssis", $userId, $message, $landmark, $title, $founderName $timeFound, $contact, $category_id, $status);
+   $stmt->bind_param("isssssis", $userId, $message, $landmark, $title, $founderName, $timeFound, $contact, $category_id, $status);
    $status = 'Pending'; // Set default status
    $stmt->execute();
    $messageId = $stmt->insert_id;
