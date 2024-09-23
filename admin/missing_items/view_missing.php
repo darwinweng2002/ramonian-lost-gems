@@ -15,29 +15,16 @@ $result = null;
 if (isset($_GET['id'])) {
     $itemId = $_GET['id'];
 
-    // Prepare the SQL statement
-    $stmt = $conn->prepare("SELECT 
-                mi.id, 
-                mi.title, 
-                mi.description, 
-                mi.last_seen_location, 
-                mi.time_missing, 
-                mi.status,  /* Status field is fetched */
-                mi.created_at, 
-                um.email, 
-                um.college,
-                um.avatar,
-                mi.contact,
-                c.name AS category_name,
-                GROUP_CONCAT(mii.image_path) AS images 
+    // SQL query to get missing item details and associated images
+    $sql = "SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, um.first_name, um.college, um.email, um.avatar, c.name AS category_name, imi.image_path
             FROM missing_items mi
             LEFT JOIN user_member um ON mi.user_id = um.id
+            LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
             LEFT JOIN categories c ON mi.category_id = c.id
-            LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
-            WHERE mi.id = ?
-            GROUP BY mi.id, um.email, um.college, um.avatar, mi.contact, c.name");
-    
-    $stmt->bind_param('i', $itemId); // Bind the integer value
+            WHERE mi.id = ?";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $itemId);
     $stmt->execute();
     $result = $stmt->get_result();
 }
@@ -51,9 +38,6 @@ if (isset($_GET['id'])) {
     <title>Missing Items - Admin View</title>
     <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
-    <!-- SweetAlert2 CSS and JS -->
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
        body {
             font-family: Arial, sans-serif;
@@ -125,41 +109,62 @@ if (isset($_GET['id'])) {
             background-color: #218838; /* Darker green on hover */
         }
         .container .avatar {
-            width: 100px; /* Set the width of the avatar */
-            height: 100px; /* Set the height of the avatar to the same value as width for a circle */
-            border-radius: 100%; /* Makes the image circular */
-            object-fit: cover; /* Ensures the image covers the circle without distortion */
-            display: block; /* Ensures the image is displayed as a block element */
-            margin-bottom: 10px; /* Adds space below the image if needed */
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+            object-fit: cover;
+            display: block;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
     <?php require_once('../inc/topBarNav.php'); ?>
-    <?php require_once('../inc/navigation.php'); ?>
-
     <div class="container">
         <h1>View Missing Item Details</h1>
         <?php
-        if ($result && $result->num_rows > 0) {
+        if ($result->num_rows > 0) {
+            $items = [];
             while ($row = $result->fetch_assoc()) {
-                // Assign the status field to the variable
-                $status = $row['status'];  // Assign the status value from the result
+                if (!isset($items[$row['id']])) {
+                    $items[$row['id']] = [
+                        'description' => $row['description'],
+                        'last_seen_location' => $row['last_seen_location'],
+                        'time_missing' => $row['time_missing'],
+                        'title' => $row['title'],
+                        'status' => $row['status'], // Fetch the status
+                        'first_name' => $row['first_name'],
+                        'college' => $row['college'],
+                        'email' => $row['email'],
+                        'avatar' => $row['avatar'],
+                        'images' => [],
+                        'contact' => $row['contact'],
+                        'category_name' => $row['category_name']
+                    ];
+                }
+                if ($row['image_path']) {
+                    // Construct the correct URL to the image
+                    $fullImagePath = base_url . 'uploads/missing_items/' . $row['image_path'];
+                    $items[$row['id']]['images'][] = $fullImagePath;
+                }
+            }
 
-                $images = explode(',', $row['images']); // Convert image paths to an array
+            // Now loop through the items and display the details
+            foreach ($items as $itemId => $itemData) {
+                $firstName = htmlspecialchars($itemData['first_name'] ?? '');
+                $email = htmlspecialchars($itemData['email'] ?? '');
+                $college = htmlspecialchars($itemData['college'] ?? '');
+                $title = htmlspecialchars($itemData['title'] ?? '');
+                $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
+                $description = htmlspecialchars($itemData['description'] ?? '');
+                $avatar = htmlspecialchars($itemData['avatar'] ?? '');
+                $timeMissing = htmlspecialchars($itemData['time_missing'] ?? ''); // Fetch date and time
+                $contact = htmlspecialchars($itemData['contact'] ?? '');
+                $categoryName = htmlspecialchars($itemData['category_name'] ?? '');
+                $status = intval($itemData['status']); // Get the correct status
 
                 echo "<div class='message-box'>";
-                $firstName = htmlspecialchars($row['first_name'] ?? '');
-                $email = htmlspecialchars($row['email'] ?? '');
-                $college = htmlspecialchars($row['college'] ?? '');
-                $title = htmlspecialchars($row['title'] ?? '');
-                $lastSeenLocation = htmlspecialchars($row['last_seen_location'] ?? '');
-                $description = htmlspecialchars($row['description'] ?? '');
-                $avatar = htmlspecialchars($row['avatar'] ?? '');
-                $timeMissing = htmlspecialchars($row['time_missing'] ?? '');
-                $contact = htmlspecialchars($row['contact'] ?? '');
-                $categoryName = htmlspecialchars($row['category_name'] ?? '');
-
+                
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                     echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
@@ -167,27 +172,18 @@ if (isset($_GET['id'])) {
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
 
-                echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
+                echo "<p><strong>Title Name:</strong> " . $title . "</p>";
+                echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
-                echo "<p><strong>Item Name:</strong> " . $title . "</p>";
+                echo "<p><strong>Date and time the item was lost:</strong> " . $timeMissing . "</p>"; // Display date and time
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
-                echo "<p><strong>Time Missing:</strong> " . $timeMissing . "</p>";
-                echo "<p><strong>Contact:</strong> " . $contact . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
-                echo "<div class='form-group col-lg-12 col-md-12 col-sm-12 col-xs-12'>";
-                echo "<label for='status' class='control-label'>Status</label>";
-                echo "<select name='status' id='status-".$row['id']."' class='form-select form-select-sm rounded-0' required='required'>";
-                echo "<option value='0' " . ($status == 0 ? 'selected' : '') . ">Pending</option>";
-                echo "<option value='1' " . ($status == 1 ? 'selected' : '') . ">Published</option>";
-                echo "<option value='2' " . ($status == 2 ? 'selected' : '') . ">Claimed</option>";
-                echo "<option value='3' " . ($status == 3 ? 'selected' : '') . ">Surrendered</option>";
-                echo "</select>";
-                echo "<button class='btn btn-primary save-status-btn' data-id='" . $row['id'] . "'>Save Status</button>";
+                echo "<p><strong>Contact:</strong> " . $contact . "</p>";
 
-                // Close message box div
-                echo "</div>";
+                // Status Display
                 echo "<dt class='text-muted'>Status</dt>";
+                echo "<dd class='ps-4'>";
                 if ($status == 1) {
                     echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
                 } elseif ($status == 2) {
@@ -195,42 +191,27 @@ if (isset($_GET['id'])) {
                 } elseif ($status == 3) {
                     echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
                 } else {
-                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";   
                 }
+                echo "</dd>";
 
-                if (!empty($images)) {
+                if (!empty($itemData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
-                    foreach ($images as $imagePath) {
-                        // Sanitize and trim the image path
-                        $imagePath = trim($imagePath);
-
-                        // Ensure image path is not empty
-                        if (!empty($imagePath)) {
-                            // Construct the full image path
-                            $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($imagePath);
-
-                            // Check if the image file exists before displaying
-                            if (file_exists('../uploads/items/' . $imagePath)) {
-                                // Add Lightbox attributes to the image
-                                echo "<a href='" . $fullImagePath . "' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Image'>";
-                                echo "<img src='" . $fullImagePath . "' alt='Image'></a>";
-                            } else {
-                                // If the image file doesn't exist, use a fallback image
-                                echo "<a href='uploads/items/default-image.png' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Default Image'>";
-                                echo "<img src='uploads/items/default-image.png' alt='No Image Available'></a>";
-                            }
-                        }
+                    foreach ($itemData['images'] as $imagePath) {
+                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='item-" . htmlspecialchars($itemId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
                     }
                     echo "</div>";
                 } else {
                     echo "<p>No images available.</p>";
                 }
 
-                echo "<button class='publish-btn' data-id='" . htmlspecialchars($row['id']) . "'>Publish</button>";
-                echo "<button class='delete-btn' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
+                echo "<button class='publish-btn' data-id='" . htmlspecialchars($itemId) . "'>Publish</button>";
+                echo "<button class='delete-btn' data-id='" . htmlspecialchars($itemId) . "'>Delete</button>";
                 echo "</div>";
             }
+        } else {
+            echo "<p>No details available for this item.</p>";
         }
         ?>
     </div>
@@ -242,121 +223,73 @@ if (isset($_GET['id'])) {
 
     <script>
     $(document).ready(function() {
-    // Delete button functionality
-    $('.delete-btn').on('click', function() {
-        var itemId = $(this).data('id');
-        // Use SweetAlert2 to show a confirmation dialog
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you really want to delete this missing item?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Perform the AJAX request to delete the item
-                $.ajax({
-                    url: 'delete_message.php', // Ensure this path is correct
-                    type: 'POST',
-                    data: { id: itemId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire(
-                                'Deleted!',
-                                'The missing item has been deleted.',
-                                'success'
-                            ).then(() => {
-                                location.reload(); // Reload the page after deletion
-                            });
-                        } else {
-                            Swal.fire('Error', 'Failed to delete the missing item: ' + response.error, 'error');
+        // Delete button functionality
+        $('.delete-btn').on('click', function() {
+            var itemId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you really want to delete this missing item?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'delete_message.php',
+                        type: 'POST',
+                        data: { id: itemId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Deleted!', 'The missing item has been deleted.', 'success')
+                                .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error', 'Failed to delete the missing item.', 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'An error occurred.', 'error');
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX error:", status, error);
-                        Swal.fire('Error', 'An error occurred while deleting the item.', 'error');
-                    }
-                });
-            }
-        });
-    });
-
-    // Publish button functionality
-    $('.publish-btn').on('click', function() {
-        var itemId = $(this).data('id');
-        // Use SweetAlert2 to show the confirmation
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you want to publish this missing item?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, publish it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: 'publish_message.php', // Ensure this path is correct
-                    type: 'POST',
-                    data: { id: itemId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire(
-                                'Published!',
-                                'The missing item has been successfully published.',
-                                'success'
-                            ).then(() => {
-                                location.reload(); // Reload the page after publishing
-                            });
-                        } else {
-                            Swal.fire('Error', 'Failed to publish the missing item: ' + response.error, 'error');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX error:", status, error);
-                        Swal.fire('Error', 'An error occurred while publishing the item.', 'error');
-                    }
-                });
-            }
-        });
-    });
-
-    // Save status button functionality
-    $('.save-status-btn').on('click', function() {
-        var itemId = $(this).data('id');
-        var selectedStatus = $('#status-' + itemId).val();
-
-        $.ajax({
-            url: 'update_status.php',
-            type: 'POST',
-            data: {
-                id: itemId,
-                status: selectedStatus
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    Swal.fire(
-                        'Success',
-                        'The status has been updated successfully.',
-                        'success'
-                    ).then(() => {
-                        location.reload();  // Reflect the status update
                     });
-                } else {
-                    Swal.fire('Error', 'Failed to update status: ' + response.error, 'error');
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error("AJAX error:", status, error);
-                Swal.fire('Error', 'An error occurred while updating the status.', 'error');
-            }
+            });
+        });
+
+        // Publish button functionality
+        $('.publish-btn').on('click', function() {
+            var itemId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to publish this missing item?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, publish it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'publish_message.php',
+                        type: 'POST',
+                        data: { id: itemId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Published!', 'The missing item has been successfully published.', 'success')
+                                .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error', 'Failed to publish the missing item.', 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'An error occurred while publishing the item.', 'error');
+                        }
+                    });
+                }
+            });
         });
     });
-});
     </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>
