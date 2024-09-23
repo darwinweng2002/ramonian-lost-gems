@@ -30,7 +30,7 @@ $categoriesResult = $conn->query("SELECT id, name FROM categories");
 
 // SQL query for found items, including status
 // SQL query for found items, including status
-$sqlFound = "SELECT mh.id, mh.title, mh.category_id, mh.time_found, mh.message, mh.status, GROUP_CONCAT(mi.image_path) AS image_paths
+$sqlFound = "SELECT mh.id, mh.title, mh.founder_name, mh.category_id, mh.time_found, mh.message, mh.status, GROUP_CONCAT(mi.image_path) AS image_paths
              FROM message_history mh
              LEFT JOIN message_images mi ON mh.id = mi.message_id
              WHERE mh.is_published = 1 AND mh.status = 1"; // Only fetch items where status is Published
