@@ -468,7 +468,7 @@ $message_stmt->close();
         <td>
             <?php
                 $statusClass = ''; // Initialize the class for the status badge
-                $tooltipMessage = ''; // Initialize the tooltip message for the status badge
+                $showNotification = false; // Flag to show notification icon
 
                 if ($missing_item['status'] == 0) {
                     $statusClass = 'badge-pending';
@@ -478,12 +478,10 @@ $message_stmt->close();
                     $statusClass = 'badge-claimed';
                 } elseif ($missing_item['status'] == 3) {
                     $statusClass = 'badge-surrendered';
-                    $tooltipMessage = 'Someone surrendered your missing item, you can go to SSG office to claim your item';
+                    $showNotification = true; // Show notification icon only for surrendered items
                 }
             ?>
-            <!-- Add the tooltip message only for the surrendered status -->
-            <span class="badge-status <?= $statusClass ?>" 
-                  <?= $tooltipMessage ? 'title="'.$tooltipMessage.'"' : '' ?>>
+            <span class="badge-status <?= $statusClass ?>">
                 <?php
                     if ($missing_item['status'] == 0) {
                         echo 'Pending';
@@ -498,9 +496,17 @@ $message_stmt->close();
                     }
                 ?>
             </span>
+
+            <!-- Add notification icon if the item is surrendered -->
+            <?php if ($showNotification): ?>
+                <i class="bi bi-bell-fill notification-icon" 
+                   onclick="showSurrenderNotification('<?= htmlspecialchars($missing_item['title']) ?>')"
+                   style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
+            <?php endif; ?>
         </td>
     </tr>
 <?php endforeach; ?>
+
 
                 </tbody>
             </table>
@@ -577,6 +583,14 @@ $message_stmt->close();
         // Optionally, set an interval to update the claim history periodically
         setInterval(updateClaimHistory, 60000); // Update every 60 seconds
     });
+    function showSurrenderNotification(itemTitle) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Item Surrendered',
+            text: `Someone surrendered your missing item (${itemTitle}), you can go to SSG office to claim it.`,
+            confirmButtonText: 'OK'
+        });
+    }
     </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>
