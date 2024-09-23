@@ -230,36 +230,29 @@ if (isset($_GET['id'])) {
 
     <script>
     $(document).ready(function() {
-        // Delete button functionality
-        $('.delete-btn').on('click', function() {
+        // Function to update status
+        $('.save-status-btn').on('click', function() {
             var itemId = $(this).data('id');
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "Do you really want to delete this missing item?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: 'delete_message.php',
-                        type: 'POST',
-                        data: { id: itemId },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire('Deleted!', 'The missing item has been deleted.', 'success')
-                                .then(() => location.reload());
-                            } else {
-                                Swal.fire('Error', 'Failed to delete the missing item.', 'error');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire('Error', 'An error occurred.', 'error');
-                        }
-                    });
+            var selectedStatus = $('#status-' + itemId).val();
+
+            $.ajax({
+                url: 'update_status.php',
+                type: 'POST',
+                data: {
+                    id: itemId,
+                    status: selectedStatus
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire('Success', 'The status has been updated successfully.', 'success')
+                        .then(() => location.reload());
+                    } else {
+                        Swal.fire('Error', 'Failed to update status.', 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire('Error', 'An error occurred while updating the status.', 'error');
                 }
             });
         });
@@ -297,29 +290,36 @@ if (isset($_GET['id'])) {
             });
         });
 
-        // Save status button functionality
-        $('.save-status-btn').on('click', function() {
+        // Delete button functionality
+        $('.delete-btn').on('click', function() {
             var itemId = $(this).data('id');
-            var selectedStatus = $('#status-' + itemId).val();
-
-            $.ajax({
-                url: 'update_status.php',
-                type: 'POST',
-                data: {
-                    id: itemId,
-                    status: selectedStatus
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire('Success', 'The status has been updated successfully.', 'success')
-                        .then(() => location.reload());
-                    } else {
-                        Swal.fire('Error', 'Failed to update status.', 'error');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    Swal.fire('Error', 'An error occurred while updating the status.', 'error');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you really want to delete this missing item?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'delete_message.php',
+                        type: 'POST',
+                        data: { id: itemId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Deleted!', 'The missing item has been deleted.', 'success')
+                                .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error', 'Failed to delete the missing item.', 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'An error occurred while deleting the item.', 'error');
+                        }
+                    });
                 }
             });
         });
