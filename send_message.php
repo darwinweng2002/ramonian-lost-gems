@@ -2,21 +2,19 @@
 include('config.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if user is logged in and user_id is set in session
     if (!isset($_SESSION['user_id'])) {
         die("User not logged in");
     }
 
     $message = $_POST['message'];
-    $landmark = $_POST['landmark']; // Existing field
-    $title = $_POST['title']; // New field
-    $timeFound = $_POST['time_found']; // New field
-    $userId = $_SESSION['user_id']; // Use user ID from session
+    $landmark = $_POST['landmark'];
+    $title = $_POST['title'];
+    $timeFound = $_POST['time_found'];
+    $userId = $_SESSION['user_id'];
     $contact = $_POST['contact'];
     $category_id = $_POST['category_id'];
     $new_category = $_POST['new_category'];
-    $founder_name= $_POST['founder_name'];
-    
+    $founderName = $_POST['founder_name']; // Capture founder name
 
     if ($category_id == 'add_new' && !empty($new_category)) {
         $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
@@ -25,22 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $category_id = $stmt->insert_id;
         $stmt->close();
     }
-    // Directory for uploading files
-    $uploadDir = 'uploads/items/';
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
-    }
-
-    $uploadedFiles = [];
 
     // Handle message saving
-   // Handle message saving
-   $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, founder_name, time_found, contact, category_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-   $stmt->bind_param("isssssis", $userId, $message, $landmark, $title, $founder_name, $timeFound, $contact, $category_id, $status);
-   $status = 'Pending'; // Set default status
-   $stmt->execute();
-   $messageId = $stmt->insert_id;
-   $stmt->close();
+    $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, time_found, contact, category_id, status, founder_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("isssssiss", $userId, $message, $landmark, $title, $timeFound, $contact, $category_id, $status, $founderName); // Include founder_name in the query
+    $status = 'Pending';
+    $stmt->execute();
+    $messageId = $stmt->insert_id;
+    $stmt->close();
+
 
 
     // Handle file uploads
@@ -191,6 +182,39 @@ if (isset($_SESSION['user_id'])) {
             border-radius: 4px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
+        .back-btn-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn svg {
+            margin-right: 8px;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .back-btn:focus {
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -209,13 +233,15 @@ if (isset($_SESSION['user_id'])) {
         <?php endif; ?>
          
         <form action="send_message.php" method="post" enctype="multipart/form-data" class="message-form">
-        <label for="founder_name">
+            <!-- Add this below the title field in the form -->
+<label for="founder_name">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
         <circle cx="12" cy="7" r="4"/>
     </svg> Founder Name:
 </label>
-<input type="text" name="founder_name" id="founder_name" placeholder="Enter founder name" required>
+<input type="text" name="founder_name" id="founder_name" placeholder="Enter founder's name" required>
+
         <label for="title">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pin"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
                 </svg> Item Name:
@@ -280,6 +306,7 @@ if (isset($_SESSION['user_id'])) {
 <input type="file" name="images[]" id="images" multiple onchange="previewImages()">
 <div class="image-preview-container" id="imagePreviewContainer"></div>
 <p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
+<p>Upload multiple images if necessary.</p>
 <button type="submit" class="submit-btn">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
         <line x1="22" x2="11" y1="2" y2="13"/>
@@ -287,6 +314,15 @@ if (isset($_SESSION['user_id'])) {
     </svg> Send Report
 </button>
         </form>
+        <div class="back-btn-container">
+    <button class="back-btn" onclick="history.back()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Back
+    </button>
+</div>
     </div>
 
     <?php require_once('inc/footer.php') ?>
