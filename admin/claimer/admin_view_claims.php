@@ -21,6 +21,7 @@ $result = $conn->query($sql);
 
 <!DOCTYPE html>
 <html lang="en">
+<?php require_once('../inc/header.php'); ?>
 <head>
     <?php require_once('../inc/header.php'); ?>
     <meta charset="UTF-8">
@@ -88,6 +89,8 @@ $result = $conn->query($sql);
     </style>
 </head>
 <body>
+<?php require_once('../inc/topBarNav.php'); ?>
+<?php require_once('../inc/navigation.php'); ?> 
 <div class="container">
     <h1>Claimant Users of Found Items</h1>
     
@@ -170,6 +173,7 @@ $result = $conn->query($sql);
     </table>
 </div>
 </body>
+<?php require_once('../inc/footer.php'); ?>
 </html>
 
 <?php
