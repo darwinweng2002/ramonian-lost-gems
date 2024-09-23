@@ -22,7 +22,7 @@ $result = $conn->query($sql);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php require_once('../inc/header.php'); ?>
+    <?php require_once('../inc/header.php'); ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - View Claims</title>
@@ -31,12 +31,13 @@ $result = $conn->query($sql);
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             padding-top: 70px;
+            color: #000; /* Black font color */
         }
         .container {
             max-width: 1200px;
             margin: 30px auto;
             padding: 20px;
-            background-color: #fff;
+            background-color: #fff; /* White background */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
         }
@@ -58,7 +59,7 @@ $result = $conn->query($sql);
         th {
             background-color: #f2f2f2;
         }
-        .btn-approve, .btn-reject {
+        .btn-approve, .btn-reject, .btn-view {
             padding: 10px 15px;
             border: none;
             border-radius: 5px;
@@ -71,6 +72,14 @@ $result = $conn->query($sql);
         .btn-reject {
             background-color: #dc3545;
             color: white;
+        }
+        .btn-view {
+            background-color: #007bff; /* Blue color */
+            color: white;
+            text-decoration: none; /* Remove underline */
+        }
+        .btn-view:hover {
+            background-color: #0056b3; /* Darker blue on hover */
         }
         img {
             max-width: 100px;
@@ -144,11 +153,12 @@ $result = $conn->query($sql);
                     echo "<td>" . htmlspecialchars($row['claim_date']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['status']) . "</td>";
                     echo "<td>
-                        <form action='update_claim_status.php' method='POST'>
+                        <form action='update_claim_status.php' method='POST' style='display:inline;'>
                             <input type='hidden' name='claim_id' value='" . $row['id'] . "'>
                             <button type='submit' name='action' value='approve' class='btn-approve'>Approve</button>
                             <button type='submit' name='action' value='reject' class='btn-reject'>Reject</button>
                         </form>
+                        <a href='claim_details.php?id=" . $row['id'] . "' class='btn-view'>View</a>
                     </td>";
                     echo "</tr>";
                 }
