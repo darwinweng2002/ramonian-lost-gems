@@ -43,7 +43,7 @@ if (isset($_GET['id'])) {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            padding-top: 70px; /* Adjust this according to the height of your navbar */
+            padding-top: 70px;
             background-color: #f4f4f4;
         }
         .container {
@@ -95,7 +95,7 @@ if (isset($_GET['id'])) {
             background-color: #c82333;
         }
         .publish-btn {
-            background-color: #28a745; /* Green background color */
+            background-color: #28a745;
             color: white;
             border: none;
             padding: 10px 15px;
@@ -103,10 +103,10 @@ if (isset($_GET['id'])) {
             cursor: pointer;
             position: absolute;
             bottom: 20px;
-            right: 80px; /* Position it to the left of the delete button */
+            right: 80px;
         }
         .publish-btn:hover {
-            background-color: #218838; /* Darker green on hover */
+            background-color: #218838;
         }
         .container .avatar {
             width: 100px;
@@ -132,7 +132,7 @@ if (isset($_GET['id'])) {
                         'last_seen_location' => $row['last_seen_location'],
                         'time_missing' => $row['time_missing'],
                         'title' => $row['title'],
-                        'status' => $row['status'], // Fetch the status
+                        'status' => $row['status'],
                         'first_name' => $row['first_name'],
                         'college' => $row['college'],
                         'email' => $row['email'],
@@ -143,13 +143,11 @@ if (isset($_GET['id'])) {
                     ];
                 }
                 if ($row['image_path']) {
-                    // Construct the correct URL to the image
                     $fullImagePath = base_url . 'uploads/missing_items/' . $row['image_path'];
                     $items[$row['id']]['images'][] = $fullImagePath;
                 }
             }
 
-            // Now loop through the items and display the details
             foreach ($items as $itemId => $itemData) {
                 $firstName = htmlspecialchars($itemData['first_name'] ?? '');
                 $email = htmlspecialchars($itemData['email'] ?? '');
@@ -158,10 +156,10 @@ if (isset($_GET['id'])) {
                 $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
                 $description = htmlspecialchars($itemData['description'] ?? '');
                 $avatar = htmlspecialchars($itemData['avatar'] ?? '');
-                $timeMissing = htmlspecialchars($itemData['time_missing'] ?? ''); // Fetch date and time
+                $timeMissing = htmlspecialchars($itemData['time_missing'] ?? '');
                 $contact = htmlspecialchars($itemData['contact'] ?? '');
                 $categoryName = htmlspecialchars($itemData['category_name'] ?? '');
-                $status = intval($itemData['status']); // Get the correct status
+                $status = intval($itemData['status']);
 
                 echo "<div class='message-box'>";
                 
@@ -176,32 +174,32 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
-                echo "<p><strong>Date and time the item was lost:</strong> " . $timeMissing . "</p>"; // Display date and time
+                echo "<p><strong>Date and time the item was lost:</strong> " . $timeMissing . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
 
-                echo "<div class='form-group'>";
+                // Status dropdown
+                echo "<div class='form-group col-lg-12 col-md-12 col-sm-12 col-xs-12'>";
                 echo "<label for='status' class='control-label'>Status</label>";
-                echo "<select name='status' id='status-".$msgId."' class='form-select form-select-sm rounded-0' required='required'>";
-                // Add options for the different statuses
-                echo "<option value='0' " . ($msgData['status'] == 0 ? 'selected' : '') . ">Pending</option>";
-                echo "<option value='1' " . ($msgData['status'] == 1 ? 'selected' : '') . ">Published</option>";
-                echo "<option value='2' " . ($msgData['status'] == 2 ? 'selected' : '') . ">Claimed</option>";
-                echo "<option value='3' " . ($msgData['status'] == 3 ? 'selected' : '') . ">Surrendered</option>";
+                echo "<select name='status' id='status-".$itemId."' class='form-select form-select-sm rounded-0' required='required'>";
+                echo "<option value='0' " . ($status == 0 ? 'selected' : '') . ">Pending</option>";
+                echo "<option value='1' " . ($status == 1 ? 'selected' : '') . ">Published</option>";
+                echo "<option value='2' " . ($status == 2 ? 'selected' : '') . ">Claimed</option>";
+                echo "<option value='3' " . ($status == 3 ? 'selected' : '') . ">Surrendered</option>";
                 echo "</select>";
-                echo "<button class='btn btn-primary save-status-btn' data-id='" . $msgId . "'>Save Status</button>";
+                echo "<button class='btn btn-primary save-status-btn' data-id='" . $itemId . "'>Save Status</button>";
                 echo "</div>";
 
                 echo "<dt class='text-muted'>Status</dt>";
-                if ($msgData['status'] == 1) {
+                if ($status == 1) {
                     echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
-                } elseif ($msgData['status'] == 2) {
+                } elseif ($status == 2) {
                     echo "<span class='badge bg-success px-3 rounded-pill'>Claimed</span>";
-                } elseif ($msgData['status'] == 3) {
+                } elseif ($status == 3) {
                     echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
                 } else {
-                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";   
                 }
 
                 if (!empty($itemData['images'])) {
@@ -246,7 +244,7 @@ if (isset($_GET['id'])) {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '../delete_message.php',
+                        url: 'delete_message.php',
                         type: 'POST',
                         data: { id: itemId },
                         dataType: 'json',
@@ -279,7 +277,7 @@ if (isset($_GET['id'])) {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '../publish_message.php',
+                        url: 'publish_message.php',
                         type: 'POST',
                         data: { id: itemId },
                         dataType: 'json',
@@ -298,37 +296,32 @@ if (isset($_GET['id'])) {
                 }
             });
         });
-    });
-    $('.save-status-btn').on('click', function() {
-        var messageId = $(this).data('id');
-        var selectedStatus = $('#status-' + messageId).val(); // Get the selected status
 
-        // Send an AJAX request to update the status
-        $.ajax({
-            url: '../update_status.php',
-            type: 'POST',
-            data: {
-                id: messageId,
-                status: selectedStatus
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    Swal.fire(
-                        'Updated!',
-                        'The status has been updated successfully.',
-                        'success'
-                    ).then(() => {
-                        location.reload();  // Reload the page to reflect status update
-                    });
-                } else {
-                    Swal.fire('Error', 'Failed to update status: ' + response.error, 'error');
+        // Save status button functionality
+        $('.save-status-btn').on('click', function() {
+            var itemId = $(this).data('id');
+            var selectedStatus = $('#status-' + itemId).val();
+
+            $.ajax({
+                url: 'update_status.php',
+                type: 'POST',
+                data: {
+                    id: itemId,
+                    status: selectedStatus
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire('Success', 'The status has been updated successfully.', 'success')
+                        .then(() => location.reload());
+                    } else {
+                        Swal.fire('Error', 'Failed to update status.', 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire('Error', 'An error occurred while updating the status.', 'error');
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error("AJAX error:", status, error);
-                Swal.fire('Error', 'An error occurred: ' + error, 'error');
-            }
+            });
         });
     });
     </script>
