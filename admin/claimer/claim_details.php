@@ -85,6 +85,12 @@ $result = $stmt->get_result();
         }
         .image-container {
             text-align: center;
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+
         }
     </style>
 </head>
