@@ -89,28 +89,33 @@ $result = $conn->query($sql);
         .search-button:hover {
             background-color: #218838;
         }
-        .btn {
-            padding: 10px 20px; /* Adjust these values for desired padding */
-    font-size: 16px; /* Ensure font size is the same for all buttons */
-    margin-bottom: 5px; 
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+        button {
+    width: 100px; /* Set a fixed width */
+    height: 50px; /* Set a fixed height */
+    display: flex;
+    justify-content: center; /* Center the text horizontally */
+    align-items: center; /* Center the text vertically */
+    font-size: 16px; /* Ensure the font size is the same for all buttons */
+    margin-bottom: 5px; /* Add spacing between buttons */
+    border: none; /* Optional: removes default border */
+    border-radius: 5px; /* Optional: rounded corners */
+}
 
-        .btn-approve {
-            background-color: #28a745;
-            color: white;
-        }
+.approve-btn {
+    background-color: green;
+    color: white;
+}
 
-        .btn-reject {
-            background-color: #dc3545;
-            color: white;
-        }
+.reject-btn {
+    background-color: red;
+    color: white;
+}
 
-        .btn-info {
-            background-color: #007bff;
-            color: white;
-        }
+.view-btn {
+    background-color: blue;
+    color: white;
+}
+
     </style>
 </head>
 <body>
