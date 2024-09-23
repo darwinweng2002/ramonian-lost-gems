@@ -70,19 +70,25 @@ if (!$is_guest) {
     $claim_stmt->close();
 
    // Fetch the user's posted missing items history
-$missing_items = [];
-$missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
-$missing_stmt->bind_param("i", $user_id);
-$missing_stmt->execute();
-$missing_stmt->bind_result($title, $time_missing, $status);
-while ($missing_stmt->fetch()) {
-    $missing_items[] = [
-        'title' => $title, 
-        'time_missing' => $time_missing, 
-        'status' => $status
-    ];
-}
-$missing_stmt->close();
+   $is_surrendered = false;
+
+   $missing_items = [];
+   $missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
+   $missing_stmt->bind_param("i", $user_id);
+   $missing_stmt->execute();
+   $missing_stmt->bind_result($title, $time_missing, $status);
+   while ($missing_stmt->fetch()) {
+       $missing_items[] = [
+           'title' => $title, 
+           'time_missing' => $time_missing, 
+           'status' => $status
+       ];
+   
+       if ($status == 3) { // Status 3 means surrendered
+           $is_surrendered = true;
+       }
+   }
+   $missing_stmt->close();
 
 
 $message_history = []; // Change $posts to $message_history
@@ -493,7 +499,7 @@ $message_stmt->close();
                                         }
                                     ?>
                                 </span>
-                            </td>
+                            </td>   
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -571,6 +577,16 @@ $message_stmt->close();
         // Optionally, set an interval to update the claim history periodically
         setInterval(updateClaimHistory, 60000); // Update every 60 seconds
     });
+    var isSurrendered = <?= $is_surrendered ? 'true' : 'false' ?>;
+    // Check if any item has been surrendered and show the SweetAlert prompt
+if (isSurrendered) {
+    Swal.fire({
+        title: 'Item Surrendered!',
+        text: 'Someone surrendered your missing item that is matched to your post. Kindly go to the SSG office to claim your item.',
+        icon: 'info',
+        confirmButtonText: 'OK'
+    });
+}
     </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>
