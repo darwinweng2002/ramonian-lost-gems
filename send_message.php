@@ -2,20 +2,19 @@
 include('config.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if user is logged in and user_id is set in session
     if (!isset($_SESSION['user_id'])) {
         die("User not logged in");
     }
 
     $message = $_POST['message'];
-    $landmark = $_POST['landmark']; // Existing field
-    $title = $_POST['title']; // New field
-    $timeFound = $_POST['time_found']; // New field
-    $userId = $_SESSION['user_id']; // Use user ID from session
+    $landmark = $_POST['landmark'];
+    $title = $_POST['title'];
+    $timeFound = $_POST['time_found'];
+    $userId = $_SESSION['user_id'];
     $contact = $_POST['contact'];
     $category_id = $_POST['category_id'];
     $new_category = $_POST['new_category'];
-    $founderName = $_POST['founder_name']; // New field for founder name
+    $founderName = $_POST['founder_name']; // Capture founder name
 
     if ($category_id == 'add_new' && !empty($new_category)) {
         $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
@@ -24,50 +23,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $category_id = $stmt->insert_id;
         $stmt->close();
     }
-    
-    // Directory for uploading files
-    $uploadDir = 'uploads/items/';
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
-    }
-
-    $uploadedFiles = [];
 
     // Handle message saving
     $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, time_found, contact, category_id, status, founder_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("isssssis", $userId, $message, $landmark, $title, $timeFound, $contact, $category_id, $status, $founderName); // Added founder_name to bind_param
-    $status = 'Pending'; // Set default status
+    $stmt->bind_param("isssssiss", $userId, $message, $landmark, $title, $timeFound, $contact, $category_id, $status, $founderName); // Include founder_name in the query
+    $status = 'Pending';
     $stmt->execute();
     $messageId = $stmt->insert_id;
     $stmt->close();
 
+
+
     // Handle file uploads
     $maxFileSize = 50 * 1024 * 1024; // 50MB
-    foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-        $fileName = basename($_FILES['images']['name'][$key]);
-        $fileSize = $_FILES['images']['size'][$key];
-        $fileType = $_FILES['images']['type'][$key];
-        $targetFilePath = $uploadDir . $fileName;
-        if ($fileSize > $maxFileSize) {
-            $error = "File " . $fileName . " exceeds the maximum file size of 50MB.";
-            break;
-        }
-
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        if (!in_array($fileType, $allowedTypes)) {
-            $error = "File type not allowed for file " . $fileName;
-            break;
-        }
-        if (move_uploaded_file($tmpName, $targetFilePath)) {
-            $stmt = $conn->prepare("INSERT INTO message_images (message_id, image_path) VALUES (?, ?)");
-            $stmt->bind_param("is", $messageId, $fileName); // Store just the filename in DB
-            $stmt->execute();
-            $stmt->close();
-            $uploadedFiles[] = $targetFilePath;
-        } else {
-            $error = "Failed to upload file: " . $fileName;
-        }
+foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+    $fileName = basename($_FILES['images']['name'][$key]);
+    $fileSize = $_FILES['images']['size'][$key];
+    $fileType = $_FILES['images']['type'][$key];
+    $targetFilePath = $uploadDir . $fileName;
+    if ($fileSize > $maxFileSize) {
+        $error = "File " . $fileName . " exceeds the maximum file size of 50MB.";
+        break;
     }
+
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    if (!in_array($fileType, $allowedTypes)) {
+        $error = "File type not allowed for file " . $fileName;
+        break;
+    }
+    if (move_uploaded_file($tmpName, $targetFilePath)) {
+        $stmt = $conn->prepare("INSERT INTO message_images (message_id, image_path) VALUES (?, ?)");
+        $stmt->bind_param("is", $messageId, $fileName); // Store just the filename in DB
+        $stmt->execute();
+        $stmt->close();
+        $uploadedFiles[] = $targetFilePath;
+    } else {
+        $error = "Failed to upload file: " . $fileName;
+    }
+}
 
     // Success or error message for SweetAlert
     $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins before being published for public viewing.";
@@ -189,6 +182,39 @@ if (isset($_SESSION['user_id'])) {
             border-radius: 4px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
+        .back-btn-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn svg {
+            margin-right: 8px;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .back-btn:focus {
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -207,54 +233,52 @@ if (isset($_SESSION['user_id'])) {
         <?php endif; ?>
          
         <form action="send_message.php" method="post" enctype="multipart/form-data" class="message-form">
+            <!-- Add this below the title field in the form -->
+<label for="founder_name">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+    </svg> Founder Name:
+</label>
+<input type="text" name="founder_name" id="founder_name" placeholder="Enter founder's name" required>
+
         <label for="title">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pin"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
                 </svg> Item Name:
             </label>
             <input type="text" name="title" id="title" placeholder="Enter item name" required>
-            
-            <!-- New Founder Name Field -->
-            <label for="founder_name">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user">
-                    <circle cx="12" cy="7" r="4"/>
-                    <path d="M5.5 21a9.5 9.5 0 0 1 13 0"/>
-                </svg> Founder Name:
-            </label>
-            <input type="text" name="founder_name" id="founder_name" placeholder="Enter founder name" required>
-            
             <label for="category">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag">
-                    <path d="M6 9v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/>
-                    <path d="M14 2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8z"/>
-                    <path d="M4 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
-                </svg> Category:
-            </label>
-            <select name="category_id" id="category_id" required>
-                <option value="">Select a category</option>
-                <?php
-                // Fetch categories from the database
-                $stmt = $conn->prepare("SELECT id, name FROM categories");
-                $stmt->execute();
-                $stmt->bind_result($categoryId, $categoryName);
-                while ($stmt->fetch()) {
-                    echo "<option value=\"$categoryId\">$categoryName</option>";
-                }
-                $stmt->close();
-                ?>
-                <option value="add_new">Add New Category</option>
-            </select>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag">
+        <path d="M6 9v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/>
+        <path d="M14 2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8z"/>
+        <path d="M4 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+    </svg> Category:
+</label>
+<select name="category_id" id="category_id" required>
+    <option value="">Select a category</option>
+    <?php
+    // Fetch categories from the database
+    $stmt = $conn->prepare("SELECT id, name FROM categories");
+    $stmt->execute();
+    $stmt->bind_result($categoryId, $categoryName);
+    while ($stmt->fetch()) {
+        echo "<option value=\"$categoryId\">$categoryName</option>";
+    }
+    $stmt->close();
+    ?>
+    <option value="add_new">Add New Category</option>
+</select>
 
-            <div id="newCategoryDiv" style="display: none;">
-                <label for="new_category">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag-add">
-                        <path d="M6 9v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/>
-                        <path d="M4 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
-                        <path d="M18 6h-5v5h-2V6H6v2h7v7h2V8h5V6z"/>
-                    </svg> New Category:
-                </label>
-                <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
-            </div>
-
+<div id="newCategoryDiv" style="display: none;">
+    <label for="new_category">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag-add">
+            <path d="M6 9v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/>
+            <path d="M4 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+            <path d="M18 6h-5v5h-2V6H6v2h7v7h2V8h5V6z"/>
+        </svg> New Category:
+    </label>
+    <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
+</div>
             <label for="landmark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-location"><path d="M21 10a9 9 0 0 0-18 0c0 5.6 9 12 9 12s9-6.4 9-12z"/><path d="M12 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg> Location where the item was found:</label>
             <input type="text" name="landmark" id="landmark" placeholder="Location details" required>
 
@@ -282,6 +306,7 @@ if (isset($_SESSION['user_id'])) {
 <input type="file" name="images[]" id="images" multiple onchange="previewImages()">
 <div class="image-preview-container" id="imagePreviewContainer"></div>
 <p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
+<p>Upload multiple images if necessary.</p>
 <button type="submit" class="submit-btn">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
         <line x1="22" x2="11" y1="2" y2="13"/>
@@ -289,6 +314,15 @@ if (isset($_SESSION['user_id'])) {
     </svg> Send Report
 </button>
         </form>
+        <div class="back-btn-container">
+    <button class="back-btn" onclick="history.back()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Back
+    </button>
+</div>
     </div>
 
     <?php require_once('inc/footer.php') ?>
