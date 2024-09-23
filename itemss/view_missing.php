@@ -241,6 +241,7 @@ $result = $stmt->get_result();
                 }                
                 
                 // Add Claim Request Button
+                echo "<p style='color: #555; font-size: 12px; margin-top: 20px;'>If you find this item, please take it to the SSG Office located in the OSA Building and turn it in.</p>";
                 echo '<div class="claim-button-container">';
                 echo '<a href="https://ramonianlostgems.com/send_message.php" class="claim-button">Report if you found this item</a>';
                 echo '</div>';
