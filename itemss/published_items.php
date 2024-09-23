@@ -19,7 +19,6 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get published item details
-// SQL query to get published item details, adding mh.founder_name
 $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder_name, mh.status, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar, 
         mh.contact, c.name as category_name
         FROM message_history mh
@@ -28,7 +27,6 @@ $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder_name, mh.s
         LEFT JOIN categories c ON mh.category_id = c.id
         WHERE mh.is_published = 1 AND mh.id = ?
         ORDER BY mh.id DESC";
-
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
@@ -177,8 +175,8 @@ $result = $stmt->get_result();
                         'avatar' => $row['avatar'],
                         'time_found' => $row['time_found'],
                         'contact' => $row['contact'],
+                        'founder_name' => $row['founder_name'],
                         'category_name' => $row['category_name']
-                        'founder_name' => $row['founder_name']
                     ];
                 }
                 if ($row['image_path']) {
@@ -211,6 +209,7 @@ $result = $stmt->get_result();
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
+                echo "<p><strong>Founder Name:</strong> " . $founderName . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
