@@ -149,7 +149,7 @@ $result = $conn->query($sql);
                 $email = htmlspecialchars($msgData['email'] ?? '');
                 $college = htmlspecialchars($msgData['college'] ?? '');
                 $title = htmlspecialchars($msgData['title'] ?? '');
-                $founder_name = htmlspecialchars($msgData['founder_name'] ?? '');
+                $founderName = htmlspecialchars($msgData['founder_name'] ?? '');
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                 $message = htmlspecialchars($msgData['message'] ?? '');
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
@@ -167,7 +167,7 @@ $result = $conn->query($sql);
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
-                echo "<p><strong>Founder Name:</strong> " . $founder_name . "</p>";
+                echo "<p><strong>Founder Name:</strong> " . $founderName . "</p>";
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Time Found:</strong> " . $timeFound . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>"; // Display category name
