@@ -74,7 +74,7 @@ $result = $stmt->get_result();
             gap: 10px;
         }
         img {
-            width: 50%;
+            width: 100%;
             height: auto;
             border-radius: 5px;
             cursor: pointer;
@@ -83,8 +83,13 @@ $result = $stmt->get_result();
         img:hover {
             transform: scale(1.05);
         }
-        .image-container {
+        .image-container img {
             text-align: center;
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
             
         }
     </style>
