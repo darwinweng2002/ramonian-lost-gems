@@ -2,7 +2,7 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');// Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
 // Check connection
 if ($conn->connect_error) {
@@ -37,12 +37,13 @@ if ($message_id > 0) {
     <title>Messages - Admin View</title>
     <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Include SweetAlert2 -->
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            padding-top: 70px; /* Adjust this according to the height of your navbar */
+            padding-top: 70px;
             background-color: #f4f4f4;
         }
         .container {
@@ -79,41 +80,32 @@ if ($message_id > 0) {
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 10px;
         }
-        .delete-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
+        .delete-btn, .publish-btn, .save-status-btn {
             padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
             position: absolute;
             bottom: 20px;
             right: 20px;
         }
-        .delete-btn:hover {
-            background-color: #c82333;
-        }
         .publish-btn {
-            background-color: #28a745; /* Green background color */
+            background-color: #28a745;
             color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
             position: absolute;
             bottom: 20px;
-            right: 80px; /* Position it to the left of the delete button */
-        }
-        .publish-btn:hover {
-            background-color: #218838; /* Darker green on hover */
+            right: 80px;
         }
         .container .avatar {
-            width: 100px; /* Set the width of the avatar */
-            height: 100px; /* Set the height of the avatar to the same value as width for a circle */
-            border-radius: 100%; /* Makes the image circular */
-            object-fit: cover; /* Ensures the image covers the circle without distortion */
-            display: block; /* Ensures the image is displayed as a block element */
-            margin-bottom: 10px; /* Adds space below the image if needed */
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+            object-fit: cover;
+            display: block;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -140,7 +132,7 @@ if ($message_id > 0) {
                         'contact' => $row['contact'],
                         'time_found' => $row['time_found'],
                         'category_name' => $row['category_name'],  
-                        'status' => $row['status']  // Add this line to include status field
+                        'status' => $row['status']
                     ];
                 }
                 if ($row['image_path']) {
@@ -182,7 +174,6 @@ if ($message_id > 0) {
                 echo "<div class='form-group'>";
                 echo "<label for='status' class='control-label'>Status</label>";
                 echo "<select name='status' id='status-".$msgId."' class='form-select form-select-sm rounded-0' required='required'>";
-                // Add options for the different statuses
                 echo "<option value='0' " . ($msgData['status'] == 0 ? 'selected' : '') . ">Pending</option>";
                 echo "<option value='1' " . ($msgData['status'] == 1 ? 'selected' : '') . ">Published</option>";
                 echo "<option value='2' " . ($msgData['status'] == 2 ? 'selected' : '') . ">Claimed</option>";
@@ -214,7 +205,6 @@ if ($message_id > 0) {
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($msgId) . "'>Delete</button>";
                 echo "</div>";
             }
-            
         }
         ?>
     </div>
@@ -226,102 +216,115 @@ if ($message_id > 0) {
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 
     <script>
-    <script>
-    $(document).ready(function() {
-        // Function to update status
-        $('.save-status-btn').on('click', function() {
-            var itemId = $(this).data('id');
-            var selectedStatus = $('#status-' + itemId).val();
-
-            $.ajax({
-                url: 'update_status.php',
-                type: 'POST',
-                data: {
-                    id: itemId,
-                    status: selectedStatus
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire('Success', 'The status has been updated successfully.', 'success')
-                        .then(() => location.reload());
-                    } else {
-                        Swal.fire('Error', 'Failed to update status.', 'error');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    Swal.fire('Error', 'An error occurred while updating the status.', 'error');
-                }
-            });
-        });
-
-        // Publish button functionality
-        $('.publish-btn').on('click', function() {
-            var itemId = $(this).data('id');
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "Do you want to publish this missing item?",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, publish it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: 'publish_message.php',
-                        type: 'POST',
-                        data: { id: itemId },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire('Published!', 'The missing item has been successfully published.', 'success')
-                                .then(() => location.reload());
-                            } else {
-                                Swal.fire('Error', 'Failed to publish the missing item.', 'error');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire('Error', 'An error occurred while publishing the item.', 'error');
-                        }
-                    });
-                }
-            });
-        });
-
-        // Delete button functionality
+      $(document).ready(function() {
+        // SweetAlert for delete confirmation
         $('.delete-btn').on('click', function() {
-            var itemId = $(this).data('id');
+            var messageId = $(this).data('id');
             Swal.fire({
                 title: 'Are you sure?',
-                text: "Do you really want to delete this missing item?",
+                text: "You won't be able to revert this!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
                         url: 'delete_message.php',
                         type: 'POST',
-                        data: { id: itemId },
+                        data: { id: messageId },
                         dataType: 'json',
                         success: function(response) {
                             if (response.success) {
-                                Swal.fire('Deleted!', 'The missing item has been deleted.', 'success')
-                                .then(() => location.reload());
+                                Swal.fire('Deleted!', 'Your message has been deleted.', 'success');
+                                location.reload();
                             } else {
-                                Swal.fire('Error', 'Failed to delete the missing item.', 'error');
+                                Swal.fire('Error!', response.error, 'error');
                             }
                         },
                         error: function(xhr, status, error) {
-                            Swal.fire('Error', 'An error occurred while deleting the item.', 'error');
+                            Swal.fire('Error!', 'An error occurred: ' + error, 'error');
                         }
                     });
                 }
             });
         });
-    });
+
+        // SweetAlert for publish confirmation
+        $('.publish-btn').on('click', function() {
+            var messageId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to publish this message?",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, publish it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'publish_message.php',
+                        type: 'POST',
+                        data: { id: messageId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Published!', 'Your message has been published.', 'success');
+                                location.reload();
+                            } else {
+                                Swal.fire('Error!', response.error, 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error!', 'An error occurred: ' + error, 'error');
+                        }
+                    });
+                }
+            });
+        });
+
+        // SweetAlert for status update confirmation
+        $('.save-status-btn').on('click', function() {
+            var messageId = $(this).data('id');
+            var selectedStatus = $('#status-' + messageId).val(); // Get the selected status
+
+            Swal.fire({
+                title: 'Update Status?',
+                text: "Are you sure you want to update the status?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, update it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'update_status.php',
+                        type: 'POST',
+                        data: {
+                            id: messageId,
+                            status: selectedStatus
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Updated!', 'Status has been updated successfully.', 'success');
+                                location.reload();
+                            } else {
+                                Swal.fire('Error!', response.error, 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error!', 'An error occurred: ' + error, 'error');
+                        }
+                    });
+                }
+            });
+        });
+
+      });
     </script>
 </body>
 <?php require_once('../inc/footer.php') ?>
