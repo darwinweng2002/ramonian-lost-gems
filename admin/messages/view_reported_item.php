@@ -43,7 +43,7 @@ if ($message_id > 0) {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            padding-top: 70px;
+            padding-top: 70px; /* Adjust this according to the height of your navbar */
             background-color: #f4f4f4;
         }
         .container {
@@ -80,32 +80,41 @@ if ($message_id > 0) {
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 10px;
         }
-        .delete-btn, .publish-btn, .save-status-btn {
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
         .delete-btn {
             background-color: #dc3545;
             color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
             position: absolute;
             bottom: 20px;
             right: 20px;
         }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
         .publish-btn {
-            background-color: #28a745;
+            background-color: #28a745; /* Green background color */
             color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
             position: absolute;
             bottom: 20px;
-            right: 80px;
+            right: 80px; /* Position it to the left of the delete button */
+        }
+        .publish-btn:hover {
+            background-color: #218838; /* Darker green on hover */
         }
         .container .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 100%;
-            object-fit: cover;
-            display: block;
-            margin-bottom: 10px;
+            width: 100px; /* Set the width of the avatar */
+            height: 100px; /* Set the height of the avatar to the same value as width for a circle */
+            border-radius: 100%; /* Makes the image circular */
+            object-fit: cover; /* Ensures the image covers the circle without distortion */
+            display: block; /* Ensures the image is displayed as a block element */
+            margin-bottom: 10px; /* Adds space below the image if needed */
         }
     </style>
 </head>
