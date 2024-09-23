@@ -37,6 +37,7 @@ $result = $stmt->get_result();
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<?php require_once('../inc/header.php') ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claim Details</title>
@@ -87,23 +88,14 @@ $result = $stmt->get_result();
     </style>
 </head>
 <body>
+<?php require_once('../inc/topBarNav.php') ?>
+<?php require_once('../inc/navigation.php') ?> 
 <div class="container">
     <h1>Claim Details</h1>
     <?php if ($result->num_rows > 0): ?>
         <div class="details">
             <?php while ($row = $result->fetch_assoc()): ?>
                 <p><strong>Item Name:</strong> <?= htmlspecialchars($row['item_name']); ?></p>
-                <?php
-                if (!empty($row['image_path'])) {
-                    echo "<p><strong>Images:</strong></p>";
-                    echo "<div class='image-grid'>";
-                    // Construct the correct URL to the image
-                    $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($row['image_path']);
-                    echo "<a href='" . $fullImagePath . "' data-lightbox='claim-" . htmlspecialchars($claimId) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Claim Image'></a>";
-                    echo "</div>";
-                }
-                ?>
-            <?php endwhile; ?>
                 <p><strong>Claimant Name:</strong> <?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></p>
                 <p><strong>Description:</strong> <?= htmlspecialchars($row['item_description']); ?></p>
                 <p><strong>Date Lost:</strong> <?= htmlspecialchars($row['date_lost']); ?></p>
@@ -154,6 +146,7 @@ $result = $stmt->get_result();
     <?php endif; ?>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
+<?php require_once('../inc/footer.php') ?>
 </body>
 </html>
 
