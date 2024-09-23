@@ -181,19 +181,28 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
 
-                // Status Display
+                echo "<div class='form-group'>";
+                echo "<label for='status' class='control-label'>Status</label>";
+                echo "<select name='status' id='status-".$msgId."' class='form-select form-select-sm rounded-0' required='required'>";
+                // Add options for the different statuses
+                echo "<option value='0' " . ($msgData['status'] == 0 ? 'selected' : '') . ">Pending</option>";
+                echo "<option value='1' " . ($msgData['status'] == 1 ? 'selected' : '') . ">Published</option>";
+                echo "<option value='2' " . ($msgData['status'] == 2 ? 'selected' : '') . ">Claimed</option>";
+                echo "<option value='3' " . ($msgData['status'] == 3 ? 'selected' : '') . ">Surrendered</option>";
+                echo "</select>";
+                echo "<button class='btn btn-primary save-status-btn' data-id='" . $msgId . "'>Save Status</button>";
+                echo "</div>";
+
                 echo "<dt class='text-muted'>Status</dt>";
-                echo "<dd class='ps-4'>";
-                if ($status == 1) {
+                if ($msgData['status'] == 1) {
                     echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
-                } elseif ($status == 2) {
+                } elseif ($msgData['status'] == 2) {
                     echo "<span class='badge bg-success px-3 rounded-pill'>Claimed</span>";
-                } elseif ($status == 3) {
+                } elseif ($msgData['status'] == 3) {
                     echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
                 } else {
-                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";   
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
                 }
-                echo "</dd>";
 
                 if (!empty($itemData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
