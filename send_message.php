@@ -71,7 +71,7 @@ foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
 }
 
     // Success or error message for SweetAlert
-    $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins before being published for public viewing.";
+    $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins, and you must surrender the item to the SSG office located at OSA Building 3rd floor before it is published for public viewing.";
 }
 
 // Retrieve user information
