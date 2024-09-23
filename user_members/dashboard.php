@@ -405,7 +405,7 @@ $message_stmt->close();
             <table class="table table-striped post-history-table">
                 <thead>
                     <tr>
-                        <th>Title</th>
+                        <th>Item Name</th>
                         <th>Date Posted</th>
                         <th>Status</th>
                     </tr>
@@ -455,7 +455,7 @@ $message_stmt->close();
             <table class="table table-striped post-history-table">
                 <thead>
                     <tr>
-                        <th>Title</th>
+                        <th>Item Name</th>
                         <th>Date Missing</th>
                         <th>Status</th>
                     </tr>
