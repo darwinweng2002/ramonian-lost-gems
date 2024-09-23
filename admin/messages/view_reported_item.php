@@ -14,7 +14,7 @@ $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($message_id > 0) {
     // SQL query to fetch the details of the selected message by its ID
-    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder_name, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.time_found, mh.status, c.name as category_name
+    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.time_found, mh.status, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN user_member um ON mh.user_id = um.id
@@ -140,8 +140,7 @@ if ($message_id > 0) {
                         'contact' => $row['contact'],
                         'time_found' => $row['time_found'],
                         'category_name' => $row['category_name'],  
-                        'status' => $row['status'],  // Add this line to include status field
-                        'founder_name' => $row['founder_name'],
+                        'status' => $row['status']  // Add this line to include status field
                     ];
                 }
                 if ($row['image_path']) {
@@ -156,7 +155,6 @@ if ($message_id > 0) {
                 $email = htmlspecialchars($msgData['email'] ?? '');
                 $college = htmlspecialchars($msgData['college'] ?? '');
                 $title = htmlspecialchars($msgData['title'] ?? '');
-                $founder_name = htmlspecialchars($msgData['founder_name'] ?? '');
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                 $message = htmlspecialchars($msgData['message'] ?? '');
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
@@ -171,11 +169,10 @@ if ($message_id > 0) {
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
                 
-                echo "<p><strong>Founder Name:</strong> " . $founder_name . "</p>";
                 echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
-                echo "<p><strong>Item Name:</strong> " . $title . "</p>";
+                echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>"; 
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>"; 
@@ -227,24 +224,12 @@ if ($message_id > 0) {
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/custom.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-  $(document).ready(function() {
-    // Delete button functionality with SweetAlert2
-    $('.delete-btn').on('click', function() {
-        var messageId = $(this).data('id');
-        // SweetAlert2 confirmation dialog
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
+      $(document).ready(function() {
+        $('.delete-btn').on('click', function() {
+            var messageId = $(this).data('id');
+            if (confirm('Are you sure you want to delete this message?')) {
                 $.ajax({
                     url: 'delete_message.php',
                     type: 'POST',
@@ -252,39 +237,23 @@ if ($message_id > 0) {
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
-                            Swal.fire(
-                                'Deleted!',
-                                'The message has been deleted.',
-                                'success'
-                            ).then(() => {
-                                location.reload(); // Reload the page after deletion
-                            });
+                            alert('Found item deleted successfully.');
+                            location.reload();
                         } else {
-                            Swal.fire('Error', 'Failed to delete the message: ' + response.error, 'error');
+                            alert('Failed to delete the message: ' + response.error);
                         }
                     },
                     error: function(xhr, status, error) {
                         console.error("AJAX error:", status, error);
-                        Swal.fire('Error', 'An error occurred: ' + error, 'error');
+                        alert('An error occurred: ' + error);
                     }
                 });
             }
         });
-    });
 
-    // Publish button functionality with SweetAlert2
-    $('.publish-btn').on('click', function() {
-        var messageId = $(this).data('id');
-        // SweetAlert2 confirmation dialog
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you want to publish this message?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, publish it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
+        $('.publish-btn').on('click', function() {
+            var messageId = $(this).data('id');
+            if (confirm('Are you sure you want to publish this message?')) {
                 $.ajax({
                     url: 'publish_message.php',
                     type: 'POST',
@@ -292,62 +261,51 @@ if ($message_id > 0) {
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
-                            Swal.fire(
-                                'Published!',
-                                'The found item has been successfully published.',
-                                'success'
-                            ).then(() => {
-                                location.reload(); // Reload the page after publishing
-                            });
+                            alert('Found item published successfully.');
+                            location.reload();
                         } else {
-                            Swal.fire('Error', 'Failed to publish the message: ' + response.error, 'error');
+                            alert('Failed to publish the message: ' + response.error);
                         }
                     },
                     error: function(xhr, status, error) {
                         console.error("AJAX error:", status, error);
-                        Swal.fire('Error', 'An error occurred: ' + error, 'error');
+                        alert('An error occurred: ' + error);
                     }
                 });
             }
         });
-    });
 
-    // Handle status update with SweetAlert2
-    $('.save-status-btn').on('click', function() {
-        var messageId = $(this).data('id');
-        var selectedStatus = $('#status-' + messageId).val(); // Get the selected status
+        // Handle status update
+        $('.save-status-btn').on('click', function() {
+            var messageId = $(this).data('id');
+            var selectedStatus = $('#status-' + messageId).val(); // Get the selected status
 
-        // Send an AJAX request to update the status
-        $.ajax({
-            url: 'update_status.php',
-            type: 'POST',
-            data: {
-                id: messageId,
-                status: selectedStatus
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    Swal.fire(
-                        'Updated!',
-                        'The status has been updated successfully.',
-                        'success'
-                    ).then(() => {
+            // Send an AJAX request to update the status
+            $.ajax({
+                url: 'update_status.php', // Backend URL to handle status updates
+                type: 'POST',
+                data: {
+                    id: messageId,
+                    status: selectedStatus
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        alert('Status updated successfully.');
                         location.reload();  // Reload the page to reflect status update
-                    });
-                } else {
-                    Swal.fire('Error', 'Failed to update status: ' + response.error, 'error');
+                    } else {
+                        alert('Failed to update status: ' + response.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX error:", status, error);
+                    alert('An error occurred: ' + error);
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error("AJAX error:", status, error);
-                Swal.fire('Error', 'An error occurred: ' + error, 'error');
-            }
+            });
         });
-    });
 
-  });
-</script>
+      });
+    </script>
 </body>
 <?php require_once('../inc/footer.php') ?>
 </html>

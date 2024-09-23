@@ -10,7 +10,7 @@ if ($conn->connect_error) {
 }
 
 // Updated SQL query to include category and contact fields
-$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, mh.founder_name, um.first_name, um.college, um.email, um.avatar, mh.time_found, 
+$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.time_found, 
         c.name as category_name, mh.contact
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
@@ -131,8 +131,7 @@ $result = $conn->query($sql);
                         'avatar' => $row['avatar'],
                         'time_found' => $row['time_found'],
                         'category_name' => $row['category_name'],
-                        'contact' => $row['contact'],
-                        'founder_name' => $row['founder_name']  // Add contact information
+                        'contact' => $row['contact'] // Add contact information
                     ];
                 }
                 if ($row['image_path']) {
@@ -149,7 +148,6 @@ $result = $conn->query($sql);
                 $email = htmlspecialchars($msgData['email'] ?? '');
                 $college = htmlspecialchars($msgData['college'] ?? '');
                 $title = htmlspecialchars($msgData['title'] ?? '');
-                $founderName = htmlspecialchars($msgData['founder_name'] ?? '');
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                 $message = htmlspecialchars($msgData['message'] ?? '');
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
@@ -166,8 +164,7 @@ $result = $conn->query($sql);
                 echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
-                echo "<p><strong>Item Name:</strong> " . $title . "</p>";
-                echo "<p><strong>Founder Name:</strong> " . $founderName . "</p>";
+                echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Time Found:</strong> " . $timeFound . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>"; // Display category name
