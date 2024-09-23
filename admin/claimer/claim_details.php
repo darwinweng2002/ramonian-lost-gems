@@ -37,8 +37,8 @@ $result = $stmt->get_result();
 
 <!DOCTYPE html>
 <html lang="en">
+<?php require_once('../inc/header.php'); ?>
 <head>
-    <?php require_once('../inc/header.php'); ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claim Details</title>
