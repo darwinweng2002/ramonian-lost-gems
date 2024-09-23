@@ -579,6 +579,8 @@ $message_stmt->close();
     });
     var isSurrendered = <?= $is_surrendered ? 'true' : 'false' ?>;
     // Check if any item has been surrendered and show the SweetAlert prompt
+    console.log("Is Surrendered: ", isSurrendered);  // Add this line for debugging
+
 if (isSurrendered) {
     Swal.fire({
         title: 'Item Surrendered!',
@@ -587,6 +589,13 @@ if (isSurrendered) {
         confirmButtonText: 'OK'
     });
 }
+Swal.fire({
+    title: 'Test Alert',
+    text: 'This is just a test to see if SweetAlert works.',
+    icon: 'info',
+    confirmButtonText: 'OK'
+});
+
     </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>
