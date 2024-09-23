@@ -89,6 +89,28 @@ $result = $conn->query($sql);
         .search-button:hover {
             background-color: #218838;
         }
+        .btn {
+            padding: 8px 12px; /* Consistent padding for all buttons */
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-approve {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-reject {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-info {
+            background-color: #007bff;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -153,8 +175,8 @@ $result = $conn->query($sql);
                         echo "<td>
                             <form action='update_claim_status.php' method='POST' style='display:inline;'>
                                 <input type='hidden' name='claim_id' value='" . $row['id'] . "'>
-                                <button type='submit' name='action' value='approve' class='btn btn-success btn-sm'>Approve</button>
-                                <button type='submit' name='action' value='reject' class='btn btn-danger btn-sm'>Reject</button>
+                                <button type='submit' name='action' value='approve' class='btn btn-approve'>Approve</button>
+                                <button type='submit' name='action' value='reject' class='btn btn-reject'>Reject</button>
                             </form>
                             <a href='claim_details.php?id=" . $row['id'] . "' class='btn btn-info btn-sm'>View</a>
                         </td>";
