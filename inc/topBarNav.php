@@ -69,7 +69,7 @@
 /* Sidebar toggle button styling */
 #sidebar-toggle-button {
     position: fixed;
-    right: 20px; /* Keep the button on the right */
+    right: 40px; /* Keep the button on the right */
     top: 0; /* Adjust to align with your design */
     background-color: #3498db; /* Professional color */
     color: white;

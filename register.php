@@ -68,14 +68,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 body {
       overflow: auto;
     }
-    .logo img {
-      max-height: 55px;
-      margin-right: 25px;
-    }
-    .logo span {
-      color: #fff;
-      text-shadow: 0px 0px 10px #000;
-    }
+    .logo {
+  display: flex;
+  flex-direction: column; /* Stack logo and text */
+  align-items: center; /* Center items horizontally */
+  margin-bottom: 10px; /* Space below the logo */
+}
+
+.logo img {
+  max-height: 60px; /* Adjust height as needed */
+}
+
+.logo span {
+  color: #fff;
+  text-shadow: 0px 0px 10px #000;
+  text-align: center; /* Center the text */
+  font-size: 24px; /* Adjust font size as needed */
+}
   </style>
   <main>
     <div class="container">
@@ -83,12 +92,13 @@ body {
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-              <div class="d-flex justify-content-center py-4">
-                <a href="user_login.php" class="logo d-flex align-items-center w-auto">
-                  <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
-                  <span class="d-none d-lg-block text-center"><?= $_settings->info('name') ?></span>
-                </a>
-              </div><!-- End Logo -->
+            <div class="d-flex justify-content-center py-4">
+            <a href="#" class="logo d-flex align-items-center w-auto">
+                <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
+                <span><?= $_settings->info('name') ?></span>
+            </a>
+            </div><!-- End Logo -->
+
               <div class="card mb-3">
                 <div class="card-body">
                   <div class="pt-4 pb-2">
@@ -195,17 +205,6 @@ body {
               </div>
             </div>
           </div>
-          <footer>
-            <div class="copyright">
-              &copy; Copyright <strong><span>Ramonian LostGems</span></strong>. All Rights Reserved
-            </div>
-            <div class="credits">
-              <p style="text-align: center;"><a href="http://lostgemramonian/login.php">ramonianlostgems.com</a></p>
-              <a href="<?= base_url ?>">
-                <center><img style="height: 55px; width: 55px;" src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo"></center>
-              </a>
-            </div>
-          </footer>
         </div>
       </section>
     </div>
@@ -445,5 +444,6 @@ body {
 
 </body>
 </html>
+<?php require_once('inc/footer.php') ?>
 </body>
 </html>
