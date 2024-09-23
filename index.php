@@ -78,7 +78,7 @@ if (isset($_POST['guest_login'])) {
   display: flex;
   flex-direction: column; /* Stack logo and text */
   align-items: center; /* Center items horizontally */
-  margin-bottom: 40px; /* Space below the logo */
+  margin-bottom: 10px; /* Space below the logo */
 }
 
 .logo img {
@@ -136,6 +136,7 @@ if (isset($_POST['guest_login'])) {
                     <div class="d-flex justify-content-center py-4">
           <a href="#" class="logo d-flex align-items-center w-auto">
             <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
+            <br>
             <span><?= $_settings->info('name') ?></span>
           </a>
         </div><!-- End Logo -->
