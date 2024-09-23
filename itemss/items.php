@@ -276,7 +276,8 @@ $resultMissing = $conn->query($sqlMissing);
                 echo "</span>";
 
                 // Image and title
-                echo "<a href='published_items.php?id=" . $itemId . "'>";
+                echo "<a href='" . $base_url . "itemss/published_items.php?id=" . $itemId . "'>";
+
                 if (!empty($images)) {
                     echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
                 } else {

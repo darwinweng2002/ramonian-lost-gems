@@ -1,13 +1,11 @@
 <?php
 include '../config.php';
-
-// Check if item ID is provided in the URL
-if (!isset($_GET['id']) || empty($_GET['id'])) {
-    echo "No item selected.";
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to login page if not logged in
+    header('Location: login.php'); // Adjust this path if necessary
     exit();
 }
-
-$itemId = intval($_GET['id']);
 
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
@@ -17,70 +15,26 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch the item details including the new founder_name field
-$sql = "SELECT mh.id, mh.title, mh.founder_name, mh.category_id, mh.time_found, mh.message, mh.status, GROUP_CONCAT(mi.image_path) AS image_paths
+// Get item ID from URL
+$itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// SQL query to get published item details
+// SQL query to get published item details, adding mh.founder_name
+$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder_name, mh.status, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar, 
+        mh.contact, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
-        WHERE mh.id = ? AND mh.is_published = 1 AND mh.status = 1"; // Only fetch published items
+        LEFT JOIN user_member um ON mh.user_id = um.id
+        LEFT JOIN categories c ON mh.category_id = c.id
+        WHERE mh.is_published = 1 AND mh.id = ?
+        ORDER BY mh.id DESC";
 
-// Prepare the statement
+
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $itemId);
+$stmt->bind_param('i', $itemId);
 $stmt->execute();
 $result = $stmt->get_result();
-
-// Check if item exists
-if ($result->num_rows > 0) {
-    $item = $result->fetch_assoc();
-    
-    // Retrieve data
-    $title = htmlspecialchars($item['title']);
-    $founderName = htmlspecialchars($item['founder_name']);  // Founder name field
-    $timeFound = htmlspecialchars($item['time_found']);
-    $message = htmlspecialchars($item['message']);
-    $imagePaths = htmlspecialchars($item['image_paths']);
-    $images = explode(',', $imagePaths);
-    
-    ?>
-    
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo $title; ?> - Item Details</title>
-        <link rel="stylesheet" href="../path/to/your/style.css">
-    </head>
-    <body>
-    <div class="item-details-container">
-        <h1><?php echo $title; ?></h1>
-        <p><strong>Founder:</strong> <?php echo $founderName; ?></p> <!-- Display the founder name -->
-        <p><strong>Found Time:</strong> <?php echo $timeFound; ?></p>
-        <p><?php echo $message; ?></p>
-        
-        <div class="image-gallery">
-            <?php
-            if (!empty($images)) {
-                foreach ($images as $image) {
-                    echo "<img src='" . base_url . 'uploads/items/' . $image . "' alt='$title' />";
-                }
-            } else {
-                echo "<img src='uploads/items/default-image.png' alt='No Image'>";
-            }
-            ?>
-        </div>
-    </div>
-    </body>
-    </html>
-    
-    <?php
-} else {
-    echo "<p>Item not found or not published.</p>";
-}
-
-$conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
