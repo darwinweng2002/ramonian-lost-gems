@@ -232,7 +232,6 @@ $result = $stmt->get_result();
 
                 if (!empty($itemData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
-                    echo "<p>Upload multiple images if necessary.</p>"; // Added label here
                     echo "<div class='image-grid'>";
                     foreach ($itemData['images'] as $imagePath) {
                         echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='item-" . htmlspecialchars($itemId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
