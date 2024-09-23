@@ -229,51 +229,101 @@ if (isset($_GET['id'])) {
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-      $(document).ready(function() {
-        $('.delete-btn').on('click', function() {
-            var messageId = $(this).data('id');
-            if (confirm('Are you sure you want to delete this missing item?')) {
-                $.ajax({
-                    url: 'delete_message.php',
-                    type: 'POST',
-                    data: { id: messageId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            alert('Missing item deleted successfully.');
-                            location.reload();
-                        } else {
-                            alert('Failed to delete the missing item: ' + response.error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("AJAX error:", status, error);
-                    }
-                });
-            }
-        });
+    $(document).ready(function() {
+        // Function to update status
+        $('.save-status-btn').on('click', function() {
+            var itemId = $(this).data('id');
+            var selectedStatus = $('#status-' + itemId).val();
 
-        $('.publish-btn').on('click', function() {
-            var messageId = $(this).data('id');
             $.ajax({
-                url: 'publish_message.php',
+                url: 'update_status.php',
                 type: 'POST',
-                data: { id: messageId },
+                data: {
+                    id: itemId,
+                    status: selectedStatus
+                },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        alert('Missing item published successfully.');
-                        location.reload();
+                        Swal.fire('Success', 'The status has been updated successfully.', 'success')
+                        .then(() => location.reload());
                     } else {
-                        alert('Failed to publish the missing item: ' + response.error);
+                        Swal.fire('Error', 'Failed to update status.', 'error');
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error("AJAX error:", status, error);
+                    Swal.fire('Error', 'An error occurred while updating the status.', 'error');
                 }
             });
         });
-      });
+
+        // Publish button functionality
+        $('.publish-btn').on('click', function() {
+            var itemId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to publish this missing item?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, publish it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'publish_message.php',
+                        type: 'POST',
+                        data: { id: itemId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Published!', 'The missing item has been successfully published.', 'success')
+                                .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error', 'Failed to publish the missing item.', 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'An error occurred while publishing the item.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+
+        // Delete button functionality
+        $('.delete-btn').on('click', function() {
+            var itemId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you really want to delete this missing item?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'delete_message.php',
+                        type: 'POST',
+                        data: { id: itemId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Deleted!', 'The missing item has been deleted.', 'success')
+                                .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error', 'Failed to delete the missing item.', 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'An error occurred while deleting the item.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
     </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>
