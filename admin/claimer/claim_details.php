@@ -85,13 +85,23 @@ $result = $stmt->get_result();
         }
         .image-container img {
             text-align: center;
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            
         }
+        .proof-image,
+.id-image {
+    max-width: 200px; /* Set a maximum width */
+    max-height: 150px; /* Set a maximum height */
+    width: auto; /* Maintain aspect ratio */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 5px; /* Optional: rounded corners */
+    cursor: pointer; /* Pointer on hover */
+    transition: transform 0.3s ease;
+}
+
+.proof-image:hover,
+.id-image:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
     </style>
 </head>
 <body>
@@ -123,29 +133,30 @@ $result = $stmt->get_result();
                 <p><strong>Status:</strong> <?= htmlspecialchars($row['status']); ?></p>
                 <p><strong>Claim Date:</strong> <?= htmlspecialchars($row['claim_date']); ?></p>
 
-                <!-- Display claimant's proof of ownership -->
-                <div class="image-container">
-                    <p><strong>Proof of Ownership:</strong></p>
-                    <?php if (!empty($row['proof_of_ownership'])): ?>
-                        <a href='/uploads/claims/<?= htmlspecialchars($row['proof_of_ownership']); ?>' data-lightbox='proof' data-title='Proof of Ownership'>
-                            <img src='/uploads/claims/<?= htmlspecialchars($row['proof_of_ownership']); ?>' alt='Proof of Ownership' />
-                        </a>
-                    <?php else: ?>
-                        <p>No proof uploaded.</p>
-                    <?php endif; ?>
-                </div>
+               <!-- Display claimant's proof of ownership -->
+<div class="image-container">
+    <p><strong>Proof of Ownership:</strong></p>
+    <?php if (!empty($row['proof_of_ownership'])): ?>
+        <a href='/uploads/claims/<?= htmlspecialchars($row['proof_of_ownership']); ?>' data-lightbox='proof' data-title='Proof of Ownership'>
+            <img src='/uploads/claims/<?= htmlspecialchars($row['proof_of_ownership']); ?>' alt='Proof of Ownership' class='proof-image' />
+        </a>
+    <?php else: ?>
+        <p>No proof uploaded.</p>
+    <?php endif; ?>
+</div>
 
-                <!-- Display claimant's personal ID -->
-                <div class="image-container">
-                    <p><strong>Personal ID:</strong></p>
-                    <?php if (!empty($row['personal_id'])): ?>
-                        <a href='/uploads/claims/<?= htmlspecialchars($row['personal_id']); ?>' data-lightbox='id' data-title='Personal ID'>
-                            <img src='/uploads/claims/<?= htmlspecialchars($row['personal_id']); ?>' alt='Personal ID' />
-                        </a>
-                    <?php else: ?>
-                        <p>No ID uploaded.</p>
-                    <?php endif; ?>
-                </div>
+<!-- Display claimant's personal ID -->
+<div class="image-container">
+    <p><strong>Personal ID:</strong></p>
+    <?php if (!empty($row['personal_id'])): ?>
+        <a href='/uploads/claims/<?= htmlspecialchars($row['personal_id']); ?>' data-lightbox='id' data-title='Personal ID'>
+            <img src='/uploads/claims/<?= htmlspecialchars($row['personal_id']); ?>' alt='Personal ID' class='id-image' />
+        </a>
+    <?php else: ?>
+        <p>No ID uploaded.</p>
+    <?php endif; ?>
+</div>
+
 
                 <!-- Display uploaded images -->
                
