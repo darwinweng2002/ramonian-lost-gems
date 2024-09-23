@@ -90,9 +90,9 @@ $result = $conn->query($sql);
             background-color: #218838;
         }
         .btn {
-            padding: 8px 12px; /* Consistent padding for all buttons */
-            border-radius: 5px;
-            font-size: 14px;
+            padding: 10px 20px; /* Adjust these values for desired padding */
+    font-size: 16px; /* Ensure font size is the same for all buttons */
+    margin-bottom: 5px; 
             cursor: pointer;
             transition: background-color 0.3s;
         }
