@@ -2,19 +2,20 @@
 include('config.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Check if user is logged in and user_id is set in session
     if (!isset($_SESSION['user_id'])) {
         die("User not logged in");
     }
 
     $message = $_POST['message'];
-    $landmark = $_POST['landmark'];
-    $title = $_POST['title'];
-    $timeFound = $_POST['time_found'];
-    $userId = $_SESSION['user_id'];
+    $landmark = $_POST['landmark']; // Existing field
+    $title = $_POST['title']; // New field
+    $timeFound = $_POST['time_found']; // New field
+    $userId = $_SESSION['user_id']; // Use user ID from session
     $contact = $_POST['contact'];
     $category_id = $_POST['category_id'];
     $new_category = $_POST['new_category'];
-    $founderName = $_POST['founder_name']; // Capture founder name
+    
 
     if ($category_id == 'add_new' && !empty($new_category)) {
         $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
@@ -23,60 +24,68 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $category_id = $stmt->insert_id;
         $stmt->close();
     }
-
+     // Directory for uploading files
+     $uploadDir = 'uploads/items/';
+     if (!is_dir($uploadDir)) {
+         mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
+     }
+ 
+     $uploadedFiles = [];
+ 
+     // Handle message saving
     // Handle message saving
-    $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, time_found, contact, category_id, status, founder_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("isssssiss", $userId, $message, $landmark, $title, $timeFound, $contact, $category_id, $status, $founderName); // Include founder_name in the query
-    $status = 'Pending';
+    $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, founder_name, time_found, contact, category_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("isssssis", $userId, $message, $landmark, $title, $founder_name, $timeFound, $contact, $category_id, $status);
+    $status = 'Pending'; // Set default status
     $stmt->execute();
     $messageId = $stmt->insert_id;
     $stmt->close();
-
-
-
-    // Handle file uploads
-    $maxFileSize = 50 * 1024 * 1024; // 50MB
-foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-    $fileName = basename($_FILES['images']['name'][$key]);
-    $fileSize = $_FILES['images']['size'][$key];
-    $fileType = $_FILES['images']['type'][$key];
-    $targetFilePath = $uploadDir . $fileName;
-    if ($fileSize > $maxFileSize) {
-        $error = "File " . $fileName . " exceeds the maximum file size of 50MB.";
-        break;
-    }
-
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    if (!in_array($fileType, $allowedTypes)) {
-        $error = "File type not allowed for file " . $fileName;
-        break;
-    }
-    if (move_uploaded_file($tmpName, $targetFilePath)) {
-        $stmt = $conn->prepare("INSERT INTO message_images (message_id, image_path) VALUES (?, ?)");
-        $stmt->bind_param("is", $messageId, $fileName); // Store just the filename in DB
-        $stmt->execute();
-        $stmt->close();
-        $uploadedFiles[] = $targetFilePath;
-    } else {
-        $error = "Failed to upload file: " . $fileName;
-    }
-}
-
-    // Success or error message for SweetAlert
-    $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins before being published for public viewing.";
-}
-
-// Retrieve user information
-if (isset($_SESSION['user_id'])) {
-    $userId = $_SESSION['user_id'];
-    $stmt = $conn->prepare("SELECT first_name, college, email FROM user_member WHERE id = ?");
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $stmt->bind_result($first_name, $college, $email);
-    $stmt->fetch();
-    $stmt->close();
-}
-?>
+ 
+ 
+     // Handle file uploads
+     $maxFileSize = 50 * 1024 * 1024; // 50MB
+ foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+     $fileName = basename($_FILES['images']['name'][$key]);
+     $fileSize = $_FILES['images']['size'][$key];
+     $fileType = $_FILES['images']['type'][$key];
+     $targetFilePath = $uploadDir . $fileName;
+     if ($fileSize > $maxFileSize) {
+         $error = "File " . $fileName . " exceeds the maximum file size of 50MB.";
+         break;
+     }
+ 
+     $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+     if (!in_array($fileType, $allowedTypes)) {
+         $error = "File type not allowed for file " . $fileName;
+         break;
+     }
+     if (move_uploaded_file($tmpName, $targetFilePath)) {
+         $stmt = $conn->prepare("INSERT INTO message_images (message_id, image_path) VALUES (?, ?)");
+         $stmt->bind_param("is", $messageId, $fileName); // Store just the filename in DB
+         $stmt->execute();
+         $stmt->close();
+         $uploadedFiles[] = $targetFilePath;
+     } else {
+         $error = "Failed to upload file: " . $fileName;
+     }
+ }
+ 
+     // Success or error message for SweetAlert
+     $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins before being published for public viewing.";
+ }
+ 
+ // Retrieve user information
+ if (isset($_SESSION['user_id'])) {
+     $userId = $_SESSION['user_id'];
+     $stmt = $conn->prepare("SELECT first_name, college, email FROM user_member WHERE id = ?");
+     $stmt->bind_param("i", $userId);
+     $stmt->execute();
+     $stmt->bind_result($first_name, $college, $email);
+     $stmt->fetch();
+     $stmt->close();
+ }
+ ?>
+ 
 
 <!DOCTYPE html>
 <html lang="en">
@@ -306,13 +315,13 @@ if (isset($_SESSION['user_id'])) {
 <input type="file" name="images[]" id="images" multiple onchange="previewImages()">
 <div class="image-preview-container" id="imagePreviewContainer"></div>
 <p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
-<p>Upload multiple images if necessary.</p>
 <button type="submit" class="submit-btn">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
         <line x1="22" x2="11" y1="2" y2="13"/>
         <polygon points="22 2 15 22 11 13 2 9 22 2"/>
     </svg> Send Report
 </button>
+
         </form>
         <div class="back-btn-container">
     <button class="back-btn" onclick="history.back()">
