@@ -167,8 +167,8 @@ $result = $conn->query($sql);
             <thead>
                 <tr>
                     <th>Item Name</th>
-                    <th>Founder Name</th>
                     <th>User</th>
+                    <th>Founder Name</th>
                     <th>College</th>
                     <th>Category</th> <!-- Display Category -->
                     <th>Time Found</th>
