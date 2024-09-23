@@ -2,7 +2,7 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');// Replace with your actual DB connection details
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
 // Check connection
 if ($conn->connect_error) {
@@ -35,7 +35,7 @@ if (isset($_GET['id'])) {
             LEFT JOIN categories c ON mi.category_id = c.id
             LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
             WHERE mi.id = ?
-            GROUP BY mi.id, um.email, um.college, um.avatar, mi.contact, c.name"); // Group by all non-aggregated columns
+            GROUP BY mi.id, um.email, um.college, um.avatar, mi.contact, c.name");
     
     $stmt->bind_param('i', $itemId); // Bind the integer value
     $stmt->execute();
@@ -159,14 +159,14 @@ if (isset($_GET['id'])) {
                 $timeMissing = htmlspecialchars($row['time_missing'] ?? '');
                 $contact = htmlspecialchars($row['contact'] ?? '');
                 $categoryName = htmlspecialchars($row['category_name'] ?? '');
-                
+
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                     echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                 } else {
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
-                
+
                 echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
@@ -197,15 +197,34 @@ if (isset($_GET['id'])) {
                 } else {
                     echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
                 }
-                
 
-                if (!empty($msgData['images'])) {
+                if (!empty($images)) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
-                    foreach ($msgData['images'] as $imagePath) {
-                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
+                    foreach ($images as $imagePath) {
+                        // Sanitize and trim the image path
+                        $imagePath = trim($imagePath);
+
+                        // Ensure image path is not empty
+                        if (!empty($imagePath)) {
+                            // Construct the full image path
+                            $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($imagePath);
+
+                            // Check if the image file exists before displaying
+                            if (file_exists('../uploads/items/' . $imagePath)) {
+                                // Add Lightbox attributes to the image
+                                echo "<a href='" . $fullImagePath . "' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Image'>";
+                                echo "<img src='" . $fullImagePath . "' alt='Image'></a>";
+                            } else {
+                                // If the image file doesn't exist, use a fallback image
+                                echo "<a href='uploads/items/default-image.png' data-lightbox='message-" . htmlspecialchars($row['id']) . "' data-title='Default Image'>";
+                                echo "<img src='uploads/items/default-image.png' alt='No Image Available'></a>";
+                            }
+                        }
                     }
                     echo "</div>";
+                } else {
+                    echo "<p>No images available.</p>";
                 }
 
                 echo "<button class='publish-btn' data-id='" . htmlspecialchars($row['id']) . "'>Publish</button>";
