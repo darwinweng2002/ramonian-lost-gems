@@ -98,8 +98,8 @@ $result = $conn->query($sql);
 <div class="container">
     <h1>Claimant Users of Found Items</h1>
 
-    <!-- Search Form -->
-    <form class="search-form" method="GET" action="view_claims.php">
+     <!-- Search Form -->
+     <form class="search-form" method="GET" action="view_claims.php">
         <div class="input-group">
             <input type="text" name="search" class="search-input form-control" placeholder="Search claims..." value="<?= htmlspecialchars($searchTerm) ?>">
             <button type="submit" class="search-button">Search</button>
