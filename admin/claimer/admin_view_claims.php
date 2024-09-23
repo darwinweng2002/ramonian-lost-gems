@@ -96,6 +96,21 @@ $result = $conn->query($sql);
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
+        .btn-approve {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-reject {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-info {
+            background-color: #007bff;
+            color: white;
+        }
     </style>
 </head>
 <body>

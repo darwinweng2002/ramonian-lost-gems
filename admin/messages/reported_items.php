@@ -13,11 +13,11 @@ if ($conn->connect_error) {
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
 // SQL query to fetch found items with search functionality
-$sql = "SELECT mh.id, mh.title, um.first_name, um.college, mh.time_found, c.name AS category_name
+$sql = "SELECT mh.id, mh.title, mh.founder_name, um.first_name, um.college, mh.time_found, c.name AS category_name
         FROM message_history mh
         LEFT JOIN user_member um ON mh.user_id = um.id
         LEFT JOIN categories c ON mh.category_id = c.id
-        WHERE CONCAT_WS(' ', mh.title, um.first_name, um.college, c.name) LIKE '%$searchTerm%'
+        WHERE CONCAT_WS(' ', mh.title, mh.founder_name, um.first_name, um.college, c.name) LIKE '%$searchTerm%'
         ORDER BY mh.id DESC";
 $result = $conn->query($sql);
 ?>
@@ -167,6 +167,7 @@ $result = $conn->query($sql);
             <thead>
                 <tr>
                     <th>Item Name</th>
+                    <th>Founder Name</th>
                     <th>User</th>
                     <th>College</th>
                     <th>Category</th> <!-- Display Category -->
@@ -181,6 +182,7 @@ $result = $conn->query($sql);
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['first_name']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['founder_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['college']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['category_name']) . "</td>"; // Display category name
                         echo "<td>" . htmlspecialchars($row['time_found']) . "</td>";

@@ -19,7 +19,7 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Use the correct query based on the one that works in the viewing page
-$sql = "SELECT mh.id, mh.title, mh.message, mh.landmark, mh.time_found, mh.contact, 
+$sql = "SELECT mh.id, mh.title, mh.founder_name mh.message, mh.landmark, mh.time_found, mh.contact, 
         um.first_name, um.last_name, um.email, um.college, c.name AS category_name
         FROM message_history mh
         LEFT JOIN user_member um ON mh.user_id = um.id
@@ -103,6 +103,7 @@ $claimantData = $claimantResult->fetch_assoc();
     <h3>Item Information</h3>
     <?php if ($itemData) : ?>
         <p><strong>Item Name:</strong> <?= htmlspecialchars($itemData['title']); ?></p>
+        <p><strong>Founder Name:</strong> <?= htmlspecialchars($itemData['founder_name']); ?></p>
         <p><strong>Category:</strong> <?= htmlspecialchars($itemData['category_name']); ?></p>
         <p><strong>Found by:</strong> <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
         <p><strong>Email:</strong> <?= htmlspecialchars($itemData['email']); ?></p>

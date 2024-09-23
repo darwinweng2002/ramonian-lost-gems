@@ -14,7 +14,7 @@ $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($message_id > 0) {
     // SQL query to fetch the details of the selected message by its ID
-    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.time_found, mh.status, c.name as category_name
+    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder_name, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.time_found, mh.status, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN user_member um ON mh.user_id = um.id
@@ -140,7 +140,8 @@ if ($message_id > 0) {
                         'contact' => $row['contact'],
                         'time_found' => $row['time_found'],
                         'category_name' => $row['category_name'],  
-                        'status' => $row['status']  // Add this line to include status field
+                        'status' => $row['status'],  // Add this line to include status field
+                        'founder_name' => $row['founder_name'],
                     ];
                 }
                 if ($row['image_path']) {
@@ -155,6 +156,7 @@ if ($message_id > 0) {
                 $email = htmlspecialchars($msgData['email'] ?? '');
                 $college = htmlspecialchars($msgData['college'] ?? '');
                 $title = htmlspecialchars($msgData['title'] ?? '');
+                $founder_name = htmlspecialchars($msgData['founder_name'] ?? '');
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                 $message = htmlspecialchars($msgData['message'] ?? '');
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
@@ -173,6 +175,7 @@ if ($message_id > 0) {
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
+                echo "<p><strong>Founder Name:</strong> " . $founder_name . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>"; 
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>"; 
