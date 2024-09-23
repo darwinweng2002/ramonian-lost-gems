@@ -90,24 +90,31 @@ $result = $stmt->get_result();
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 10px;
         }
-        .claim-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #fff;
-            background-color: #E63946; /* Blue color */
-            border: none;
-            border-radius: 5px;
-            text-align: center;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-            margin-top: 10px;
-        }
-        .claim-button:hover {
-            background-color: #E63940; /* Darker blue */
-            color: #fff;
-        }
+        .claim-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.claim-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #E63946;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.claim-button:hover {
+    background-color: #E63940;
+    color: #fff;
+}
+
         .back-btn-container {
     margin: 20px 0;
     display: flex;
@@ -234,10 +241,10 @@ $result = $stmt->get_result();
                 }                
                 
                 // Add Claim Request Button
-                echo "<p style='color: #555; font-size: 12px; margin-top: 20px;'>If you find this item, please take it to the SSG Office located in the OSA Building and turn it in.</p>";
-                echo "<a href='https://ramonianlostgems.com/send_message.php' class='claim-button'>Report if you found this item.</a>";
+                echo '<div class="claim-button-container">';
+                echo '<a href="https://ramonianlostgems.com/send_message.php" class="claim-button">Report if you found this item</a>';
+                echo '</div>';
                 
-                echo "</div>";
             }
         } else {
             echo "<p>No details available for this item.</p>";
