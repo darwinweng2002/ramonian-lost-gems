@@ -246,7 +246,7 @@ if (isset($_GET['id'])) {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: 'delete_message.php',
+                        url: '../delete_message.php',
                         type: 'POST',
                         data: { id: itemId },
                         dataType: 'json',
@@ -279,7 +279,7 @@ if (isset($_GET['id'])) {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: 'publish_message.php',
+                        url: '../publish_message.php',
                         type: 'POST',
                         data: { id: itemId },
                         dataType: 'json',
@@ -305,7 +305,7 @@ if (isset($_GET['id'])) {
 
         // Send an AJAX request to update the status
         $.ajax({
-            url: 'update_status.php',
+            url: '../update_status.php',
             type: 'POST',
             data: {
                 id: messageId,
