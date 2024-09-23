@@ -70,25 +70,19 @@ if (!$is_guest) {
     $claim_stmt->close();
 
    // Fetch the user's posted missing items history
-   $is_surrendered = false;
-
-   $missing_items = [];
-   $missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
-   $missing_stmt->bind_param("i", $user_id);
-   $missing_stmt->execute();
-   $missing_stmt->bind_result($title, $time_missing, $status);
-   while ($missing_stmt->fetch()) {
-       $missing_items[] = [
-           'title' => $title, 
-           'time_missing' => $time_missing, 
-           'status' => $status
-       ];
-   
-       if ($status == 3) { // Status 3 means surrendered
-           $is_surrendered = true;
-       }
-   }
-   $missing_stmt->close();
+$missing_items = [];
+$missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
+$missing_stmt->bind_param("i", $user_id);
+$missing_stmt->execute();
+$missing_stmt->bind_result($title, $time_missing, $status);
+while ($missing_stmt->fetch()) {
+    $missing_items[] = [
+        'title' => $title, 
+        'time_missing' => $time_missing, 
+        'status' => $status
+    ];
+}
+$missing_stmt->close();
 
 
 $message_history = []; // Change $posts to $message_history
@@ -467,41 +461,47 @@ $message_stmt->close();
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($missing_items as $missing_item): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($missing_item['title']) ?></td>
-                            <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
-                            <td>
-                                <?php
-                                    $statusClass = ''; // Initialize the class for the status badge
-                                    if ($missing_item['status'] == 0) {
-                                        $statusClass = 'badge-pending';
-                                    } elseif ($missing_item['status'] == 1) {
-                                        $statusClass = 'badge-published';
-                                    } elseif ($missing_item['status'] == 2) {
-                                        $statusClass = 'badge-claimed';
-                                    } elseif ($missing_item['status'] == 3) {
-                                        $statusClass = 'badge-surrendered';
-                                    }
-                                ?>
-                                <span class="badge-status <?= $statusClass ?>">
-                                    <?php
-                                        if ($missing_item['status'] == 0) {
-                                            echo 'Pending';
-                                        } elseif ($missing_item['status'] == 1) {
-                                            echo 'Published';
-                                        } elseif ($missing_item['status'] == 2) {
-                                            echo 'Claimed';
-                                        } elseif ($missing_item['status'] == 3) {
-                                            echo 'Surrendered';
-                                        } else {
-                                            echo 'Unknown Status'; // Optional fallback
-                                        }
-                                    ?>
-                                </span>
-                            </td>   
-                        </tr>
-                    <?php endforeach; ?>
+                <?php foreach ($missing_items as $missing_item): ?>
+    <tr>
+        <td><?= htmlspecialchars($missing_item['title']) ?></td>
+        <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
+        <td>
+            <?php
+                $statusClass = ''; // Initialize the class for the status badge
+                $tooltipMessage = ''; // Initialize the tooltip message for the status badge
+
+                if ($missing_item['status'] == 0) {
+                    $statusClass = 'badge-pending';
+                } elseif ($missing_item['status'] == 1) {
+                    $statusClass = 'badge-published';
+                } elseif ($missing_item['status'] == 2) {
+                    $statusClass = 'badge-claimed';
+                } elseif ($missing_item['status'] == 3) {
+                    $statusClass = 'badge-surrendered';
+                    $tooltipMessage = 'Someone surrendered your missing item, you can go to SSG office to claim your item';
+                }
+            ?>
+            <!-- Add the tooltip message only for the surrendered status -->
+            <span class="badge-status <?= $statusClass ?>" 
+                  <?= $tooltipMessage ? 'title="'.$tooltipMessage.'"' : '' ?>>
+                <?php
+                    if ($missing_item['status'] == 0) {
+                        echo 'Pending';
+                    } elseif ($missing_item['status'] == 1) {
+                        echo 'Published';
+                    } elseif ($missing_item['status'] == 2) {
+                        echo 'Claimed';
+                    } elseif ($missing_item['status'] == 3) {
+                        echo 'Surrendered';
+                    } else {
+                        echo 'Unknown Status'; // Optional fallback
+                    }
+                ?>
+            </span>
+        </td>
+    </tr>
+<?php endforeach; ?>
+
                 </tbody>
             </table>
         </div>
@@ -577,25 +577,6 @@ $message_stmt->close();
         // Optionally, set an interval to update the claim history periodically
         setInterval(updateClaimHistory, 60000); // Update every 60 seconds
     });
-    var isSurrendered = <?= $is_surrendered ? 'true' : 'false' ?>;
-    // Check if any item has been surrendered and show the SweetAlert prompt
-    console.log("Is Surrendered: ", isSurrendered);  // Add this line for debugging
-
-if (isSurrendered) {
-    Swal.fire({
-        title: 'Item Surrendered!',
-        text: 'Someone surrendered your missing item that is matched to your post. Kindly go to the SSG office to claim your item.',
-        icon: 'info',
-        confirmButtonText: 'OK'
-    });
-}
-Swal.fire({
-    title: 'Test Alert',
-    text: 'This is just a test to see if SweetAlert works.',
-    icon: 'info',
-    confirmButtonText: 'OK'
-});
-
     </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>
