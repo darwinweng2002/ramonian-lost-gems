@@ -51,12 +51,11 @@ $sqlFound .= " GROUP BY mh.id
 
 
 // SQL query for missing items with extended search functionality
-// SQL query for missing items, including surrendered items but excluding claimed and pending items
+// SQL query for missing items with extended search functionality
 $sqlMissing = "SELECT mi.id, mi.title, mi.category_id, mi.time_missing, mi.description, mi.status, GROUP_CONCAT(mii.image_path) AS image_paths
                FROM missing_items mi
                LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
-               WHERE mi.status = 1 OR mi.status = 3"; // Include published (status = 1) and surrendered (status = 3) items
-
+               WHERE mi.status = 1";  // Fetch only published items
  // Only fetch published items
 
 // Search and filter by category
