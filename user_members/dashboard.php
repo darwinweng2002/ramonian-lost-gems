@@ -170,16 +170,6 @@ $message_stmt->close();
                                             <a href="../logout.php" class="btn btn-danger">Logout</a>
                                         </div>
                                     <?php else: ?>
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <?php if ($is_guest): ?>
-                                        <!-- Disable the entire dashboard for guest users -->
-                                        <div class="text-center">
-                                            <h5 class="card-title">Guest Dashboard</h5>
-                                            <p class="text-muted">Guest access is limited. Please register to access full features.</p>
-                                            <a href="../logout.php" class="btn btn-danger">Logout</a>
-                                        </div>
-                                    <?php else: ?>
                                         <!-- Show the dashboard only for regular users -->
                                         <div class="pt-4 pb-2 text-center">
                                             <h5 class="card-title text-center pb-0 fs-4">User Dashboard</h5>
