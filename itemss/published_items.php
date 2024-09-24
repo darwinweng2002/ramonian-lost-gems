@@ -200,8 +200,7 @@ $result = $stmt->get_result();
                 $contact = htmlspecialchars($msgData['contact'] ?? '');
                 $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
                 $status = intval($msgData['status']); // Get the correct status
-
-
+            
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                     echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
@@ -211,13 +210,19 @@ $result = $stmt->get_result();
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Founder Name:</strong> " . $founder . "</p>";
-                echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
-                echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Location where the item was found:</strong> " . $landmark . "</p>";
                 echo "<p><strong>Date and Time Found:</strong> " . $timeFound . "</p>";
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
-
+            
+                // Display user information only if available
+                if ($firstName || $email || $college) {
+                    echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
+                    echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
+                } else {
+                    echo "<p><strong>User Info:</strong> Guest User</p>"; // Indicate that the post is from a guest
+                }
+            
                 echo "<dt class='text-muted'>Status</dt>";
                 echo "<dd class='ps-4'>";
                 if ($status == 1) {
