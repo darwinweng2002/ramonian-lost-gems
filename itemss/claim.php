@@ -121,6 +121,7 @@ $claimantData = $claimantResult->fetch_assoc();
     </style>
 </head>
 <body>
+<?php require_once('../inc/topBarNav.php') ?>
 <div class="container">
     <h1>Claim This Item</h1>
 
@@ -206,6 +207,7 @@ $claimantData = $claimantResult->fetch_assoc();
         });
     });
 </script>
+<?php require_once('../inc/footer.php') ?>
 </body>
 </html>
 
