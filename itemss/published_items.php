@@ -19,7 +19,7 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get published item details
-$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder_name, mh.status, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar, 
+$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.status, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar, 
         mh.contact, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
@@ -175,7 +175,6 @@ $result = $stmt->get_result();
                         'avatar' => $row['avatar'],
                         'time_found' => $row['time_found'],
                         'contact' => $row['contact'],
-                        'founder_name' => $row['founder_name'],
                         'category_name' => $row['category_name']
                     ];
                 }
@@ -192,7 +191,6 @@ $result = $stmt->get_result();
                 $email = htmlspecialchars($msgData['email'] ?? '');
                 $college = htmlspecialchars($msgData['college'] ?? '');
                 $title = htmlspecialchars($msgData['title'] ?? '');
-                $founder_name = htmlspecialchars($msgData['founder_name'] ?? '');
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                 $message = htmlspecialchars($msgData['message'] ?? '');
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
@@ -209,9 +207,8 @@ $result = $stmt->get_result();
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
-                echo "<p><strong>Founder Name:</strong> " . $founderName . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
-                echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
+                echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Location where the item was found:</strong> " . $landmark . "</p>";
                 echo "<p><strong>Date and Time Found:</strong> " . $timeFound . "</p>";
@@ -243,8 +240,9 @@ $result = $stmt->get_result();
 
                 // Add Claim Request Button
                 echo '<div class="claim-button-container">';
-                echo '<a href="claim.php?id=' . htmlspecialchars($msgId) . '" class="claim-button">Send claim request.</a>';
+                echo '<a href="https://ramonianlostgems.com/itemss/claim.php?id=' . htmlspecialchars($msgId) . '" class="claim-button">Send claim request.</a>';
                 echo '</div>';
+
 
                 echo "</div>";
             }
