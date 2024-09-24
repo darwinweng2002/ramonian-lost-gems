@@ -412,116 +412,102 @@ if (!$is_guest) {
         </div>
 
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-            <h5 class="history-title">Posted Found Items</h5>
-            <table class="table table-striped post-history-table">
-                <thead>
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Date Posted</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($message_history as $message): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($message['title']) ?></td>
-                            <td><?= htmlspecialchars($message['time_found']) ?></td>
-                            <td>
-                                <?php
-                                    $statusClass = ''; // Initialize the class for the status badge
-                                    if ($message['status'] == 0) {
-                                        $statusClass = 'badge-pending';
-                                    } elseif ($message['status'] == 1) {
-                                        $statusClass = 'badge-published';
-                                    } elseif ($message['status'] == 2) {
-                                        $statusClass = 'badge-claimed';
-                                    } elseif ($message['status'] == 3) {
-                                        $statusClass = 'badge-surrendered';
-                                    }
-                                ?>
-                                <span class="badge-status <?= $statusClass ?>">
-                                    <?php
-                                        if ($message['status'] == 0) {
-                                            echo 'Pending';
-                                        } elseif ($message['status'] == 1) {
-                                            echo 'Published';
-                                        } elseif ($message['status'] == 2) {
-                                            echo 'Claimed';
-                                        } elseif ($message['status'] == 3) {
-                                            echo 'Surrendered';
-                                        } else {
-                                            echo 'Unknown Status'; // Optional fallback
-                                        }
-                                    ?>
-                                </span>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+    <h5 class="history-title">Posted Found Items</h5>
+    <table class="table table-striped post-history-table">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Date Posted</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($message_history as $message): ?>
+                <tr>
+                    <td><?= htmlspecialchars($message['title']) ?></td>
+                    <td><?= htmlspecialchars($message['time_found']) ?></td>
+                    <td>
+                        <?php
+                            $statusClass = '';
+                            $showNotification = false;
 
-        <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
-            <h5 class="history-title">Posted Missing Items</h5>
-            <table class="table table-striped post-history-table">
-                <thead>
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Date Missing</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <?php foreach ($missing_items as $missing_item): ?>
-    <tr>
-        <td><?= htmlspecialchars($missing_item['title']) ?></td>
-        <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
-        <td>
-            <?php
-                $statusClass = ''; // Initialize the class for the status badge
-                $showNotification = false; // Flag to show notification icon
+                            if ($message['status'] == 0) {
+                                $statusClass = 'badge-pending';
+                            } elseif ($message['status'] == 1) {
+                                $statusClass = 'badge-published';
+                            } elseif ($message['status'] == 2) {
+                                $statusClass = 'badge-claimed';
+                            } elseif ($message['status'] == 3) {
+                                $statusClass = 'badge-surrendered';
+                                $showNotification = true; // Set to true for surrendered items
+                            }
+                        ?>
+                        <span class="badge-status <?= $statusClass ?>">
+                            <?= $statusClass === 'badge-surrendered' ? 'Surrendered' : 'Unknown Status'; ?>
+                        </span>
 
-                if ($missing_item['status'] == 0) {
-                    $statusClass = 'badge-pending';
-                } elseif ($missing_item['status'] == 1) {
-                    $statusClass = 'badge-published';
-                } elseif ($missing_item['status'] == 2) {
-                    $statusClass = 'badge-claimed';
-                } elseif ($missing_item['status'] == 3) {
-                    $statusClass = 'badge-surrendered';
-                    $showNotification = true; // Show notification icon only for surrendered items
-                }
-            ?>
-            <span class="badge-status <?= $statusClass ?>">
-                <?php
-                    if ($missing_item['status'] == 0) {
-                        echo 'Pending';
-                    } elseif ($missing_item['status'] == 1) {
-                        echo 'Published';
-                    } elseif ($missing_item['status'] == 2) {
-                        echo 'Claimed';
-                    } elseif ($missing_item['status'] == 3) {
-                        echo 'Surrendered';
-                    } else {
-                        echo 'Unknown Status'; // Optional fallback
-                    }
-                ?>
-            </span>
-
-            <!-- Add notification icon if the item is surrendered -->
-            <?php if ($showNotification): ?>
-                <i class="bi bi-bell-fill notification-icon" 
-                   onclick="showSurrenderNotification('<?= htmlspecialchars($missing_item['title']) ?>')"
-                   style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
-            <?php endif; ?>
-        </td>
-    </tr>
-<?php endforeach; ?>
+                        <!-- Add notification icon if the item is surrendered -->
+                        <?php if ($showNotification): ?>
+                            <i class="bi bi-bell-fill notification-icon" 
+                               onclick="showSurrenderNotification('<?= htmlspecialchars($message['title']) ?>')"
+                               style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 
 
-                </tbody>
-            </table>
-        </div>
+<div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+    <h5 class="history-title">Posted Missing Items</h5>
+    <table class="table table-striped post-history-table">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Date Missing</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($missing_items as $missing_item): ?>
+                <tr>
+                    <td><?= htmlspecialchars($missing_item['title']) ?></td>
+                    <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
+                    <td>
+                        <?php
+                            $statusClass = '';
+                            $showNotification = false;
+
+                            if ($missing_item['status'] == 0) {
+                                $statusClass = 'badge-pending';
+                            } elseif ($missing_item['status'] == 1) {
+                                $statusClass = 'badge-published';
+                            } elseif ($missing_item['status'] == 2) {
+                                $statusClass = 'badge-claimed';
+                            } elseif ($missing_item['status'] == 3) {
+                                $statusClass = 'badge-surrendered';
+                                $showNotification = true; // Set to true for surrendered items
+                            }
+                        ?>
+                        <span class="badge-status <?= $statusClass ?>">
+                            <?= $statusClass === 'badge-surrendered' ? 'Surrendered' : 'Unknown Status'; ?>
+                        </span>
+
+                        <!-- Add notification icon if the item is surrendered -->
+                        <?php if ($showNotification): ?>
+                            <i class="bi bi-bell-fill notification-icon" 
+                               onclick="showSurrenderNotification('<?= htmlspecialchars($missing_item['title']) ?>')"
+                               style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
     </div>
 <?php endif; ?>
 
