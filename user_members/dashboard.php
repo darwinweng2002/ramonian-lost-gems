@@ -121,6 +121,179 @@ if (!$is_guest) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
         /* Your existing CSS */
+        body {
+            overflow: auto;
+        }
+        .logo img {
+            max-height: 55px;
+            margin-right: 25px;
+        }
+        .logo span {
+            color: #fff;
+            text-shadow: 0px 0px 10px #000;
+        }
+        .claim-history-table,
+        .post-history-table {
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+        .claim-history-table thead,
+        .post-history-table thead {
+            background-color: #0D6EFD;
+            color: #fff;
+        }
+        .claim-history-table th,
+        .post-history-table th,
+        .claim-history-table td,
+        .post-history-table td {
+            padding: 12px;
+            text-align: left;
+        }
+        .claim-history-table tbody tr:nth-child(even),
+        .post-history-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .history-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .status-approved {
+            color: green;
+        }
+        .swal2-popup {
+            position: fixed !important; /* Fix position relative to viewport */
+            top: 50% !important;        /* Center vertically */
+            left: 50% !important;       /* Center horizontally */
+            transform: translate(-50%, -50%) !important; /* Adjust for exact center */
+            z-index: 9999 !important;   /* Ensure it appears above other elements */
+            overflow: auto;              /* Allow scrolling within the popup if needed */
+        }
+
+        /* Optional: To ensure that the page content can be scrolled while the popup is visible */
+        .swal2-overlay {
+            overflow: auto;             /* Allow scrolling of the page if necessary */
+        }
+        @media (max-width: 512px) {
+        /* Adjust logo size */
+        .logo img {
+            max-height: 40px; /* Smaller logo for smaller screens */
+            margin-right: 15px; /* Adjust margin */
+        }
+        
+        /* Adjust user avatar size */
+        .card-body img {
+            width: 80px;
+            height: 80px;
+        }
+        
+        /* Adjust font size for card title */
+        .card-title {
+            font-size: 1.2rem; /* Smaller font size for smaller screens */
+        }
+        
+        /* Adjust tab content */
+        .nav-tabs .nav-link {
+            font-size: 0.9rem; /* Smaller font size for tab links */
+        }
+        
+        .tab-content .history-title {
+            font-size: 1.2rem; /* Smaller font size for section titles */
+        }
+        
+        /* Stack tables and adjust padding */
+        .claim-history-table, 
+        .post-history-table {
+            margin-top: 10px;
+            font-size: 0.9rem; /* Smaller font size for table content */
+        }
+        
+        .claim-history-table th,
+        .post-history-table th,
+        .claim-history-table td,
+        .post-history-table td {
+            padding: 8px; /* Reduce padding for smaller screens */
+        }
+        
+        /* Adjust button sizes */
+        .btn {
+            font-size: 0.9rem; /* Smaller font size for buttons */
+            padding: 8px 12px; /* Adjust padding for buttons */
+        }
+
+        /* Adjust form input file size */
+        input[type="file"] {
+            font-size: 0.8rem; /* Smaller font size for file input */
+        }
+        
+        /* Adjust container padding */
+        .container {
+            padding: 10px; /* Reduced padding for smaller screens */
+        }
+
+        /* Adjust tab-pane content margins */
+        .tab-content .tab-pane {
+            padding: 10px; /* Reduced padding for tab content */
+        }
+        
+        /* Adjust back-to-top button */
+        .back-to-top {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
+.badge-status {
+    padding: 2px 6px;  /* Slightly reduced padding */
+    font-size: 12px;
+    border-radius: 20px; /* Rounded edges for the badges */
+    color: #fff;
+    display: inline-block;
+    min-width: 80px;  /* Set a minimum width to ensure all badges have the same width */
+    text-align: center;
+    line-height: 1.5;  /* Ensures consistent vertical alignment */
+    white-space: nowrap;  /* Prevents text from wrapping */
+}
+
+.badge-pending {
+    background-color: #6c757d;/* Yellow for Pending */
+}
+
+.badge-published {
+    background-color: #007bff; /* Blue for Published */
+}
+
+.badge-claimed {
+    background-color: #28a745; /* Green for Claimed */
+}
+
+.badge-surrendered {
+    background-color: #6c757d; /* Grey for Surrendered */
+}
+
+    }
+    .nav-tabs {
+        display: flex;
+        flex-wrap: wrap; /* Allows the tabs to wrap to the next line if needed */
+        justify-content: space-around; /* Centers tabs and ensures even spacing */
+    }
+    
+    .nav-tabs .nav-item {
+        display: inline-block; /* Change from block to inline-block */
+        margin-bottom: 0; /* Remove bottom margin if any */
+    }
+
+    .nav-tabs .nav-link {
+        padding: 10px; /* Adjust padding as needed for better spacing */
+        font-size: 0.9rem; /* Adjust font size for better fit */
+    }
+    
+    .tab-content {
+        width: 100%; /* Ensure the tab content takes full width */
+    }
+   
     </style>
 </head>
 <body>
