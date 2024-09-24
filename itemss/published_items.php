@@ -19,7 +19,7 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get published item details
-$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.status, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar, 
+$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder,  mh.status, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar, 
         mh.contact, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
@@ -168,6 +168,7 @@ $result = $stmt->get_result();
                         'images' => [],
                         'first_name' => $row['first_name'],
                         'landmark' => $row['landmark'],
+                        'founder' => $row['founder'],
                         'title' => $row['title'],
                         'status' => $row['status'], // Fetch the status
                         'college' => $row['college'],
@@ -192,6 +193,7 @@ $result = $stmt->get_result();
                 $college = htmlspecialchars($msgData['college'] ?? '');
                 $title = htmlspecialchars($msgData['title'] ?? '');
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
+                $founder = htmlspecialchars($msgData['founder'] ?? '');
                 $message = htmlspecialchars($msgData['message'] ?? '');
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
                 $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
@@ -208,6 +210,7 @@ $result = $stmt->get_result();
                 }
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
+                echo "<p><strong>Founder Name:</strong> " . $founder . "</p>";
                 echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Location where the item was found:</strong> " . $landmark . "</p>";
