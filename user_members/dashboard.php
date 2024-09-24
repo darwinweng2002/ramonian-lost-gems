@@ -295,7 +295,7 @@ if (!$is_guest) {
     .back-btn-container {
             margin: 20px 0;
             display: flex;
-            justify-content: flex-start;
+            text-align: center;
         }
 
         .back-btn {
@@ -347,7 +347,7 @@ if (!$is_guest) {
                                     <?php if ($is_guest): ?>
                                         <!-- Disable the entire dashboard for guest users -->
                                         <div class="text-center">
-                                            <h5 class="card-title">Guest Dashboard</h5>s
+                                            <h5 class="card-title">Guest Dashboard</h5>
                                             <p class="text-muted">Guest access is limited. Please register to access full features.</p>
                                             <div class="back-btn-container">
                                             <button class="back-btn" onclick="history.back()">
