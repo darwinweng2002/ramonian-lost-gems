@@ -34,13 +34,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $uploadedFiles = [];
 
     // Handle message saving
-   // Handle message saving
-   $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, time_found, contact, founder, category_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-   $stmt->bind_param("isssssis", $userId, $message, $landmark, $title, $timeFound, $contact, $founder $category_id, $status);
-   $status = 'Pending'; // Set default status
-   $stmt->execute();
-   $messageId = $stmt->insert_id;
-   $stmt->close();
+
+    $status = 0; // Default to 'Pending'
+
+    // Prepare the SQL statement
+    $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, time_found, contact, founder, category_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    
+    // Bind parameters (8 strings and 1 integer)
+    $stmt->bind_param("issssssis", $userId, $message, $landmark, $title, $timeFound, $contact, $founder, $category_id, $status);
+    
+    // Execute the statement
+    $stmt->execute();
+    $messageId = $stmt->insert_id; // Get the ID of the newly inserted message
+    $stmt->close();
+
 
 
     // Handle file uploads
@@ -242,10 +249,6 @@ if (isset($_SESSION['user_id'])) {
         <?php endif; ?>
          
         <form action="send_message.php" method="post" enctype="multipart/form-data" class="message-form">
-        <label for="title">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pin"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
-                </svg> Item Name:
-            </label>
             <label for="founder">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user">
         <path d="M12 14c-4.28 0-8 3.58-8 8h16c0-4.42-3.72-8-8-8z"/>
@@ -253,7 +256,10 @@ if (isset($_SESSION['user_id'])) {
     </svg> Founder:
 </label>
 <input type="text" name="founder" id="founder" placeholder="Enter founder's name" required>
-
+<label for="title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pin"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
+                </svg> Item Name:
+            </label>
             <input type="text" name="title" id="title" placeholder="Enter item name" required>
             <label for="category">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag">
