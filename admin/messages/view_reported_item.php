@@ -230,7 +230,7 @@ if ($message_id > 0) {
         $('.delete-btn').on('click', function() {
             var messageId = $(this).data('id');
             Swal.fire({
-                title: 'Are you sure?',
+                title: 'Are you sure you want to delete this item entry?',
                 text: "You won't be able to revert this!",
                 icon: 'warning',
                 showCancelButton: true,
@@ -246,7 +246,7 @@ if ($message_id > 0) {
                         dataType: 'json',
                         success: function(response) {
                             if (response.success) {
-                                Swal.fire('Deleted!', 'Your message has been deleted.', 'success');
+                                Swal.fire('Deleted!', 'The item has been deleted.', 'success');
                                 location.reload();
                             } else {
                                 Swal.fire('Error!', response.error, 'error');
@@ -265,7 +265,7 @@ if ($message_id > 0) {
             var messageId = $(this).data('id');
             Swal.fire({
                 title: 'Are you sure?',
-                text: "Do you want to publish this message?",
+                text: "Do you want to publish this found item entry?",
                 icon: 'info',
                 showCancelButton: true,
                 confirmButtonColor: '#28a745',
@@ -280,7 +280,7 @@ if ($message_id > 0) {
                         dataType: 'json',
                         success: function(response) {
                             if (response.success) {
-                                Swal.fire('Published!', 'Your message has been published.', 'success');
+                                Swal.fire('Published!', 'The found item has been published.', 'success');
                                 location.reload();
                             } else {
                                 Swal.fire('Error!', response.error, 'error');
