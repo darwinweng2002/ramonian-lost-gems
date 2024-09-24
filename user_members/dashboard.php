@@ -552,15 +552,45 @@ if (!$is_guest) {
                 }
             });
         });
+        function updateClaimHistory() {
+        $.ajax({
+            url: 'fetch_claims.php', // Create this PHP file to return the claim history
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                let tableBody = $('.claim-history-table tbody');
+                tableBody.empty();
+                data.forEach(claim => {
+                    tableBody.append(`
+                        <tr>
+                            <td><a href="view_item.php?id=${claim.item_id}">${claim.item_name}</a></td>
+                            <td>${claim.claim_date}</td>
+                            <td class="${claim.status === 'Approved' ? 'status-approved' : ''}">${claim.status}</td>
+                        </tr>
+                    `);
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching claim history:', error);
+            }
+        });
+    }
 
-        function showSurrenderNotification(itemTitle) {
-            Swal.fire({
-                icon: 'info',
-                title: 'Item Surrendered',
-                text: `Someone surrendered your missing item (${itemTitle}), you can go to SSG office to claim it.`,
-                confirmButtonText: 'OK'
-            });
-        }
+    // Call the function to update claim history on page load
+    $(document).ready(function() {
+        updateClaimHistory();
+
+        // Optionally, set an interval to update the claim history periodically
+        setInterval(updateClaimHistory, 60000); // Update every 60 seconds
+    });
+    function showSurrenderNotification(itemTitle) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Item Surrendered',
+            text: `Someone surrendered your missing item (${itemTitle}), you can go to SSG office to claim it.`,
+            confirmButtonText: 'OK'
+        });
+    }
     </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>
