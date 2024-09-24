@@ -334,140 +334,200 @@ if (!$is_guest) {
                                             <p class="text-center small">Welcome, <?= htmlspecialchars($first_name ?? '') . ' ' . htmlspecialchars($last_name ?? '') ?></p>
                                         </div>
 
+                                        <!-- Display User Avatar -->
+                                        
+
                                         <!-- Avatar Upload Form -->
                                         <form action="" method="post" enctype="multipart/form-data">
                                             <input type="file" name="avatar" accept="image/*">
                                             <button type="submit" name="upload_avatar" class="btn btn-primary">Upload Avatar</button>
                                         </form>
 
-                                        <!-- Display additional tabs and data for regular users -->
-                                        <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
-                                            <li class="nav-item" role="presentation">
-                                                <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Profile Information</a>
-                                            </li>
-                                            <li class="nav-item" role="presentation">
-                                                <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Claim History</a>
-                                            </li>
-                                            <li class="nav-item" role="presentation">
-                                                <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Posted Found Items</a>
-                                            </li>
-                                            <li class="nav-item" role="presentation">
-                                                <a class="nav-link" id="history-tab" data-bs-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">Posted Missing Items</a>
-                                            </li>
-                                        </ul>
+                                        <?php if (!$is_guest): ?>
+    <!-- Display tabs only for non-guest users -->
+    <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Profile Information</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Claim History</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Posted Found Items</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="history-tab" data-bs-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">Posted Missing Items</a>
+        </li>
+    </ul>
 
-                                        <!-- Tab Content for regular users -->
-                                        <div class="tab-content">
-                                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                                <ul class="list-group mb-3">
-                                                    <li class="list-group-item d-flex justify-content-between">
-                                                        <strong>Course:</strong>
-                                                        <span><?= htmlspecialchars($course ?? '') ?></span>
-                                                    </li>
-                                                    <li class="list-group-item d-flex justify-content-between">
-                                                        <strong>Year:</strong>
-                                                        <span><?= htmlspecialchars($year ?? '') ?></span>
-                                                    </li>
-                                                    <li class="list-group-item d-flex justify-content-between">
-                                                        <strong>Section:</strong>
-                                                        <span><?= htmlspecialchars($section ?? '') ?></span>
-                                                    </li>
-                                                    <li class="list-group-item d-flex justify-content-between">
-                                                        <strong>Email:</strong>
-                                                        <span><?= htmlspecialchars($email ?? '') ?></span>
-                                                    </li>
-                                                    <li class="list-group-item d-flex justify-content-between">
-                                                        <strong>College:</strong>
-                                                        <span><?= htmlspecialchars($college ?? '') ?></span>
-                                                    </li>
-                                                </ul>
-                                            </div>
+    <!-- Show tab content only for non-guest users -->
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <ul class="list-group mb-3">
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Course:</strong>
+                    <span><?= htmlspecialchars($course ?? '') ?></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Year:</strong>
+                    <span><?= htmlspecialchars($year ?? '') ?></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Section:</strong>
+                    <span><?= htmlspecialchars($section ?? '') ?></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Email:</strong>
+                    <span><?= htmlspecialchars($email ?? '') ?></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>College:</strong>
+                    <span><?= htmlspecialchars($college ?? '') ?></span>
+                </li>
+            </ul>
+        </div>
 
-                                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                                <h5 class="history-title">Claim History</h5>
-                                                <table class="table table-striped claim-history-table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Item Name</th>
-                                                            <th>Date Claimed</th>
-                                                            <th>Status</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php foreach ($claims as $claim): ?>
-                                                            <tr>
-                                                                <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
-                                                                <td><?= htmlspecialchars($claim['claim_date']) ?></td>
-                                                                <td class="<?= $claim['status'] == 'Approved' ? 'status-approved' : '' ?>">
-                                                                    <?= htmlspecialchars($claim['status']) ?>
-                                                                </td>
-                                                            </tr>
-                                                        <?php endforeach; ?>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <h5 class="history-title">Claim History</h5>
+            <table class="table table-striped claim-history-table">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Date Claimed</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($claims as $claim): ?>
+                        <tr>
+                            <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
+                            <td><?= htmlspecialchars($claim['claim_date']) ?></td>
+                            <td class="<?= $claim['status'] == 'Approved' ? 'status-approved' : '' ?>">
+                                <?= htmlspecialchars($claim['status']) ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
 
-                                            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
-    <h5 class="history-title">Posted Missing Items</h5>
-    <table class="table table-striped post-history-table">
-        <thead>
-            <tr>
-                <th>Item Name</th>
-                <th>Date Missing</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($missing_items as $missing_item): ?>
-                <tr>
-                    <td><?= htmlspecialchars($missing_item['title']) ?></td>
-                    <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
-                    <td>
-                        <?php
-                            $statusClass = ''; // Initialize the class for the status badge
-                            $showNotification = false; // Flag to show notification icon
+        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+            <h5 class="history-title">Posted Found Items</h5>
+            <table class="table table-striped post-history-table">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Date Posted</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($message_history as $message): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($message['title']) ?></td>
+                            <td><?= htmlspecialchars($message['time_found']) ?></td>
+                            <td>
+                                <?php
+                                    $statusClass = ''; // Initialize the class for the status badge
+                                    if ($message['status'] == 0) {
+                                        $statusClass = 'badge-pending';
+                                    } elseif ($message['status'] == 1) {
+                                        $statusClass = 'badge-published';
+                                    } elseif ($message['status'] == 2) {
+                                        $statusClass = 'badge-claimed';
+                                    } elseif ($message['status'] == 3) {
+                                        $statusClass = 'badge-surrendered';
+                                    }
+                                ?>
+                                <span class="badge-status <?= $statusClass ?>">
+                                    <?php
+                                        if ($message['status'] == 0) {
+                                            echo 'Pending';
+                                        } elseif ($message['status'] == 1) {
+                                            echo 'Published';
+                                        } elseif ($message['status'] == 2) {
+                                            echo 'Claimed';
+                                        } elseif ($message['status'] == 3) {
+                                            echo 'Surrendered';
+                                        } else {
+                                            echo 'Unknown Status'; // Optional fallback
+                                        }
+                                    ?>
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
 
-                            if ($missing_item['status'] == 0) {
-                                $statusClass = 'badge-pending';
-                            } elseif ($missing_item['status'] == 1) {
-                                $statusClass = 'badge-published';
-                            } elseif ($missing_item['status'] == 2) {
-                                $statusClass = 'badge-claimed';
-                            } elseif ($missing_item['status'] == 3) {
-                                $statusClass = 'badge-surrendered';
-                                $showNotification = true; // Show notification icon only for surrendered items
-                            }
-                        ?>
-                        <span class="badge-status <?= $statusClass ?>">
-                            <?php
-                                if ($missing_item['status'] == 0) {
-                                    echo 'Pending';
-                                } elseif ($missing_item['status'] == 1) {
-                                    echo 'Published';
-                                } elseif ($missing_item['status'] == 2) {
-                                    echo 'Claimed';
-                                } elseif ($missing_item['status'] == 3) {
-                                    echo 'Surrendered';
-                                } else {
-                                    echo 'Unknown Status'; // Optional fallback
-                                }
-                            ?>
-                        </span>
+        <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+            <h5 class="history-title">Posted Missing Items</h5>
+            <table class="table table-striped post-history-table">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Date Missing</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($missing_items as $missing_item): ?>
+    <tr>
+        <td><?= htmlspecialchars($missing_item['title']) ?></td>
+        <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
+        <td>
+            <?php
+                $statusClass = ''; // Initialize the class for the status badge
+                $showNotification = false; // Flag to show notification icon
 
-                        <!-- Add notification icon if the item is surrendered -->
-                        <?php if ($showNotification): ?>
-                            <i class="bi bi-bell-fill notification-icon" 
-                               onclick="showSurrenderNotification('<?= htmlspecialchars($missing_item['title']) ?>')"
-                               style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
+                if ($missing_item['status'] == 0) {
+                    $statusClass = 'badge-pending';
+                } elseif ($missing_item['status'] == 1) {
+                    $statusClass = 'badge-published';
+                } elseif ($missing_item['status'] == 2) {
+                    $statusClass = 'badge-claimed';
+                } elseif ($missing_item['status'] == 3) {
+                    $statusClass = 'badge-surrendered';
+                    $showNotification = true; // Show notification icon only for surrendered items
+                }
+            ?>
+            <span class="badge-status <?= $statusClass ?>">
+                <?php
+                    if ($missing_item['status'] == 0) {
+                        echo 'Pending';
+                    } elseif ($missing_item['status'] == 1) {
+                        echo 'Published';
+                    } elseif ($missing_item['status'] == 2) {
+                        echo 'Claimed';
+                    } elseif ($missing_item['status'] == 3) {
+                        echo 'Surrendered';
+                    } else {
+                        echo 'Unknown Status'; // Optional fallback
+                    }
+                ?>
+            </span>
+
+            <!-- Add notification icon if the item is surrendered -->
+            <?php if ($showNotification): ?>
+                <i class="bi bi-bell-fill notification-icon" 
+                   onclick="showSurrenderNotification('<?= htmlspecialchars($missing_item['title']) ?>')"
+                   style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
+            <?php endif; ?>
+        </td>
+    </tr>
+<?php endforeach; ?>
 
 
+                </tbody>
+            </table>
+        </div>
+    </div>
+<?php endif; ?>
+
+                                            <div class="text-center mt-4 d-flex justify-content-center">
+                                        <a href="https://ramonianlostgems.com/main.php" class="btn btn-secondary mx-2">Back</a>
+                                    </div>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -479,14 +539,12 @@ if (!$is_guest) {
         </div>
     </main>
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     <script src="<?= base_url ?>assets/js/jquery-3.6.4.min.js"></script>
     <script src="<?= base_url ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="<?= base_url ?>assets/vendor/simple-datatables/simple-datatables.js"></script>
     <script src="<?= base_url ?>assets/js/main.js"></script>
     <!-- Include SweetAlert JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-
     <script>
         document.getElementById('logout-btn').addEventListener('click', function (event) {
             event.preventDefault(); // Prevent default link behavior
