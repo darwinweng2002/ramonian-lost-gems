@@ -178,8 +178,7 @@ $result = $conn->query($sql);
                                 <button type='submit' name='action' value='approve' class='btn btn-approve'>Approve</button>
                                 <button type='submit' name='action' value='reject' class='btn btn-reject'>Reject</button>
                             </form>
-                            <a href='claim_details.php?id=<?= htmlspecialchars($row['id']) ?>' class='btn btn-info btn-sm'>View</a>
-
+                            <a href='https://ramonianlostgems.com/admin/claimer/claim_details.php?id=" . $row['id'] . "' class='btn btn-info btn-sm'>View</a>
                         </td>";
                         echo "</tr>";
                     }
