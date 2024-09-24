@@ -45,13 +45,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
 
 // Check if "Login as Guest" button is clicked
 if (isset($_POST['guest_login'])) {
-    // Start guest session with predefined values
-    $_SESSION['user_id'] = 'guest';
-    $_SESSION['email'] = 'guest@example.com';  // This can be any guest identifier
+  // Generate a unique guest session ID
+  $_SESSION['user_id'] = 'guest_' . bin2hex(random_bytes(5)); // Unique guest ID
+  $_SESSION['email'] = 'guest@example.com';  // Identifier remains generic for guests
 
-    // Redirect guest user to the main page
-    header("Location: https://ramonianlostgems.com/main.php");
-    exit();
+  // Redirect guest user to the main page
+  header("Location: https://ramonianlostgems.com/main.php");
+  exit();
 }
 ?>
 
