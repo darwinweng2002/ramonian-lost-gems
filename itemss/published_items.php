@@ -201,12 +201,18 @@ $result = $stmt->get_result();
                 $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
                 $status = intval($msgData['status']); // Get the correct status
             
-                if ($avatar) {
-                    $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
-                    echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
+                // Only display avatar if the post is not from a guest user
+                if ($firstName || $email || $college) {
+                    if ($avatar) {
+                        $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
+                        echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
+                    } else {
+                        echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                    }
                 } else {
-                    echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                    echo "<p><strong>User Info:</strong> Guest User</p>"; // Indicate that the post is from a guest
                 }
+            
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Founder Name:</strong> " . $founder . "</p>";
@@ -220,7 +226,8 @@ $result = $stmt->get_result();
                     echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
                     echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
                 } else {
-                    echo "<p><strong>User Info:</strong> Guest User</p>"; // Indicate that the post is from a guest
+                    // No additional user info for guest posts
+                    echo "<p><strong>User Info:</strong> Guest User</p>";
                 }
             
                 echo "<dt class='text-muted'>Status</dt>";
