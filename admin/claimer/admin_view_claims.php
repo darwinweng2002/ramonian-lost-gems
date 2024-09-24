@@ -175,8 +175,6 @@ $result = $conn->query($sql);
                         echo "<td>
                             <form action='update_claim_status.php' method='POST' style='display:inline;'>
                                 <input type='hidden' name='claim_id' value='" . $row['id'] . "'>
-                                <button type='submit' name='action' value='approve' class='btn btn-approve'>Approve</button>
-                                <button type='submit' name='action' value='reject' class='btn btn-reject'>Reject</button>
                             </form>
                             <a href='https://ramonianlostgems.com/admin/claimer/claim_details.php?id=" . $row['id'] . "' class='btn btn-info btn-sm'>View</a>
                         </td>";
