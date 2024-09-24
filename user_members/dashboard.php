@@ -147,7 +147,7 @@ if (!$is_guest) {
                                             <a href="../logout.php" class="btn btn-danger">Logout</a>
                                         </div>
                                     <?php else: ?>
-                            <div class="card mb-3">
+                                        <div class="card mb-3">
                                 <div class="card-body">
                                     <?php if ($is_guest): ?>
                                         <!-- Disable the entire dashboard for guest users -->
