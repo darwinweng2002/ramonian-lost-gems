@@ -227,7 +227,7 @@ $result = $stmt->get_result();
                     echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
                 } else {
                     // No additional user info for guest posts
-                    echo "<p><strong>User Info:</strong> Guest User</p>";
+                    
                 }
             
                 echo "<dt class='text-muted'>Status</dt>";
