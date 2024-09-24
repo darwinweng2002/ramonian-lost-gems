@@ -14,7 +14,7 @@ $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($message_id > 0) {
     // SQL query to fetch the details of the selected message by its ID
-    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.time_found, mh.status, c.name as category_name
+    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN user_member um ON mh.user_id = um.id
@@ -139,6 +139,7 @@ if ($message_id > 0) {
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
                         'contact' => $row['contact'],
+                        'founder' => $row['founder'],
                         'time_found' => $row['time_found'],
                         'category_name' => $row['category_name'],  
                         'status' => $row['status']
@@ -160,6 +161,7 @@ if ($message_id > 0) {
                 $message = htmlspecialchars($msgData['message'] ?? '');
                 $avatar = htmlspecialchars($msgData['avatar'] ?? '');
                 $contact = htmlspecialchars($msgData['contact'] ?? '');
+                $founder = htmlspecialchars($msgData['founder'] ?? '');
                 $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
                 $categoryName = htmlspecialchars($msgData['category_name'] ?? ''); 
                 
@@ -177,6 +179,7 @@ if ($message_id > 0) {
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>"; 
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>"; 
+                echo "<p><strong>Founder:</strong> " . $founder . "</p>";
                 echo "<p><strong>Time Found:</strong> " . $timeFound . "</p>";
 
                 // Status dropdown and status badge display
