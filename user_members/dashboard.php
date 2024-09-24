@@ -120,7 +120,6 @@ if (!$is_guest) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
-        /* Your existing CSS */
         body {
             overflow: auto;
         }
@@ -528,12 +527,14 @@ if (!$is_guest) {
         </div>
     </main>
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
     <script src="<?= base_url ?>assets/js/jquery-3.6.4.min.js"></script>
     <script src="<?= base_url ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="<?= base_url ?>assets/vendor/simple-datatables/simple-datatables.js"></script>
     <script src="<?= base_url ?>assets/js/main.js"></script>
     <!-- Include SweetAlert JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
     <script>
         document.getElementById('logout-btn').addEventListener('click', function (event) {
             event.preventDefault(); // Prevent default link behavior
