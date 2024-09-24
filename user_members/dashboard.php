@@ -11,18 +11,20 @@ if (!isset($_SESSION['user_id'])) {
 // Fetch the user's information from the database
 $user_id = $_SESSION['user_id'];
 
-// Prepare and execute query to fetch user information
-$stmt = $conn->prepare("SELECT first_name, last_name, course, year, section, email, college, avatar, user_type FROM user_member WHERE id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$stmt->bind_result($first_name, $last_name, $course, $year, $section, $email, $college, $avatar, $user_type);
-$stmt->fetch();
-$stmt->close();
+// Check if the user is a guest by determining if their user_id starts with 'guest_'
+$is_guest = (strpos($user_id, 'guest_') === 0);
 
-// Determine if the user is a guest
-$is_guest = ($user_type === 'guest');
+// Prepare and execute query to fetch user information for regular users
+if (!$is_guest) {
+    $stmt = $conn->prepare("SELECT first_name, last_name, course, year, section, email, college, avatar, user_type FROM user_member WHERE id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $stmt->bind_result($first_name, $last_name, $course, $year, $section, $email, $college, $avatar, $user_type);
+    $stmt->fetch();
+    $stmt->close();
+}
 
-// Handle avatar upload
+// Handle avatar upload (disabled for guests)
 if (isset($_POST['upload_avatar']) && !$is_guest) {
     if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
         $avatar_name = $_FILES['avatar']['name'];
@@ -47,9 +49,20 @@ if (isset($_POST['upload_avatar']) && !$is_guest) {
     }
 }
 
-// Fetch the user's claim history
+// Fetch the user's claim history or guest's claim history
 $claims = [];
-if (!$is_guest) {
+if ($is_guest) {
+    // Use the guest session ID to fetch guest-specific claim history
+    $guest_id = $_SESSION['user_id'];
+    $claim_stmt = $conn->prepare("
+        SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
+        FROM claims c 
+        JOIN item_list i ON c.item_id = i.id 
+        WHERE c.guest_id = ?
+    ");
+    $claim_stmt->bind_param("s", $guest_id); // guest_id is a string
+} else {
+    // Fetch claim history for regular users
     $claim_stmt = $conn->prepare("
         SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
         FROM claims c 
@@ -57,22 +70,33 @@ if (!$is_guest) {
         WHERE c.user_id = ?
     ");
     $claim_stmt->bind_param("i", $user_id);
-    $claim_stmt->execute();
-    $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
-    while ($claim_stmt->fetch()) {
-        $claims[] = [
-            'item_id' => $item_id, 
-            'item_name' => $item_name, 
-            'claim_date' => $claim_date, 
-            'status' => $status
-        ];
-    }
-    $claim_stmt->close();
+}
 
-   // Fetch the user's posted missing items history
+$claim_stmt->execute();
+$claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
+while ($claim_stmt->fetch()) {
+    $claims[] = [
+        'item_id' => $item_id, 
+        'item_name' => $item_name, 
+        'claim_date' => $claim_date, 
+        'status' => $status
+    ];
+}
+$claim_stmt->close();
+
+// Fetch the user's posted missing items history or guest-specific missing items
 $missing_items = [];
-$missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
-$missing_stmt->bind_param("i", $user_id);
+if ($is_guest) {
+    // Fetch missing items for guest users using their session-based guest_id
+    $guest_id = $_SESSION['user_id'];
+    $missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE guest_id = ?");
+    $missing_stmt->bind_param("s", $guest_id); // guest_id is a string
+} else {
+    // Fetch missing items for regular users
+    $missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
+    $missing_stmt->bind_param("i", $user_id);
+}
+
 $missing_stmt->execute();
 $missing_stmt->bind_result($title, $time_missing, $status);
 while ($missing_stmt->fetch()) {
@@ -84,21 +108,29 @@ while ($missing_stmt->fetch()) {
 }
 $missing_stmt->close();
 
+// Fetch the user's posted found items or guest-specific found items
+$message_history = [];
+if ($is_guest) {
+    // Fetch found items for guest users using their session-based guest_id
+    $guest_id = $_SESSION['user_id'];
+    $message_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE guest_id = ?");
+    $message_stmt->bind_param("s", $guest_id); // guest_id is a string
+} else {
+    // Fetch found items for regular users
+    $message_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE user_id = ?");
+    $message_stmt->bind_param("i", $user_id);
+}
 
-$message_history = []; // Change $posts to $message_history
-$message_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE user_id = ?");
-$message_stmt->bind_param("i", $user_id);
 $message_stmt->execute();
 $message_stmt->bind_result($title, $time_found, $status);
 while ($message_stmt->fetch()) {
-    $message_history[] = [ // Update here too
+    $message_history[] = [
         'title' => $title, 
         'time_found' => $time_found,
         'status' => $status
     ];
 }
 $message_stmt->close();
-}
 ?>
 
 <!DOCTYPE html>
