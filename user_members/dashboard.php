@@ -11,20 +11,18 @@ if (!isset($_SESSION['user_id'])) {
 // Fetch the user's information from the database
 $user_id = $_SESSION['user_id'];
 
-// Check if the user is a guest by determining if their user_id starts with 'guest_'
-$is_guest = (strpos($user_id, 'guest_') === 0);
+// Prepare and execute query to fetch user information
+$stmt = $conn->prepare("SELECT first_name, last_name, course, year, section, email, college, avatar, user_type FROM user_member WHERE id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($first_name, $last_name, $course, $year, $section, $email, $college, $avatar, $user_type);
+$stmt->fetch();
+$stmt->close();
 
-// Prepare and execute query to fetch user information for regular users
-if (!$is_guest) {
-    $stmt = $conn->prepare("SELECT first_name, last_name, course, year, section, email, college, avatar, user_type FROM user_member WHERE id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $stmt->bind_result($first_name, $last_name, $course, $year, $section, $email, $college, $avatar, $user_type);
-    $stmt->fetch();
-    $stmt->close();
-}
+// Determine if the user is a guest
+$is_guest = ($user_type === 'guest');
 
-// Handle avatar upload (disabled for guests)
+// Handle avatar upload
 if (isset($_POST['upload_avatar']) && !$is_guest) {
     if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
         $avatar_name = $_FILES['avatar']['name'];
@@ -49,20 +47,9 @@ if (isset($_POST['upload_avatar']) && !$is_guest) {
     }
 }
 
-// Fetch the user's claim history or guest's claim history
+// Fetch the user's claim history
 $claims = [];
-if ($is_guest) {
-    // Use the guest session ID to fetch guest-specific claim history
-    $guest_id = $_SESSION['user_id'];
-    $claim_stmt = $conn->prepare("
-        SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
-        FROM claims c 
-        JOIN item_list i ON c.item_id = i.id 
-        WHERE c.guest_id = ?
-    ");
-    $claim_stmt->bind_param("s", $guest_id); // guest_id is a string
-} else {
-    // Fetch claim history for regular users
+if (!$is_guest) {
     $claim_stmt = $conn->prepare("
         SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
         FROM claims c 
@@ -70,33 +57,22 @@ if ($is_guest) {
         WHERE c.user_id = ?
     ");
     $claim_stmt->bind_param("i", $user_id);
-}
+    $claim_stmt->execute();
+    $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
+    while ($claim_stmt->fetch()) {
+        $claims[] = [
+            'item_id' => $item_id, 
+            'item_name' => $item_name, 
+            'claim_date' => $claim_date, 
+            'status' => $status
+        ];
+    }
+    $claim_stmt->close();
 
-$claim_stmt->execute();
-$claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
-while ($claim_stmt->fetch()) {
-    $claims[] = [
-        'item_id' => $item_id, 
-        'item_name' => $item_name, 
-        'claim_date' => $claim_date, 
-        'status' => $status
-    ];
-}
-$claim_stmt->close();
-
-// Fetch the user's posted missing items history or guest-specific missing items
+   // Fetch the user's posted missing items history
 $missing_items = [];
-if ($is_guest) {
-    // Fetch missing items for guest users using their session-based guest_id
-    $guest_id = $_SESSION['user_id'];
-    $missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE guest_id = ?");
-    $missing_stmt->bind_param("s", $guest_id); // guest_id is a string
-} else {
-    // Fetch missing items for regular users
-    $missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
-    $missing_stmt->bind_param("i", $user_id);
-}
-
+$missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
+$missing_stmt->bind_param("i", $user_id);
 $missing_stmt->execute();
 $missing_stmt->bind_result($title, $time_missing, $status);
 while ($missing_stmt->fetch()) {
@@ -108,29 +84,21 @@ while ($missing_stmt->fetch()) {
 }
 $missing_stmt->close();
 
-// Fetch the user's posted found items or guest-specific found items
-$message_history = [];
-if ($is_guest) {
-    // Fetch found items for guest users using their session-based guest_id
-    $guest_id = $_SESSION['user_id'];
-    $message_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE guest_id = ?");
-    $message_stmt->bind_param("s", $guest_id); // guest_id is a string
-} else {
-    // Fetch found items for regular users
-    $message_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE user_id = ?");
-    $message_stmt->bind_param("i", $user_id);
-}
 
+$message_history = []; // Change $posts to $message_history
+$message_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE user_id = ?");
+$message_stmt->bind_param("i", $user_id);
 $message_stmt->execute();
 $message_stmt->bind_result($title, $time_found, $status);
 while ($message_stmt->fetch()) {
-    $message_history[] = [
+    $message_history[] = [ // Update here too
         'title' => $title, 
         'time_found' => $time_found,
         'status' => $status
     ];
 }
 $message_stmt->close();
+}
 ?>
 
 <!DOCTYPE html>
@@ -383,7 +351,166 @@ $message_stmt->close();
 
     <!-- Show tab content only for non-guest users -->
     <div class="tab-content">
-        <!-- Existing tab content for non-guest users -->
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <ul class="list-group mb-3">
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Course:</strong>
+                    <span><?= htmlspecialchars($course ?? '') ?></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Year:</strong>
+                    <span><?= htmlspecialchars($year ?? '') ?></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Section:</strong>
+                    <span><?= htmlspecialchars($section ?? '') ?></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>Email:</strong>
+                    <span><?= htmlspecialchars($email ?? '') ?></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <strong>College:</strong>
+                    <span><?= htmlspecialchars($college ?? '') ?></span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <h5 class="history-title">Claim History</h5>
+            <table class="table table-striped claim-history-table">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Date Claimed</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($claims as $claim): ?>
+                        <tr>
+                            <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
+                            <td><?= htmlspecialchars($claim['claim_date']) ?></td>
+                            <td class="<?= $claim['status'] == 'Approved' ? 'status-approved' : '' ?>">
+                                <?= htmlspecialchars($claim['status']) ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+            <h5 class="history-title">Posted Found Items</h5>
+            <table class="table table-striped post-history-table">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Date Posted</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($message_history as $message): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($message['title']) ?></td>
+                            <td><?= htmlspecialchars($message['time_found']) ?></td>
+                            <td>
+                                <?php
+                                    $statusClass = ''; // Initialize the class for the status badge
+                                    if ($message['status'] == 0) {
+                                        $statusClass = 'badge-pending';
+                                    } elseif ($message['status'] == 1) {
+                                        $statusClass = 'badge-published';
+                                    } elseif ($message['status'] == 2) {
+                                        $statusClass = 'badge-claimed';
+                                    } elseif ($message['status'] == 3) {
+                                        $statusClass = 'badge-surrendered';
+                                    }
+                                ?>
+                                <span class="badge-status <?= $statusClass ?>">
+                                    <?php
+                                        if ($message['status'] == 0) {
+                                            echo 'Pending';
+                                        } elseif ($message['status'] == 1) {
+                                            echo 'Published';
+                                        } elseif ($message['status'] == 2) {
+                                            echo 'Claimed';
+                                        } elseif ($message['status'] == 3) {
+                                            echo 'Surrendered';
+                                        } else {
+                                            echo 'Unknown Status'; // Optional fallback
+                                        }
+                                    ?>
+                                </span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
+            <h5 class="history-title">Posted Missing Items</h5>
+            <table class="table table-striped post-history-table">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Date Missing</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($missing_items as $missing_item): ?>
+    <tr>
+        <td><?= htmlspecialchars($missing_item['title']) ?></td>
+        <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
+        <td>
+            <?php
+                $statusClass = ''; // Initialize the class for the status badge
+                $showNotification = false; // Flag to show notification icon
+
+                if ($missing_item['status'] == 0) {
+                    $statusClass = 'badge-pending';
+                } elseif ($missing_item['status'] == 1) {
+                    $statusClass = 'badge-published';
+                } elseif ($missing_item['status'] == 2) {
+                    $statusClass = 'badge-claimed';
+                } elseif ($missing_item['status'] == 3) {
+                    $statusClass = 'badge-surrendered';
+                    $showNotification = true; // Show notification icon only for surrendered items
+                }
+            ?>
+            <span class="badge-status <?= $statusClass ?>">
+                <?php
+                    if ($missing_item['status'] == 0) {
+                        echo 'Pending';
+                    } elseif ($missing_item['status'] == 1) {
+                        echo 'Published';
+                    } elseif ($missing_item['status'] == 2) {
+                        echo 'Claimed';
+                    } elseif ($missing_item['status'] == 3) {
+                        echo 'Surrendered';
+                    } else {
+                        echo 'Unknown Status'; // Optional fallback
+                    }
+                ?>
+            </span>
+
+            <!-- Add notification icon if the item is surrendered -->
+            <?php if ($showNotification): ?>
+                <i class="bi bi-bell-fill notification-icon" 
+                   onclick="showSurrenderNotification('<?= htmlspecialchars($missing_item['title']) ?>')"
+                   style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
+            <?php endif; ?>
+        </td>
+    </tr>
+<?php endforeach; ?>
+
+
+                </tbody>
+            </table>
+        </div>
     </div>
 <?php endif; ?>
 
