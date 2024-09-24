@@ -316,7 +316,7 @@ if (!$is_guest) {
                                         <div class="text-center">
                                             <h5 class="card-title">Guest Dashboard</h5>
                                             <p class="text-muted">Guest access is limited. Please register to access full features.</p>
-                                            <a href="../logout.php" class="btn btn-danger">Logout</a>
+                                            <a href="https://ramonianlostgems.com" class="btn btn-green">Back</a>
                                         </div>
                                     <?php else: ?>
                                         <!-- Show the dashboard only for regular users -->
