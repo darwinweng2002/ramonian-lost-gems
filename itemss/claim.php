@@ -190,52 +190,23 @@ $claimantData = $claimantResult->fetch_assoc();
     </form>
 </div>
 
-<!-- SweetAlert2 script for form submission and reset fields -->
+<!-- SweetAlert2 script for form submission -->
 <script>
     document.getElementById('claimForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission behavior
+        e.preventDefault();
 
-        // FormData object to gather form data
-        let formData = new FormData(e.target);
-
-        // Sending data using Fetch API
-        fetch('submit_claim.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json()) // Assuming your PHP returns a JSON response
-        .then(data => {
-            if (data.success) { // Success case from server
-                Swal.fire({
-                    title: 'Claim Submitted!',
-                    text: 'Your claim has been submitted successfully.',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then(function() {
-                    // Clear the form fields after submission
-                    document.getElementById('claimForm').reset();
-                });
-            } else {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'There was an issue with your submission. Please try again.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({
-                title: 'Error!',
-                text: 'Something went wrong. Please try again.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
+        // Assuming form is valid
+        Swal.fire({
+            title: 'Claim Submitted!',
+            text: 'Your claim has been submitted successfully.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then(function() {
+            // Proceed with form submission
+            e.target.submit();
         });
     });
 </script>
-
 <?php require_once('../inc/footer.php') ?>
 </body>
 </html>
