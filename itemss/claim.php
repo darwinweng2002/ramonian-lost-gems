@@ -54,38 +54,47 @@ $claimantData = $claimantResult->fetch_assoc();
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9f9f9;
+            font-family: 'Helvetica', Arial, sans-serif;
+            background-color: #f0f0f0;
             padding-top: 70px;
             margin: 0;
         }
         .container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
         }
         h1, h3 {
             color: #333;
             text-align: center;
+            font-weight: normal;
+            margin-bottom: 20px;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         .form-group label {
-            font-weight: bold;
-            margin-bottom: 5px;
             display: block;
-            color: #333;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+            color: #555;
         }
         .form-group input, .form-group textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
             font-size: 1rem;
+            background-color: #fafafa;
+            color: #333;
+            transition: border-color 0.3s ease;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #007bff;
+            outline: none;
         }
         .submit-btn {
             width: 100%;
@@ -93,7 +102,7 @@ $claimantData = $claimantResult->fetch_assoc();
             background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             font-size: 1rem;
             cursor: pointer;
             text-align: center;
@@ -102,8 +111,9 @@ $claimantData = $claimantResult->fetch_assoc();
             background-color: #0056b3;
         }
         .info-section p {
-            font-size: 0.95rem;
-            color: #555;
+            font-size: 1rem;
+            color: #444;
+            margin-bottom: 10px;
         }
         .info-section strong {
             color: #000;
@@ -118,14 +128,14 @@ $claimantData = $claimantResult->fetch_assoc();
     <h3>Item Information</h3>
     <?php if ($itemData) : ?>
         <div class="info-section">
-            <p><strong>Item Name:</strong> <?= htmlspecialchars($itemData['title']); ?></p>
-            <p><strong>Category:</strong> <?= htmlspecialchars($itemData['category_name']); ?></p>
-            <p><strong>Found by:</strong> <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
-            <p><strong>Email:</strong> <?= htmlspecialchars($itemData['email']); ?></p>
-            <p><strong>Time Found:</strong> <?= htmlspecialchars($itemData['time_found']); ?></p>
-            <p><strong>Location Found:</strong> <?= htmlspecialchars($itemData['landmark']); ?></p>
-            <p><strong>Description:</strong> <?= htmlspecialchars($itemData['message']); ?></p>
-            <p><strong>Contact:</strong> <?= htmlspecialchars($itemData['contact']); ?></p>
+            <p>Item Name: <?= htmlspecialchars($itemData['title']); ?></p>
+            <p>Category: <?= htmlspecialchars($itemData['category_name']); ?></p>
+            <p>Found by: <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
+            <p>Email: <?= htmlspecialchars($itemData['email']); ?></p>
+            <p>Time Found: <?= htmlspecialchars($itemData['time_found']); ?></p>
+            <p>Location Found: <?= htmlspecialchars($itemData['landmark']); ?></p>
+            <p>Description: <?= htmlspecialchars($itemData['message']); ?></p>
+            <p>Contact: <?= htmlspecialchars($itemData['contact']); ?></p>
         </div>
     <?php else : ?>
         <p>Item not found or not published.</p>
@@ -134,11 +144,11 @@ $claimantData = $claimantResult->fetch_assoc();
     <!-- Display Claimant's Information -->
     <h3>Your Information</h3>
     <div class="info-section">
-        <p><strong>Name:</strong> <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
-        <p><strong>Email:</strong> <?= htmlspecialchars($claimantData['email']); ?></p>
-        <p><strong>College:</strong> <?= htmlspecialchars($claimantData['college']); ?></p>
-        <p><strong>Course:</strong> <?= htmlspecialchars($claimantData['course']); ?></p>
-        <p><strong>Year & Section:</strong> <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section']); ?></p>
+        <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
+        <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
+        <p>College: <?= htmlspecialchars($claimantData['college']); ?></p>
+        <p>Course: <?= htmlspecialchars($claimantData['course']); ?></p>
+        <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section']); ?></p>
     </div>
 
     <!-- Claim Form -->
