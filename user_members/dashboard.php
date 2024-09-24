@@ -295,7 +295,7 @@ if (!$is_guest) {
     .back-btn-container {
             margin: 20px 0;
             display: flex;
-            text-align: center;
+            justify-content: center;
         }
 
         .back-btn {
