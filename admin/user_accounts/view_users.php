@@ -192,7 +192,7 @@ $result = $conn->query($sql);
         <th>Course</th>
         <th>Year</th>
         <th>Section</th>
-        <th>Email</th> <!-- Adjusted Email Header -->
+        <th>Username</th> <!-- Adjusted Email Header -->
         <th>Actions</th> <!-- Adjusted Actions Header -->
     </tr>
 </thead>
