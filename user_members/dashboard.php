@@ -325,7 +325,10 @@ if (!$is_guest) {
             outline: none;
             box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
         }
-   
+        .table {
+    width: 100%;
+    table-layout: auto; /* Ensure the table takes full width and adjusts to content */
+}
     </style>
 </head>
 <body>
