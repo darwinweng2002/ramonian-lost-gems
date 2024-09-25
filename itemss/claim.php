@@ -1,23 +1,88 @@
 <?php
 include '../config.php';
 
-// Check if user is logged in (guest users can't access this page)
+// Check if the user is logged in (guest users can't access this page)
 if (!isset($_SESSION['user_id'])) {
-    // Redirect guest users to the login page
     header('Location: login.php');
     exit();
 }
 
-// Fetch the user's information from the database
+// Fetch the user's information to determine if they are a guest
 $user_id = $_SESSION['user_id'];
 
 // Check if the user is a guest by determining if their user_id starts with 'guest_'
 $is_guest = (strpos($user_id, 'guest_') === 0);
 
-// If the user is a guest, redirect to the login page
+// If the user is a guest, display the restricted access message and prevent access to the claim page
 if ($is_guest) {
-    header('Location: login.php');
-    exit();
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Guest Dashboard</title>
+        <style>
+            body {
+                font-family: 'Helvetica', Arial, sans-serif;
+                background-color: #f0f0f0;
+                padding-top: 70px;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+            .container {
+                max-width: 400px;
+                background-color: #ffffff;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                border-radius: 10px;
+                text-align: center;
+                padding: 20px;
+            }
+            .container img {
+                width: 50px;
+                margin-bottom: 20px;
+            }
+            h1 {
+                color: #333;
+                font-weight: normal;
+                margin-bottom: 10px;
+            }
+            p {
+                color: #666;
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+            .back-btn {
+                padding: 10px 20px;
+                background-color: #007BFF;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                font-size: 1rem;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+            }
+            .back-btn:hover {
+                background-color: #0056b3;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <img src="path/to/logo.png" alt="Logo">
+            <h1>Guest Dashboard</h1>
+            <p>Guest access is limited. Please register to access full features.</p>
+            <a href="javascript:history.back()" class="back-btn">Back</a>
+        </div>
+    </body>
+    </html>
+    <?php
+    exit(); // Stop further execution for guest users
 }
 
 // Database connection
