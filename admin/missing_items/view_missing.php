@@ -16,7 +16,7 @@ if (isset($_GET['id'])) {
     $itemId = $_GET['id'];
 
     // SQL query to get missing item details and associated images
-    $sql = "SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, um.first_name, um.college, um.email, um.avatar, c.name AS category_name, imi.image_path
+    $sql = "SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, mi.owner, um.first_name, um.college, um.email, um.avatar, c.name AS category_name, imi.image_path
             FROM missing_items mi
             LEFT JOIN user_member um ON mi.user_id = um.id
             LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
@@ -131,6 +131,7 @@ if (isset($_GET['id'])) {
                     $items[$row['id']] = [
                         'description' => $row['description'],
                         'last_seen_location' => $row['last_seen_location'],
+                        'owner' => $row['owner'],
                         'time_missing' => $row['time_missing'],
                         'title' => $row['title'],
                         'status' => $row['status'],
@@ -156,6 +157,7 @@ if (isset($_GET['id'])) {
                 $title = htmlspecialchars($itemData['title'] ?? '');
                 $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
                 $description = htmlspecialchars($itemData['description'] ?? '');
+                $owner = htmlspecialchars($itemData['owner'] ?? '');
                 $avatar = htmlspecialchars($itemData['avatar'] ?? '');
                 $timeMissing = htmlspecialchars($itemData['time_missing'] ?? '');
                 $contact = htmlspecialchars($itemData['contact'] ?? '');
@@ -171,8 +173,9 @@ if (isset($_GET['id'])) {
                     echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
 
-                echo "<p><strong>Title Name:</strong> " . $title . "</p>";
-                echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
+                echo "<p><strong>Item Name:</strong> " . $title . "</p>";
+                echo "<p><strong>Owner Name:</strong> " . $owner . "</p>";
+                echo "<p><strong>User Name:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
                 echo "<p><strong>Date and time the item was lost:</strong> " . $timeMissing . "</p>";

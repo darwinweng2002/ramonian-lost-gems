@@ -19,7 +19,7 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get missing item details and associated images
-$sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi.title, mi.status, um.first_name, um.college, um.email, um.avatar, mi.contact, c.name as category_name, imi.image_path
+$sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi.title, mi.status, mi.owner, um.first_name, um.college, um.email, um.avatar, mi.contact, c.name as category_name, imi.image_path
         FROM missing_items mi
         LEFT JOIN user_member um ON mi.user_id = um.id
         LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
@@ -165,6 +165,7 @@ $result = $stmt->get_result();
                 if (!isset($items[$row['id']])) {
                     $items[$row['id']] = [
                         'description' => $row['description'],
+                        'owner' => $row['owner'],
                         'last_seen_location' => $row['last_seen_location'],
                         'time_missing' => $row['time_missing'],
                         'title' => $row['title'],
@@ -192,6 +193,7 @@ $result = $stmt->get_result();
                 $title = htmlspecialchars($itemData['title'] ?? '');
                 $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
                 $description = htmlspecialchars($itemData['description'] ?? '');
+                $owner = htmlspecialchars($itemData['owner'] ?? '');
                 $avatar = htmlspecialchars($itemData['avatar'] ?? '');
                 $timeMissing = htmlspecialchars($itemData['time_missing'] ?? ''); // Fetch date and time
                 $contact = htmlspecialchars($itemData['contact'] ?? '');
@@ -200,22 +202,32 @@ $result = $stmt->get_result();
 
                 echo "<div class='message-box'>";
                 
-                if ($avatar) {
-                    $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
-                    echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
+                if ($firstName || $email || $college) {
+                    if ($avatar) {
+                        $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
+                        echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
+                    } else {
+                        echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                    }
                 } else {
-                    echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                    echo "<p><strong>User Info:</strong> Guest User</p>"; // Indicate that the post is from a guest
                 }
                 
-                echo "<p><strong>Title Name:</strong> " . $title . "</p>";
-                echo "<p><strong>Founder Name:</strong> " . $firstName . " (" . $email . ")</p>";
-                echo "<p><strong>College:</strong> " . $college . "</p>";
+                echo "<p><strong>Item Name:</strong> " . $title . "</p>";
+                echo "<p><strong>Owner's Name:</strong> " . $owner . "</p>";
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
                 echo "<p><strong>Date and time the item was lost.</strong> " . $timeMissing . "</p>"; // Display date and time
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
-
+                
+                if ($firstName || $email || $college) {
+                    echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
+                    echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
+                } else {
+                    // No additional user info for guest posts
+                    
+                }
                 // Add Status Display using the new status indicator code
                 echo "<dt class='text-muted'>Status</dt>";
                 echo "<dd class='ps-4'>";

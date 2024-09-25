@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
 // SQL query to fetch reported items, with search functionality
-$sql = "SELECT mi.id, mi.title, um.first_name, um.college, mi.time_missing, c.name AS category
+$sql = "SELECT mi.id, mi.title, mi.owner, um.first_name, um.college, mi.time_missing, c.name AS category
         FROM missing_items mi
         LEFT JOIN user_member um ON mi.user_id = um.id
         LEFT JOIN categories c ON mi.category_id = c.id
@@ -187,6 +187,7 @@ $result = $conn->query($sql);
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Owner's Name</th>
                         <th>Item Name</th>
                         <th>User</th>
                         <th>College</th>
