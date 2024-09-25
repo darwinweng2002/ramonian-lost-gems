@@ -26,7 +26,7 @@ $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Query for item data
 $sql = "SELECT mh.id, mh.title, mh.message, mh.landmark, mh.time_found, mh.contact, 
-        mh.user_id AS finder_id, um.first_name, um.last_name, um.email, um.college, c.name AS category_name
+        mh.user_id AS founder, um.first_name, um.last_name, um.email, um.college, c.name AS category_name
         FROM message_history mh
         LEFT JOIN user_member um ON mh.user_id = um.id
         LEFT JOIN categories c ON mh.category_id = c.id
@@ -201,7 +201,7 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
         <div class="info-section">
             <p><strong>Item Name:</strong> <?= htmlspecialchars($itemData['title']); ?></p>
             <p><strong>Category:</strong> <?= htmlspecialchars($itemData['category_name']); ?></p>
-            <p><strong>Found by:</strong> <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
+            <p><strong>Found by:</strong> <?= htmlspecialchars($itemData['finder_id'] . ' ' . $itemData['last_name']); ?></p>
             <p><strong>Time Found:</strong> <?= htmlspecialchars($itemData['time_found']); ?></p>
             <p><strong>Location Found:</strong> <?= htmlspecialchars($itemData['landmark']); ?></p>
             <p><strong>Description:</strong> <?= htmlspecialchars($itemData['message']); ?></p>
