@@ -231,21 +231,26 @@ echo "<a href='$imagePath' data-lightbox='item-images'><img src='$imagePath' alt
 
 <!-- SweetAlert2 script for form submission -->
 <script>
-    document.getElementById('claimForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    document.getElementById('claimForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent the form from submitting the traditional way
+        const form = e.target;
 
-        // Assuming form is valid
+        // Display SweetAlert success message
         Swal.fire({
             title: 'Claim Submitted!',
             text: 'Your claim has been submitted successfully.',
             icon: 'success',
             confirmButtonText: 'OK'
-        }).then(function() {
-            // Proceed with form submission
-            e.target.submit();
+        }).then(function () {
+            // After clicking 'OK', reset the form
+            form.reset(); // Reset the form fields
+            
+            // Optionally, you can manually redirect the user if needed
+            // window.location.href = 'some_page.php'; // Replace with the desired page
         });
     });
 </script>
+
 <?php require_once('../inc/footer.php') ?>
 </body>
 </html>
