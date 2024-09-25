@@ -20,7 +20,7 @@ $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Query for item data
 $sql = "SELECT mh.id, mh.title, mh.message, mh.landmark, mh.time_found, mh.contact, 
-        um.first_name, um.last_name, um.email, um.college, c.name AS category_name
+        mh.user_id AS finder_id, um.first_name, um.last_name, um.email, um.college, c.name AS category_name
         FROM message_history mh
         LEFT JOIN user_member um ON mh.user_id = um.id
         LEFT JOIN categories c ON mh.category_id = c.id
@@ -40,6 +40,9 @@ $stmtClaimant->bind_param('i', $claimantId);
 $stmtClaimant->execute();
 $claimantResult = $stmtClaimant->get_result();
 $claimantData = $claimantResult->fetch_assoc();
+
+// Check if the claimer (logged-in user) is the same as the finder
+$isFinder = ($itemData['finder_id'] == $claimantId);
 ?>
 
 <!DOCTYPE html>
@@ -118,6 +121,13 @@ $claimantData = $claimantResult->fetch_assoc();
         .info-section strong {
             color: #000;
         }
+        .disabled-msg {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -132,7 +142,7 @@ $claimantData = $claimantResult->fetch_assoc();
             <p>Item Name: <?= htmlspecialchars($itemData['title']); ?></p>
             <p>Category: <?= htmlspecialchars($itemData['category_name']); ?></p>
             <p>Found by: <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
-            <p>Email: <?= htmlspecialchars($itemData['email']); ?></p>
+            <p>Username: <?= htmlspecialchars($itemData['email']); ?></p>
             <p>Time Found: <?= htmlspecialchars($itemData['time_found']); ?></p>
             <p>Location Found: <?= htmlspecialchars($itemData['landmark']); ?></p>
             <p>Description: <?= htmlspecialchars($itemData['message']); ?></p>
@@ -146,48 +156,55 @@ $claimantData = $claimantResult->fetch_assoc();
     <h3>Your Information</h3>
     <div class="info-section">
         <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
-        <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
+        <p>Username: <?= htmlspecialchars($claimantData['email']); ?></p>
         <p>College: <?= htmlspecialchars($claimantData['college']); ?></p>
         <p>Course: <?= htmlspecialchars($claimantData['course']); ?></p>
         <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section']); ?></p>
     </div>
 
-    <!-- Claim Form -->
-    <form id="claimForm" action="submit_claim.php" method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="item_id" value="<?= $itemId; ?>">
-
-        <div class="form-group">
-            <label for="item_description">Describe the item (e.g., color, model, size, etc.):</label>
-            <textarea id="item_description" name="item_description" required></textarea>
+    <!-- Disable form if the claimer is the finder -->
+    <?php if ($isFinder): ?>
+        <div class="disabled-msg">
+            <strong>Note:</strong> You cannot claim your own posted item.
         </div>
+    <?php else: ?>
+        <!-- Claim Form -->
+        <form id="claimForm" action="submit_claim.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="item_id" value="<?= $itemId; ?>">
 
-        <div class="form-group">
-            <label for="date_lost">When did you lose the item?</label>
-            <input type="date" id="date_lost" name="date_lost" required>
-        </div>
+            <div class="form-group">
+                <label for="item_description">Describe the item (e.g., color, model, size, etc.):</label>
+                <textarea id="item_description" name="item_description" required></textarea>
+            </div>
 
-        <div class="form-group">
-            <label for="location_lost">Where did you lose the item?</label>
-            <input type="text" id="location_lost" name="location_lost" required>
-        </div>
+            <div class="form-group">
+                <label for="date_lost">When did you lose the item?</label>
+                <input type="date" id="date_lost" name="date_lost" required>
+            </div>
 
-        <div class="form-group">
-            <label for="proof_of_ownership">Upload proof of ownership (e.g., receipt, serial number, photo):</label>
-            <input type="file" id="proof_of_ownership" name="proof_of_ownership" accept="image/*,application/pdf">
-        </div>
+            <div class="form-group">
+                <label for="location_lost">Where did you lose the item?</label>
+                <input type="text" id="location_lost" name="location_lost" required>
+            </div>
 
-        <div class="form-group">
-            <label for="security_question">Security Question (e.g., contents in the pocket):</label>
-            <input type="text" id="security_question" name="security_question" required>
-        </div>
+            <div class="form-group">
+                <label for="proof_of_ownership">Upload proof of ownership (e.g., receipt, serial number, photo):</label>
+                <input type="file" id="proof_of_ownership" name="proof_of_ownership" accept="image/*,application/pdf">
+            </div>
 
-        <div class="form-group">
-            <label for="personal_id">Upload your ID (student card, national ID, etc.):</label>
-            <input type="file" id="personal_id" name="personal_id" accept="image/*,application/pdf" required>
-        </div>
+            <div class="form-group">
+                <label for="security_question">Security Question (e.g., contents in the pocket):</label>
+                <input type="text" id="security_question" name="security_question" required>
+            </div>
 
-        <button type="submit" class="submit-btn">Submit Claim</button>
-    </form>
+            <div class="form-group">
+                <label for="personal_id">Upload your ID (student card, national ID, etc.):</label>
+                <input type="file" id="personal_id" name="personal_id" accept="image/*,application/pdf" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Claim</button>
+        </form>
+    <?php endif; ?>
 </div>
 
 <!-- SweetAlert2 script for form submission -->
