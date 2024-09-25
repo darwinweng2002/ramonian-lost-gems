@@ -155,17 +155,17 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
         <!-- Display Item Images -->
         <div class="item-images">
             <h3>Item Images:</h3>
-            <?php 
-            if (!empty($itemData['image_paths'])) {
-                $images = explode(',', $itemData['image_paths']);
-                foreach ($images as $image) {
-                    $imagePath = 'uploads/items/' . htmlspecialchars($image); // Adjust the path as needed
-                    echo "<a href='$imagePath' data-lightbox='item-images'><img src='$imagePath' alt='Item Image' style='max-width: 150px; margin-right: 10px;'></a>";
-                }
-            } else {
-                echo "<p>No images available for this item.</p>";
-            }
-            ?>
+            <?php
+// Example debug: print image path in full
+$imagePath = 'uploads/items/' . htmlspecialchars($image);
+if (file_exists($imagePath)) {
+    echo "<p>Debug: Image exists at: " . $imagePath . "</p>"; // Debug statement
+} else {
+    echo "<p>Debug: Image does NOT exist at: " . $imagePath . "</p>"; // Debug statement
+}
+echo "<a href='$imagePath' data-lightbox='item-images'><img src='$imagePath' alt='Item Image'></a>";
+?>
+
         </div>
     </div>
 <?php else : ?>
