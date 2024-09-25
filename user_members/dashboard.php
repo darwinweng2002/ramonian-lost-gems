@@ -257,6 +257,9 @@ if (!$is_guest) {
     display: inline-flex;
     align-items: center; /* Align text and icon properly */
     justify-content: space-between;
+    min-width: 80px;
+    line-height: 1.5;  /* Ensures consistent vertical alignment */
+    white-space: nowrap;  /* Prevents text from wrapping */
 }
 
 .badge-pending {
