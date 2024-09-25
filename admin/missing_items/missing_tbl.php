@@ -201,6 +201,7 @@ $result = $conn->query($sql);
                         <?php while($row = $result->fetch_assoc()): ?>
                             <tr>
                                 <td><?= htmlspecialchars($row['id']) ?></td>
+                                <td><?= htmlspecialchars($row['owner']) ?></td>
                                 <td><?= htmlspecialchars($row['title']) ?></td>
                                 <td><?= htmlspecialchars($row['first_name']) ?></td>
                                 <td><?= htmlspecialchars($row['college']) ?></td>
