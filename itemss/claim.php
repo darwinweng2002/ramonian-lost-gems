@@ -158,6 +158,20 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
     <!-- Display Item Information -->
     <h3>Item Information</h3>
     <?php if ($itemData) : ?>
+        <?php while ($row = $result->fetch_assoc()): ?>
+                <p><strong>Item Name:</strong> <?= htmlspecialchars($row['item_name']); ?></p>
+                <?php
+                if (!empty($row['image_paths'])) {
+                    $images = explode(',', $row['image_paths']);
+                    echo "<p><strong>Images:</strong></p>";
+                    echo "<div class='image-grid'>";
+                    foreach ($images as $image) {
+                        $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($image);
+                        echo "<a href='" . $fullImagePath . "' data-lightbox='claim-" . htmlspecialchars($claimId) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Claim Image'></a>";
+                    }
+                    echo "</div>";
+                }
+                ?>
     <div class="info-section">
         <p><strong>Item Name:</strong> <?= htmlspecialchars($itemData['title']); ?></p>
         <p><strong>Category:</strong> <?= htmlspecialchars($itemData['category_name']); ?></p>
