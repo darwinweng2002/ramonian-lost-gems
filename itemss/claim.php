@@ -182,7 +182,10 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
     <?php if ($is_guest): ?>
         <!-- Guest Restriction Message -->
         <div class="guest-container">
-            <img src="path/to/logo.png" alt="Logo">
+        <a href="#" class="logo d-flex align-items-center w-auto">
+                                    <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
+                                    <span class="d-none d-lg-block text-center"><?= $_settings->info('name') ?></span>
+                                </a>
             <h1>Guest Dashboard</h1>
             <p>Guest access is limited. Please register to access full features.</p>
             <a href="javascript:history.back()" class="back-btn">Back</a>
