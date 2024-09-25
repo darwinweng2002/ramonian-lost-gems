@@ -201,7 +201,7 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
         <div class="info-section">
             <p><strong>Item Name:</strong> <?= htmlspecialchars($itemData['title']); ?></p>
             <p><strong>Category:</strong> <?= htmlspecialchars($itemData['category_name']); ?></p>
-            <p><strong>Found by:</strong> <?= htmlspecialchars($itemData['finder_id'] . ' ' . $itemData['last_name']); ?></p>
+            <p><strong>Found by:</strong> <?= htmlspecialchars($itemData['founder'] . ' ' . $itemData['last_name']); ?></p>
             <p><strong>Time Found:</strong> <?= htmlspecialchars($itemData['time_found']); ?></p>
             <p><strong>Location Found:</strong> <?= htmlspecialchars($itemData['landmark']); ?></p>
             <p><strong>Description:</strong> <?= htmlspecialchars($itemData['message']); ?></p>
