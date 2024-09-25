@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $contact = isset($_POST['contact']) ? $_POST['contact'] : '';
     $category_id = $_POST['category_id'];
     $new_category = $_POST['new_category'];
+    $owner = $_POST['owner'];
 
     // Check if category_id is set to add new category
     if ($category_id == 'add_new' && !empty($new_category)) {
@@ -36,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $uploadedFiles = [];
 
     // Prepare and execute the SQL statement
-    $sql = "INSERT INTO missing_items (user_id, title, description, last_seen_location, time_missing, contact, category_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO missing_items (user_id, title, description, last_seen_location, time_missing, contact, category_id, status, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isssssis", $userId, $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status);
+    $stmt->bind_param("isssssis", $userId, $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
     $stmt->execute();
     $missingItemId = $stmt->insert_id;
     $stmt->close();
@@ -229,6 +230,8 @@ if (isset($_SESSION['user_id'])) {
         <?php endif; ?>
 
         <form action="send_missing.php" method="post" enctype="multipart/form-data" class="message-form">
+        <label for="owner_name">Owner's Name:</label>
+        <input type="text" name="owner_name" id="owner_name" placeholder="Enter the owner's name" required>
             <label for="title">Item Name:</label>
             <input type="text" name="title" id="title" placeholder="Enter item name" required>
             <label for="category">Category:</label>
