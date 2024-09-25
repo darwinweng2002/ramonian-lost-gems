@@ -484,7 +484,7 @@ if (!$is_guest) {
                             }
                         ?>
                         <span class="badge-status <?= $statusClass ?>">
-                            <?= $statusClass === 'badge-surrendered' ? 'Surrendered' : 'Unknown Status'; ?>
+                            <?= $statusClass === 'badge-surrendered' ? 'Surrendered' : ?>
                         </span>
 
                         <!-- Add notification icon if the item is surrendered -->
