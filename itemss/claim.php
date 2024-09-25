@@ -26,7 +26,7 @@ $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Query for item data
 $sql = "SELECT mh.id, mh.title, mh.message, mh.landmark, mh.time_found, mh.contact, 
-        mh.user_id AS founder, um.first_name, um.last_name, um.email, um.college, c.name AS category_name
+         founder, um.first_name, um.last_name, um.email, um.college, c.name AS category_name
         FROM message_history mh
         LEFT JOIN user_member um ON mh.user_id = um.id
         LEFT JOIN categories c ON mh.category_id = c.id
