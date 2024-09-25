@@ -1,8 +1,9 @@
 <?php
 include '../config.php';
 
-// Check if user is logged in
+// Check if user is logged in (guest users can't access this page)
 if (!isset($_SESSION['user_id'])) {
+    // Redirect guest users to the login page
     header('Location: login.php');
     exit();
 }
@@ -19,16 +20,12 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Query for item data
-// Query for item data including images
 $sql = "SELECT mh.id, mh.title, mh.message, mh.landmark, mh.time_found, mh.contact, 
-        mh.user_id AS finder_id, um.first_name, um.last_name, um.email, um.college, c.name AS category_name,
-        GROUP_CONCAT(mi.image_path) AS image_paths
+        mh.user_id AS finder_id, um.first_name, um.last_name, um.email, um.college, c.name AS category_name
         FROM message_history mh
         LEFT JOIN user_member um ON mh.user_id = um.id
         LEFT JOIN categories c ON mh.category_id = c.id
-        LEFT JOIN message_images mi ON mh.id = mi.message_id
-        WHERE mh.id = ? AND mh.is_published = 1
-        GROUP BY mh.id";
+        WHERE mh.id = ? AND mh.is_published = 1";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
@@ -134,20 +131,6 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
             text-align: center;
             border: 1px solid #f5c6cb;
         }
-        .item-images img {
-            max-width: 100px;
-            margin-right: 10px;
-            border-radius: 5px;
-            transition: transform 0.3s ease;
-        }
-        .item-images img:hover {
-            transform: scale(1.1);
-        }
-        .item-images {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
     </style>
 </head>
 <body>
@@ -166,22 +149,6 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
         <p><strong>Location Found:</strong> <?= htmlspecialchars($itemData['landmark']); ?></p>
         <p><strong>Description:</strong> <?= htmlspecialchars($itemData['message']); ?></p>
         <p><strong>Contact:</strong> <?= htmlspecialchars($itemData['contact']); ?></p>
-
-        <!-- Display Item Images -->
-        <div class="item-images">
-            <h3>Item Images:</h3>
-            <?php
-            $imagePaths = explode(',', $itemData['image_paths']);
-            foreach ($imagePaths as $image) {
-                $imagePath = base_url . 'uploads/items/' . htmlspecialchars($image);
-                if (file_exists($imagePath)) {
-                    echo "<a href='$imagePath' data-lightbox='item-images'><img src='$imagePath' alt='Item Image'></a>";
-                } else {
-                    echo "<p>Image not available.</p>";
-                }
-            }
-            ?>
-        </div>
     </div>
 <?php else : ?>
     <p>Item not found or not published.</p>
