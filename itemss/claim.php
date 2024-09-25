@@ -1,7 +1,7 @@
 <?php
 include '../config.php';
 
-// Check if the user is logged in (guest users can't access this page)
+// Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
@@ -12,78 +12,6 @@ $user_id = $_SESSION['user_id'];
 
 // Check if the user is a guest by determining if their user_id starts with 'guest_'
 $is_guest = (strpos($user_id, 'guest_') === 0);
-
-// If the user is a guest, display the restricted access message and prevent access to the claim page
-if ($is_guest) {
-    ?>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Guest Dashboard</title>
-        <style>
-            body {
-                font-family: 'Helvetica', Arial, sans-serif;
-                background-color: #f0f0f0;
-                padding-top: 70px;
-                margin: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-            }
-            .container {
-                max-width: 400px;
-                background-color: #ffffff;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-                border-radius: 10px;
-                text-align: center;
-                padding: 20px;
-            }
-            .container img {
-                width: 50px;
-                margin-bottom: 20px;
-            }
-            h1 {
-                color: #333;
-                font-weight: normal;
-                margin-bottom: 10px;
-            }
-            p {
-                color: #666;
-                font-size: 1rem;
-                margin-bottom: 20px;
-            }
-            .back-btn {
-                padding: 10px 20px;
-                background-color: #007BFF;
-                color: white;
-                border: none;
-                border-radius: 6px;
-                font-size: 1rem;
-                cursor: pointer;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-            }
-            .back-btn:hover {
-                background-color: #0056b3;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <img src="path/to/logo.png" alt="Logo">
-            <h1>Guest Dashboard</h1>
-            <p>Guest access is limited. Please register to access full features.</p>
-            <a href="javascript:history.back()" class="back-btn">Back</a>
-        </div>
-    </body>
-    </html>
-    <?php
-    exit(); // Stop further execution for guest users
-}
 
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
@@ -208,81 +136,130 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
             text-align: center;
             border: 1px solid #f5c6cb;
         }
+        .guest-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+        .guest-container h1 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .guest-container p {
+            font-size: 1rem;
+            color: #666;
+        }
+        .guest-container img {
+            width: 50px;
+            margin-bottom: 20px;
+        }
+        .back-btn {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
 <?php require_once('../inc/topBarNav.php') ?>
+
 <div class="container">
-    <h1>Claim This Item</h1>
-
-    <!-- Display Item Information -->
-    <h3>Item Information</h3>
-    <?php if ($itemData) : ?>
-    <div class="info-section">
-        <p><strong>Item Name:</strong> <?= htmlspecialchars($itemData['title']); ?></p>
-        <p><strong>Category:</strong> <?= htmlspecialchars($itemData['category_name']); ?></p>
-        <p><strong>Found by:</strong> <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
-        <p><strong>Time Found:</strong> <?= htmlspecialchars($itemData['time_found']); ?></p>
-        <p><strong>Location Found:</strong> <?= htmlspecialchars($itemData['landmark']); ?></p>
-        <p><strong>Description:</strong> <?= htmlspecialchars($itemData['message']); ?></p>
-        <p><strong>Contact:</strong> <?= htmlspecialchars($itemData['contact']); ?></p>
-    </div>
-<?php else : ?>
-    <p>Item not found or not published.</p>
-<?php endif; ?>
-
-    <!-- Display Claimant's Information -->
-    <h3>Your Information</h3>
-    <div class="info-section">
-        <p><strong>Name:</strong> <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
-        <p><strong>Username:</strong> <?= htmlspecialchars($claimantData['email']); ?></p>
-        <p><strong>College:</strong> <?= htmlspecialchars($claimantData['college']); ?></p>
-        <p><strong>Course:</strong> <?= htmlspecialchars($claimantData['course']); ?></p>
-        <p><strong>Year & Section:</strong> <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section']); ?></p>
-    </div>
-
-    <!-- Disable form if the claimer is the finder -->
-    <?php if ($isFinder): ?>
-        <div class="disabled-msg">
-            <strong>Note:</strong> You cannot claim your own posted item.
+    <?php if ($is_guest): ?>
+        <!-- Guest Restriction Message -->
+        <div class="guest-container">
+            <img src="path/to/logo.png" alt="Logo">
+            <h1>Guest Dashboard</h1>
+            <p>Guest access is limited. Please register to access full features.</p>
+            <a href="javascript:history.back()" class="back-btn">Back</a>
         </div>
     <?php else: ?>
-        <!-- Claim Form -->
-        <form id="claimForm" action="submit_claim.php" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="item_id" value="<?= $itemId; ?>">
+        <!-- Claim Form for Regular Users -->
+        <h1>Claim This Item</h1>
 
-            <div class="form-group">
-                <label for="item_description">Describe the item (e.g., color, model, size, etc.):</label>
-                <textarea id="item_description" name="item_description" rows="4" required></textarea>
+        <!-- Display Item Information -->
+        <h3>Item Information</h3>
+        <?php if ($itemData) : ?>
+        <div class="info-section">
+            <p><strong>Item Name:</strong> <?= htmlspecialchars($itemData['title']); ?></p>
+            <p><strong>Category:</strong> <?= htmlspecialchars($itemData['category_name']); ?></p>
+            <p><strong>Found by:</strong> <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
+            <p><strong>Time Found:</strong> <?= htmlspecialchars($itemData['time_found']); ?></p>
+            <p><strong>Location Found:</strong> <?= htmlspecialchars($itemData['landmark']); ?></p>
+            <p><strong>Description:</strong> <?= htmlspecialchars($itemData['message']); ?></p>
+            <p><strong>Contact:</strong> <?= htmlspecialchars($itemData['contact']); ?></p>
+        </div>
+        <?php else : ?>
+            <p>Item not found or not published.</p>
+        <?php endif; ?>
+
+        <!-- Display Claimant's Information -->
+        <h3>Your Information</h3>
+        <div class="info-section">
+            <p><strong>Name:</strong> <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
+            <p><strong>Username:</strong> <?= htmlspecialchars($claimantData['email']); ?></p>
+            <p><strong>College:</strong> <?= htmlspecialchars($claimantData['college']); ?></p>
+            <p><strong>Course:</strong> <?= htmlspecialchars($claimantData['course']); ?></p>
+            <p><strong>Year & Section:</strong> <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section']); ?></p>
+        </div>
+
+        <!-- Disable form if the claimer is the finder -->
+        <?php if ($isFinder): ?>
+            <div class="disabled-msg">
+                <strong>Note:</strong> You cannot claim your own posted item.
             </div>
+        <?php else: ?>
+            <!-- Claim Form -->
+            <form id="claimForm" action="submit_claim.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="item_id" value="<?= $itemId; ?>">
 
-            <div class="form-group">
-                <label for="date_lost">When did you lose the item?</label>
-                <input type="date" id="date_lost" name="date_lost" required>
-            </div>
+                <div class="form-group">
+                    <label for="item_description">Describe the item (e.g., color, model, size, etc.):</label>
+                    <textarea id="item_description" name="item_description" rows="4" required></textarea>
+                </div>
 
-            <div class="form-group">
-                <label for="location_lost">Where did you lose the item?</label>
-                <input type="text" id="location_lost" name="location_lost" required>
-            </div>
+                <div class="form-group">
+                    <label for="date_lost">When did you lose the item?</label>
+                    <input type="date" id="date_lost" name="date_lost" required>
+                </div>
 
-            <div class="form-group">
-                <label for="proof_of_ownership">Upload proof of ownership (e.g., receipt, serial number, photo):</label>
-                <input type="file" id="proof_of_ownership" name="proof_of_ownership" accept="image/*,application/pdf">
-            </div>
+                <div class="form-group">
+                    <label for="location_lost">Where did you lose the item?</label>
+                    <input type="text" id="location_lost" name="location_lost" required>
+                </div>
 
-            <div class="form-group">
-                <label for="security_question">Security Question (e.g., contents in the pocket):</label>
-                <input type="text" id="security_question" name="security_question" required>
-            </div>
+                <div class="form-group">
+                    <label for="proof_of_ownership">Upload proof of ownership (e.g., receipt, serial number, photo):</label>
+                    <input type="file" id="proof_of_ownership" name="proof_of_ownership" accept="image/*,application/pdf">
+                </div>
 
-            <div class="form-group">
-                <label for="personal_id">Upload your ID (student card, national ID, etc.):</label>
-                <input type="file" id="personal_id" name="personal_id" accept="image/*,application/pdf" required>
-            </div>
+                <div class="form-group">
+                    <label for="security_question">Security Question (e.g., contents in the pocket):</label>
+                    <input type="text" id="security_question" name="security_question" required>
+                </div>
 
-            <button type="submit" class="submit-btn">Submit Claim</button>
-        </form>
+                <div class="form-group">
+                    <label for="personal_id">Upload your ID (student card, national ID, etc.):</label>
+                    <input type="file" id="personal_id" name="personal_id" accept="image/*,application/pdf" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Claim</button>
+            </form>
+        <?php endif; ?>
     <?php endif; ?>
 </div>
 
