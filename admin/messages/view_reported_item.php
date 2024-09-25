@@ -179,7 +179,7 @@ if ($message_id > 0) {
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>"; 
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>"; 
-                echo "<p><strong>Founder:</strong> " . $founder . "</p>";
+                echo "<p><strong>Finder's Name:</strong> " . $founder . "</p>";
                 echo "<p><strong>Time Found:</strong> " . $timeFound . "</p>";
 
                 // Status dropdown and status badge display

@@ -90,7 +90,7 @@ $result = $conn->query($sql);
                     <th>User</th>
                     <th>College</th>
                     <th>Category</th>
-                    <th>Founder</th>  <!-- Display Category -->
+                    <th>Finder's Name</th>  <!-- Display Category -->
                     <th>Time Found</th>
                     <th>Actions</th>
                 </tr>
