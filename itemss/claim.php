@@ -147,21 +147,20 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
         <p>Item Name: <?= htmlspecialchars($itemData['title']); ?></p>
         <p>Category: <?= htmlspecialchars($itemData['category_name']); ?></p>
         <p>Found by: <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
-        <p>Username: <?= htmlspecialchars($itemData['email']); ?></p>
         <p>Time Found: <?= htmlspecialchars($itemData['time_found']); ?></p>
         <p>Location Found: <?= htmlspecialchars($itemData['landmark']); ?></p>
         <p>Description: <?= htmlspecialchars($itemData['message']); ?></p>
         <p>Contact: <?= htmlspecialchars($itemData['contact']); ?></p>
 
-        <!-- Display Images -->
+        <!-- Display Item Images -->
         <div class="item-images">
             <h3>Item Images:</h3>
             <?php 
             if (!empty($itemData['image_paths'])) {
-                $images = explode(',', $itemData['image_paths']); // Split the image paths
+                $images = explode(',', $itemData['image_paths']);
                 foreach ($images as $image) {
-                    $imagePath = 'uploads/items/' . htmlspecialchars($image); // Assuming images are stored in 'uploads/items/'
-                    echo "<img src='$imagePath' alt='Item Image' style='max-width: 150px; margin-right: 10px;'>";
+                    $imagePath = 'uploads/items/' . htmlspecialchars($image); // Adjust the path as needed
+                    echo "<a href='$imagePath' data-lightbox='item-images'><img src='$imagePath' alt='Item Image' style='max-width: 150px; margin-right: 10px;'></a>";
                 }
             } else {
                 echo "<p>No images available for this item.</p>";
@@ -172,6 +171,7 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
 <?php else : ?>
     <p>Item not found or not published.</p>
 <?php endif; ?>
+
 
 
     <!-- Display Claimant's Information -->
