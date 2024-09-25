@@ -244,33 +244,43 @@ if (!$is_guest) {
             height: 40px;
             font-size: 1rem;
         }
+        .table {
+    width: 100%;
+    table-layout: auto; /* Ensure the table takes full width and adjusts to content */
+}
+
 .badge-status {
-    padding: 2px 6px;  /* Slightly reduced padding */
+    padding: 4px 8px;
     font-size: 12px;
-    border-radius: 20px; /* Rounded edges for the badges */
+    border-radius: 20px;
     color: #fff;
-    display: inline-block;
-    min-width: 80px;  /* Set a minimum width to ensure all badges have the same width */
-    text-align: center;
-    line-height: 1.5;  /* Ensures consistent vertical alignment */
-    white-space: nowrap;  /* Prevents text from wrapping */
+    display: inline-flex;
+    align-items: center; /* Align text and icon properly */
+    justify-content: space-between;
 }
 
 .badge-pending {
-    background-color: #6c757d;/* Yellow for Pending */
+    background-color: #6c757d;
 }
 
 .badge-published {
-    background-color: #007bff; /* Blue for Published */
+    background-color: #007bff;
 }
 
 .badge-claimed {
-    background-color: #28a745; /* Green for Claimed */
+    background-color: #28a745;
 }
 
 .badge-surrendered {
-    background-color: #6c757d; /* Grey for Surrendered */
+    background-color: #6c757d;
 }
+
+.notification-icon {
+    margin-left: 5px;
+    display: inline-flex; /* Ensure the icon is aligned with the text */
+    align-items: center;
+}
+
 
     }
     .nav-tabs {
@@ -457,12 +467,12 @@ if (!$is_guest) {
 
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
     <h5 class="history-title">Posted Found Items</h5>
-    <table class="table table-striped post-history-table">
+    <table class="table table-striped post-history-table" style="width: 100%; table-layout: auto;">
         <thead>
             <tr>
-                <th>Item Name</th>
-                <th>Date Posted</th>
-                <th>Status</th>
+                <th style="width: 40%;">Item Name</th>
+                <th style="width: 30%;">Date Posted</th>
+                <th style="width: 30%;">Status</th>
             </tr>
         </thead>
         <tbody>
@@ -472,7 +482,6 @@ if (!$is_guest) {
                     <td><?= htmlspecialchars($message['time_found']) ?></td>
                     <td>
                         <?php
-                        // Assign appropriate status classes and text
                         $statusClass = '';
                         $statusText = '';
                         $showNotification = false;
@@ -492,22 +501,21 @@ if (!$is_guest) {
                             $showNotification = true; // Show notification for surrendered items
                         }
                         ?>
-                        <span class="badge-status <?= $statusClass ?>">
+                        <span class="badge-status <?= $statusClass ?>" style="display: inline-flex; align-items: center;">
                             <?= htmlspecialchars($statusText) ?>
+                            <?php if ($showNotification): ?>
+                                <i class="bi bi-bell-fill notification-icon"
+                                   onclick="showSurrenderNotification('<?= htmlspecialchars($message['title']) ?>')"
+                                   style="cursor: pointer; color: #ffc107; margin-left: 5px; display: inline-flex; align-items: center;"></i>
+                            <?php endif; ?>
                         </span>
-
-                        <!-- Show notification icon if the item is surrendered -->
-                        <?php if ($showNotification): ?>
-                            <i class="bi bi-bell-fill notification-icon"
-                               onclick="showSurrenderNotification('<?= htmlspecialchars($message['title']) ?>')"
-                               style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
-                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 </div>
+
 
 
 
