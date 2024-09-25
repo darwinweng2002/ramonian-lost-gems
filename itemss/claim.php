@@ -173,6 +173,9 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
         .back-btn:hover {
             background-color: #0056b3;
         }
+        .logo img {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
