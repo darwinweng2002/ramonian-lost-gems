@@ -260,6 +260,7 @@ if (!$is_guest) {
     min-width: 80px;
     line-height: 1.5;  /* Ensures consistent vertical alignment */
     white-space: nowrap;  /* Prevents text from wrapping */
+    text-align: center;
 }
 
 .badge-pending {
