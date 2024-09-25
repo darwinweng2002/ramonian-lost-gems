@@ -187,7 +187,6 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
         <div class="guest-container">
         <a href="#" class="logo d-flex align-items-center w-auto">
                                     <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
-                                    <span class="d-none d-lg-block text-center"><?= $_settings->info('name') ?></span>
                                 </a>
             <h1>Guest Dashboard</h1>
             <p>Guest access is limited. Please register to access full features.</p>
