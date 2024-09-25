@@ -469,27 +469,33 @@ if (!$is_guest) {
                     <td><?= htmlspecialchars($message['time_found']) ?></td>
                     <td>
                         <?php
-                            $statusClass = '';
-                            $showNotification = false;
+                        // Assign appropriate status classes and text
+                        $statusClass = '';
+                        $statusText = '';
+                        $showNotification = false;
 
-                            if ($message['status'] == 0) {
-                                $statusClass = 'badge-pending';
-                            } elseif ($message['status'] == 1) {
-                                $statusClass = 'badge-published';
-                            } elseif ($message['status'] == 2) {
-                                $statusClass = 'badge-claimed';
-                            } elseif ($message['status'] == 3) {
-                                $statusClass = 'badge-surrendered';
-                                $showNotification = true; // Set to true for surrendered items
-                            }
+                        if ($message['status'] == 0) {
+                            $statusClass = 'badge-pending';
+                            $statusText = 'Pending';
+                        } elseif ($message['status'] == 1) {
+                            $statusClass = 'badge-published';
+                            $statusText = 'Published';
+                        } elseif ($message['status'] == 2) {
+                            $statusClass = 'badge-claimed';
+                            $statusText = 'Claimed';
+                        } elseif ($message['status'] == 3) {
+                            $statusClass = 'badge-surrendered';
+                            $statusText = 'Surrendered';
+                            $showNotification = true; // Show notification for surrendered items
+                        }
                         ?>
                         <span class="badge-status <?= $statusClass ?>">
-                            <?= $statusClass === 'badge-surrendered' ? 'Surrendered' : ?>
+                            <?= htmlspecialchars($statusText) ?>
                         </span>
 
-                        <!-- Add notification icon if the item is surrendered -->
+                        <!-- Show notification icon if the item is surrendered -->
                         <?php if ($showNotification): ?>
-                            <i class="bi bi-bell-fill notification-icon" 
+                            <i class="bi bi-bell-fill notification-icon"
                                onclick="showSurrenderNotification('<?= htmlspecialchars($message['title']) ?>')"
                                style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
                         <?php endif; ?>
@@ -499,6 +505,7 @@ if (!$is_guest) {
         </tbody>
     </table>
 </div>
+
 
 
 <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
@@ -518,27 +525,33 @@ if (!$is_guest) {
                     <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
                     <td>
                         <?php
-                            $statusClass = '';
-                            $showNotification = false;
+                        // Assign appropriate status classes and text
+                        $statusClass = '';
+                        $statusText = '';
+                        $showNotification = false;
 
-                            if ($missing_item['status'] == 0) {
-                                $statusClass = 'badge-pending';
-                            } elseif ($missing_item['status'] == 1) {
-                                $statusClass = 'badge-published';
-                            } elseif ($missing_item['status'] == 2) {
-                                $statusClass = 'badge-claimed';
-                            } elseif ($missing_item['status'] == 3) {
-                                $statusClass = 'badge-surrendered';
-                                $showNotification = true; // Set to true for surrendered items
-                            }
+                        if ($missing_item['status'] == 0) {
+                            $statusClass = 'badge-pending';
+                            $statusText = 'Pending';
+                        } elseif ($missing_item['status'] == 1) {
+                            $statusClass = 'badge-published';
+                            $statusText = 'Published';
+                        } elseif ($missing_item['status'] == 2) {
+                            $statusClass = 'badge-claimed';
+                            $statusText = 'Claimed';
+                        } elseif ($missing_item['status'] == 3) {
+                            $statusClass = 'badge-surrendered';
+                            $statusText = 'Surrendered';
+                            $showNotification = true; // Show notification for surrendered items
+                        }
                         ?>
                         <span class="badge-status <?= $statusClass ?>">
-                            <?= $statusClass === 'badge-surrendered' ? 'Surrendered' : 'Unknown Status'; ?>
+                            <?= htmlspecialchars($statusText) ?>
                         </span>
 
-                        <!-- Add notification icon if the item is surrendered -->
+                        <!-- Show notification icon if the item is surrendered -->
                         <?php if ($showNotification): ?>
-                            <i class="bi bi-bell-fill notification-icon" 
+                            <i class="bi bi-bell-fill notification-icon"
                                onclick="showSurrenderNotification('<?= htmlspecialchars($missing_item['title']) ?>')"
                                style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
                         <?php endif; ?>
@@ -548,6 +561,7 @@ if (!$is_guest) {
         </tbody>
     </table>
 </div>
+
 
     </div>
 <?php endif; ?>
