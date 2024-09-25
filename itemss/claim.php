@@ -19,18 +19,23 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // Query for item data
+// Query for item data including images
 $sql = "SELECT mh.id, mh.title, mh.message, mh.landmark, mh.time_found, mh.contact, 
-        mh.user_id AS finder_id, um.first_name, um.last_name, um.email, um.college, c.name AS category_name
+        mh.user_id AS finder_id, um.first_name, um.last_name, um.email, um.college, c.name AS category_name,
+        GROUP_CONCAT(mi.image_path) AS image_paths
         FROM message_history mh
         LEFT JOIN user_member um ON mh.user_id = um.id
         LEFT JOIN categories c ON mh.category_id = c.id
-        WHERE mh.id = ? AND mh.is_published = 1";
+        LEFT JOIN message_images mi ON mh.id = mi.message_id
+        WHERE mh.id = ? AND mh.is_published = 1
+        GROUP BY mh.id";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
 $stmt->execute();
 $itemResult = $stmt->get_result();
 $itemData = $itemResult->fetch_assoc();
+
 
 // Fetch claimant's user info
 $claimantId = $_SESSION['user_id'];
@@ -138,19 +143,36 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
     <!-- Display Item Information -->
     <h3>Item Information</h3>
     <?php if ($itemData) : ?>
-        <div class="info-section">
-            <p>Item Name: <?= htmlspecialchars($itemData['title']); ?></p>
-            <p>Category: <?= htmlspecialchars($itemData['category_name']); ?></p>
-            <p>Found by: <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
-            <p>Username: <?= htmlspecialchars($itemData['email']); ?></p>
-            <p>Time Found: <?= htmlspecialchars($itemData['time_found']); ?></p>
-            <p>Location Found: <?= htmlspecialchars($itemData['landmark']); ?></p>
-            <p>Description: <?= htmlspecialchars($itemData['message']); ?></p>
-            <p>Contact: <?= htmlspecialchars($itemData['contact']); ?></p>
+    <div class="info-section">
+        <p>Item Name: <?= htmlspecialchars($itemData['title']); ?></p>
+        <p>Category: <?= htmlspecialchars($itemData['category_name']); ?></p>
+        <p>Found by: <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
+        <p>Username: <?= htmlspecialchars($itemData['email']); ?></p>
+        <p>Time Found: <?= htmlspecialchars($itemData['time_found']); ?></p>
+        <p>Location Found: <?= htmlspecialchars($itemData['landmark']); ?></p>
+        <p>Description: <?= htmlspecialchars($itemData['message']); ?></p>
+        <p>Contact: <?= htmlspecialchars($itemData['contact']); ?></p>
+
+        <!-- Display Images -->
+        <div class="item-images">
+            <h3>Item Images:</h3>
+            <?php 
+            if (!empty($itemData['image_paths'])) {
+                $images = explode(',', $itemData['image_paths']); // Split the image paths
+                foreach ($images as $image) {
+                    $imagePath = 'uploads/items/' . htmlspecialchars($image); // Assuming images are stored in 'uploads/items/'
+                    echo "<img src='$imagePath' alt='Item Image' style='max-width: 150px; margin-right: 10px;'>";
+                }
+            } else {
+                echo "<p>No images available for this item.</p>";
+            }
+            ?>
         </div>
-    <?php else : ?>
-        <p>Item not found or not published.</p>
-    <?php endif; ?>
+    </div>
+<?php else : ?>
+    <p>Item not found or not published.</p>
+<?php endif; ?>
+
 
     <!-- Display Claimant's Information -->
     <h3>Your Information</h3>
