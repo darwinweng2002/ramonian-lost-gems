@@ -18,7 +18,6 @@ if ($conn->connect_error) {
 // Get item ID from URL
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Query for item data
 // Query for item data including images
 $sql = "SELECT mh.id, mh.title, mh.message, mh.landmark, mh.time_found, mh.contact, 
         mh.user_id AS finder_id, um.first_name, um.last_name, um.email, um.college, c.name AS category_name,
@@ -59,6 +58,8 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
 
     <!-- SweetAlert and CSS Integration -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
+
     <style>
         body {
             font-family: 'Helvetica', Arial, sans-serif;
@@ -158,20 +159,6 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
     <!-- Display Item Information -->
     <h3>Item Information</h3>
     <?php if ($itemData) : ?>
-        <?php while ($row = $result->fetch_assoc()): ?>
-                <p><strong>Item Name:</strong> <?= htmlspecialchars($row['item_name']); ?></p>
-                <?php
-                if (!empty($row['image_paths'])) {
-                    $images = explode(',', $row['image_paths']);
-                    echo "<p><strong>Images:</strong></p>";
-                    echo "<div class='image-grid'>";
-                    foreach ($images as $image) {
-                        $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($image);
-                        echo "<a href='" . $fullImagePath . "' data-lightbox='claim-" . htmlspecialchars($claimId) . "' data-title='Image'><img src='" . $fullImagePath . "' alt='Claim Image'></a>";
-                    }
-                    echo "</div>";
-                }
-                ?>
     <div class="info-section">
         <p><strong>Item Name:</strong> <?= htmlspecialchars($itemData['title']); ?></p>
         <p><strong>Category:</strong> <?= htmlspecialchars($itemData['category_name']); ?></p>
@@ -185,14 +172,19 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
         <div class="item-images">
             <h3>Item Images:</h3>
             <?php
-            $imagePaths = explode(',', $itemData['image_paths']);
-            foreach ($imagePaths as $image) {
-                $imagePath = base_url . 'uploads/items/' . htmlspecialchars($image);
-                if (file_exists($imagePath)) {
-                    echo "<a href='$imagePath' data-lightbox='item-images'><img src='$imagePath' alt='Item Image'></a>";
-                } else {
-                    echo "<p>Image not available.</p>";
+            if (!empty($itemData['image_paths'])) {
+                $imagePaths = explode(',', $itemData['image_paths']);
+                foreach ($imagePaths as $image) {
+                    // Correct the base URL for the image directory
+                    $fullImagePath = base_url . 'uploads/items/' . htmlspecialchars($image);
+                    if (file_exists($fullImagePath)) {
+                        echo "<a href='$fullImagePath' data-lightbox='item-images'><img src='$fullImagePath' alt='Item Image'></a>";
+                    } else {
+                        echo "<p>Image not available.</p>";
+                    }
                 }
+            } else {
+                echo "<p>No images available for this item.</p>";
             }
             ?>
         </div>
@@ -257,6 +249,7 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
 </div>
 
 <!-- SweetAlert2 script for form submission -->
+<script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 <script>
     document.getElementById('claimForm').addEventListener('submit', function (e) {
         e.preventDefault(); // Prevent the form from submitting the traditional way
