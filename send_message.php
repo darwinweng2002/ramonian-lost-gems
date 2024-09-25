@@ -249,13 +249,21 @@ if (isset($_SESSION['user_id'])) {
         <?php endif; ?>
          
         <form action="send_message.php" method="post" enctype="multipart/form-data" class="message-form">
-            <label for="founder">
+        <label for="founder">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user">
         <path d="M12 14c-4.28 0-8 3.58-8 8h16c0-4.42-3.72-8-8-8z"/>
         <circle cx="12" cy="6" r="4"/>
     </svg> Finder's Name:
 </label>
-<input type="text" name="founder" id="founder" placeholder="Enter finder's name" required>
+
+<?php if (isset($first_name) && isset($email)) { ?>
+    <!-- Logged-in User: Autofill Finder's Name and Disable Field -->
+    <input type="text" name="founder" id="founder" value="<?php echo htmlspecialchars($first_name); ?>" readonly>
+    <p>Your name is automatically set as the Finder.</p>
+<?php } else { ?>
+    <!-- Guest User: Show Finder's Name Input -->
+    <input type="text" name="founder" id="founder" placeholder="Enter finder's name" required>
+<?php } ?>
 <label for="title">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pin"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>
                 </svg> Item Name:
