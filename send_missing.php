@@ -230,8 +230,8 @@ if (isset($_SESSION['user_id'])) {
         <?php endif; ?>
 
         <form action="send_missing.php" method="post" enctype="multipart/form-data" class="message-form">
-        <label for="owner_name">Owner's Name:</label>
-        <input type="text" name="owner_name" id="owner_name" placeholder="Enter the owner's name" required>
+        <label for="owner">Owner's Name:</label>
+        <input type="text" name="owner" id="owner" placeholder="Enter the owner's name" required>
             <label for="title">Item Name:</label>
             <input type="text" name="title" id="title" placeholder="Enter item name" required>
             <label for="category">Category:</label>
