@@ -250,40 +250,39 @@ if (!$is_guest) {
 }
 
 .badge-status {
-    padding: 4px 8px;
+    padding: 4px 12px; /* Adjust padding for better spacing */
     font-size: 12px;
     border-radius: 20px;
     color: #fff;
     display: inline-flex;
-    align-items: center; /* Align text and icon properly */
-    justify-content: space-between;
-    min-width: 80px;
-    line-height: 1.5;  /* Ensures consistent vertical alignment */
-    white-space: nowrap;  /* Prevents text from wrapping */
-    text-align: center;
+    align-items: center; /* Vertically align the text */
+    justify-content: center; /* Center the text horizontally */
+    line-height: 1.5; /* Ensures consistent vertical alignment */
+    white-space: nowrap; /* Prevents text from wrapping */
 }
 
 .badge-pending {
-    background-color: #6c757d;
+    background-color: #6c757d; /* Color for Pending */
 }
 
 .badge-published {
-    background-color: #007bff;
+    background-color: #007bff; /* Color for Published */
 }
 
 .badge-claimed {
-    background-color: #28a745;
+    background-color: #28a745; /* Color for Claimed */
 }
 
 .badge-surrendered {
-    background-color: #6c757d;
+    background-color: #6c757d; /* Color for Surrendered */
 }
 
 .notification-icon {
-    margin-left: 5px;
-    display: inline-flex; /* Ensure the icon is aligned with the text */
-    align-items: center;
+    margin-left: 8px; /* Adjust margin for better spacing */
+    display: inline-flex; /* Ensure icon aligns with text */
+    align-items: center; /* Vertically align the bell icon */
 }
+
 
 
     }
