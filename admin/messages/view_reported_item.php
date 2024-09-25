@@ -34,7 +34,7 @@ if ($message_id > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messages - Admin View</title>
+    <title>Found Item Details - Admin View</title>
     <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Include SweetAlert2 -->
@@ -123,7 +123,7 @@ if ($message_id > 0) {
     <?php require_once('../inc/navigation.php'); ?>
 
     <div class="container">
-        <h1>View Details</h1>
+        <h1>Found Item Details</h1>
         <?php
         if ($result->num_rows > 0) {
             $messages = [];
@@ -165,22 +165,34 @@ if ($message_id > 0) {
                 $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
                 $categoryName = htmlspecialchars($msgData['category_name'] ?? ''); 
                 
-                if ($avatar) {
-                    $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
-                    echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
+                // Only display avatar if the post is not from a guest user
+                if ($firstName || $email || $college) {
+                    if ($avatar) {
+                        $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
+                        echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
+                    } else {
+                        echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                    }
                 } else {
-                    echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                    echo "<p><strong>User Info:</strong> Guest User</p>"; // Indicate that the post is from a guest
                 }
-                
-                echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
-                echo "<p><strong>College:</strong> " . $college . "</p>";
-                echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
-                echo "<p><strong>Title:</strong> " . $title . "</p>";
-                echo "<p><strong>Category:</strong> " . $categoryName . "</p>"; 
-                echo "<p><strong>Description:</strong> " . $message . "</p>";
-                echo "<p><strong>Contact:</strong> " . $contact . "</p>"; 
+            
+                echo "<p><strong>Item Name:</strong> " . $title . "</p>";
+                echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Finder's Name:</strong> " . $founder . "</p>";
-                echo "<p><strong>Time Found:</strong> " . $timeFound . "</p>";
+                echo "<p><strong>Location where the item was found:</strong> " . $landmark . "</p>";
+                echo "<p><strong>Date and Time Found:</strong> " . $timeFound . "</p>";
+                echo "<p><strong>Description:</strong> " . $message . "</p>";
+                echo "<p><strong>Contact:</strong> " . $contact . "</p>";
+            
+                // Display user information only if available
+                if ($firstName || $email || $college) {
+                    echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
+                    echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
+                } else {
+                    // No additional user info for guest posts
+                    
+                }
 
                 // Status dropdown and status badge display
                 echo "<div class='form-group'>";
