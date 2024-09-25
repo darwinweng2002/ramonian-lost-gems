@@ -157,7 +157,7 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
             <h3>Item Images:</h3>
             <?php
 // Example debug: print image path in full
-$imagePath = 'uploads/items/' . htmlspecialchars($image);
+$imagePath = base_url .  'uploads/items/' . htmlspecialchars($image);
 if (file_exists($imagePath)) {
     echo "<p>Debug: Image exists at: " . $imagePath . "</p>"; // Debug statement
 } else {
