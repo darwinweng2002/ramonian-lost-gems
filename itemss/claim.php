@@ -8,6 +8,18 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Fetch the user's information from the database
+$user_id = $_SESSION['user_id'];
+
+// Check if the user is a guest by determining if their user_id starts with 'guest_'
+$is_guest = (strpos($user_id, 'guest_') === 0);
+
+// If the user is a guest, redirect to the login page
+if ($is_guest) {
+    header('Location: login.php');
+    exit();
+}
+
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
