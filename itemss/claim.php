@@ -185,7 +185,6 @@ $isFinder = ($itemData['finder_id'] == $claimantId);
     <?php if ($is_guest): ?>
         <!-- Guest Restriction Message -->
         <div class="guest-container">
-        <a href="#" class="logo d-flex align-items-center w-auto">
                                     <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
                                 </a>
             <h1>Guest Dashboard</h1>
