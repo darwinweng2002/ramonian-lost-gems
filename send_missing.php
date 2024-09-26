@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 include('config.php');
 session_start(); // Start session if not already started
 // Check if the user is logged in as either regular user or staff
