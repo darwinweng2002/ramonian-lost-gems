@@ -1,16 +1,21 @@
 <?php 
+session_start();
 require_once('./config.php');
 
 // Check if the user is logged in, if not then redirect to login page
-
-// Include the database configuration file
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php"); // Redirect to login page if user is not logged in
+    exit();
+}
 
 // Fetch the user's information from the database
 $user_id = $_SESSION['user_id'];
+$user_type = $_SESSION['user_type']; // Fetch the user_type from the session (student, faculty, staff)
+
 $stmt = $conn->prepare("SELECT first_name, last_name, course, year, section, email FROM user_member WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-$stmt->bind_result($first_name, $last_name, $course, $year, $section, $email); // Fix bind_result to match SQL columns
+$stmt->bind_result($first_name, $last_name, $course, $year, $section, $email); 
 $stmt->fetch();
 $stmt->close();
 ?>
