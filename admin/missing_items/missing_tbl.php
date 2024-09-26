@@ -12,13 +12,21 @@ if ($conn->connect_error) {
 // Initialize search term
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
-// SQL query to fetch reported items, with search functionality
-$sql = "SELECT mi.id, mi.title, mi.owner, um.first_name, um.college, mi.time_missing, c.name AS category
-        FROM missing_items mi
-        LEFT JOIN user_member um ON mi.user_id = um.id
-        LEFT JOIN categories c ON mi.category_id = c.id
-        WHERE CONCAT_WS(' ', mi.title, um.first_name, um.college, c.name) LIKE '%$searchTerm%'
-        ORDER BY mi.id DESC";
+// SQL query to fetch reported items, including user_member and user_staff
+$sql = "
+SELECT mi.id, mi.title, mi.owner, user_info.first_name, user_info.college, mi.time_missing, c.name AS category
+FROM missing_items mi
+LEFT JOIN (
+    -- Fetch data from user_member
+    SELECT id AS user_id, first_name, college, email FROM user_member
+    UNION
+    -- Fetch data from user_staff
+    SELECT id AS user_id, first_name, department AS college, email FROM user_staff
+) AS user_info ON mi.user_id = user_info.user_id
+LEFT JOIN categories c ON mi.category_id = c.id
+WHERE CONCAT_WS(' ', mi.title, user_info.first_name, user_info.college, c.name) LIKE '%$searchTerm%'
+ORDER BY mi.id DESC";
+
 $result = $conn->query($sql);
 ?>
 
@@ -39,7 +47,6 @@ $result = $conn->query($sql);
             color: #333;
             padding: 20px;
         }
-
         .container {
             margin: 30px auto;
             max-width: 1200px;
@@ -48,25 +55,21 @@ $result = $conn->query($sql);
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-
         h2 {
             text-align: center;
             color: #333;
             margin-bottom: 20px;
         }
-
         .table-responsive {
             background: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
         }
-
         th, td {
             padding: 12px;
             text-align: center;
@@ -74,20 +77,16 @@ $result = $conn->query($sql);
         th {
             white-space: nowrap; /* Prevents wrapping */
         }
-
         thead th {
             background-color: #f2f2f2;
             color: #444;
         }
-
         tbody tr:nth-child(even) {
             background-color: #f9f9f9;
         }
-
         tbody tr:hover {
             background-color: #f1f1f1;
         }
-
         .btn {
             border-radius: 5px;
             padding: 8px 12px;
@@ -96,32 +95,25 @@ $result = $conn->query($sql);
             transition: background-color 0.3s;
             color: #fff;
         }
-
         .btn-view {
             background-color: #007bff;
             border: none;
         }
-
         .btn-view:hover {
             background-color: #007bff;
         }
-
         .no-data {
             text-align: center;
             font-size: 1.2rem;
             color: #333;
             padding: 30px 0;
         }
-
-        /* Style for the input group */
         .input-group {
             display: flex;
             align-items: center;
             border-radius: 8px; /* Adds the border-radius to the entire group */
             overflow: hidden;   /* Ensures the border-radius applies to all child elements */
         }
-
-        /* Search input field */
         .search-input {
             border: 1px solid #ddd;
             border-right: none;
@@ -132,8 +124,6 @@ $result = $conn->query($sql);
             width: 200px;
             flex-grow: 1;
         }
-
-        /* Button */
         .search-button {
             border-radius: 0;
             background-color: #28a745;
@@ -144,13 +134,9 @@ $result = $conn->query($sql);
             transition: background-color 0.3s;
             margin-left: -5px;
         }
-
-        /* Button hover */
         .search-button:hover {
             background-color: #218838;
         }
-
-        /* Icon styling */
         .input-group-text {
             background-color: #fff;
             border: 1px solid #ddd;
@@ -158,7 +144,6 @@ $result = $conn->query($sql);
             border-right: none;
             color: #333;
         }
-
         .input-group-text i {
             font-size: 14px;
         }
@@ -218,7 +203,7 @@ $result = $conn->query($sql);
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="7" class="no-data">
+                            <td colspan="8" class="no-data">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-x">
                                     <path d="M2 21a8 8 0 0 1 11.873-7"/><circle cx="10" cy="8" r="5"/><path d="m17 17 5 5"/><path d="m22 17-5 5"/>
                                 </svg> 
@@ -238,4 +223,3 @@ $conn->close();
 <?php require_once('../inc/footer.php') ?>
 </body>
 </html>
-s
