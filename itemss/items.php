@@ -1,4 +1,3 @@
-
 <?php
 include '../config.php';
 
@@ -40,7 +39,6 @@ if (isset($_GET['category_id'])) {
 $categoriesResult = $conn->query("SELECT id, name FROM categories");
 
 // SQL query for found items, including status
-// SQL query for found items, including status
 $sqlFound = "SELECT mh.id, mh.title, mh.category_id, mh.time_found, mh.message, mh.status, GROUP_CONCAT(mi.image_path) AS image_paths
              FROM message_history mh
              LEFT JOIN message_images mi ON mh.id = mi.message_id
@@ -60,14 +58,11 @@ if ($selectedCategory) {
 $sqlFound .= " GROUP BY mh.id
                ORDER BY mh.id DESC";
 
-
-// SQL query for missing items with extended search functionality
 // SQL query for missing items with extended search functionality
 $sqlMissing = "SELECT mi.id, mi.title, mi.category_id, mi.time_missing, mi.description, mi.status, GROUP_CONCAT(mii.image_path) AS image_paths
                FROM missing_items mi
                LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
                WHERE mi.status = 1";  // Fetch only published items
- // Only fetch published items
 
 // Search and filter by category
 if ($searchTerm) {
@@ -288,10 +283,11 @@ $resultMissing = $conn->query($sqlMissing);
 
                 // Image and title
                 echo "<a href='published_items.php?id=" . $itemId . "'>";
-                if (!empty($images)) {
+                if (!empty($images) && file_exists('../uploads/items/' . $images[0])) {
                     echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
                 } else {
-                    echo "<img src='uploads/items/default-image.png' alt='No Image'>";
+                    // Fallback if no image or broken image
+                    echo "<img src='" . base_url . "uploads/items/no-image.png' alt='No Image'>";
                 }
                 echo "<h3>" . $title . "</h3>";
                 echo "</a>";
@@ -304,57 +300,59 @@ $resultMissing = $conn->query($sqlMissing);
     </div>
 
     <h2>Missing Items</h2>
-<div class="gallery-grid">
-    <?php
-    if ($resultMissing->num_rows > 0) {
-        while ($row = $resultMissing->fetch_assoc()) {
-            $itemId = htmlspecialchars($row['id']);
-            $title = htmlspecialchars($row['title']);
-            $imagePaths = htmlspecialchars($row['image_paths']);
-            $status = isset($row['status']) && !is_null($row['status']) ? htmlspecialchars($row['status']) : 'Pending';  // Get status or default to 'Pending'
-            $images = explode(',', $imagePaths);
+    <div class="gallery-grid">
+        <?php
+        if ($resultMissing->num_rows > 0) {
+            while ($row = $resultMissing->fetch_assoc()) {
+                $itemId = htmlspecialchars($row['id']);
+                $title = htmlspecialchars($row['title']);
+                $imagePaths = htmlspecialchars($row['image_paths']);
+                $status = isset($row['status']) && !is_null($row['status']) ? htmlspecialchars($row['status']) : 'Pending';  // Get status or default to 'Pending'
+                $images = explode(',', $imagePaths);
 
-            echo "<div class='gallery-item'>";
-            echo "<a href='view_missing.php?id=" . $itemId . "'>";
+                echo "<div class='gallery-item'>";
+                echo "<a href='view_missing.php?id=" . $itemId . "'>";
 
-            // Add status badge based on the status value
-            echo "<span class='status-badge ";
-            if ($status == 1) {
-                echo "badge-published";
-            } elseif ($status == 2) {
-                echo "badge-claimed";
-            } elseif ($status == 3) {
-                echo "badge-surrendered";
-            } else {
-                echo "badge-pending";
+                // Add status badge based on the status value
+                echo "<span class='status-badge ";
+                if ($status == 1) {
+                    echo "badge-published";
+                } elseif ($status == 2) {
+                    echo "badge-claimed";
+                } elseif ($status == 3) {
+                    echo "badge-surrendered";
+                } else {
+                    echo "badge-pending";
+                }
+                echo "'>";
+                echo ($status == 1 ? 'Published' : ($status == 2 ? 'Claimed' : ($status == 3 ? 'Surrendered' : 'Pending')));
+                echo "</span>";
+
+                // Display the item image
+                if (!empty($images) && file_exists('../uploads/items/' . $images[0])) {
+                    echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
+                } else {
+                    // Fallback to default image if image does not exist
+                    echo "<img src='" . base_url . "uploads/items/no-image.png' alt='No Image'>";
+                }
+                echo "<h3>" . $title . "</h3>";
+                echo "</a>";
+                echo "</div>";
             }
-            echo "'>";
-            echo ($status == 1 ? 'Published' : ($status == 2 ? 'Claimed' : ($status == 3 ? 'Surrendered' : 'Pending')));
-            echo "</span>";
-
-           // Check if image exists, else show default image
-if (!empty($images) && file_exists('../uploads/items/' . $images[0])) {
-    echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
-} else {
-    // For debugging: output the image path to check if it's correct
-    echo "Image path: " . base_url . 'uploads/items/' . $images[0] . "<br>"; // Debugging line
-    echo "<img src='" . base_url . "uploads/items/no-image.png' alt='No Image Available'>";
-}
-
-    } else {
-        echo "<p>No published missing items available.</p>";
-    }
-    ?>
-</div>
-<div class="back-btn-container">
-    <button class="back-btn" onclick="history.back()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
-            <line x1="19" y1="12" x2="5" y2="12"/>
-            <polyline points="12 19 5 12 12 5"/>
-        </svg>
-        Back
-    </button>
-</div>
+        } else {
+            echo "<p>No published missing items available.</p>";
+        }
+        ?>
+    </div>
+    <div class="back-btn-container">
+        <button class="back-btn" onclick="history.back()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+            </svg>
+            Back
+        </button>
+    </div>
 </div>
 
 <?php require_once('../inc/footer.php') ?>
