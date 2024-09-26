@@ -332,16 +332,15 @@ $resultMissing = $conn->query($sqlMissing);
             echo ($status == 1 ? 'Published' : ($status == 2 ? 'Claimed' : ($status == 3 ? 'Surrendered' : 'Pending')));
             echo "</span>";
 
-            // Display the item image
-            if (!empty($images)) {
-                echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
-            } else {
-                echo "<img src='uploads/items/default-image.png' alt='No Image'>";
-            }
-            echo "<h3>" . $title . "</h3>";
-            echo "</a>";
-            echo "</div>";
-        }
+           // Check if image exists, else show default image
+if (!empty($images) && file_exists('../uploads/items/' . $images[0])) {
+    echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
+} else {
+    // For debugging: output the image path to check if it's correct
+    echo "Image path: " . base_url . 'uploads/items/' . $images[0] . "<br>"; // Debugging line
+    echo "<img src='" . base_url . "uploads/items/no-image.png' alt='No Image Available'>";
+}
+
     } else {
         echo "<p>No published missing items available.</p>";
     }
