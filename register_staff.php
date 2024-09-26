@@ -263,7 +263,7 @@ body {
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = 'https://ramonianlostgems.com/';
+                            window.location.href = 'https://ramonianlostgems.com/staff_login.php';
                         }
                     });
                 }
