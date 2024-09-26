@@ -1,6 +1,8 @@
 <?php
 include '../../config.php';
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 session_start(); // Make sure session is started
 
 // Check if the form is submitted
