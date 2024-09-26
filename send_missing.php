@@ -1,94 +1,69 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 include('config.php');
 
-// Check if a session is already active before starting a new one
-if (session_status() === PHP_SESSION_NONE) {
-    session_start(); // Start session if not already started
-}
-
-// Check if the user is logged in as either regular user or staff
-if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
-    die("User not logged in");
-}
-
-// Get the user ID and user type
-if (isset($_SESSION['user_id'])) {
-    // Regular user
-    $userId = $_SESSION['user_id'];
-    $userType = 'user_member'; // Table for regular users
-} elseif (isset($_SESSION['staff_id'])) {
-    // Staff user
-    $userId = $_SESSION['staff_id'];
-    $userType = 'user_staff'; // Table for staff users
-}
-
-// Validate that required fields are present and not empty
-if (!isset($_POST['title'], $_POST['description'], $_POST['last_seen_location'], $_POST['time_missing'], $_POST['category_id'], $_POST['owner'])) {
-    die("Some fields are missing in the form submission.");
-}
-
-// Retrieve user inputs
-$title = $_POST['title'] ?? null;
-$description = $_POST['description'] ?? null;
-$lastSeenLocation = $_POST['last_seen_location'] ?? null;
-$timeMissing = $_POST['time_missing'] ?? null;
-$contact = $_POST['contact'] ?? '';
-$category_id = $_POST['category_id'] ?? null;
-$new_category = $_POST['new_category'] ?? '';
-$owner = $_POST['owner'] ?? null;
-$status = 0; // Set to 0 for 'Pending'
-
-// Check if category_id is set to add new category
-if ($category_id === 'add_new' && !empty($new_category)) {
-    $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
-    $stmt->bind_param("s", $new_category);
-    $stmt->execute();
-    $category_id = $stmt->insert_id;
-    $stmt->close();
-}
-
-// Directory for uploading files
-$uploadDir = 'uploads/missing_items/';
-if (!is_dir($uploadDir)) {
-    mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
-}
-
-// Prepare and execute the SQL statement
-$sql = "INSERT INTO missing_items (user_id, title, description, last_seen_location, time_missing, contact, category_id, status, owner) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-$stmt = $conn->prepare($sql);
-
-if (!$stmt) {
-    die("Error preparing statement: " . $conn->error);
-}
-
-$stmt->bind_param("isssssiss", $userId, $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
-$stmt->execute();
-$missingItemId = $stmt->insert_id;
-$stmt->close();
-
-// Handle file uploads
-$uploadedFiles = [];
-foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-    $fileName = basename($_FILES['images']['name'][$key]);
-    $targetFilePath = $uploadDir . $fileName;
-
-    if (move_uploaded_file($tmpName, $targetFilePath)) {
-        $stmt = $conn->prepare("INSERT INTO missing_item_images (missing_item_id, image_path) VALUES (?, ?)");
-        $stmt->bind_param("is", $missingItemId, $fileName);
-        $stmt->execute();
-        $stmt->close();
-        $uploadedFiles[] = $targetFilePath;
-    } else {
-        $error = "Failed to upload file: " . $fileName;
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Check if user is logged in and user_id is set in session
+    if (!isset($_SESSION['user_id'])) {
+        die("User not logged in");
     }
-}
 
-// Success or error message for SweetAlert
-$alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins before being published for public viewing.";
+    // Retrieve user inputs
+    $title = $_POST['title'];
+    $description = $_POST['description'];
+    $lastSeenLocation = $_POST['last_seen_location'];
+    $timeMissing = $_POST['time_missing'];
+    $userId = $_SESSION['user_id'];
+    $status = 0; // Set to 0 for 'Pending' (assuming 0 is for 'Pending')
+    $contact = isset($_POST['contact']) ? $_POST['contact'] : '';
+    $category_id = $_POST['category_id'];
+    $new_category = $_POST['new_category'];
+    $owner = $_POST['owner'];
+
+    // Check if category_id is set to add new category
+    if ($category_id == 'add_new' && !empty($new_category)) {
+        $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
+        $stmt->bind_param("s", $new_category);
+        $stmt->execute();
+        $category_id = $stmt->insert_id;
+        $stmt->close();
+    }
+
+    // Directory for uploading files
+    $uploadDir = 'uploads/missing_items/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
+    }
+
+    $uploadedFiles = [];
+
+    // Prepare and execute the SQL statement
+    $sql = "INSERT INTO missing_items (user_id, title, description, last_seen_location, time_missing, contact, category_id, status, owner) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("isssssiss", $userId, $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
+    $stmt->execute();
+    $missingItemId = $stmt->insert_id;
+    $stmt->close();
+
+    // Handle file uploads
+    foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+        $fileName = basename($_FILES['images']['name'][$key]);
+        $targetFilePath = $uploadDir . $fileName;
+
+        if (move_uploaded_file($tmpName, $targetFilePath)) {
+            $stmt = $conn->prepare("INSERT INTO missing_item_images (missing_item_id, image_path) VALUES (?, ?)");
+            $stmt->bind_param("is", $missingItemId, $fileName);
+            $stmt->execute();
+            $stmt->close();
+            $uploadedFiles[] = $targetFilePath;
+        } else {
+            $error = "Failed to upload file: " . $fileName;
+        }
+    }
+
+    // Success or error message for SweetAlert
+    $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins before being published for public viewing.";
+}
 
 // Retrieve user information
 if (isset($_SESSION['user_id'])) {
@@ -101,7 +76,6 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -257,23 +231,12 @@ if (isset($_SESSION['user_id'])) {
         <?php endif; ?>
 
         <form action="send_missing.php" method="post" enctype="multipart/form-data" class="message-form">
-    <label for="owner">Owner's Name:</label>
-    <input type="text" name="owner" id="owner" placeholder="Enter the owner's name" required>
-    
-    <label for="title">Item Name:</label>
-    <input type="text" name="title" id="title" placeholder="Enter item name" required>
-
-    <label for="category">Category:</label>
-    <select name="category_id" id="category_id" required>
-        <option value="">Select a category</option>
-        <!-- Category options go here -->
-        <option value="add_new">Add New Category</option>
-    </select>
-
-    <div id="newCategoryDiv" style="display: none;">
-        <label for="new_category">New Category:</label>
-        <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
-        <select name="category_id" id="category_id" required>
+        <label for="owner">Owner's Name:</label>
+        <input type="text" name="owner" id="owner" placeholder="Enter the owner's name" required>
+            <label for="title">Item Name:</label>
+            <input type="text" name="title" id="title" placeholder="Enter item name" required>
+            <label for="category">Category:</label>
+<select name="category_id" id="category_id" required>
     <option value="">Select a category</option>
     <?php
     // Fetch categories from the database
@@ -294,26 +257,28 @@ if (isset($_SESSION['user_id'])) {
     </label>
     <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
 </div>
+            <label for="description">Description of the missing item:</label>
+            <textarea name="description" id="description" rows="4" placeholder="Describe the missing item" required></textarea>
 
-    </div>
-
-    <label for="description">Description of the missing item:</label>
-    <textarea name="description" id="description" rows="4" placeholder="Describe the missing item" required></textarea>
-
-    <label for="last_seen_location">Last Seen Location:</label>
-    <input type="text" name="last_seen_location" id="last_seen_location" placeholder="Location where the item was last seen" required>
-
-    <label for="contact">Contact Information:</label>
-    <input type="text" id="contact" name="contact" pattern="[0-9]{10,11}" placeholder="Enter contact information" required>
-
-    <label for="time_missing">Time Missing:</label>
-    <input type="datetime-local" name="time_missing" id="time_missing" required>
-
-    <label for="images">Upload Images:</label>
-    <input type="file" name="images[]" id="images" multiple>
-
-    <button type="submit" class="submit-btn">Submit Report</button>
-</form>
+            <label for="last_seen_location">Last Seen Location:</label>
+            <input type="text" name="last_seen_location" id="last_seen_location" placeholder="Location where the item was last seen" required>
+            <label for="contact">
+                </svg> Contact Information:
+            </label>
+            <input type="text" id="contact" name="contact" pattern="[0-9]{10,11}" placeholder="Enter contact information" required>
+            <label for="time_missing">Time Missing:</label>
+            <input type="datetime-local" name="time_missing" id="time_missing" required>
+           
+            <label for="images">Upload Images:</label> <!-- Added the text label here -->
+<input type="file" name="images[]" id="images" multiple onchange="previewImages()">
+<div class="image-preview-container" id="imagePreviewContainer"></div>
+<p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
+<p>Upload multiple images if necessary.</p>
+            <button type="submit" class="submit-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
+        <line x1="22" x2="11" y1="2" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+    </svg>Submit Report</button>
+        </form>
         <div class="back-btn-container">
     <button class="back-btn" onclick="history.back()">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
