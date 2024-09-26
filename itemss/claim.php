@@ -23,8 +23,8 @@ if (isset($_SESSION['user_id'])) {
 } elseif (isset($_SESSION['staff_id'])) {
     // Staff user
     $claimantId = $_SESSION['staff_id'];
-    $userType = 'staff_user';
-    $sqlClaimant = "SELECT first_name, last_name, email, department AS college, NULL AS course, NULL AS year, NULL AS section FROM staff_user WHERE id = ?";
+    $userType = 'user_staff';
+    $sqlClaimant = "SELECT first_name, last_name, email, department AS college, NULL AS course, NULL AS year, NULL AS section FROM user_staff WHERE id = ?";
 }
 
 // Database connection
