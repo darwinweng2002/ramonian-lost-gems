@@ -9,34 +9,22 @@ $error_message = '';
 
 // Check if the form is submitted for regular login
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
-    // Get form data and trim any leading or trailing whitespace
-    $username = trim($_POST['email'] ?? ''); // Using null coalescing operator to avoid undefined array key notice
-    $password = trim($_POST['password'] ?? '');
+    // Get form data
+    $username = $_POST['email'] ?? ''; // Using null coalescing operator to avoid undefined array key notice
+    $password = $_POST['password'] ?? '';
 
-    // Debug: Print the entered username (email)
-    echo "Entered Username: " . htmlspecialchars($username) . "<br>";
-
-    // Prepare and execute the query (make email search case-insensitive)
-    if ($stmt = $conn->prepare("SELECT id, password FROM user_member WHERE LOWER(email) = LOWER(?)")) { 
+    // Prepare and execute query
+    if ($stmt = $conn->prepare("SELECT id, password FROM user_member WHERE email = ?")) { // 'email' column is still used for usernames
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $stmt->store_result();
-
-        // Debug: Check if rows are returned
-        echo "Number of Rows Found: " . $stmt->num_rows . "<br>";
 
         if ($stmt->num_rows > 0) {
             $stmt->bind_result($user_id, $hashed_password);
             $stmt->fetch();
 
-            // Debug: Output the hashed password from the database
-            echo "Hashed Password from DB: " . $hashed_password . "<br>";
-
             // Verify password
             if (password_verify($password, $hashed_password)) {
-                // Debug: Password is verified
-                echo "Password verification successful!<br>";
-
                 // Password is correct, start a session
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['email'] = $username;  // Store the username in the session (same variable for compatibility)
@@ -45,12 +33,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
                 header("Location: https://ramonianlostgems.com/main.php");
                 exit();
             } else {
-                // Debug: Password verification failed
-                echo "Password verification failed.<br>";
-                $error_message = 'Invalid username or password.'; 
+                $error_message = 'Invalid username or password.'; // Update message to reflect username
             }
         } else {
-            $error_message = 'No user found with that username.'; 
+            $error_message = 'No user found with that username.'; // Update message to reflect username
         }
     } else {
         $error_message = 'Error preparing statement: ' . $conn->error;
@@ -59,21 +45,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
 
 // Check if "Login as Guest" button is clicked
 if (isset($_POST['guest_login'])) {
-    // Generate a unique guest session ID
-    $_SESSION['user_id'] = 'guest_' . bin2hex(random_bytes(5)); // Unique guest ID
-    $_SESSION['email'] = 'guest@example.com';  // Identifier remains generic for guests
+  // Generate a unique guest session ID
+  $_SESSION['user_id'] = 'guest_' . bin2hex(random_bytes(5)); // Unique guest ID
+  $_SESSION['email'] = 'guest@example.com';  // Identifier remains generic for guests
 
-    // Redirect guest user to the main page
-    header("Location: https://ramonianlostgems.com/main.php");
-    exit();
-}
-
-// Debug: Show any error messages
-if ($error_message) {
-    echo $error_message;
+  // Redirect guest user to the main page
+  header("Location: https://ramonianlostgems.com/main.php");
+  exit();
 }
 ?>
-
 
 
 <!DOCTYPE html>
