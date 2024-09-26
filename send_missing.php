@@ -1,7 +1,9 @@
 <?php
 include('config.php');
 
-session_start(); // Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start(); // Start session if not already started
+}
 
 // Check if the user is logged in as either regular user or staff
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
@@ -10,34 +12,44 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
 
 // Get the user ID and user type
 if (isset($_SESSION['user_id'])) {
-    // Regular user
     $userId = $_SESSION['user_id'];
     $userType = 'user_member'; // Table for regular users
 } elseif (isset($_SESSION['staff_id'])) {
-    // Staff user
     $userId = $_SESSION['staff_id'];
     $userType = 'user_staff'; // Table for staff users
+}
 
+// Check if the form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Retrieve user inputs
-    $title = $_POST['title'];
-    $description = $_POST['description'];
-    $lastSeenLocation = $_POST['last_seen_location'];
-    $timeMissing = $_POST['time_missing'];
-    $userId = $_SESSION['user_id'];
-    $status = 0; // Set to 0 for 'Pending' (assuming 0 is for 'Pending')
-    $contact = isset($_POST['contact']) ? $_POST['contact'] : '';
-    $category_id = $_POST['category_id'];
-    $new_category = $_POST['new_category'];
-    $owner = $_POST['owner'];
+    // Retrieve user inputs and validate
+    $title = isset($_POST['title']) ? trim($_POST['title']) : '';
+    $description = isset($_POST['description']) ? trim($_POST['description']) : '';
+    $lastSeenLocation = isset($_POST['last_seen_location']) ? trim($_POST['last_seen_location']) : '';
+    $timeMissing = isset($_POST['time_missing']) ? trim($_POST['time_missing']) : '';
+    $contact = isset($_POST['contact']) ? trim($_POST['contact']) : '';
+    $category_id = isset($_POST['category_id']) ? $_POST['category_id'] : '';
+    $new_category = isset($_POST['new_category']) ? trim($_POST['new_category']) : '';
+    $owner = isset($_POST['owner']) ? trim($_POST['owner']) : '';
+
+    // Validate required fields
+    if (empty($title) || empty($description) || empty($lastSeenLocation) || empty($timeMissing) || empty($contact) || empty($category_id) || empty($owner)) {
+        die('Please fill in all required fields.');
+    }
+
+    $status = 0; // Set to 0 for 'Pending'
 
     // Check if category_id is set to add new category
-    if ($category_id == 'add_new' && !empty($new_category)) {
+    if ($category_id === 'add_new' && !empty($new_category)) {
         $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
-        $stmt->bind_param("s", $new_category);
-        $stmt->execute();
-        $category_id = $stmt->insert_id;
-        $stmt->close();
+        if ($stmt) {
+            $stmt->bind_param("s", $new_category);
+            $stmt->execute();
+            $category_id = $stmt->insert_id;
+            $stmt->close();
+        } else {
+            die('Error creating new category.');
+        }
     }
 
     // Directory for uploading files
@@ -48,28 +60,43 @@ if (isset($_SESSION['user_id'])) {
 
     $uploadedFiles = [];
 
-    // Prepare and execute the SQL statement
+    // Insert into the missing_items table
     $sql = "INSERT INTO missing_items (user_id, title, description, last_seen_location, time_missing, contact, category_id, status, owner) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("isssssiss", $userId, $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
-    $stmt->execute();
-    $missingItemId = $stmt->insert_id;
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        die('Error preparing statement: ' . $conn->error);
+    }
+    $stmt->bind_param("isssssiss", $userId, $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
+    if ($stmt->execute()) {
+        $missingItemId = $stmt->insert_id;
+    } else {
+        die('Error executing statement: ' . $stmt->error);
+    }
     $stmt->close();
 
     // Handle file uploads
-    foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-        $fileName = basename($_FILES['images']['name'][$key]);
-        $targetFilePath = $uploadDir . $fileName;
+    if (!empty($_FILES['images']['tmp_name'][0])) {
+        foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+            $fileName = basename($_FILES['images']['name'][$key]);
+            $targetFilePath = $uploadDir . $fileName;
 
-        if (move_uploaded_file($tmpName, $targetFilePath)) {
-            $stmt = $conn->prepare("INSERT INTO missing_item_images (missing_item_id, image_path) VALUES (?, ?)");
-            $stmt->bind_param("is", $missingItemId, $fileName);
-            $stmt->execute();
-            $stmt->close();
-            $uploadedFiles[] = $targetFilePath;
-        } else {
-            $error = "Failed to upload file: " . $fileName;
+            // Check file type and size
+            $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
+            if (in_array($fileType, ['jpg', 'jpeg', 'png', 'gif']) && $_FILES['images']['size'][$key] <= 5000000) { // 5MB limit
+                if (move_uploaded_file($tmpName, $targetFilePath)) {
+                    $stmt = $conn->prepare("INSERT INTO missing_item_images (missing_item_id, image_path) VALUES (?, ?)");
+                    if ($stmt) {
+                        $stmt->bind_param("is", $missingItemId, $fileName);
+                        $stmt->execute();
+                        $stmt->close();
+                    }
+                } else {
+                    $error = "Failed to upload file: " . $fileName;
+                }
+            } else {
+                $error = "Invalid file type or size for: " . $fileName;
+            }
         }
     }
 
@@ -77,6 +104,7 @@ $stmt->bind_param("isssssiss", $userId, $title, $description, $lastSeenLocation,
     $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins before being published for public viewing.";
 }
 
+// Retrieve user info for logged-in users
 if (isset($userId)) {
     if ($userType === 'user_member') {
         // Query for regular user
@@ -92,6 +120,7 @@ if (isset($userId)) {
     $stmt->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
