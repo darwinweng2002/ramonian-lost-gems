@@ -470,7 +470,7 @@ body {
                 if (selectedRole === 'student') {
                     window.location.href = 'register.php'; // Redirect to student registration page
                 } else if (selectedRole === 'faculty') {
-                    window.location.href = 'register_staff.php'; // Redirect to faculty registration page
+                    window.location.href = 'https://ramonianlostgems.com/register_staff.php'; // Redirect to faculty registration page
                 }
             });
         });
