@@ -86,18 +86,6 @@ body {
   text-align: center; /* Center the text */
   font-size: 24px; /* Adjust font size as needed */
 }
- .role-selector {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .role-selector select {
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            width: 300px;
-        }
   </style>
   <main>
     <div class="container">
@@ -112,7 +100,7 @@ body {
             </a>
             </div><!-- End Logo -->
             <div class="role-selector">
-                                <label for="role-select"></label>
+                                <label for="role-select">Select your role:</label>
                                 <select id="role-select">
                                     <option value="" disabled selected>-- Select Role --</option>
                                     <option value="student">Register as Student</option>
@@ -468,9 +456,9 @@ body {
 
                 // Redirect based on the selected role
                 if (selectedRole === 'student') {
-                    window.location.href = 'register.php'; // Redirect to student registration page
+                    window.location.href = 'https://ramonianlostgems.com/register.php/'; // Redirect to student registration page
                 } else if (selectedRole === 'faculty') {
-                    window.location.href = 'register_staff.php'; // Redirect to faculty registration page
+                    window.location.href = 'https://ramonianlostgems.com/register_staff.php'; // Redirect to faculty registration page
                 }
             });
         });
