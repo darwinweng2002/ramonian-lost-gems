@@ -450,7 +450,7 @@ body {
             });
         });
     });
-    document.getElementById('userType').addEventListener('change', function() {
+     document.getElementById('userType').addEventListener('change', function() {
       const userType = this.value;
       document.getElementById('course-field').style.display = userType === 'student' ? '' : 'none';
       document.getElementById('year-field').style.display = userType === 'student' ? '' : 'none';
