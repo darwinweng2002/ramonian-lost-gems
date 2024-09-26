@@ -239,20 +239,27 @@ $message_stmt->close();
                                                             <td><?= htmlspecialchars($message['title']) ?></td>
                                                             <td><?= htmlspecialchars($message['time_found']) ?></td>
                                                             <td>
-                                                                <?php
-                                                                $statusClass = '';
-                                                                if ($message['status'] == 0) {
-                                                                    $statusClass = 'badge-pending';
-                                                                } elseif ($message['status'] == 1) {
-                                                                    $statusClass = 'badge-published';
-                                                                } elseif ($message['status'] == 2) {
-                                                                    $statusClass = 'badge-claimed';
-                                                                } elseif ($message['status'] == 3) {
-                                                                    $statusClass = 'badge-surrendered';
-                                                                }
-                                                                ?>
-                                                                <span class="badge-status <?= $statusClass ?>"><?= htmlspecialchars($message['status']) ?></span>
-                                                            </td>
+    <?php
+    switch ($message['status']) {
+        case 0:
+            $statusText = 'Pending';
+            break;
+        case 1:
+            $statusText = 'Published';
+            break;
+        case 2:
+            $statusText = 'Claimed';
+            break;
+        case 3:
+            $statusText = 'Surrendered';
+            break;
+        default:
+            $statusText = 'Unknown'; // In case of an unexpected value
+    }
+    ?>
+    <span class="badge-status"><?= htmlspecialchars($statusText) ?></span>
+</td>
+
                                                         </tr>
                                                     <?php endforeach; ?>
                                                 </tbody>
@@ -276,20 +283,27 @@ $message_stmt->close();
                                                             <td><?= htmlspecialchars($missing_item['title']) ?></td>
                                                             <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
                                                             <td>
-                                                                <?php
-                                                                $statusClass = '';
-                                                                if ($missing_item['status'] == 0) {
-                                                                    $statusClass = 'badge-pending';
-                                                                } elseif ($missing_item['status'] == 1) {
-                                                                    $statusClass = 'badge-published';
-                                                                } elseif ($missing_item['status'] == 2) {
-                                                                    $statusClass = 'badge-claimed';
-                                                                } elseif ($missing_item['status'] == 3) {
-                                                                    $statusClass = 'badge-surrendered';
-                                                                }
-                                                                ?>
-                                                                <span class="badge-status <?= $statusClass ?>"><?= htmlspecialchars($missing_item['status']) ?></span>
-                                                            </td>
+    <?php
+    switch ($missing_item['status']) {
+        case 0:
+            $statusText = 'Pending';
+            break;
+        case 1:
+            $statusText = 'Published';
+            break;
+        case 2:
+            $statusText = 'Claimed';
+            break;
+        case 3:
+            $statusText = 'Surrendered';
+            break;
+        default:
+            $statusText = 'Unknown';
+    }
+    ?>
+    <span class="badge-status"><?= htmlspecialchars($statusText) ?></span>
+</td>
+
                                                         </tr>
                                                     <?php endforeach; ?>
                                                 </tbody>
