@@ -6,11 +6,10 @@ $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284
 
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    // Log the error to a file
+    error_log("Connection failed: " . $conn->connect_error);
+    die("Connection failed: Check the error log for details.");
 }
-
-// Initialize $result as null
-$result = null;
 
 if (isset($_GET['id'])) {
     $itemId = $_GET['id'];
@@ -30,8 +29,20 @@ if (isset($_GET['id'])) {
             WHERE mi.id = ?";
 
     $stmt = $conn->prepare($sql);
+
+    if (!$stmt) {
+        // Log the SQL error and stop execution
+        error_log("SQL Error: " . $conn->error);
+        die("SQL Error: Check the error log for details.");
+    }
+
     $stmt->bind_param('i', $itemId);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        // Log any execution error
+        error_log("Execution Error: " . $stmt->error);
+        die("Execution Error: Check the error log for details.");
+    }
+
     $result = $stmt->get_result();
 }
 ?>
