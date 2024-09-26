@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
                 $_SESSION['user_type'] = $user_type; // Store user_type in session to differentiate between users
 
                 // Redirect to different pages based on user_type
-                if ($user_type === 'student') {
+                if ($user_type === 'faculty') {
                     header("Location: https://ramonianlostgems.com/main.php");
                 } elseif ($user_type === 'faculty') {
                     header("Location: https://ramonianlostgems.com/main.php");
