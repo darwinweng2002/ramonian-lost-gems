@@ -9,15 +9,21 @@ $error_message = '';
 
 // Check if the form is submitted for regular login
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
-    // Get form data
-    $username = $_POST['email'] ?? ''; // Using null coalescing operator to avoid undefined array key notice
-    $password = $_POST['password'] ?? '';
+    // Get form data and trim any leading or trailing whitespace
+    $username = trim($_POST['email'] ?? ''); // Using null coalescing operator to avoid undefined array key notice
+    $password = trim($_POST['password'] ?? '');
 
-    // Prepare and execute query
-    if ($stmt = $conn->prepare("SELECT id, password, user_type FROM user_member WHERE email = ?")) { 
-        $stmt->bind_param("s", $username);
+    // Debug: Print entered email and password for verification
+    echo "Entered Email: " . htmlspecialchars($username) . "<br>";
+
+    // Prepare and execute case-insensitive query
+    if ($stmt = $conn->prepare("SELECT id, password, user_type FROM user_member WHERE LOWER(email) = LOWER(?)")) {
+        $stmt->bind_param("s", $username); // Bind email parameter
         $stmt->execute();
         $stmt->store_result();
+
+        // Debug: Print number of rows found
+        echo "Number of Rows Found: " . $stmt->num_rows . "<br>";
 
         if ($stmt->num_rows > 0) {
             $stmt->bind_result($user_id, $hashed_password, $user_type);
@@ -31,21 +37,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
                 $_SESSION['user_type'] = $user_type; // Store user_type in session to differentiate between users
 
                 // Redirect to different pages based on user_type if needed (optional)
-                if ($user_type === 'user') {
-                    header("Location: https://ramonianlostgems.com/main.php");
-                } elseif ($user_type === 'faculty') {
-                    header("Location: https://ramonianlostgems.com/main.php");
-                } elseif ($user_type === 'staff') {
-                    header("Location: https://ramonianlostgems.com/main.php");
-                } else {
-                    header("Location: https://ramonianlostgems.com/main.php"); // For regular users or guests
-                }
+                header("Location: https://ramonianlostgems.com/main.php");
                 exit();
             } else {
                 $error_message = 'Invalid username or password.';
             }
         } else {
-            $error_message = 'No user found with that username.';
+            $error_message = 'No user found with that email.';
         }
     } else {
         $error_message = 'Error preparing statement: ' . $conn->error;
@@ -62,7 +60,13 @@ if (isset($_POST['guest_login'])) {
   header("Location: https://ramonianlostgems.com/main.php");
   exit();
 }
+
+// Debug: Show any error messages
+if ($error_message) {
+    echo $error_message;
+}
 ?>
+
 
 
 
