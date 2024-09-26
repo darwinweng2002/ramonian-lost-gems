@@ -5,10 +5,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Retrieve form data
   $first_name = $_POST['first_name'];
   $last_name = $_POST['last_name'];
-  $college = $_POST['college'];
-  $course = $_POST['course'];
-  $year = $_POST['year'];
-  $section = $_POST['section'];
+  $user_type = $_POST['user_type']; // Add user type field
+  $college = $_POST['college'] ?? null;
+  $course = $_POST['course'] ?? null;
+  $year = $_POST['year'] ?? null;
+  $section = $_POST['section'] ?? null;
+  $position = $_POST['position'] ?? null; // Add position field for staff
   $username = $_POST['email']; // This is now the username field, but keep the variable name as 'email'
   
   // Check if passwords match
@@ -22,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
 
   // Prepare the SQL statement
-  $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("ssssssss", $first_name, $last_name, $college, $course, $year, $section, $username, $password);
+  $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, user_type, college, course, year, section, position, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("ssssssssss", $first_name, $last_name, $user_type, $college, $course, $year, $section, $position, $username, $password);
 
   // Execute the query and check for success
   if ($stmt->execute()) {
@@ -87,7 +89,7 @@ body {
   font-size: 24px; /* Adjust font size as needed */
 }
   </style>
-  <main>
+ <main>
     <div class="container">
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
@@ -106,8 +108,17 @@ body {
                     <h5 class="card-title text-center pb-0 fs-4">User Registration</h5>
                     <p class="text-center small">Fill in the form to create an account</p>
                   </div>
-                  
-                  <!-- Updated registration form -->
+
+                  <!-- Add user type selection -->
+                  <div class="col-12">
+                    <label for="userType" class="form-label">Register As</label>
+                    <select name="user_type" class="form-control" id="userType" required>
+                      <option value="student" selected>Student</option>
+                      <option value="faculty">Faculty</option>
+                      <option value="staff">Staff</option>
+                    </select>
+                  </div>
+
                   <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php">
                       <div class="col-12">
                           <label for="firstName" class="form-label">First Name</label>
@@ -119,8 +130,10 @@ body {
                           <input type="text" name="last_name" class="form-control" id="lastName" required>
                           <div class="invalid-feedback">Please enter your last name.</div>
                       </div>
-                      <div class="col-12">
-                          <label for="college" class="form-label">College</label>
+
+                      <!-- For Students and Faculty -->
+                      <div class="col-12" id="college-field">
+                          <label for="college" class="form-label">College/Faculty</label>
                           <select name="college" class="form-control" id="college" required>
                               <option value="" disabled selected>Select your college</option>
                               <option value="CABA">College of Accountancy and Business Administration</option>
@@ -135,25 +148,29 @@ body {
                           </select>
                           <div class="invalid-feedback">Please select your college.</div>
                       </div>
-                      <div class="col-12">
+
+                      <!-- For Students only -->
+                      <div class="col-12" id="course-field">
                           <label for="course" class="form-label">Course</label>
                           <select name="course" class="form-control" id="course" required>
                               <option value="" disabled selected>Select your course</option>
+                              <!-- Add courses dynamically -->
                           </select>
                           <div class="invalid-feedback">Please select your course.</div>
                       </div>
-                      <div class="col-12">
+                      <div class="col-12" id="year-field">
                           <label for="year" class="form-label">Year</label>
                           <select name="year" class="form-control" id="year" required>
                               <option value="" disabled selected>Select your year</option>
-                              <option value="1st - year">1st - year</option>
-                              <option value="2nd - year">2nd - year</option>
+                              <option value="1st">1st Year</option>
+                              <option value="2nd">2nd Year</option>
                               <option value="3rd - year">3rd - year</option>
                               <option value="4th - year">4th - year</option>
+                              <!-- Add other years -->
                           </select>
                           <div class="invalid-feedback">Please select your year.</div>
                       </div>
-                      <div class="col-12">
+                      <div class="col-12" id="section-field">
                           <label for="section" class="form-label">Section</label>
                           <select name="section" class="form-control" id="section" required>
                               <option value="" disabled selected>Select your section</option>
@@ -163,46 +180,39 @@ body {
                               <option value="Section D">Section D</option>
                               <option value="Section E">Section E</option>
                               <option value="Section F">Section F</option>
+                              <!-- Add other sections -->
                           </select>
                           <div class="invalid-feedback">Please select your section.</div>
                       </div>
+
+                      <!-- For Staff only -->
+                      <div class="col-12" id="position-field" style="display: none;">
+                          <label for="position" class="form-label">Position/Job Title</label>
+                          <input type="text" name="position" class="form-control" id="position">
+                          <div class="invalid-feedback">Please enter your position/job title.</div>
+                      </div>
+
                       <!-- Updated username field -->
                       <div class="col-12">
                       <label for="email" class="form-label">Username</label> 
-                      <input type="text" name="email" class="form-control" id="email" pattern="^[a-zA-Z0-9]+$" required>
-                      <div class="invalid-feedback">Please enter a valid username (alphanumeric characters only, no "@" or email-like formats).</div>
+                      <input type="text" name="email" class="form-control" id="email" required>
+                      <div class="invalid-feedback">Please enter a valid username.</div>
                       </div>
-                      <!-- Password and Confirm Password Fields -->
+
+                      <!-- Password fields -->
                       <div class="col-12">
-                          <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
+                          <label for="yourPassword" class="form-label">Password</label>
                           <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
                           <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
                       </div>
                       <div class="col-12">
                           <label for="confirm_password" class="form-label">Confirm Password</label>
                           <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
-                          <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
+                          <div class="invalid-feedback">Passwords do not match.</div>
                       </div>
                       <div class="col-12">
                           <button class="btn btn-primary w-100" type="submit">Register</button>
                   </form>
-                  <!-- End form -->
-                  
-                  <div id="g_id_onload"
-                       data-client_id="462546722729-vflluo934lv9qei2jbeaqcib5sllh9t6.apps.googleusercontent.com"
-                       data-context="signin"
-                       data-ux_mode="popup"
-                       data-callback="handleCredentialResponse"
-                       data-auto_prompt="false">
-                  </div>
-                  <div class="g_id_signin"
-                       data-type="standard"
-                       data-shape="rectangular"
-                       data-theme="outline"
-                       data-text="signin_with"
-                       data-size="large"
-                       data-logo_alignment="left">
-                  </div>
               </div>
             </div>
           </div>
@@ -439,6 +449,14 @@ body {
                 }
             });
         });
+    });
+    document.getElementById('userType').addEventListener('change', function() {
+      const userType = this.value;
+      document.getElementById('course-field').style.display = userType === 'student' ? '' : 'none';
+      document.getElementById('year-field').style.display = userType === 'student' ? '' : 'none';
+      document.getElementById('section-field').style.display = userType === 'student' ? '' : 'none';
+      document.getElementById('college-field').style.display = userType === 'student' || userType === 'faculty' ? '' : 'none';
+      document.getElementById('position-field').style.display = userType === 'staff' ? '' : 'none';
     });
 </script>
 
