@@ -207,6 +207,9 @@ body {
             // Trim password fields to remove leading/trailing spaces
             var password = $('#yourPassword').val().trim();
             var confirmPassword = $('#confirm_password').val().trim();
+            var department = $('#department').val().trim();
+            var position = $('#position').val().trim();
+            var college = $('#college').val().trim();
 
             // Get the username value
             const username = $('#email').val().trim();
@@ -245,10 +248,21 @@ body {
                 return;
             }
 
+            // Ensure department, position, and college are filled
+            if (department === '' || position === '' || college === '') {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please fill in all the required fields.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
             // If validation passes, submit the form using AJAX
             var formData = $(this).serialize();
             $.ajax({
-                url: 'staff_process.php',
+                url: 'staff_process.php', // URL where you process the form data
                 type: 'POST',
                 data: formData,
                 dataType: 'json',
@@ -267,28 +281,28 @@ body {
                     } else {
                         Swal.fire({
                             title: 'Error!',
-                            text: response.message || 'An error occurred.',
+                            text: response.message || 'An error occurred during registration.',
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
                     }
                 },
                 error: function(xhr, status, error) {
+                    // Log the error if necessary
+                    console.error('AJAX Error:', status, error);
+
                     Swal.fire({
-                        title: 'Success!',
-                        text: 'Registration successful! You are all set to access your staff portal.',
-                        icon: 'success',
+                        title: 'Error!',
+                        text: 'An error occurred during registration. Please try again later.',
+                        icon: 'error',
                         confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = 'https://ramonianlostgems.com/';
-                        }
                     });
                 }
             });
         });
     });
-  </script>
+</script>
+
 <?php require_once('inc/footer.php') ?>
 </body>
 </html>
