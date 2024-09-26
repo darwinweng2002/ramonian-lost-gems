@@ -146,7 +146,7 @@ if (isset($_POST['guest_login'])) {
               <div class="card mb-3">
                 <div class="card-body">
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Staff Login</h5>
+                    <h5 class="card-title text-center pb-0 fs-4">Login as Faculty</h5>
                     <p class="text-center small">Enter your email & password to login</p>
                   </div>
                   <form class="row g-3 needs-validation" novalidate method="POST">
