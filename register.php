@@ -85,52 +85,19 @@ body {
   text-align: center; /* Center the text */
   font-size: 24px; /* Adjust font size as needed */
 }
-.back-btn-container {
-            margin: 20px 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        .back-btn {
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            transition: background-color 0.3s ease;
-        }
-
-        .back-btn svg {
-            margin-right: 8px;
-        }
-
-        .back-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .back-btn:focus {
-            outline: none;
-            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-        }
   </style>
-   <main>
+  <main>
     <div class="container">
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-              <div class="d-flex justify-content-center py-4">
-                <a href="#" class="logo d-flex align-items-center w-auto">
-                  <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
-                  <span><?= $_settings->info('name') ?></span>
-                </a>
-              </div><!-- End Logo -->
+            <div class="d-flex justify-content-center py-4">
+            <a href="#" class="logo d-flex align-items-center w-auto">
+                <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
+                <span><?= $_settings->info('name') ?></span>
+            </a>
+            </div><!-- End Logo -->
 
               <div class="card mb-3">
                 <div class="card-body">
@@ -138,7 +105,7 @@ body {
                     <h5 class="card-title text-center pb-0 fs-4">User Registration</h5>
                     <p class="text-center small">Fill in the form to create an account</p>
                   </div>
-
+                  
                   <!-- Updated registration form -->
                   <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php">
   <!-- First Name -->
@@ -166,11 +133,11 @@ body {
     <div class="invalid-feedback">Please select your user type.</div>
   </div>
 
-  <!-- For Faculty and Student -->
+  <!-- College/Department for Students and Faculty -->
   <div id="college-container" class="col-12">
-    <label for="college" class="form-label">Department/College</label>
+    <label for="college" class="form-label">College/Department</label>
     <select name="college" class="form-control" id="college" required>
-      <option value="" disabled selected>Select your department or college</option>
+      <option value="" disabled selected>Select your college/department</option>
       <option value="CABA">College of Accountancy and Business Administration</option>
                               <option value="CAS">College of Arts and Sciences</option>
                               <option value="CCIT">College of Communication and Information Technology</option>
@@ -183,11 +150,47 @@ body {
 
       <!-- Add more options as needed -->
     </select>
-    <div class="invalid-feedback">Please select your department or college.</div>
+    <div class="invalid-feedback">Please select your college/department.</div>
   </div>
 
-  <!-- For Staff Only -->
-  <div id="position-container" class="col-12" style="display:none;">
+  <!-- Course, Year, Section for Students Only -->
+  <div id="student-fields" style="display:none;">
+    <div class="col-12">
+      <label for="course" class="form-label">Course</label>
+      <select name="course" class="form-control" id="course">
+        <option value="" disabled selected>Select your course</option>
+      </select>
+      <div class="invalid-feedback">Please select your course.</div>
+    </div>
+    <div class="col-12">
+      <label for="year" class="form-label">Year</label>
+      <select name="year" class="form-control" id="year">
+        <option value="" disabled selected>Select your year</option>
+        <option value="1st - year">1st - year</option>
+        <option value="2nd - year">2nd - year</option>
+        <option value="3rd - year">3rd - year</option>
+        <option value="4th - year">4th - year</option>
+      </select>
+      <div class="invalid-feedback">Please select your year.</div>
+    </div>
+    <div class="col-12">
+      <label for="section" class="form-label">Section</label>
+      <select name="section" class="form-control" id="section">
+        <option value="" disabled selected>Select your section</option>
+        <option value="Section A">Section A</option>
+                              <option value="Section B">Section B</option>
+                              <option value="Section C">Section C</option>
+                              <option value="Section D">Section D</option>
+                              <option value="Section E">Section E</option>
+                              <option value="Section F">Section F</option>
+
+      </select>
+      <div class="invalid-feedback">Please select your section.</div>
+    </div>
+  </div>
+
+  <!-- Position/Job for Staff Only -->
+  <div id="staff-fields" class="col-12" style="display:none;">
     <label for="position" class="form-label">Position/Job</label>
     <input type="text" name="position" class="form-control" id="position">
     <div class="invalid-feedback">Please enter your position.</div>
@@ -210,19 +213,31 @@ body {
   <div class="col-12">
     <label for="confirm_password" class="form-label">Confirm Password</label>
     <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
-    <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
+    <div class="invalid-feedback">Passwords do not match.</div>
   </div>
 
   <div class="col-12">
     <button class="btn btn-primary w-100" type="submit">Register</button>
   </div>
 </form>
-
-                  <br>
-
-                </div>
+                  <!-- End form -->
+                  
+                  <div id="g_id_onload"
+                       data-client_id="462546722729-vflluo934lv9qei2jbeaqcib5sllh9t6.apps.googleusercontent.com"
+                       data-context="signin"
+                       data-ux_mode="popup"
+                       data-callback="handleCredentialResponse"
+                       data-auto_prompt="false">
+                  </div>
+                  <div class="g_id_signin"
+                       data-type="standard"
+                       data-shape="rectangular"
+                       data-theme="outline"
+                       data-text="signin_with"
+                       data-size="large"
+                       data-logo_alignment="left">
+                  </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -459,50 +474,6 @@ body {
             });
         });
     });
-    document.addEventListener('DOMContentLoaded', function () {
-      const userTypeSelect = document.getElementById('userType');
-      const collegeLabel = document.getElementById('collegeLabel');
-      const courseField = document.getElementById('courseField');
-      const yearField = document.getElementById('yearField');
-      const sectionField = document.getElementById('sectionField');
-      const positionField = document.getElementById('positionField');
-
-      userTypeSelect.addEventListener('change', function () {
-        const userType = this.value;
-
-        // Reset fields
-        courseField.style.display = 'none';
-        yearField.style.display = 'none';
-        sectionField.style.display = 'none';
-        positionField.style.display = 'none';
-
-        // Adjust fields based on user type
-        if (userType === 'student') {
-          collegeLabel.textContent = 'College';
-          courseField.style.display = 'block';
-          yearField.style.display = 'block';
-          sectionField.style.display = 'block';
-        } else if (userType === 'faculty') {
-          collegeLabel.textContent = 'Department';
-        } else if (userType === 'staff') {
-          collegeLabel.textContent = 'Department';
-          positionField.style.display = 'block';
-        }
-      });
-    });
-    document.getElementById('user_type').addEventListener('change', function() {
-    var userType = this.value;
-    var collegeContainer = document.getElementById('college-container');
-    var positionContainer = document.getElementById('position-container');
-
-    if (userType === 'student' || userType === 'faculty') {
-      collegeContainer.style.display = 'block';
-      positionContainer.style.display = 'none';
-    } else if (userType === 'staff') {
-      collegeContainer.style.display = 'none';
-      positionContainer.style.display = 'block';
-    }
-  });
 </script>
 
 
