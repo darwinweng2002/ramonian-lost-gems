@@ -227,7 +227,7 @@ $claimantData = $claimantResult->fetch_assoc();
         // Assuming form is valid
         Swal.fire({
             title: 'Claim Submitted!',
-            text: 'Your claim has been submitted successfully.',
+            text: 'Submission successful. Please proceed to the SSG office (located on the 3rd floor of the OSA Building) for verification to claim the item.',
             icon: 'success',
             confirmButtonText: 'OK'
         }).then(function() {
