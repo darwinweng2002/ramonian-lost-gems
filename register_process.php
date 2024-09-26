@@ -54,6 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Check if the username already exists
     $stmt = $conn->prepare("SELECT id FROM user_member WHERE email = ?");
+    if (!$stmt) {
+        // Debugging SQL error
+        echo "SQL Error: " . $conn->error;
+        exit;
+    }
+
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
@@ -69,13 +75,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Prepare the SQL statement to insert a new user
     $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, user_type, college, course, year, section, position, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    
+    if (!$stmt) {
+        // Debugging SQL error
+        echo "SQL Error: " . $conn->error;
+        exit;
+    }
+
     $stmt->bind_param("ssssssssss", $first_name, $last_name, $user_type, $college, $course, $year, $section, $position, $username, $hashed_password);
 
     // Execute the query and check for success
     if ($stmt->execute()) {
         $response = ['success' => true, 'message' => 'Registration successful!'];
     } else {
-        $response = ['success' => false, 'message' => 'Failed to register user.'];
+        // Output SQL error for debugging
+        echo "SQL Error: " . $stmt->error;
     }
 
     $stmt->close();
