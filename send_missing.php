@@ -1,11 +1,23 @@
 <?php
 include('config.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if user is logged in and user_id is set in session
-    if (!isset($_SESSION['user_id'])) {
-        die("User not logged in");
-    }
+session_start(); // Start session if not already started
+
+// Check if the user is logged in as either regular user or staff
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
+    die("User not logged in");
+}
+
+// Get the user ID and user type
+if (isset($_SESSION['user_id'])) {
+    // Regular user
+    $userId = $_SESSION['user_id'];
+    $userType = 'user_member'; // Table for regular users
+} elseif (isset($_SESSION['staff_id'])) {
+    // Staff user
+    $userId = $_SESSION['staff_id'];
+    $userType = 'user_staff'; // Table for staff users
+
 
     // Retrieve user inputs
     $title = $_POST['title'];
@@ -65,13 +77,17 @@ $stmt->bind_param("isssssiss", $userId, $title, $description, $lastSeenLocation,
     $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins before being published for public viewing.";
 }
 
-// Retrieve user information
-if (isset($_SESSION['user_id'])) {
-    $userId = $_SESSION['user_id'];
-    $stmt = $conn->prepare("SELECT first_name, college, email FROM user_member WHERE id = ?");
+if (isset($userId)) {
+    if ($userType === 'user_member') {
+        // Query for regular user
+        $stmt = $conn->prepare("SELECT first_name, last_name, college, email FROM user_member WHERE id = ?");
+    } else {
+        // Query for staff user
+        $stmt = $conn->prepare("SELECT first_name, last_name, department AS college, email FROM user_staff WHERE id = ?");
+    }
     $stmt->bind_param("i", $userId);
     $stmt->execute();
-    $stmt->bind_result($first_name, $college, $email);
+    $stmt->bind_result($first_name, $last_name, $college, $email);
     $stmt->fetch();
     $stmt->close();
 }
