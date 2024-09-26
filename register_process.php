@@ -87,22 +87,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     
     if ($stmt === false) {
-        $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
+        // Capture SQL error and show it for debugging
+        $response = ['success' => false, 'message' => 'Failed to prepare the database statement: ' . $conn->error];
         echo json_encode($response);
         exit;
     }
 
-    $stmt->bind_param("sssssssssss", 
+    // Bind parameters and execute
+    if ($stmt->bind_param("sssssssssss", 
         $first_name, $last_name, $college, 
         $course, $year, $section, 
         $faculty_department, $staff_position, 
-        $username, $hashed_password, $user_type);
+        $username, $hashed_password, $user_type)) {
 
-    // Execute the query and check for success
-    if ($stmt->execute()) {
-        $response = ['success' => true, 'message' => 'Registration successful!'];
+        // Execute the query and check for success
+        if ($stmt->execute()) {
+            $response = ['success' => true, 'message' => 'Registration successful!'];
+        } else {
+            $response = ['success' => false, 'message' => 'Failed to register user: ' . $stmt->error];
+        }
+
     } else {
-        $response = ['success' => false, 'message' => 'Failed to register user.'];
+        $response = ['success' => false, 'message' => 'Failed to bind parameters: ' . $stmt->error];
     }
 
     $stmt->close();
