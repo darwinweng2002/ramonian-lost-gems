@@ -246,6 +246,14 @@ if (isset($userId)) {
 
         <form action="send_missing.php" method="post" enctype="multipart/form-data" class="message-form">
         <label for="owner">Owner's Name:</label>
+        <?php if (isset($first_name) && isset($last_name) && isset($email)) { ?>
+    <!-- Logged-in User: Autofill Finder's Name with both first and last names and Disable Field -->
+    <input type="text" name="founder" id="founder" value="<?php echo htmlspecialchars($first_name . ' ' . $last_name); ?>" readonly>
+    <p>Your name is automatically set as the Owner.</p>
+<?php } else { ?>
+    <!-- Guest User: Show Finder's Name Input -->
+    <input type="text" name="founder" id="founder" placeholder="Enter finder's name" required>
+<?php } ?>
         <input type="text" name="owner" id="owner" placeholder="Enter the owner's name" required>
             <label for="title">Item Name:</label>
             <input type="text" name="title" id="title" placeholder="Enter item name" required>
