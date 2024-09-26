@@ -300,50 +300,52 @@ $resultMissing = $conn->query($sqlMissing);
     </div>
 
     <h2>Missing Items</h2>
-    <div class="gallery-grid">
-        <?php
-        if ($resultMissing->num_rows > 0) {
-            while ($row = $resultMissing->fetch_assoc()) {
-                $itemId = htmlspecialchars($row['id']);
-                $title = htmlspecialchars($row['title']);
-                $imagePaths = htmlspecialchars($row['image_paths']);
-                $status = isset($row['status']) && !is_null($row['status']) ? htmlspecialchars($row['status']) : 'Pending';  // Get status or default to 'Pending'
-                $images = explode(',', $imagePaths);
+<div class="gallery-grid">
+    <?php
+    if ($resultMissing->num_rows > 0) {
+        while ($row = $resultMissing->fetch_assoc()) {
+            $itemId = htmlspecialchars($row['id']);
+            $title = htmlspecialchars($row['title']);
+            $imagePaths = htmlspecialchars($row['image_paths']);
+            $status = isset($row['status']) && !is_null($row['status']) ? htmlspecialchars($row['status']) : 'Pending';  // Get status or default to 'Pending'
+            $images = explode(',', $imagePaths); // Split the image paths
 
-                echo "<div class='gallery-item'>";
-                echo "<a href='view_missing.php?id=" . $itemId . "'>";
+            echo "<div class='gallery-item'>";
+            echo "<a href='view_missing.php?id=" . $itemId . "'>";
 
-                // Add status badge based on the status value
-                echo "<span class='status-badge ";
-                if ($status == 1) {
-                    echo "badge-published";
-                } elseif ($status == 2) {
-                    echo "badge-claimed";
-                } elseif ($status == 3) {
-                    echo "badge-surrendered";
-                } else {
-                    echo "badge-pending";
-                }
-                echo "'>";
-                echo ($status == 1 ? 'Published' : ($status == 2 ? 'Claimed' : ($status == 3 ? 'Surrendered' : 'Pending')));
-                echo "</span>";
-
-                // Display the item image
-                if (!empty($images) && file_exists('../uploads/items/' . $images[0])) {
-                    echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
-                } else {
-                    // Fallback to default image if image does not exist
-                    echo "<img src='" . base_url . "uploads/items/no-image.png' alt='No Image'>";
-                }
-                echo "<h3>" . $title . "</h3>";
-                echo "</a>";
-                echo "</div>";
+            // Add status badge based on the status value
+            echo "<span class='status-badge ";
+            if ($status == 1) {
+                echo "badge-published";
+            } elseif ($status == 2) {
+                echo "badge-claimed";
+            } elseif ($status == 3) {
+                echo "badge-surrendered";
+            } else {
+                echo "badge-pending";
             }
-        } else {
-            echo "<p>No published missing items available.</p>";
+            echo "'>";
+            echo ($status == 1 ? 'Published' : ($status == 2 ? 'Claimed' : ($status == 3 ? 'Surrendered' : 'Pending')));
+            echo "</span>";
+
+            // Display the item image
+            $imagePath = !empty($images[0]) ? '../uploads/missing_items/' . $images[0] : '';
+            if (!empty($imagePath) && file_exists($imagePath)) {
+                echo "<img src='" . $imagePath . "' alt='" . $title . "'>";
+            } else {
+                // Fallback to default image if image does not exist
+                echo "<img src='" . base_url . "uploads/items/no-image.png' alt='No Image'>";
+            }
+            echo "<h3>" . $title . "</h3>";
+            echo "</a>";
+            echo "</div>";
         }
-        ?>
-    </div>
+    } else {
+        echo "<p>No published missing items available.</p>";
+    }
+    ?>
+</div>
+
     <div class="back-btn-container">
         <button class="back-btn" onclick="history.back()">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
