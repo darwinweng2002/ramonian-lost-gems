@@ -23,9 +23,17 @@ if ($conn->connect_error) {
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if the user is logged in
-    if (!isset($_SESSION['user_id'])) {
+    // Check if the user or staff is logged in
+    if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
         die("User not logged in.");
+    }
+
+    // Get the user ID from session (either user_id or staff_id)
+    $claimantId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : (isset($_SESSION['staff_id']) ? $_SESSION['staff_id'] : null);
+
+    // Check if claimantId is null (if neither user_id nor staff_id are available)
+    if ($claimantId === null) {
+        die("User ID is missing.");
     }
 
     // Get the data from the form
