@@ -54,6 +54,7 @@ if (isset($_POST['upload_avatar']) && !$is_guest) {
 }
 
 // Fetch the user's claim history
+// Fetch the user's claim history
 $claimer = [];
 if (!$is_guest) {
     // Only fetch claim history for regular users
@@ -63,9 +64,9 @@ if (!$is_guest) {
         JOIN item_list i ON c.item_id = i.id 
         WHERE c.user_id = ?
     ");
-    $claimer_stmt->bind_param("i", $user_id);
-    $claimer_stmt->execute();
-    $claimerstmt->bind_result($item_id, $item_name, $claim_date, $status);
+    $claim_stmt->bind_param("i", $user_id);
+    $claim_stmt->execute();
+    $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
     while ($claim_stmt->fetch()) {
         $claimer[] = [
             'item_id' => $item_id, 
@@ -76,6 +77,7 @@ if (!$is_guest) {
     }
     $claim_stmt->close();
 }
+
 
 // Fetch the user's posted missing items history
 $missing_items = [];
