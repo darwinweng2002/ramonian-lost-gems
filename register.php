@@ -86,43 +86,42 @@ body {
   text-align: center; /* Center the text */
   font-size: 24px; /* Adjust font size as needed */
 }
-#role-select {
-        appearance: none; /* Remove default dropdown arrow */
-        width: 100%;
-        padding: 12px 16px;
-        font-size: 16px;
-        border-radius: 8px;
-        border: 2px solid #007bff;
-        background-color: #f8f9fa;
-        color: #333;
-        cursor: pointer;
-        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        outline: none; /* Remove outline on focus */
-    }
+.role-selector {
+    width: 100%;
+    margin-bottom: 20px;
+}
 
-    /* Hover effect */
-    #role-select:hover {
-        border-color: #0056b3;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-    }
+.role-selector label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #333;
+}
 
-    /* Focus effect */
-    #role-select:focus {
-        border-color: #0056b3;
-        background-color: #e9ecef;
-    }
+.role-selector select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #0d6efd;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+    outline: none;
+    box-shadow: none;
+    transition: border-color 0.3s ease-in-out;
+}
 
-    /* Styling the dropdown arrow */
-    #role-select::after {
-        content: '▼';
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 12px;
-        color: #007bff;
-    }
+.role-selector select:focus {
+    border-color: #0d6efd;
+    outline: none;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.role-selector select option {
+    padding: 10px;
+    font-size: 16px;
+}
+
   </style>
   <main>
     <div class="container">
@@ -137,13 +136,13 @@ body {
             </a>
             </div><!-- End Logo -->
             <div class="role-selector">
-                                <label for="role-select">Select your role:</label>
-                                <select id="role-select">
-                                    <option value="" disabled selected>-- Select Role --</option>
-                                    <option value="student">Register as Student</option>
-                                    <option value="faculty">Register as Faculty</option>
-                                </select>
-                            </div>
+    <label for="role-select" class="form-label">Select your role:</label>
+    <select id="role-select" class="form-select">
+        <option value="" disabled selected>Register as</option>
+        <option value="student">Register as Student</option>
+        <option value="faculty">Register as Faculty</option>
+    </select>
+</div>
               <div class="card mb-3">
                 <div class="card-body">
                   <div class="pt-4 pb-2">
