@@ -86,6 +86,43 @@ body {
   text-align: center; /* Center the text */
   font-size: 24px; /* Adjust font size as needed */
 }
+#role-select {
+        appearance: none; /* Remove default dropdown arrow */
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 2px solid #007bff;
+        background-color: #f8f9fa;
+        color: #333;
+        cursor: pointer;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        outline: none; /* Remove outline on focus */
+    }
+
+    /* Hover effect */
+    #role-select:hover {
+        border-color: #0056b3;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Focus effect */
+    #role-select:focus {
+        border-color: #0056b3;
+        background-color: #e9ecef;
+    }
+
+    /* Styling the dropdown arrow */
+    #role-select::after {
+        content: '▼';
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 12px;
+        color: #007bff;
+    }
   </style>
   <main>
     <div class="container">
