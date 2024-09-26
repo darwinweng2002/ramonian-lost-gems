@@ -2,6 +2,14 @@
 // Include the database configuration file
 include '../config.php';
 
+// Start session (make sure it's at the top)
+session_start();
+
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Check if the staff user is logged in
 if (!isset($_SESSION['staff_id'])) {
     header("Location: ../login.php");
@@ -13,6 +21,9 @@ $staff_id = $_SESSION['staff_id'];
 
 // Prepare and execute query to fetch staff user information
 $stmt = $conn->prepare("SELECT first_name, last_name, department, email, avatar FROM user_staff WHERE id = ?");
+if ($stmt === false) {
+    die('MySQL prepare failed: ' . $conn->error);
+}
 $stmt->bind_param("i", $staff_id);
 $stmt->execute();
 $stmt->bind_result($first_name, $last_name, $department, $email, $avatar);
@@ -29,12 +40,15 @@ if (isset($_POST['upload_avatar'])) {
         // Move uploaded file to the avatars folder
         if (move_uploaded_file($avatar_tmp_name, $avatar_folder)) {
             $stmt = $conn->prepare("UPDATE user_staff SET avatar = ? WHERE id = ?");
+            if ($stmt === false) {
+                die('MySQL prepare failed: ' . $conn->error);
+            }
             $stmt->bind_param("si", $avatar_name, $staff_id);
             $stmt->execute();
             $stmt->close();
             
             // Refresh the page to reflect changes
-            header("Location: staff_dashboard.php");
+            header("Location: faculty_dashboard.php");
             exit;
         } else {
             echo "Failed to upload avatar.";
@@ -52,6 +66,9 @@ $claim_stmt = $conn->prepare("
     JOIN item_list i ON c.item_id = i.id 
     WHERE c.user_id = ?
 ");
+if ($claim_stmt === false) {
+    die('MySQL prepare failed: ' . $conn->error);
+}
 $claim_stmt->bind_param("i", $staff_id);
 $claim_stmt->execute();
 $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
@@ -68,6 +85,9 @@ $claim_stmt->close();
 // Fetch the staff's posted missing items history
 $missing_items = [];
 $missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
+if ($missing_stmt === false) {
+    die('MySQL prepare failed: ' . $conn->error);
+}
 $missing_stmt->bind_param("i", $staff_id);
 $missing_stmt->execute();
 $missing_stmt->bind_result($title, $time_missing, $status);
@@ -83,6 +103,9 @@ $missing_stmt->close();
 // Fetch the staff's posted found items
 $message_history = [];
 $message_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE user_id = ?");
+if ($message_stmt === false) {
+    die('MySQL prepare failed: ' . $conn->error);
+}
 $message_stmt->bind_param("i", $staff_id);
 $message_stmt->execute();
 $message_stmt->bind_result($title, $time_found, $status);
