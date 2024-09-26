@@ -262,43 +262,49 @@ $resultMissing = $conn->query($sqlMissing);
 
     <h2>Found Items</h2>
     <div class="gallery-grid">
-        <?php
-        if ($resultFound->num_rows > 0) {
-            while ($row = $resultFound->fetch_assoc()) {
-                $itemId = htmlspecialchars($row['id']);
-                $title = htmlspecialchars($row['title']);
-                $imagePaths = htmlspecialchars($row['image_paths']);
-                $status = htmlspecialchars($row['status']); // Get the status
-                $images = explode(',', $imagePaths);
+    <?php
+// Display the found items
+if ($resultFound->num_rows > 0) {
+    while ($row = $resultFound->fetch_assoc()) {
+        $itemId = htmlspecialchars($row['id']);
+        $title = htmlspecialchars($row['title']);
+        $imagePaths = htmlspecialchars($row['image_paths']);
+        $status = htmlspecialchars($row['status']); // Get the status
+        $images = explode(',', $imagePaths);
 
-                echo "<div class='gallery-item'>";
-                // Status Badge
-                echo "<span class='status-badge ";
-                if ($status == 1) {
-                    echo "badge-published'>Published";
-                } elseif ($status == 2) {
-                    echo "badge-claimed'>Claimed";
-                } elseif ($status == 3) {
-                    echo "badge-surrendered'>Surrendered";
-                } else {
-                    echo "badge-pending'>Pending";
-                }
-                echo "</span>";
+        echo "<div class='gallery-item'>";
 
-                // Image and title
-                echo "<a href='published_items.php?id=" . $itemId . "'>";
-                if (!empty($images)) {
-                    echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
-                } else {
-                    echo "<img src='uploads/items/default-image.png' alt='No Image'>";
-                }
-                echo "<h3>" . $title . "</h3>";
-                echo "</a>";
-                echo "</div>";
-            }
+        // Status Badge
+        echo "<span class='status-badge ";
+        if ($status == 1) {
+            echo "badge-published'>Published";
+        } elseif ($status == 2) {
+            echo "badge-claimed'>Claimed";
+        } elseif ($status == 3) {
+            echo "badge-surrendered'>Surrendered";
         } else {
-            echo "<p>No published found items available.</p>";
+            echo "badge-pending'>Pending";
         }
+        echo "</span>";
+
+        // Image and title
+        echo "<a href='published_items.php?id=" . $itemId . "'>";
+
+        // Check if image exists, else show default image
+        if (!empty($images) && file_exists('../uploads/items/' . $images[0])) {
+            echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
+        } else {
+            // Show default placeholder image if image is missing or doesn't exist
+            echo "<img src='" . base_url . "uploads/items/no-image.png' alt='No Image Available'>";
+        }
+
+        echo "<h3>" . $title . "</h3>";
+        echo "</a>";
+        echo "</div>";
+    }
+} else {
+    echo "<p>No published found items available.</p>";
+}
         ?>
     </div>
 
