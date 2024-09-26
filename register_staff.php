@@ -5,6 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Retrieve form data
   $first_name = $_POST['first_name'];
   $last_name = $_POST['last_name'];
+  $college = $_POST['college']; // Retrieve selected college
   $department = $_POST['department'];
   $position = $_POST['position'];
   $username = $_POST['email']; // This is now the username field, but keep the variable name as 'email'
@@ -20,8 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
 
   // Prepare the SQL statement for the user_staff table
-  $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, department, position, email, password) VALUES (?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("ssssss", $first_name, $last_name, $department, $position, $username, $password);
+  $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, college, department, position, email, password) VALUES (?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("ssssss", $first_name, $last_name, $college, $department, $position, $username, $password);
 
   // Execute the query and check for success
   if ($stmt->execute()) {
@@ -115,8 +116,9 @@ body {
                           <input type="text" name="last_name" class="form-control" id="lastName" required>
                           <div class="invalid-feedback">Please enter your last name.</div>
                       </div>
+                      <!-- College selection dropdown -->
                       <div class="col-12">
-                          <label for="college" class="form-label">Faculty/Department</label>
+                          <label for="college" class="form-label">College</label>
                           <select name="college" class="form-control" id="college" required>
                               <option value="" disabled selected>Select your college</option>
                               <option value="CABA">College of Accountancy and Business Administration</option>
@@ -129,7 +131,12 @@ body {
                               <option value="NUR">College of Nursing</option>
                               <option value="CTHM">College of Tourism and Hospitality Management</option>
                           </select>
-                          <div class="invalid-feedback">Please select your Faculty.</div>
+                          <div class="invalid-feedback">Please select your college.</div>
+                      </div>
+                      <div class="col-12">
+                          <label for="department" class="form-label">Department</label>
+                          <input type="text" name="department" class="form-control" id="department" required>
+                          <div class="invalid-feedback">Please enter your department.</div>
                       </div>
                       <div class="col-12">
                           <label for="position" class="form-label">Position</label>
@@ -285,4 +292,3 @@ body {
 <?php require_once('inc/footer.php') ?>
 </body>
 </html>
-
