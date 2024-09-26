@@ -86,6 +86,18 @@ body {
   text-align: center; /* Center the text */
   font-size: 24px; /* Adjust font size as needed */
 }
+.role-selector {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .role-selector select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 300px;
+        }
   </style>
   <main>
     <div class="container">
@@ -99,11 +111,18 @@ body {
                 <span><?= $_settings->info('name') ?></span>
             </a>
             </div><!-- End Logo -->
-
+            <div class="role-selector">
+                                <label for="role-select">Select your role:</label>
+                                <select id="role-select">
+                                    <option value="" disabled selected>-- Select Role --</option>
+                                    <option value="student">Register as Student</option>
+                                    <option value="faculty">Register as Faculty</option>
+                                </select>
+                            </div>
               <div class="card mb-3">
                 <div class="card-body">
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">User Registration</h5>
+                    <h5 class="card-title text-center pb-0 fs-4">Students User Registration</h5>
                     <p class="text-center small">Fill in the form to create an account</p>
                   </div>
                   
@@ -440,6 +459,21 @@ body {
             });
         });
     });
+    document.addEventListener('DOMContentLoaded', function () {
+            // Handle role selection change
+            const roleSelect = document.getElementById('role-select');
+
+            roleSelect.addEventListener('change', function () {
+                const selectedRole = this.value;
+
+                // Redirect based on the selected role
+                if (selectedRole === 'student') {
+                    window.location.href = 'register.php'; // Redirect to student registration page
+                } else if (selectedRole === 'faculty') {
+                    window.location.href = 'register_staff.php'; // Redirect to faculty registration page
+                }
+            });
+        });
 </script>
 
 

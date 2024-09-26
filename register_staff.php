@@ -99,7 +99,7 @@ body {
               <div class="card mb-3">
                 <div class="card-body">
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Staff Registration</h5>
+                    <h5 class="card-title text-center pb-0 fs-4">Register as Faculty</h5>
                     <p class="text-center small">Fill in the form to create a staff account</p>
                   </div>
                   
@@ -116,9 +116,20 @@ body {
                           <div class="invalid-feedback">Please enter your last name.</div>
                       </div>
                       <div class="col-12">
-                          <label for="department" class="form-label">Department</label>
-                          <input type="text" name="department" class="form-control" id="department" required>
-                          <div class="invalid-feedback">Please enter your department.</div>
+                          <label for="college" class="form-label">Faculty/Department</label>
+                          <select name="college" class="form-control" id="college" required>
+                              <option value="" disabled selected>Select your college</option>
+                              <option value="CABA">College of Accountancy and Business Administration</option>
+                              <option value="CAS">College of Arts and Sciences</option>
+                              <option value="CCIT">College of Communication and Information Technology</option>
+                              <option value="CTE">College of Teacher Education</option>
+                              <option value="CE">College of Engineering</option>
+                              <option value="CIT">College of Industrial Technology</option>
+                              <option value="CAF">College of Agriculture and Forestry</option>
+                              <option value="NUR">College of Nursing</option>
+                              <option value="CTHM">College of Tourism and Hospitality Management</option>
+                          </select>
+                          <div class="invalid-feedback">Please select your Faculty.</div>
                       </div>
                       <div class="col-12">
                           <label for="position" class="form-label">Position</label>
