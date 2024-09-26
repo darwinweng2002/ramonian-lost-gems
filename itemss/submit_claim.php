@@ -1,22 +1,20 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 include '../config.php';
 
 // Check if the form is submitted
-if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
-    die("User not logged in");
-}
-
-    // Determine if the user is a regular user or staff user
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Determine if user is a regular user or staff
     if (isset($_SESSION['user_id'])) {
+        // Regular user
         $claimantId = $_SESSION['user_id'];
-        $claimantType = 'user_member'; // Table for regular users
+        $userType = 'user_member';
     } elseif (isset($_SESSION['staff_id'])) {
+        // Staff user
         $claimantId = $_SESSION['staff_id'];
-        $claimantType = 'staff_user'; // Table for staff users
+        $userType = 'staff_user';
+    } else {
+        // Neither user nor staff logged in
+        die("User not logged in.");
     }
 
     // Get the data from the form
@@ -25,7 +23,6 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
     $dateLost = htmlspecialchars(trim($_POST['date_lost']));
     $locationLost = htmlspecialchars(trim($_POST['location_lost']));
     $securityQuestion = htmlspecialchars(trim($_POST['security_question']));
-    $claimantId = $_SESSION['user_id'];
 
     // Directory for uploading files
     $uploadDir = '../uploads/claims/';
@@ -33,34 +30,46 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
         mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
     }
 
-    // Handle proof of ownership file upload
+    // Initialize variables for file uploads
     $proofOfOwnershipPath = null;
+    $personalIdPath = null;
+
+    // Allowed file types
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+
+    // Handle proof of ownership file upload
     if (isset($_FILES['proof_of_ownership']) && $_FILES['proof_of_ownership']['error'] == UPLOAD_ERR_OK) {
         $fileName = basename($_FILES['proof_of_ownership']['name']);
         $fileType = $_FILES['proof_of_ownership']['type'];
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
 
         if (in_array($fileType, $allowedTypes)) {
-            $targetFilePath = $uploadDir . $fileName;
+            $targetFilePath = $uploadDir . uniqid() . '_' . $fileName; // Use a unique file name to avoid conflicts
             if (move_uploaded_file($_FILES['proof_of_ownership']['tmp_name'], $targetFilePath)) {
-                $proofOfOwnershipPath = $fileName; // Store just the file name in the database
+                $proofOfOwnershipPath = $targetFilePath; // Store full file path for better management
+            } else {
+                die("Error uploading proof of ownership file.");
             }
+        } else {
+            die("Invalid proof of ownership file type.");
         }
     }
 
     // Handle personal ID file upload
-    $personalIdPath = null;
     if (isset($_FILES['personal_id']) && $_FILES['personal_id']['error'] == UPLOAD_ERR_OK) {
         $fileName = basename($_FILES['personal_id']['name']);
         $fileType = $_FILES['personal_id']['type'];
+
         if (in_array($fileType, $allowedTypes)) {
-            $targetFilePath = $uploadDir . $fileName;
+            $targetFilePath = $uploadDir . uniqid() . '_' . $fileName; // Use a unique file name to avoid conflicts
             if (move_uploaded_file($_FILES['personal_id']['tmp_name'], $targetFilePath)) {
-                $personalIdPath = $fileName; // Store just the file name in the database
+                $personalIdPath = $targetFilePath; // Store full file path for better management
+            } else {
+                die("Error uploading personal ID file.");
             }
+        } else {
+            die("Invalid personal ID file type.");
         }
     }
-
 
     // Insert the claim into the database
     $sql = "INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id)
@@ -75,7 +84,7 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
     // Execute the query and check for errors
     if ($stmt->execute()) {
         // Success
-        header('Location: claim.php'); // Redirect to a success page
+        header('Location: success.php'); // Redirect to a success page
         exit();
     } else {
         // Error in query execution
@@ -84,4 +93,6 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
 
     $stmt->close();
     $conn->close();
+}
+
 ?>
