@@ -257,12 +257,23 @@ if (isset($_SESSION['user_id'])) {
         <?php endif; ?>
 
         <form action="send_missing.php" method="post" enctype="multipart/form-data" class="message-form">
-        <label for="owner">Owner's Name:</label>
-        <input type="text" name="owner" id="owner" placeholder="Enter the owner's name" required>
-            <label for="title">Item Name:</label>
-            <input type="text" name="title" id="title" placeholder="Enter item name" required>
-            <label for="category">Category:</label>
-<select name="category_id" id="category_id" required>
+    <label for="owner">Owner's Name:</label>
+    <input type="text" name="owner" id="owner" placeholder="Enter the owner's name" required>
+    
+    <label for="title">Item Name:</label>
+    <input type="text" name="title" id="title" placeholder="Enter item name" required>
+
+    <label for="category">Category:</label>
+    <select name="category_id" id="category_id" required>
+        <option value="">Select a category</option>
+        <!-- Category options go here -->
+        <option value="add_new">Add New Category</option>
+    </select>
+
+    <div id="newCategoryDiv" style="display: none;">
+        <label for="new_category">New Category:</label>
+        <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
+        <select name="category_id" id="category_id" required>
     <option value="">Select a category</option>
     <?php
     // Fetch categories from the database
@@ -283,28 +294,26 @@ if (isset($_SESSION['user_id'])) {
     </label>
     <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
 </div>
-            <label for="description">Description of the missing item:</label>
-            <textarea name="description" id="description" rows="4" placeholder="Describe the missing item" required></textarea>
 
-            <label for="last_seen_location">Last Seen Location:</label>
-            <input type="text" name="last_seen_location" id="last_seen_location" placeholder="Location where the item was last seen" required>
-            <label for="contact">
-                </svg> Contact Information:
-            </label>
-            <input type="text" id="contact" name="contact" pattern="[0-9]{10,11}" placeholder="Enter contact information" required>
-            <label for="time_missing">Time Missing:</label>
-            <input type="datetime-local" name="time_missing" id="time_missing" required>
-           
-            <label for="images">Upload Images:</label> <!-- Added the text label here -->
-<input type="file" name="images[]" id="images" multiple onchange="previewImages()">
-<div class="image-preview-container" id="imagePreviewContainer"></div>
-<p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
-<p>Upload multiple images if necessary.</p>
-            <button type="submit" class="submit-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
-        <line x1="22" x2="11" y1="2" y2="13"/>
-        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-    </svg>Submit Report</button>
-        </form>
+    </div>
+
+    <label for="description">Description of the missing item:</label>
+    <textarea name="description" id="description" rows="4" placeholder="Describe the missing item" required></textarea>
+
+    <label for="last_seen_location">Last Seen Location:</label>
+    <input type="text" name="last_seen_location" id="last_seen_location" placeholder="Location where the item was last seen" required>
+
+    <label for="contact">Contact Information:</label>
+    <input type="text" id="contact" name="contact" pattern="[0-9]{10,11}" placeholder="Enter contact information" required>
+
+    <label for="time_missing">Time Missing:</label>
+    <input type="datetime-local" name="time_missing" id="time_missing" required>
+
+    <label for="images">Upload Images:</label>
+    <input type="file" name="images[]" id="images" multiple>
+
+    <button type="submit" class="submit-btn">Submit Report</button>
+</form>
         <div class="back-btn-container">
     <button class="back-btn" onclick="history.back()">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
