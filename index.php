@@ -147,123 +147,63 @@ if (isset($_POST['guest_login'])) {
                     <h5 class="card-title text-center pb-0 fs-4">User Account Login</h5>
                     <p class="text-center small">Enter your email & password to login</p>
                   </div>
-                  <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php">
-  <!-- First Name -->
-  <div class="col-12">
-    <label for="firstName" class="form-label">First Name</label>
-    <input type="text" name="first_name" class="form-control" id="firstName" required>
-    <div class="invalid-feedback">Please enter your first name.</div>
-  </div>
+                  <form class="row g-3 needs-validation" novalidate method="POST">
+                              <div class="col-12">
+                  <label for="yourEmail" class="form-label">Username</label>
+                  <div class="input-group has-validation">
+                      <input type="text" name="email" class="form-control" id="yourEmail" required>
+                      <div class="invalid-feedback">Please enter your username.</div>
+                  </div>
+              </div>
+              <div class="col-12">
+                  <label for="yourPassword" class="form-label">Password</label>
+                  <input type="password" name="password" class="form-control" id="yourPassword" required>
+                  <div class="invalid-feedback">Please enter your password!</div>
+              </div>
+              <div class="col-12">
+                  <button class="btn btn-primary w-100" type="submit" id="loginButton" disabled>Login</button>
+              </div>
+              </form>
+                  <br>
+                  <button class="btn btn-primary w-100"><a style="color: #fff;" href="https://ramonianlostgems.com/admin/login.php">Login as Admin</a></button>
+                  <form method="POST" action="">
+                    <div class="col-12">
+                      <br>
+                      <p style="text-align: center;">Not a student or faculty member? Proceed as guest.
+                      <button class="btn btn-secondary w-100" type="submit" name="guest_login" value="1">Login as Guest</button>
+                      </p>
+                    </div>
+                  </form>
+                  <div class="text-center mt-3">
+                  <p>Don't have an account? 
+                      <a href="https://ramonianlostgems.com/register.php/" class="btn btn-primary w-100">Register account here</a>
+                  </p>
+              </div>
 
-  <!-- Last Name -->
-  <div class="col-12">
-    <label for="lastName" class="form-label">Last Name</label>
-    <input type="text" name="last_name" class="form-control" id="lastName" required>
-    <div class="invalid-feedback">Please enter your last name.</div>
-  </div>
-
-  <!-- User Type -->
-  <div class="col-12">
-    <label for="user_type" class="form-label">User Type</label>
-    <select name="user_type" class="form-control" id="user_type" required>
-      <option value="student">Student</option>
-      <option value="faculty">Faculty</option>
-      <option value="staff">Staff</option>
-    </select>
-    <div class="invalid-feedback">Please select your user type.</div>
-  </div>
-
-  <!-- For Faculty and Student -->
-  <div id="college-container" class="col-12">
-    <label for="college" class="form-label">Department/College</label>
-    <select name="college" class="form-control" id="college" required>
-      <option value="" disabled selected>Select your department or college</option>
-      <option value="CABA">College of Accountancy and Business Administration</option>
-                              <option value="CAS">College of Arts and Sciences</option>
-                              <option value="CCIT">College of Communication and Information Technology</option>
-                              <option value="CTE">College of Teacher Education</option>
-                              <option value="CE">College of Engineering</option>
-                              <option value="CIT">College of Industrial Technology</option>
-                              <option value="CAF">College of Agriculture and Forestry</option>
-                              <option value="NUR">College of Nursing</option>
-                              <option value="CTHM">College of Tourism and Hospitality Management</option>
-      <!-- Add more options as needed -->
-    </select>
-    <div class="invalid-feedback">Please select your department or college.</div>
-  </div>
-
-  <!-- For Staff Only -->
-  <div id="position-container" class="col-12" style="display:none;">
-    <label for="position" class="form-label">Position/Job</label>
-    <input type="text" name="position" class="form-control" id="position">
-    <div class="invalid-feedback">Please enter your position.</div>
-  </div>
-
-  <!-- Username -->
-  <div class="col-12">
-    <label for="email" class="form-label">Username</label>
-    <input type="text" name="email" class="form-control" id="email" required>
-    <div class="invalid-feedback">Please enter your username.</div>
-  </div>
-
-  <!-- Password Fields -->
-  <div class="col-12">
-    <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
-    <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
-    <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
-  </div>
-
-  <div class="col-12">
-    <label for="confirm_password" class="form-label">Confirm Password</label>
-    <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
-    <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
-  </div>
-
-  <div class="col-12">
-    <button class="btn btn-primary w-100" type="submit">Register</button>
-  </div>
-</form>
-
-      <br>
-      <button class="btn btn-primary w-100"><a style="color: #fff;" href="https://ramonianlostgems.com/admin/login.php">Login as Admin</a></button>
-      <form method="POST" action="">
-        <div class="col-12">
-          <br>
-          <p style="text-align: center;">Not a student or faculty member? Proceed as guest.
-          <button class="btn btn-secondary w-100" type="submit" name="guest_login" value="1">Login as Guest</button>
-          </p>
+                  <br>
+                  <br>
+                  <div id="g_id_onload"
+                    data-client_id="YGOCSPX-kVEygpsdOrU_3FQ8fHnfv86qUrRM"
+                    data-context="signin"
+                    data-ux_mode="popup"
+                    data-callback="handleCredentialResponse"
+                    data-auto_prompt="false">
+                  </div>
+                  <div class="g_id_signin"
+                      data-type="standard"
+                      data-shape="rectangular"
+                      data-theme="outline"
+                      data-text="signin_with"
+                      data-size="large"
+                      data-logo_alignment="left">
+                  </div>
+                </div>
+              </div>
+          
+            </div>
+          </div>
         </div>
-      </form>
-      <div class="text-center mt-3">
-      <p>Don't have an account? 
-          <a href="https://ramonianlostgems.com/register.php/" class="btn btn-primary w-100">Register account here</a>
-      </p>
-  </div>
-
-      <br>
-      <br>
-      <div id="g_id_onload"
-        data-client_id="YGOCSPX-kVEygpsdOrU_3FQ8fHnfv86qUrRM"
-        data-context="signin"
-        data-ux_mode="popup"
-        data-callback="handleCredentialResponse"
-        data-auto_prompt="false">
-      </div>
-      <div class="g_id_signin"
-          data-type="standard"
-          data-shape="rectangular"
-          data-theme="outline"
-          data-text="signin_with"
-          data-size="large"
-          data-logo_alignment="left">
-      </div>
-    </div>
-  </div>
-
-</div>
-</div>
-</div>
-</section>
+      </section>
     </div>
     <div id="loader" class="loader-wrapper" style="display:none;">
   <div class="loader"></div>
@@ -346,19 +286,6 @@ if (isset($_POST['guest_login'])) {
     $('#yourEmail, #yourPassword').on('keyup', function() {
       checkForm();
     });
-  });
-  document.getElementById('user_type').addEventListener('change', function() {
-    var userType = this.value;
-    var collegeContainer = document.getElementById('college-container');
-    var positionContainer = document.getElementById('position-container');
-
-    if (userType === 'student' || userType === 'faculty') {
-      collegeContainer.style.display = 'block';
-      positionContainer.style.display = 'none';
-    } else if (userType === 'staff') {
-      collegeContainer.style.display = 'none';
-      positionContainer.style.display = 'block';
-    }
   });
 </script>
 
