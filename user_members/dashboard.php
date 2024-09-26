@@ -182,7 +182,7 @@ if (!$is_guest) {
         .swal2-overlay {
             overflow: auto;             /* Allow scrolling of the page if necessary */
         }
-        @media (max-width: 600spx) {
+        @media (max-width: 512spx) {
         /* Adjust logo size */
         .logo img {
             max-height: 40px; /* Smaller logo for smaller screens */
@@ -284,7 +284,7 @@ if (!$is_guest) {
 }
 
 .notification-icon {
-    margin-left: 8px; /* Adjust margin for better spacing */
+    margin-left: 4px; /* Adjust margin for better spacing */
     display: inline-flex; /* Ensure icon aligns with text */
     align-items: center; /* Vertically align the bell icon */
 }
