@@ -1,3 +1,31 @@
+<?php
+include '../../config.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+// Database connection
+$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Initialize search term
+$searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
+
+// Update SQL query to include search functionality
+$sql = "SELECT c.id, c.item_id, mh.title AS item_name, um.first_name, um.last_name, c.item_description, c.date_lost, 
+        c.location_lost, c.proof_of_ownership, c.security_question, c.personal_id, c.status, c.claim_date
+        FROM claimer c
+        LEFT JOIN message_history mh ON c.item_id = mh.id
+        LEFT JOIN user_member um ON c.user_id = um.id
+        WHERE CONCAT_WS(' ', um.first_name, um.last_name, mh.title, c.item_description) LIKE '%$searchTerm%'
+        ORDER BY c.claim_date DESC";
+
+$result = $conn->query($sql);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <?php require_once('../inc/header.php'); ?>
@@ -9,7 +37,83 @@
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* Styling goes here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        .no-data {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #333;
+            padding: 30px 0;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .search-button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-button:hover {
+            background-color: #218838;
+        }
+        .btn {
+            padding: 10px 20px; /* Adjust these values for desired padding */
+    font-size: 16px; /* Ensure font size is the same for all buttons */
+    margin-bottom: 5px; 
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-approve {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-reject {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-info {
+            background-color: #007bff;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -85,8 +189,6 @@
         </table>
     </div>
 </div>
-
-<!-- Add this script to handle the deletion via AJAX -->
 <script>
     $(document).on('click', '.delete-claim', function() {
         const claimId = $(this).data('claim-id');
