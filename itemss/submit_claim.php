@@ -3,9 +3,18 @@ include '../config.php';
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if the user is logged in
-    if (!isset($_SESSION['user_id'])) {
+    // Check if the user (either regular user or staff) is logged in
+    if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
         die("User not logged in.");
+    }
+
+    // Determine if the user is a regular user or staff user
+    if (isset($_SESSION['user_id'])) {
+        $claimantId = $_SESSION['user_id'];
+        $claimantType = 'user_member'; // Table for regular users
+    } elseif (isset($_SESSION['staff_id'])) {
+        $claimantId = $_SESSION['staff_id'];
+        $claimantType = 'staff_user'; // Table for staff users
     }
 
     // Get the data from the form
@@ -14,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $dateLost = htmlspecialchars(trim($_POST['date_lost']));
     $locationLost = htmlspecialchars(trim($_POST['location_lost']));
     $securityQuestion = htmlspecialchars(trim($_POST['security_question']));
-    $claimantId = $_SESSION['user_id'];
 
     // Directory for uploading files
     $uploadDir = '../uploads/claims/';
@@ -70,9 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!$stmt) {
         die("Database error: " . $conn->error);
     }
-    
+
     $stmt->bind_param('iissssss', $itemId, $claimantId, $itemDescription, $dateLost, $locationLost, $proofOfOwnershipPath, $securityQuestion, $personalIdPath);
-    
+
     // Execute the query and check for errors
     if ($stmt->execute()) {
         // Success
