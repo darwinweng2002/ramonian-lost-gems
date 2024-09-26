@@ -1,8 +1,6 @@
 <?php
 include '../config.php';
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+
 // Start the session if not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -21,10 +19,10 @@ if (isset($_SESSION['user_id'])) {
     $userType = 'user_member';
     $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, section FROM user_member WHERE id = ?";
 } elseif (isset($_SESSION['staff_id'])) {
-    // Staff user
+    // Staff user, assuming the correct table name is `user_staff`
     $claimantId = $_SESSION['staff_id'];
-    $userType = 'user_staff';
-    $sqlClaimant = "SELECT first_name, last_name, email, department AS college, NULL AS course, NULL AS year, NULL AS section FROM user_staff WHERE id = ?";
+    $userType = 'user_staff';  // Update with the correct staff table name
+    $sqlClaimant = "SELECT first_name, last_name, email, department AS college, NULL AS course, NULL AS year, NULL AS section FROM user_staff WHERE id = ?";  // Correct table and field names
 }
 
 // Database connection
@@ -59,6 +57,7 @@ $stmtClaimant->execute();
 $claimantResult = $stmtClaimant->get_result();
 $claimantData = $claimantResult->fetch_assoc();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
