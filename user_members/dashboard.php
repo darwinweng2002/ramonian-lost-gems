@@ -50,20 +50,20 @@ if (isset($_POST['upload_avatar']) && !$is_guest) {
 }
 
 // Fetch the user's claim history
-$claims = [];
+$claimer = [];
 if (!$is_guest) {
     // Only fetch claim history for regular users
     $claim_stmt = $conn->prepare("
         SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
-        FROM claims c 
+        FROM claimer c 
         JOIN item_list i ON c.item_id = i.id 
         WHERE c.user_id = ?
     ");
-    $claim_stmt->bind_param("i", $user_id);
-    $claim_stmt->execute();
-    $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
+    $claimer_stmt->bind_param("i", $user_id);
+    $claimer_stmt->execute();
+    $claimerstmt->bind_result($item_id, $item_name, $claim_date, $status);
     while ($claim_stmt->fetch()) {
-        $claims[] = [
+        $claimer[] = [
             'item_id' => $item_id, 
             'item_name' => $item_name, 
             'claim_date' => $claim_date, 
@@ -455,7 +455,7 @@ if (!$is_guest) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($claims as $claim): ?>
+                    <?php foreach ($claimer as $claimer): ?>
                         <tr>
                             <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
                             <td><?= htmlspecialchars($claim['claim_date']) ?></td>
