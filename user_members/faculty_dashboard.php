@@ -461,33 +461,44 @@ $message_stmt->close();
                                                             <td><?= htmlspecialchars($message['title']) ?></td>
                                                             <td><?= htmlspecialchars($message['time_found']) ?></td>
                                                             <td>
-                                                            <?php
-                                                            switch ($message['status']) {
-                                                                case 0:
-                                                                    $statusText = 'Pending';
-                                                                    $statusClass = 'badge-pending';
-                                                                    break;
-                                                                case 1:
-                                                                    $statusText = 'Published';
-                                                                    $statusClass = 'badge-published';
-                                                                    break;
-                                                                case 2:
-                                                                    $statusText = 'Claimed';
-                                                                    $statusClass = 'badge-claimed';
-                                                                    break;
-                                                                case 3:
-                                                                    $statusText = 'Surrendered';
-                                                                    $statusClass = 'badge-surrendered';
-                                                                    break;
-                                                                default:
-                                                                    $statusText = 'Unknown';
-                                                                    $statusClass = '';
-                                                            }
-                                                            ?>
-                                                            <span class="badge-status <?= htmlspecialchars($statusClass) ?>">
-                                                                <?= htmlspecialchars($statusText) ?>
-                                                            </span>
-                                                        </td>
+    <?php
+    $showNotification = false; // Initialize notification flag
+    
+    switch ($message['status']) {
+        case 0:
+            $statusText = 'Pending';
+            $statusClass = 'badge-pending';
+            break;
+        case 1:
+            $statusText = 'Published';
+            $statusClass = 'badge-published';
+            break;
+        case 2:
+            $statusText = 'Claimed';
+            $statusClass = 'badge-claimed';
+            break;
+        case 3:
+            $statusText = 'Surrendered';
+            $statusClass = 'badge-surrendered';
+            $showNotification = true; // Show notification for surrendered items
+            break;
+        default:
+            $statusText = 'Unknown';
+            $statusClass = '';
+    }
+    ?>
+    <span class="badge-status <?= htmlspecialchars($statusClass) ?>">
+        <?= htmlspecialchars($statusText) ?>
+    </span>
+
+    <!-- Show notification icon if the item is surrendered -->
+    <?php if ($showNotification): ?>
+        <i class="bi bi-bell-fill notification-icon"
+           onclick="showSurrenderNotification('<?= htmlspecialchars($message['title']) ?>')"
+           style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
+    <?php endif; ?>
+</td>
+
 
 
                                                         </tr>
@@ -514,25 +525,43 @@ $message_stmt->close();
                                                             <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
                                                             <td>
     <?php
+    $showNotification = false; // Initialize notification flag
+    
     switch ($missing_item['status']) {
         case 0:
             $statusText = 'Pending';
+            $statusClass = 'badge-pending';
             break;
         case 1:
             $statusText = 'Published';
+            $statusClass = 'badge-published';
             break;
         case 2:
             $statusText = 'Claimed';
+            $statusClass = 'badge-claimed';
             break;
         case 3:
             $statusText = 'Surrendered';
+            $statusClass = 'badge-surrendered';
+            $showNotification = true; // Show notification for surrendered items
             break;
         default:
             $statusText = 'Unknown';
+            $statusClass = '';
     }
     ?>
-    <span class="badge-status"><?= htmlspecialchars($statusText) ?></span>
+    <span class="badge-status <?= htmlspecialchars($statusClass) ?>">
+        <?= htmlspecialchars($statusText) ?>
+    </span>
+
+    <!-- Show notification icon if the item is surrendered -->
+    <?php if ($showNotification): ?>
+        <i class="bi bi-bell-fill notification-icon"
+           onclick="showSurrenderNotification('<?= htmlspecialchars($missing_item['title']) ?>')"
+           style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
+    <?php endif; ?>
 </td>
+
 
                                                         </tr>
                                                     <?php endforeach; ?>
@@ -559,6 +588,47 @@ $message_stmt->close();
     <script src="<?= base_url ?>assets/js/main.js"></script>
     <!-- Include SweetAlert JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        function updateClaimHistory() {
+        $.ajax({
+            url: 'fetch_claims.php', // Create this PHP file to return the claim history
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                let tableBody = $('.claim-history-table tbody');
+                tableBody.empty();
+                data.forEach(claim => {
+                    tableBody.append(`
+                        <tr>
+                            <td><a href="view_item.php?id=${claim.item_id}">${claim.item_name}</a></td>
+                            <td>${claim.claim_date}</td>
+                            <td class="${claim.status === 'Approved' ? 'status-approved' : ''}">${claim.status}</td>
+                        </tr>
+                    `);
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching claim history:', error);
+            }
+        });
+    }
+
+    // Call the function to update claim history on page load
+    $(document).ready(function() {
+        updateClaimHistory();
+
+        // Optionally, set an interval to update the claim history periodically
+        setInterval(updateClaimHistory, 60000); // Update every 60 seconds
+    });
+    function showSurrenderNotification(itemTitle) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Item Surrendered',
+            text: `Someone surrendered your missing item (${itemTitle}), you can go to SSG office to claim it.`,
+            confirmButtonText: 'OK'
+        });
+    }
+    </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
