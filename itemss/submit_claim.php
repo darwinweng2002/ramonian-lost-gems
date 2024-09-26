@@ -84,5 +84,4 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
 
     $stmt->close();
     $conn->close();
-}
 ?>
