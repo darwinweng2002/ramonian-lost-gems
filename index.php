@@ -14,29 +14,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
     $password = $_POST['password'] ?? '';
 
     // Prepare and execute query
-    if ($stmt = $conn->prepare("SELECT id, password FROM user_member WHERE email = ?")) { // 'email' column is still used for usernames
+    if ($stmt = $conn->prepare("SELECT id, password, user_type FROM user_member WHERE email = ?")) { 
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
-            $stmt->bind_result($user_id, $hashed_password);
+            $stmt->bind_result($user_id, $hashed_password, $user_type);
             $stmt->fetch();
 
             // Verify password
             if (password_verify($password, $hashed_password)) {
                 // Password is correct, start a session
                 $_SESSION['user_id'] = $user_id;
-                $_SESSION['email'] = $username;  // Store the username in the session (same variable for compatibility)
+                $_SESSION['email'] = $username; // Store the username in the session
+                $_SESSION['user_type'] = $user_type; // Store user_type in session to differentiate between users
 
-                // Redirect to a protected page
-                header("Location: https://ramonianlostgems.com/main.php");
+                // Redirect to different pages based on user_type if needed (optional)
+                if ($user_type === 'student') {
+                    header("Location: https://ramonianlostgems.com/main.php");
+                } elseif ($user_type === 'faculty') {
+                    header("Location: https://ramonianlostgems.com/main.php");
+                } elseif ($user_type === 'staff') {
+                    header("Location: https://ramonianlostgems.com/main.php");
+                } else {
+                    header("Location: https://ramonianlostgems.com/main.php"); // For regular users or guests
+                }
                 exit();
             } else {
-                $error_message = 'Invalid username or password.'; // Update message to reflect username
+                $error_message = 'Invalid username or password.';
             }
         } else {
-            $error_message = 'No user found with that username.'; // Update message to reflect username
+            $error_message = 'No user found with that username.';
         }
     } else {
         $error_message = 'Error preparing statement: ' . $conn->error;
@@ -54,6 +63,7 @@ if (isset($_POST['guest_login'])) {
   exit();
 }
 ?>
+
 
 
 <!DOCTYPE html>
