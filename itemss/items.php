@@ -42,7 +42,7 @@ $categoriesResult = $conn->query("SELECT id, name FROM categories");
 $sqlFound = "SELECT mh.id, mh.title, mh.category_id, mh.time_found, mh.message, mh.status, GROUP_CONCAT(mi.image_path) AS image_paths
              FROM message_history mh
              LEFT JOIN message_images mi ON mh.id = mi.message_id
-             WHERE mh.is_published = 1 AND mh.status = 1";
+             WHERE mh.is_published = 1 AND mh.status = 1"; // Only fetch items where status is Published
 
 // Search and filter by category
 if ($searchTerm) {
@@ -108,6 +108,47 @@ $resultMissing = $conn->query($sqlMissing);
             color: #333;
             margin-bottom: 20px;
         }
+        .search-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-bar form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-bar input[type="text"],
+        .search-bar select {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .search-bar input[type="text"]:focus,
+        .search-bar select:focus {
+            border-color: #333;
+            outline: none;
+        }
+        .search-bar button {
+            padding: 12px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .search-bar button:hover {
+            background-color: #008BFF;
+        }
+
+        /* Gallery Grid Styling */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -121,13 +162,24 @@ $resultMissing = $conn->query($sqlMissing);
             text-align: center;
             position: relative;
             overflow: hidden;
-            height: 350px;
+            height: 350px; /* Adjusted for consistency */
         }
         .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 5px;
+        }
+        .gallery-item h3 {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 5px;
+            text-align: center;
+            border-radius: 0 0 8px 8px;
         }
         .status-badge {
             position: absolute;
@@ -142,6 +194,39 @@ $resultMissing = $conn->query($sqlMissing);
         .badge-claimed { background-color: #ffc107; }
         .badge-surrendered { background-color: #6c757d; }
         .badge-pending { background-color: #007bff; }
+        .back-btn-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn svg {
+            margin-right: 8px;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .back-btn:focus {
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -149,6 +234,29 @@ $resultMissing = $conn->query($sqlMissing);
 
 <div class="container">
     <h1>Published Items</h1>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <form action="" method="get">
+            <input type="text" name="search" placeholder="Search by title or description" value="<?php echo htmlspecialchars($searchTerm); ?>">
+            <select name="category_id">
+                <option value="" <?php echo $selectedCategory === '' ? 'selected' : ''; ?>>All Categories</option>
+                <?php
+                if ($categoriesResult->num_rows > 0) {
+                    while ($row = $categoriesResult->fetch_assoc()) {
+                        $categoryId = htmlspecialchars($row['id']);
+                        $categoryName = htmlspecialchars($row['name']);
+                        $selected = $selectedCategory == $categoryId ? 'selected' : '';
+                        echo "<option value=\"$categoryId\" $selected>$categoryName</option>";
+                    }
+                }
+                ?>
+            </select>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <h2>Found Items</h2>
     <div class="gallery-grid">
         <?php
         if ($resultFound->num_rows > 0) {
@@ -158,9 +266,9 @@ $resultMissing = $conn->query($sqlMissing);
                 $imagePaths = htmlspecialchars($row['image_paths']);
                 $status = htmlspecialchars($row['status']); // Get the status
                 $images = explode(',', $imagePaths);
-                
-                // Status Badge
+
                 echo "<div class='gallery-item'>";
+                // Status Badge
                 echo "<span class='status-badge ";
                 if ($status == 1) {
                     echo "badge-published'>Published";
@@ -173,15 +281,16 @@ $resultMissing = $conn->query($sqlMissing);
                 }
                 echo "</span>";
 
-                // Display the item image
-                $imagePath = "../uploads/items/" . $images[0]; // Correct path to the image directory
-                if (!empty($images[0]) && file_exists($imagePath)) {
-                    echo "<img src='" . $imagePath . "' alt='" . $title . "'>";
+                // Image and title
+                echo "<a href='published_items.php?id=" . $itemId . "'>";
+                if (!empty($images) && file_exists('../uploads/items/' . $images[0])) {
+                    echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
                 } else {
-                    // Fallback to default image if image does not exist
-                    echo "<img src='../uploads/items/no-image.png' alt='No Image'>";
+                    // Fallback if no image or broken image
+                    echo "<img src='" . base_url . "uploads/items/no-image.png' alt='No Image'>";
                 }
                 echo "<h3>" . $title . "</h3>";
+                echo "</a>";
                 echo "</div>";
             }
         } else {
@@ -220,12 +329,11 @@ $resultMissing = $conn->query($sqlMissing);
                 echo "</span>";
 
                 // Display the item image
-                $imagePath = "../uploads/items/" . $images[0]; // Correct path to the image directory
-                if (!empty($images[0]) && file_exists($imagePath)) {
-                    echo "<img src='" . $imagePath . "' alt='" . $title . "'>";
+                if (!empty($images) && file_exists('../uploads/items/' . $images[0])) {
+                    echo "<img src='" . base_url . 'uploads/items/' . $images[0] . "' alt='" . $title . "'>";
                 } else {
                     // Fallback to default image if image does not exist
-                    echo "<img src='../uploads/items/no-image.png' alt='No Image'>";
+                    echo "<img src='" . base_url . "uploads/items/no-image.png' alt='No Image'>";
                 }
                 echo "<h3>" . $title . "</h3>";
                 echo "</a>";
@@ -235,6 +343,15 @@ $resultMissing = $conn->query($sqlMissing);
             echo "<p>No published missing items available.</p>";
         }
         ?>
+    </div>
+    <div class="back-btn-container">
+        <button class="back-btn" onclick="history.back()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
+                <line x1="19" y1="12" x2="5" y2="12"/>
+                <polyline points="12 19 5 12 12 5"/>
+            </svg>
+            Back
+        </button>
     </div>
 </div>
 

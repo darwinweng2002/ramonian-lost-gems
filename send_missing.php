@@ -1,8 +1,6 @@
 <?php
 include('config.php');
 
-session_start(); // Start session if not already started
-
 // Check if the user is logged in as either regular user or staff
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
     die("User not logged in");
@@ -19,19 +17,19 @@ if (isset($_SESSION['user_id'])) {
     $userType = 'user_staff'; // Table for staff users
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve user inputs
     $title = $_POST['title'];
     $description = $_POST['description'];
     $lastSeenLocation = $_POST['last_seen_location'];
     $timeMissing = $_POST['time_missing'];
+    $userId = $_SESSION['user_id'];
     $status = 0; // Set to 0 for 'Pending' (assuming 0 is for 'Pending')
     $contact = isset($_POST['contact']) ? $_POST['contact'] : '';
     $category_id = $_POST['category_id'];
     $new_category = $_POST['new_category'];
     $owner = $_POST['owner'];
 
-    // Check if category_id is set to add a new category
+    // Check if category_id is set to add new category
     if ($category_id == 'add_new' && !empty($new_category)) {
         $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
         $stmt->bind_param("s", $new_category);
@@ -46,13 +44,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
     }
 
+    $uploadedFiles = [];
+
     // Prepare and execute the SQL statement
     $sql = "INSERT INTO missing_items (user_id, title, description, last_seen_location, time_missing, contact, category_id, status, owner) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isssssiss", $userId, $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("isssssiss", $userId, $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
     $stmt->execute();
-    $missingItemId = $stmt->insert_id; // Get the last inserted missing item ID
+    $missingItemId = $stmt->insert_id;
     $stmt->close();
 
     // Handle file uploads
@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param("is", $missingItemId, $fileName);
             $stmt->execute();
             $stmt->close();
+            $uploadedFiles[] = $targetFilePath;
         } else {
             $error = "Failed to upload file: " . $fileName;
         }
@@ -74,18 +75,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins before being published for public viewing.";
 }
 
-// Retrieve user information based on user type
-if (isset($userId)) {
-    if ($userType === 'user_member') {
-        // Query for regular user
-        $stmt = $conn->prepare("SELECT first_name, last_name, college, email FROM user_member WHERE id = ?");
-    } else {
-        // Query for staff user
-        $stmt = $conn->prepare("SELECT first_name, last_name, department AS college, email FROM user_staff WHERE id = ?");
-    }
+// Retrieve user information
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+    $stmt = $conn->prepare("SELECT first_name, college, email FROM user_member WHERE id = ?");
     $stmt->bind_param("i", $userId);
     $stmt->execute();
-    $stmt->bind_result($first_name, $last_name, $college, $email);
+    $stmt->bind_result($first_name, $college, $email);
     $stmt->fetch();
     $stmt->close();
 }
@@ -237,23 +233,16 @@ if (isset($userId)) {
     <br>
     <div class="container">
     <h2 class="user-info">Report Missing Item</h2>
-        <?php if (isset($first_name) && isset($last_name) && isset($email) && isset($college)): ?>
-    <div class="user-info">
-        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg> College: <?php echo htmlspecialchars($college); ?></p>
-        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paperclip"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg> Username: <?php echo htmlspecialchars($first_name . ' ' . $last_name); ?> (<?php echo htmlspecialchars($email); ?>)</p>
-    </div>
-<?php endif; ?>
+        <?php if (isset($first_name) && isset($email) && isset($college)): ?>
+        <div class="user-info">
+            <p>College: <?php echo htmlspecialchars($college); ?></p>
+            <p>Email: <?php echo htmlspecialchars($email); ?></p>
+        </div>
+        <?php endif; ?>
 
         <form action="send_missing.php" method="post" enctype="multipart/form-data" class="message-form">
         <label for="owner">Owner's Name:</label>
-        <?php if (isset($first_name) && isset($last_name) && isset($email)) { ?>
-    <!-- Logged-in User: Autofill Finder's Name with both first and last names and Disable Field -->
-    <input type="text" name="owner" id="owner" value="<?php echo htmlspecialchars($first_name . ' ' . $last_name); ?>" readonly>
-    <p>Your name is automatically set as the Owner.</p>
-<?php } else { ?>
-    <!-- Guest User: Show Finder's Name Input -->
-    <input type="text" name="owner" id="owner" placeholder="Enter owner's name" required>
-<?php } ?>
+        <input type="text" name="owner" id="owner" placeholder="Enter the owner's name" required>
             <label for="title">Item Name:</label>
             <input type="text" name="title" id="title" placeholder="Enter item name" required>
             <label for="category">Category:</label>
