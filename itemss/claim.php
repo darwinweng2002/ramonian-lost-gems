@@ -1,10 +1,28 @@
 <?php
 include '../config.php';
 
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
+// Start the session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check if the user is logged in as either a regular user or staff
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
     header('Location: login.php');
     exit();
+}
+
+// Determine user type and fetch user info accordingly
+if (isset($_SESSION['user_id'])) {
+    // Regular user
+    $claimantId = $_SESSION['user_id'];
+    $userType = 'user_member';
+    $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, section FROM user_member WHERE id = ?";
+} elseif (isset($_SESSION['staff_id'])) {
+    // Staff user
+    $claimantId = $_SESSION['staff_id'];
+    $userType = 'staff_user';
+    $sqlClaimant = "SELECT first_name, last_name, email, department AS college, NULL AS course, NULL AS year, NULL AS section FROM staff_user WHERE id = ?";
 }
 
 // Database connection
@@ -33,8 +51,6 @@ $itemResult = $stmt->get_result();
 $itemData = $itemResult->fetch_assoc();
 
 // Fetch claimant's user info
-$claimantId = $_SESSION['user_id'];
-$sqlClaimant = "SELECT first_name, last_name, email, college, course, year, section FROM user_member WHERE id = ?";
 $stmtClaimant = $conn->prepare($sqlClaimant);
 $stmtClaimant->bind_param('i', $claimantId);
 $stmtClaimant->execute();
@@ -148,8 +164,10 @@ $claimantData = $claimantResult->fetch_assoc();
         <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
         <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
         <p>College: <?= htmlspecialchars($claimantData['college']); ?></p>
-        <p>Course: <?= htmlspecialchars($claimantData['course']); ?></p>
-        <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section']); ?></p>
+        <?php if ($userType == 'user_member'): ?>
+            <p>Course: <?= htmlspecialchars($claimantData['course']); ?></p>
+            <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section']); ?></p>
+        <?php endif; ?>
     </div>
 
     <!-- Claim Form -->
