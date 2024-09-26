@@ -136,7 +136,6 @@ body {
             </a>
             </div><!-- End Logo -->
             <div class="role-selector">
-    <label for="role-select" class="form-label">Select your role:</label>
     <select id="role-select" class="form-select">
         <option value="" disabled selected>Register as</option>
         <option value="student">Register as Student</option>
