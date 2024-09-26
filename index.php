@@ -42,11 +42,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
 
                 // Redirect to different pages based on user_type
                 if ($user_type === 'student') {
-                    header("Location: https://ramonianlostgems.com/student_dashboard.php");
+                    header("Location: https://ramonianlostgems.com/main.php");
                 } elseif ($user_type === 'faculty') {
-                    header("Location: https://ramonianlostgems.com/faculty_dashboard.php");
+                    header("Location: https://ramonianlostgems.com/main.php");
                 } elseif ($user_type === 'staff') {
-                    header("Location: https://ramonianlostgems.com/staff_dashboard.php");
+                    header("Location: https://ramonianlostgems.com/main.php");
                 } else {
                     header("Location: https://ramonianlostgems.com/main.php");
                 }
