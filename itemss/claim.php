@@ -146,21 +146,28 @@ $claimantData = $claimantResult->fetch_assoc();
 
     <!-- Display Item Information -->
     <h3>Item Information</h3>
-    <?php if ($itemData) : ?>
-        <div class="info-section">
+<?php if ($itemData) : ?>
+    <div class="info-section">
         <p>Item Name: <?= htmlspecialchars($itemData['title'] ?? ''); ?></p>
-<p>Category: <?= htmlspecialchars($itemData['category_name'] ?? ''); ?></p>
-<p>Found by: <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name'] ?? ''); ?></p>
-<p>Email: <?= htmlspecialchars($itemData['email'] ?? ''); ?></p>
-<p>Time Found: <?= htmlspecialchars($itemData['time_found'] ?? ''); ?></p>
-<p>Location Found: <?= htmlspecialchars($itemData['landmark'] ?? ''); ?></p>
-<p>Description: <?= htmlspecialchars($itemData['message'] ?? ''); ?></p>
-<p>Contact: <?= htmlspecialchars($itemData['contact'] ?? ''); ?></p>
+        <p>Category: <?= htmlspecialchars($itemData['category_name'] ?? ''); ?></p>
 
-        </div>
-    <?php else : ?>
-        <p>Item not found or not published.</p>
-    <?php endif; ?>
+        <!-- Check if the founder's name or email is empty -->
+        <?php if (empty($itemData['first_name']) && empty($itemData['email'])): ?>
+            <p>Found by: Guest User</p>
+        <?php else: ?>
+            <p>Found by: <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
+            <p>Email: <?= htmlspecialchars($itemData['email']); ?></p>
+        <?php endif; ?>
+
+        <p>Time Found: <?= htmlspecialchars($itemData['time_found'] ?? ''); ?></p>
+        <p>Location Found: <?= htmlspecialchars($itemData['landmark'] ?? ''); ?></p>
+        <p>Description: <?= htmlspecialchars($itemData['message'] ?? ''); ?></p>
+        <p>Contact: <?= htmlspecialchars($itemData['contact'] ?? ''); ?></p>
+    </div>
+<?php else : ?>
+    <p>Item not found or not published.</p>
+<?php endif; ?>
+
 
     <!-- Display Claimant's Information -->
     <h3>Your Information</h3>
