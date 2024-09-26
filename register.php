@@ -18,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       exit;
   }
 
-  // Hash the password (limit length to 8 characters)
-  $password = password_hash(substr($_POST['password'], 0, 8), PASSWORD_BCRYPT); 
+  // Hash the entire password, no truncation
+  $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
 
   // Prepare the SQL statement
   $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   echo json_encode($response);
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -85,39 +86,6 @@ body {
   text-align: center; /* Center the text */
   font-size: 24px; /* Adjust font size as needed */
 }
-.back-btn-container {
-            margin: 20px 0;
-            display: flex;
-            justify-content: center;
-        }
-
-        .back-btn {
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            transition: background-color 0.3s ease;
-        }
-
-        .back-btn svg {
-            margin-right: 8px;
-        }
-
-        .back-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .back-btn:focus {
-            outline: none;
-            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-        }
   </style>
   <main>
     <div class="container">
@@ -240,15 +208,6 @@ body {
           </div>
         </div>
       </section>
-      <div class="back-btn-container">
-    <button class="back-btn" onclick="history.back()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
-            <line x1="19" y1="12" x2="5" y2="12"/>
-            <polyline points="12 19 5 12 12 5"/>
-        </svg>
-        Back
-    </button>
-</div>
     </div>
   </main>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
