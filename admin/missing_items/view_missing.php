@@ -1,6 +1,8 @@
 <?php
 include '../../config.php';
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
@@ -16,18 +18,25 @@ if (isset($_GET['id'])) {
     $itemId = $_GET['id'];
 
     // SQL query to get missing item details and associated images
-    $sql = "SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, mi.owner, um.first_name, us.college, us.email, us.first_name, us.college, um.email, um.avatar, c.name AS category_name, imi.image_path
-            FROM missing_items mi
-            LEFT JOIN user_member um ON mi.user_id = um.id
-            LEFT JOIN user_staff us ON mi.user_id = us.id
-            LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
-            LEFT JOIN categories c ON mi.category_id = c.id
-            WHERE mi.id = ?";
+    $sql = "
+    SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, mi.owner, user_info.first_name, user_info.college, user_info.email, user_info.avatar, c.name AS category_name, imi.image_path
+    FROM missing_items mi
+    LEFT JOIN (
+        -- Fetch from user_member
+        SELECT id AS user_id, first_name, college, email, avatar FROM user_member
+        UNION
+        -- Fetch from user_staff
+        SELECT id AS user_id, first_name, department AS college, email, avatar FROM user_staff
+    ) user_info ON mi.user_id = user_info.user_id
+    LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
+    LEFT JOIN categories c ON mi.category_id = c.id
+    WHERE mi.id = ?
+";
 
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('i', $itemId);
-    $stmt->execute();
-    $result = $stmt->get_result();
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $itemId);
+$stmt->execute();
+$result = $stmt->get_result();
 }
 ?>
 
