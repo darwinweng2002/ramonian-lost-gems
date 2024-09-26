@@ -6,42 +6,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $first_name = trim($_POST['first_name']);
     $last_name = trim($_POST['last_name']);
     $college = trim($_POST['college']);
+    $course = trim($_POST['course']);
+    $year = trim($_POST['year']);
+    $section = trim($_POST['section']);
     $username = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
-    $user_type = $_POST['user_type']; // student, faculty, or staff
 
-    // Initialize variables for conditional fields
-    $course = $year = $section = $faculty_department = $staff_position = null;
-
-    // Based on user type, adjust required fields
-    if ($user_type === 'student') {
-        $course = trim($_POST['course']);
-        $year = trim($_POST['year']);
-        $section = trim($_POST['section']);
-        if (empty($course) || empty($year) || empty($section)) {
-            $response = ['success' => false, 'message' => 'Please fill in all the required fields for students.'];
-            echo json_encode($response);
-            exit;
-        }
-    } elseif ($user_type === 'faculty') {
-        $faculty_department = trim($_POST['faculty_department']);
-        if (empty($faculty_department)) {
-            $response = ['success' => false, 'message' => 'Please provide the faculty department.'];
-            echo json_encode($response);
-            exit;
-        }
-    } elseif ($user_type === 'staff') {
-        $staff_position = trim($_POST['staff_position']);
-        if (empty($staff_position)) {
-            $response = ['success' => false, 'message' => 'Please provide the staff position.'];
-            echo json_encode($response);
-            exit;
-        }
-    }
-
-    // Validate common fields
-    if (empty($first_name) || empty($last_name) || empty($college) || empty($username) || empty($password)) {
+    // Check if all required fields are provided
+    if (empty($first_name) || empty($last_name) || empty($college) || empty($course) || empty($year) || empty($section) || empty($username) || empty($password)) {
         $response = ['success' => false, 'message' => 'Please fill in all the required fields.'];
         echo json_encode($response);
         exit;
@@ -81,34 +54,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt->close();
 
-    // Prepare the SQL statement to insert new user based on the user_type
-    $stmt = $conn->prepare("INSERT INTO user_member 
-        (first_name, last_name, college, course, year, section, faculty_department, staff_position, email, password, user_type) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    
+    // Prepare the SQL statement to insert new user
+    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {
-        // Capture SQL error and show it for debugging
-        $response = ['success' => false, 'message' => 'Failed to prepare the database statement: ' . $conn->error];
+        $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
         echo json_encode($response);
         exit;
     }
 
-    // Bind parameters and execute
-    if ($stmt->bind_param("sssssssssss", 
-        $first_name, $last_name, $college, 
-        $course, $year, $section, 
-        $faculty_department, $staff_position, 
-        $username, $hashed_password, $user_type)) {
+    $stmt->bind_param("ssssssss", $first_name, $last_name, $college, $course, $year, $section, $username, $hashed_password);
 
-        // Execute the query and check for success
-        if ($stmt->execute()) {
-            $response = ['success' => true, 'message' => 'Registration successful!'];
-        } else {
-            $response = ['success' => false, 'message' => 'Failed to register user: ' . $stmt->error];
-        }
-
+    // Execute the query and check for success
+    if ($stmt->execute()) {
+        $response = ['success' => true, 'message' => 'Registration successful!'];
     } else {
-        $response = ['success' => false, 'message' => 'Failed to bind parameters: ' . $stmt->error];
+        $response = ['success' => false, 'message' => 'Failed to register user.'];
     }
 
     $stmt->close();
