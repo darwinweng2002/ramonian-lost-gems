@@ -1,18 +1,33 @@
 <?php 
 require_once('./config.php');
 
-// Check if the user is logged in, if not then redirect to login page
+// Check if the user is logged in as either user_member or user_staff
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
+    // Redirect to login if neither user is logged in
+    header("Location: login.php");
+    exit();
+}
 
-// Include the database configuration file
-
-// Fetch the user's information from the database
-$user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT first_name, last_name, course, year, section, email FROM user_member WHERE id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$stmt->bind_result($first_name, $last_name, $course, $year, $section, $email); // Fix bind_result to match SQL columns
-$stmt->fetch();
-$stmt->close();
+// Fetch the user's information from the database based on the session
+if (isset($_SESSION['user_id'])) {
+    // Regular user (student)
+    $user_id = $_SESSION['user_id'];
+    $stmt = $conn->prepare("SELECT first_name, last_name, course, year, section, email FROM user_member WHERE id = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $stmt->bind_result($first_name, $last_name, $course, $year, $section, $email); 
+    $stmt->fetch();
+    $stmt->close();
+} elseif (isset($_SESSION['staff_id'])) {
+    // Staff user
+    $staff_id = $_SESSION['staff_id'];
+    $stmt = $conn->prepare("SELECT first_name, last_name, department, position, email FROM user_staff WHERE id = ?");
+    $stmt->bind_param("i", $staff_id);
+    $stmt->execute();
+    $stmt->bind_result($first_name, $last_name, $department, $position, $email); 
+    $stmt->fetch();
+    $stmt->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
