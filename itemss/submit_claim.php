@@ -2,11 +2,9 @@
 include '../config.php';
 
 // Check if the form is submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if the user (either regular user or staff) is logged in
-    if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
-        die("User not logged in.");
-    }
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
+    die("User not logged in");
+}
 
     // Determine if the user is a regular user or staff user
     if (isset($_SESSION['user_id'])) {
