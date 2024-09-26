@@ -45,49 +45,55 @@ $result = $stmt->get_result();
     <title>Claim Details</title>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            padding: 20px;
-            color: #000;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        h1, h3 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .details {
-            margin: 20px 0;
-        }
-        .details p {
-            margin: 10px 0;
-        }
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-        }
-        img {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        img:hover {
-            transform: scale(1.05);
-        }
-        .image-container img {
-            text-align: center;
-        }
-        .proof-image,
+    /* Existing CSS */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+    color: #000;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1, h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.details {
+    margin: 20px 0;
+}
+
+.details p {
+    margin: 10px 0;
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+img:hover {
+    transform: scale(1.05);
+}
+
+.proof-image,
 .id-image {
     max-width: 200px; /* Set a maximum width */
     max-height: 150px; /* Set a maximum height */
@@ -102,6 +108,28 @@ $result = $stmt->get_result();
 .id-image:hover {
     transform: scale(1.05); /* Slight zoom effect on hover */
 }
+
+/* New CSS for fixing the logo size */
+.logo img {
+    max-height: 80px; /* Set this to control the max height */
+    width: auto; /* Maintain aspect ratio */
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 15px; /* Optional margin to space it from text */
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.logo span {
+    font-size: 1.5rem; /* Adjust the text size next to the logo */
+    color: #333; /* Adjust color based on theme */
+}
+
 
     </style>
 </head>
