@@ -460,27 +460,27 @@ $message_stmt->close();
                                                         <tr>
                                                             <td><?= htmlspecialchars($message['title']) ?></td>
                                                             <td><?= htmlspecialchars($message['time_found']) ?></td>
-                                                            <td>
-    <?php
-    switch ($message['status']) {
-        case 0:
-            $statusText = 'Pending';
-            break;
-        case 1:
-            $statusText = 'Published';
-            break;
-        case 2:
-            $statusText = 'Claimed';
-            break;
-        case 3:
-            $statusText = 'Surrendered';
-            break;
-        default:
-            $statusText = 'Unknown'; // In case of an unexpected value
-    }
-    ?>
-    <span class="badge-status"><?= htmlspecialchars($statusText) ?></span>
-</td>
+                                                                                                                    <td>
+                                                            <?php
+                                                            switch ($message['status']) {
+                                                                case 0:
+                                                                    $statusText = 'Pending';
+                                                                    break;
+                                                                case 1:
+                                                                    $statusText = 'Published';
+                                                                    break;
+                                                                case 2:
+                                                                    $statusText = 'Claimed';
+                                                                    break;
+                                                                case 3:
+                                                                    $statusText = 'Surrendered';
+                                                                    break;
+                                                                default:
+                                                                    $statusText = 'Unknown'; // Handle unexpected values
+                                                            }
+                                                            ?>
+                                                            <span class="badge-status"><?= htmlspecialchars($statusText) ?></span>
+                                                        </td>
 
                                                         </tr>
                                                     <?php endforeach; ?>
@@ -520,11 +520,12 @@ $message_stmt->close();
             $statusText = 'Surrendered';
             break;
         default:
-            $statusText = 'Unknown';
+            $statusText = 'Unknown'; // Handle unexpected values
     }
     ?>
     <span class="badge-status"><?= htmlspecialchars($statusText) ?></span>
 </td>
+
 
                                                         </tr>
                                                     <?php endforeach; ?>
