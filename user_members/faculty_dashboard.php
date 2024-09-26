@@ -20,13 +20,13 @@ if (!isset($_SESSION['staff_id'])) {
 $staff_id = $_SESSION['staff_id'];
 
 // Prepare and execute query to fetch staff user information
-$stmt = $conn->prepare("SELECT first_name, last_name, department, email, avatar FROM user_staff WHERE id = ?");
+$stmt = $conn->prepare("SELECT first_name, last_name, department, position, email, avatar FROM user_staff WHERE id = ?");
 if ($stmt === false) {
     die('MySQL prepare failed: ' . $conn->error);
 }
 $stmt->bind_param("i", $staff_id);
 $stmt->execute();
-$stmt->bind_result($first_name, $last_name, $department, $email, $avatar);
+$stmt->bind_result($first_name, $last_name, $department, $position, $email, $avatar);
 $stmt->fetch();
 $stmt->close();
 
@@ -176,6 +176,10 @@ $message_stmt->close();
                                         <li class="list-group-item d-flex justify-content-between">
                                             <strong>Department:</strong>
                                             <span><?= htmlspecialchars($department ?? '') ?></span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <strong>Position:</strong>
+                                            <span><?= htmlspecialchars($position ?? '') ?></span>
                                         </li>
                                         <li class="list-group-item d-flex justify-content-between">
                                             <strong>Email:</strong>
