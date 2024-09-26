@@ -1,5 +1,9 @@
 <?php
 // Include the database configuration file
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include '../config.php';
 
 // Check if the user is logged in
