@@ -1,58 +1,31 @@
 <?php
-// Include the database configuration file
 include '../config.php';
 
 // Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
     header("Location: ../login.php");
     exit;
 }
 
-// Fetch the user's information from the database
-$user_id = $_SESSION['user_id'];
+// Determine if the user is a regular user or staff
+$is_regular_user = isset($_SESSION['user_id']);
+$is_staff_user = isset($_SESSION['staff_id']);
 
-// Check if the user is a guest by determining if their user_id starts with 'guest_'
-$is_guest = (strpos($user_id, 'guest_') === 0);
-
-// Prepare and execute query to fetch user information for regular users
-if (!$is_guest) {
+if ($is_regular_user) {
+    // Regular user
+    $user_id = $_SESSION['user_id'];
+    $user_type = 'user_member';
+    
+    // Fetch the regular user's information
     $stmt = $conn->prepare("SELECT first_name, last_name, course, year, section, email, college, avatar, user_type FROM user_member WHERE id = ?");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $stmt->bind_result($first_name, $last_name, $course, $year, $section, $email, $college, $avatar, $user_type);
     $stmt->fetch();
     $stmt->close();
-}
-
-// Handle avatar upload (disabled for guests)
-if (isset($_POST['upload_avatar']) && !$is_guest) {
-    if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
-        $avatar_name = $_FILES['avatar']['name'];
-        $avatar_tmp_name = $_FILES['avatar']['tmp_name'];
-        $avatar_folder = '../uploads/avatars/' . $avatar_name;
-
-        // Move uploaded file to the avatars folder
-        if (move_uploaded_file($avatar_tmp_name, $avatar_folder)) {
-            $stmt = $conn->prepare("UPDATE user_member SET avatar = ? WHERE id = ?");
-            $stmt->bind_param("si", $avatar_name, $user_id);
-            $stmt->execute();
-            $stmt->close();
-            
-            // Refresh the page to reflect changes
-            header("Location: dashboard.php");
-            exit;
-        } else {
-            echo "Failed to upload avatar.";
-        }
-    } else {
-        echo "No file uploaded or upload error.";
-    }
-}
-
-// Fetch the user's claim history
-$claims = [];
-if (!$is_guest) {
-    // Only fetch claim history for regular users
+    
+    // Fetch claim history for user_member
+    $claims = [];
     $claim_stmt = $conn->prepare("
         SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
         FROM claims c 
@@ -71,12 +44,9 @@ if (!$is_guest) {
         ];
     }
     $claim_stmt->close();
-}
-
-// Fetch the user's posted missing items history
-$missing_items = [];
-if (!$is_guest) {
-    // Only fetch missing items for regular users
+    
+    // Fetch posted missing items
+    $missing_items = [];
     $missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
     $missing_stmt->bind_param("i", $user_id);
     $missing_stmt->execute();
@@ -89,12 +59,9 @@ if (!$is_guest) {
         ];
     }
     $missing_stmt->close();
-}
-
-// Fetch the user's posted found items
-$message_history = [];
-if (!$is_guest) {
-    // Only fetch found items for regular users
+    
+    // Fetch posted found items
+    $message_history = [];
     $message_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE user_id = ?");
     $message_stmt->bind_param("i", $user_id);
     $message_stmt->execute();
@@ -107,6 +74,91 @@ if (!$is_guest) {
         ];
     }
     $message_stmt->close();
+    
+} elseif ($is_staff_user) {
+    // Staff user
+    $staff_id = $_SESSION['staff_id'];
+    $user_type = 'user_staff';
+
+    // Fetch the staff user's information
+    $stmt = $conn->prepare("SELECT first_name, last_name, department AS college, email, avatar FROM user_staff WHERE id = ?");
+    $stmt->bind_param("i", $staff_id);
+    $stmt->execute();
+    $stmt->bind_result($first_name, $last_name, $college, $email, $avatar);
+    $stmt->fetch();
+    $stmt->close();
+    
+    // Fetch claim history for staff_user
+    $claims = [];
+    $claim_stmt = $conn->prepare("
+        SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
+        FROM claims c 
+        JOIN item_list i ON c.item_id = i.id 
+        WHERE c.staff_id = ?
+    ");
+    $claim_stmt->bind_param("i", $staff_id);
+    $claim_stmt->execute();
+    $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
+    while ($claim_stmt->fetch()) {
+        $claims[] = [
+            'item_id' => $item_id, 
+            'item_name' => $item_name, 
+            'claim_date' => $claim_date, 
+            'status' => $status
+        ];
+    }
+    $claim_stmt->close();
+    
+    // Fetch posted missing items for staff
+    $missing_items = [];
+    $missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE staff_id = ?");
+    $missing_stmt->bind_param("i", $staff_id);
+    $missing_stmt->execute();
+    $missing_stmt->bind_result($title, $time_missing, $status);
+    while ($missing_stmt->fetch()) {
+        $missing_items[] = [
+            'title' => $title, 
+            'time_missing' => $time_missing, 
+            'status' => $status
+        ];
+    }
+    $missing_stmt->close();
+    
+    // Fetch posted found items for staff
+    $message_history = [];
+    $message_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE staff_id = ?");
+    $message_stmt->bind_param("i", $staff_id);
+    $message_stmt->execute();
+    $message_stmt->bind_result($title, $time_found, $status);
+    while ($message_stmt->fetch()) {
+        $message_history[] = [
+            'title' => $title, 
+            'time_found' => $time_found,
+            'status' => $status
+        ];
+    }
+    $message_stmt->close();
+}
+
+// Handle avatar upload
+if (isset($_POST['upload_avatar'])) {
+    $avatar_name = $_FILES['avatar']['name'];
+    $avatar_tmp_name = $_FILES['avatar']['tmp_name'];
+    $avatar_folder = '../uploads/avatars/' . $avatar_name;
+    
+    if (move_uploaded_file($avatar_tmp_name, $avatar_folder)) {
+        if ($is_regular_user) {
+            $stmt = $conn->prepare("UPDATE user_member SET avatar = ? WHERE id = ?");
+            $stmt->bind_param("si", $avatar_name, $user_id);
+        } elseif ($is_staff_user) {
+            $stmt = $conn->prepare("UPDATE user_staff SET avatar = ? WHERE id = ?");
+            $stmt->bind_param("si", $avatar_name, $staff_id);
+        }
+        $stmt->execute();
+        $stmt->close();
+        header("Location: dashboard.php");
+        exit;
+    }
 }
 ?>
 
