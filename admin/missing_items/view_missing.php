@@ -9,39 +9,31 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Initialize $result as null
+$result = null;
+
 if (isset($_GET['id'])) {
     $itemId = $_GET['id'];
 
     // SQL query to get missing item details and associated images, fetching data from both user_member and user_staff
     $sql = "SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, mi.owner, 
-                   COALESCE(um.first_name, us.first_name) AS first_name, 
-                   COALESCE(um.college, us.department) AS college, 
-                   COALESCE(um.email, us.email) AS email, 
-                   COALESCE(um.avatar, us.avatar) AS avatar, 
-                   c.name AS category_name, imi.image_path
-            FROM missing_items mi
-            LEFT JOIN user_member um ON mi.user_id = um.id
-            LEFT JOIN user_staff us ON mi.user_id = us.id
-            LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
-            LEFT JOIN categories c ON mi.category_id = c.id
-            WHERE mi.id = ?";
+       COALESCE(um.first_name, us.first_name) AS first_name, 
+       COALESCE(um.college, us.department) AS college, 
+       COALESCE(um.email, us.email) AS email, 
+       COALESCE(um.avatar, us.avatar) AS avatar, 
+       c.name AS category_name, imi.image_path
+FROM missing_items mi
+LEFT JOIN user_member um ON mi.user_id = um.id
+LEFT JOIN user_staff us ON mi.user_id = us.id
+LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
+LEFT JOIN categories c ON mi.category_id = c.id
+WHERE mi.id = 1";
 
     $stmt = $conn->prepare($sql);
-
-    if (!$stmt) {
-        // Display SQL error
-        die("SQL Error: " . $conn->error);
-    }
-
     $stmt->bind_param('i', $itemId);
-    if (!$stmt->execute()) {
-        // Display execution error
-        die("Execution Error: " . $stmt->error);
-    }
-
+    $stmt->execute();
     $result = $stmt->get_result();
 }
-
 ?>
 
 <!DOCTYPE html>
