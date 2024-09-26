@@ -258,7 +258,7 @@ body {
                 error: function(xhr, status, error) {
                     Swal.fire({
                         title: 'Success!',
-                        text: 'Registration successful! You are all set to access your staff portal.',
+                        text: 'Registration successful! You are all set to access your account as faculty.',
                         icon: 'success',
                         confirmButtonText: 'OK'
                     }).then((result) => {
