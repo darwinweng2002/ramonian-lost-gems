@@ -18,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       exit;
   }
 
-  // Hash the password (limit length to 8 characters)
-  $password = password_hash(substr($_POST['password'], 0, 8), PASSWORD_BCRYPT); 
+  // Hash the entire password, no truncation
+  $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
 
   // Prepare the SQL statement
   $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   echo json_encode($response);
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
