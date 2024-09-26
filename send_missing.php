@@ -252,8 +252,8 @@ if (isset($userId)) {
     <p>Your name is automatically set as the Owner.</p>
 <?php } else { ?>
     <!-- Guest User: Show Finder's Name Input -->
+    <input type="text" name="founder" id="founder" placeholder="Enter finder's name" required>
 <?php } ?>
-        <input type="text" name="owner" id="owner" placeholder="Enter the owner's name" required>
             <label for="title">Item Name:</label>
             <input type="text" name="title" id="title" placeholder="Enter item name" required>
             <label for="category">Category:</label>
