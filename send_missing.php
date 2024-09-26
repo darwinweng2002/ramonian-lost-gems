@@ -3,7 +3,12 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 include('config.php');
-session_start(); // Start session if not already started
+
+// Check if a session is already active before starting a new one
+if (session_status() === PHP_SESSION_NONE) {
+    session_start(); // Start session if not already started
+}
+
 // Check if the user is logged in as either regular user or staff
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
     die("User not logged in");
@@ -20,63 +25,70 @@ if (isset($_SESSION['user_id'])) {
     $userType = 'user_staff'; // Table for staff users
 }
 
-    // Retrieve user inputs
-    $title = $_POST['title'];
-    $description = $_POST['description'];
-    $lastSeenLocation = $_POST['last_seen_location'];
-    $timeMissing = $_POST['time_missing'];
-    $userId = $_SESSION['user_id'];
-    $status = 0; // Set to 0 for 'Pending' (assuming 0 is for 'Pending')
-    $contact = isset($_POST['contact']) ? $_POST['contact'] : '';
-    $category_id = $_POST['category_id'];
-    $new_category = $_POST['new_category'];
-    $owner = $_POST['owner'];
+// Validate that required fields are present and not empty
+if (!isset($_POST['title'], $_POST['description'], $_POST['last_seen_location'], $_POST['time_missing'], $_POST['category_id'], $_POST['owner'])) {
+    die("Some fields are missing in the form submission.");
+}
 
-    // Check if category_id is set to add new category
-    if ($category_id == 'add_new' && !empty($new_category)) {
-        $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
-        $stmt->bind_param("s", $new_category);
-        $stmt->execute();
-        $category_id = $stmt->insert_id;
-        $stmt->close();
-    }
+// Retrieve user inputs
+$title = $_POST['title'] ?? null;
+$description = $_POST['description'] ?? null;
+$lastSeenLocation = $_POST['last_seen_location'] ?? null;
+$timeMissing = $_POST['time_missing'] ?? null;
+$contact = $_POST['contact'] ?? '';
+$category_id = $_POST['category_id'] ?? null;
+$new_category = $_POST['new_category'] ?? '';
+$owner = $_POST['owner'] ?? null;
+$status = 0; // Set to 0 for 'Pending'
 
-    // Directory for uploading files
-    $uploadDir = 'uploads/missing_items/';
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
-    }
-
-    $uploadedFiles = [];
-
-    // Prepare and execute the SQL statement
-    $sql = "INSERT INTO missing_items (user_id, title, description, last_seen_location, time_missing, contact, category_id, status, owner) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("isssssiss", $userId, $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
+// Check if category_id is set to add new category
+if ($category_id === 'add_new' && !empty($new_category)) {
+    $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
+    $stmt->bind_param("s", $new_category);
     $stmt->execute();
-    $missingItemId = $stmt->insert_id;
+    $category_id = $stmt->insert_id;
     $stmt->close();
+}
 
-    // Handle file uploads
-    foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-        $fileName = basename($_FILES['images']['name'][$key]);
-        $targetFilePath = $uploadDir . $fileName;
+// Directory for uploading files
+$uploadDir = 'uploads/missing_items/';
+if (!is_dir($uploadDir)) {
+    mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
+}
 
-        if (move_uploaded_file($tmpName, $targetFilePath)) {
-            $stmt = $conn->prepare("INSERT INTO missing_item_images (missing_item_id, image_path) VALUES (?, ?)");
-            $stmt->bind_param("is", $missingItemId, $fileName);
-            $stmt->execute();
-            $stmt->close();
-            $uploadedFiles[] = $targetFilePath;
-        } else {
-            $error = "Failed to upload file: " . $fileName;
-        }
+// Prepare and execute the SQL statement
+$sql = "INSERT INTO missing_items (user_id, title, description, last_seen_location, time_missing, contact, category_id, status, owner) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+$stmt = $conn->prepare($sql);
+
+if (!$stmt) {
+    die("Error preparing statement: " . $conn->error);
+}
+
+$stmt->bind_param("isssssiss", $userId, $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
+$stmt->execute();
+$missingItemId = $stmt->insert_id;
+$stmt->close();
+
+// Handle file uploads
+$uploadedFiles = [];
+foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+    $fileName = basename($_FILES['images']['name'][$key]);
+    $targetFilePath = $uploadDir . $fileName;
+
+    if (move_uploaded_file($tmpName, $targetFilePath)) {
+        $stmt = $conn->prepare("INSERT INTO missing_item_images (missing_item_id, image_path) VALUES (?, ?)");
+        $stmt->bind_param("is", $missingItemId, $fileName);
+        $stmt->execute();
+        $stmt->close();
+        $uploadedFiles[] = $targetFilePath;
+    } else {
+        $error = "Failed to upload file: " . $fileName;
     }
+}
 
-    // Success or error message for SweetAlert
-    $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins before being published for public viewing.";
-
+// Success or error message for SweetAlert
+$alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins before being published for public viewing.";
 
 // Retrieve user information
 if (isset($_SESSION['user_id'])) {
@@ -89,6 +101,7 @@ if (isset($_SESSION['user_id'])) {
     $stmt->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
