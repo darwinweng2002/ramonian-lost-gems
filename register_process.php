@@ -12,12 +12,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
+    
+    // Optional: Use this to check the type of user (student/faculty/staff) to adjust the field requirements.
+    // For example:
+    $user_type = $_POST['user_type'] ?? 'student'; // Assuming a field that checks if the user is student, faculty, or staff.
 
-    // Check if all required fields are provided
-    if (empty($first_name) || empty($last_name) || empty($college) || empty($course) || empty($year) || empty($section) || empty($username) || empty($password)) {
+    // Check if required fields are provided (adjust this based on user type)
+    if (empty($first_name) || empty($last_name) || empty($username) || empty($password)) {
         $response = ['success' => false, 'message' => 'Please fill in all the required fields.'];
         echo json_encode($response);
         exit;
+    }
+
+    // Additional validation for students
+    if ($user_type === 'student') {
+        if (empty($college) || empty($course) || empty($year) || empty($section)) {
+            $response = ['success' => false, 'message' => 'Please fill in all the required fields for students.'];
+            echo json_encode($response);
+            exit;
+        }
     }
 
     // Check if passwords match
@@ -37,8 +50,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Hash the password before inserting into the database
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-    // Check if the username already exists in the database
+    // Check if the username (email) already exists in the database
     $stmt = $conn->prepare("SELECT id FROM user_member WHERE email = ?");
+    if (!$stmt) {
+        $response = ['success' => false, 'message' => 'Database error: Failed to prepare statement.'];
+        echo json_encode($response);
+        exit;
+    }
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
@@ -51,12 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conn->close();
         exit;
     }
-
     $stmt->close();
 
     // Prepare the SQL statement to insert new user
     $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    if ($stmt === false) {
+    if (!$stmt) {
         $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
         echo json_encode($response);
         exit;
@@ -68,7 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt->execute()) {
         $response = ['success' => true, 'message' => 'Registration successful!'];
     } else {
-        $response = ['success' => false, 'message' => 'Failed to register user.'];
+        // Detailed error for internal debugging, not shown to users
+        error_log("Database error: " . $stmt->error);
+        $response = ['success' => false, 'message' => 'Failed to register user due to a database error.'];
     }
 
     $stmt->close();
