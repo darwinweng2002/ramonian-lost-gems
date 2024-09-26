@@ -65,6 +65,14 @@ if (isset($_POST['guest_login'])) {
 if ($error_message) {
     echo $error_message;
 }
+$entered_password = 'your_password_here'; // The password you're trying to login with
+$stored_hash = 'the_password_hash_from_database'; // Copy the hashed password from your database
+
+if (password_verify($entered_password, $stored_hash)) {
+    echo "Password matches!";
+} else {
+    echo "Password does not match!";
+}
 ?>
 
 
