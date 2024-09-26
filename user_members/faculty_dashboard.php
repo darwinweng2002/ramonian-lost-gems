@@ -258,18 +258,6 @@ $message_stmt->close();
     table-layout: auto; /* Ensure the table takes full width and adjusts to content */
 }
 
-.badge-status {
-    padding: 4px 12px; /* Adjust padding for better spacing */
-    font-size: 12px;
-    border-radius: 20px;
-    color: #fff;
-    display: inline-flex;
-    align-items: center; /* Vertically align the text */
-    justify-content: center; /* Center the text horizontally */
-    line-height: 1.5; /* Ensures consistent vertical alignment */
-    white-space: nowrap; /* Prevents text from wrapping */
-}
-
 .badge-pending {
     background-color: #6c757d; /* Color for Pending */
 }
@@ -286,14 +274,24 @@ $message_stmt->close();
     background-color: #6c757d; /* Color for Surrendered */
 }
 
-.notification-icon {
-    margin-left: 8px; /* Adjust margin for better spacing */
-    display: inline-flex; /* Ensure icon aligns with text */
-    align-items: center; /* Vertically align the bell icon */
+.badge-status {
+    padding: 4px 12px;
+    font-size: 12px;
+    border-radius: 20px;
+    color: #fff;
+    display: inline-block; /* Make sure it behaves as an inline element */
+    line-height: 1.5;
+    white-space: nowrap;
 }
 
-
-
+.notification-icon {
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center; /* Vertically align the bell icon */
+    justify-content: center;
+    font-size: 16px; /* Adjust icon size if needed */
+    color: #ffc107;
+}
     }
     .nav-tabs {
         display: flex;
@@ -487,17 +485,21 @@ $message_stmt->close();
             $statusClass = '';
     }
     ?>
-    <span class="badge-status <?= htmlspecialchars($statusClass) ?>">
-        <?= htmlspecialchars($statusText) ?>
-    </span>
+    <!-- Wrapper for status and notification icon -->
+    <div style="display: flex; align-items: center;">
+        <span class="badge-status <?= htmlspecialchars($statusClass) ?>">
+            <?= htmlspecialchars($statusText) ?>
+        </span>
 
-    <!-- Show notification icon if the item is surrendered -->
-    <?php if ($showNotification): ?>
-        <i class="bi bi-bell-fill notification-icon"
-           onclick="showSurrenderNotification('<?= htmlspecialchars($message['title']) ?>')"
-           style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
-    <?php endif; ?>
+        <!-- Show notification icon if the item is surrendered -->
+        <?php if ($showNotification): ?>
+            <i class="bi bi-bell-fill notification-icon"
+               onclick="showSurrenderNotification('<?= htmlspecialchars($message['title']) ?>')"
+               style="cursor: pointer; color: #ffc107; margin-left: 10px;"></i>
+        <?php endif; ?>
+    </div>
 </td>
+
 
 
 
