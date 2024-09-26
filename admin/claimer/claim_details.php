@@ -115,7 +115,7 @@ img:hover {
     width: auto; /* Maintain aspect ratio */
     display: inline-block;
     vertical-align: middle;
-    margin-left: 10px; /* Optional margin to space it from text */
+    margin-left: 15px; /* Optional margin to space it from text */
 }
 
 .logo {
