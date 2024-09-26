@@ -1,24 +1,31 @@
 <?php
-include '../../config.php';
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
+// Enable error reporting
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-session_start(); // Make sure session is started
+
+// Include config or manually create the connection
+include '../config.php';
+
+// OR manually create the connection if not in config.php
+$servername = "localhost";
+$username = "u450897284_root";
+$password = "Lfisgemsdb1234";
+$dbname = "u450897284_lfis_db";
+
+// Create the connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check if the connection is successful
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if the user or staff is logged in
-    if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
+    // Check if the user is logged in
+    if (!isset($_SESSION['user_id'])) {
         die("User not logged in.");
-    }
-
-    // Get the user ID from session (either user_id or staff_id)
-    $claimantId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : (isset($_SESSION['staff_id']) ? $_SESSION['staff_id'] : null);
-
-    // Check if claimantId is null (if neither user_id nor staff_id are available)
-    if ($claimantId === null) {
-        die("User ID is missing.");
     }
 
     // Get the data from the form
@@ -27,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $dateLost = htmlspecialchars(trim($_POST['date_lost']));
     $locationLost = htmlspecialchars(trim($_POST['location_lost']));
     $securityQuestion = htmlspecialchars(trim($_POST['security_question']));
+    $claimantId = $_SESSION['user_id'];
 
     // Directory for uploading files
     $uploadDir = '../uploads/claims/';
@@ -82,9 +90,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!$stmt) {
         die("Database error: " . $conn->error);
     }
-
+    
     $stmt->bind_param('iissssss', $itemId, $claimantId, $itemDescription, $dateLost, $locationLost, $proofOfOwnershipPath, $securityQuestion, $personalIdPath);
-
+    
     // Execute the query and check for errors
     if ($stmt->execute()) {
         // Success
