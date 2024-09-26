@@ -1,23 +1,35 @@
 <?php
 include('config.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if user is logged in and user_id is set in session
-    if (!isset($_SESSION['user_id'])) {
-        die("User not logged in");
-    }
+session_start(); // Make sure the session is started
 
+// Check if the user is logged in as either regular user or staff
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
+    die("User not logged in");
+}
+
+// Get the user ID and user type
+if (isset($_SESSION['user_id'])) {
+    // Regular user
+    $userId = $_SESSION['user_id'];
+    $userType = 'user_member'; // Table for regular users
+} elseif (isset($_SESSION['staff_id'])) {
+    // Staff user
+    $userId = $_SESSION['staff_id'];
+    $userType = 'user_staff'; // Table for staff users
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $message = $_POST['message'];
     $landmark = $_POST['landmark']; // Existing field
     $title = $_POST['title']; // New field
     $timeFound = $_POST['time_found']; // New field
-    $userId = $_SESSION['user_id']; // Use user ID from session
     $contact = $_POST['contact'];
     $category_id = $_POST['category_id'];
     $new_category = $_POST['new_category'];
     $founder = $_POST['founder']; 
-    
 
+    // Handle category addition
     if ($category_id == 'add_new' && !empty($new_category)) {
         $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
         $stmt->bind_param("s", $new_category);
@@ -25,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $category_id = $stmt->insert_id;
         $stmt->close();
     }
+
     // Directory for uploading files
     $uploadDir = 'uploads/items/';
     if (!is_dir($uploadDir)) {
@@ -33,59 +46,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $uploadedFiles = [];
 
-    // Handle message saving
-
+    // Default status
     $status = 0; // Default to 'Pending'
 
-    // Prepare the SQL statement
+    // Insert the message into the database
     $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, time_found, contact, founder, category_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    
-    // Bind parameters (8 strings and 1 integer)
     $stmt->bind_param("issssssis", $userId, $message, $landmark, $title, $timeFound, $contact, $founder, $category_id, $status);
-    
-    // Execute the statement
     $stmt->execute();
     $messageId = $stmt->insert_id; // Get the ID of the newly inserted message
     $stmt->close();
 
-
-
     // Handle file uploads
     $maxFileSize = 50 * 1024 * 1024; // 50MB
-foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-    $fileName = basename($_FILES['images']['name'][$key]);
-    $fileSize = $_FILES['images']['size'][$key];
-    $fileType = $_FILES['images']['type'][$key];
-    $targetFilePath = $uploadDir . $fileName;
-    if ($fileSize > $maxFileSize) {
-        $error = "File " . $fileName . " exceeds the maximum file size of 50MB.";
-        break;
-    }
+    foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+        $fileName = basename($_FILES['images']['name'][$key]);
+        $fileSize = $_FILES['images']['size'][$key];
+        $fileType = $_FILES['images']['type'][$key];
+        $targetFilePath = $uploadDir . $fileName;
+        if ($fileSize > $maxFileSize) {
+            $error = "File " . $fileName . " exceeds the maximum file size of 50MB.";
+            break;
+        }
 
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    if (!in_array($fileType, $allowedTypes)) {
-        $error = "File type not allowed for file " . $fileName;
-        break;
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!in_array($fileType, $allowedTypes)) {
+            $error = "File type not allowed for file " . $fileName;
+            break;
+        }
+        if (move_uploaded_file($tmpName, $targetFilePath)) {
+            $stmt = $conn->prepare("INSERT INTO message_images (message_id, image_path) VALUES (?, ?)");
+            $stmt->bind_param("is", $messageId, $fileName); // Store just the filename in DB
+            $stmt->execute();
+            $stmt->close();
+            $uploadedFiles[] = $targetFilePath;
+        } else {
+            $error = "Failed to upload file: " . $fileName;
+        }
     }
-    if (move_uploaded_file($tmpName, $targetFilePath)) {
-        $stmt = $conn->prepare("INSERT INTO message_images (message_id, image_path) VALUES (?, ?)");
-        $stmt->bind_param("is", $messageId, $fileName); // Store just the filename in DB
-        $stmt->execute();
-        $stmt->close();
-        $uploadedFiles[] = $targetFilePath;
-    } else {
-        $error = "Failed to upload file: " . $fileName;
-    }
-}
 
     // Success or error message for SweetAlert
     $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins, and you must surrender the item to the SSG office located at OSA Building 3rd floor before it is published for public viewing.";
 }
 
-// Retrieve user information
-if (isset($_SESSION['user_id'])) {
-    $userId = $_SESSION['user_id'];
-    $stmt = $conn->prepare("SELECT first_name, last_name, college, email FROM user_member WHERE id = ?");
+// Retrieve user information based on user type
+if (isset($userId)) {
+    if ($userType === 'user_member') {
+        $stmt = $conn->prepare("SELECT first_name, last_name, college, email FROM user_member WHERE id = ?");
+    } else {
+        $stmt = $conn->prepare("SELECT first_name, last_name, department AS college, email FROM user_staff WHERE id = ?");
+    }
     $stmt->bind_param("i", $userId);
     $stmt->execute();
     $stmt->bind_result($first_name, $last_name, $college, $email);
