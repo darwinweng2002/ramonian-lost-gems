@@ -3,7 +3,6 @@ include '../../config.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
@@ -32,12 +31,12 @@ if (isset($_GET['id'])) {
     LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
     LEFT JOIN categories c ON mi.category_id = c.id
     WHERE mi.id = ?
-    ";
+";
 
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('i', $itemId);
-    $stmt->execute();
-    $result = $stmt->get_result();
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $itemId);
+$stmt->execute();
+$result = $stmt->get_result();
 }
 ?>
 
@@ -155,15 +154,9 @@ if (isset($_GET['id'])) {
                         'category_name' => $row['category_name']
                     ];
                 }
-
-                // Ensure correct image path
                 if ($row['image_path']) {
-                    $fullImagePath = '../uploads/missing_items/' . $row['image_path'];
-                    if (file_exists($fullImagePath)) {
-                        $items[$row['id']]['images'][] = $fullImagePath;
-                    } else {
-                        $items[$row['id']]['images'][] = '../uploads/missing_items/no-image.png'; // fallback
-                    }
+                    $fullImagePath = base_url . 'uploads/missing_items/' . $row['image_path'];
+                    $items[$row['id']]['images'][] = $fullImagePath;
                 }
             }
 
@@ -182,12 +175,12 @@ if (isset($_GET['id'])) {
                 $status = intval($itemData['status']);
 
                 echo "<div class='message-box'>";
-
+                
                 if ($avatar) {
-                    $fullAvatar = '../uploads/avatars/' . $avatar;
+                    $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                     echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                 } else {
-                    echo "<img src='../uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                    echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                 }
 
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
@@ -200,7 +193,18 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
 
-                // Status display
+                // Status dropdown
+                echo "<div class='form-group col-lg-12 col-md-12 col-sm-12 col-xs-12'>";
+                echo "<label for='status' class='control-label'>Status</label>";
+                echo "<select name='status' id='status-".$itemId."' class='form-select form-select-sm rounded-0' required='required'>";
+                echo "<option value='0' " . ($status == 0 ? 'selected' : '') . ">Pending</option>";
+                echo "<option value='1' " . ($status == 1 ? 'selected' : '') . ">Published</option>";
+                echo "<option value='2' " . ($status == 2 ? 'selected' : '') . ">Claimed</option>";
+                echo "<option value='3' " . ($status == 3 ? 'selected' : '') . ">Surrendered</option>";
+                echo "</select>";
+                echo "<button class='btn btn-primary save-status-btn' data-id='" . $itemId . "'>Save Status</button>";
+                echo "</div>";
+
                 echo "<dt class='text-muted'>Status</dt>";
                 if ($status == 1) {
                     echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
@@ -212,7 +216,6 @@ if (isset($_GET['id'])) {
                     echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";   
                 }
 
-                // Display images
                 if (!empty($itemData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
