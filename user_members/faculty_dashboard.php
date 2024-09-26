@@ -132,7 +132,225 @@ $message_stmt->close();
         body {
             overflow: auto;
         }
-        /* Add your custom styles here */
+        .logo img {
+            max-height: 55px;
+            margin-right: 25px;
+        }
+        .logo span {
+            color: #fff;
+            text-shadow: 0px 0px 10px #000;
+        }
+        .claim-history-table,
+        .post-history-table {
+            margin-top: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+        .claim-history-table thead,
+        .post-history-table thead {
+            background-color: #0D6EFD;
+            color: #fff;
+        }
+        .claim-history-table th,
+        .post-history-table th,
+        .claim-history-table td,
+        .post-history-table td {
+            padding: 12px;
+            text-align: left;
+        }
+        .claim-history-table tbody tr:nth-child(even),
+        .post-history-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .history-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .status-approved {
+            color: green;
+        }
+        .swal2-popup {
+            position: fixed !important; /* Fix position relative to viewport */
+            top: 50% !important;        /* Center vertically */
+            left: 50% !important;       /* Center horizontally */
+            transform: translate(-50%, -50%) !important; /* Adjust for exact center */
+            z-index: 9999 !important;   /* Ensure it appears above other elements */
+            overflow: auto;              /* Allow scrolling within the popup if needed */
+        }
+
+        /* Optional: To ensure that the page content can be scrolled while the popup is visible */
+        .swal2-overlay {
+            overflow: auto;             /* Allow scrolling of the page if necessary */
+        }
+        @media (max-width: 512px) {
+        /* Adjust logo size */
+        .logo img {
+            max-height: 40px; /* Smaller logo for smaller screens */
+            margin-right: 15px; /* Adjust margin */
+        }
+        
+        /* Adjust user avatar size */
+        .card-body img {
+            width: 80px;
+            height: 80px;
+        }
+        
+        /* Adjust font size for card title */
+        .card-title {
+            font-size: 1.2rem; /* Smaller font size for smaller screens */
+        }
+        
+        /* Adjust tab content */
+        .nav-tabs .nav-link {
+            font-size: 0.9rem; /* Smaller font size for tab links */
+        }
+        
+        .tab-content .history-title {
+            font-size: 1.2rem; /* Smaller font size for section titles */
+        }
+        
+        /* Stack tables and adjust padding */
+        .claim-history-table, 
+        .post-history-table {
+            margin-top: 10px;
+            font-size: 0.9rem; /* Smaller font size for table content */
+        }
+        
+        .claim-history-table th,
+        .post-history-table th,
+        .claim-history-table td,
+        .post-history-table td {
+            padding: 8px; /* Reduce padding for smaller screens */
+        }
+        
+        /* Adjust button sizes */
+        .btn {
+            font-size: 0.9rem; /* Smaller font size for buttons */
+            padding: 8px 12px; /* Adjust padding for buttons */
+        }
+
+        /* Adjust form input file size */
+        input[type="file"] {
+            font-size: 0.8rem; /* Smaller font size for file input */
+        }
+        
+        /* Adjust container padding */
+        .container {
+            padding: 10px; /* Reduced padding for smaller screens */
+        }
+
+        /* Adjust tab-pane content margins */
+        .tab-content .tab-pane {
+            padding: 10px; /* Reduced padding for tab content */
+        }
+        
+        /* Adjust back-to-top button */
+        .back-to-top {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
+        .table {
+    width: 100%;
+    table-layout: auto; /* Ensure the table takes full width and adjusts to content */
+}
+
+.badge-status {
+    padding: 4px 12px; /* Adjust padding for better spacing */
+    font-size: 12px;
+    border-radius: 20px;
+    color: #fff;
+    display: inline-flex;
+    align-items: center; /* Vertically align the text */
+    justify-content: center; /* Center the text horizontally */
+    line-height: 1.5; /* Ensures consistent vertical alignment */
+    white-space: nowrap; /* Prevents text from wrapping */
+}
+
+.badge-pending {
+    background-color: #6c757d; /* Color for Pending */
+}
+
+.badge-published {
+    background-color: #007bff; /* Color for Published */
+}
+
+.badge-claimed {
+    background-color: #28a745; /* Color for Claimed */
+}
+
+.badge-surrendered {
+    background-color: #6c757d; /* Color for Surrendered */
+}
+
+.notification-icon {
+    margin-left: 8px; /* Adjust margin for better spacing */
+    display: inline-flex; /* Ensure icon aligns with text */
+    align-items: center; /* Vertically align the bell icon */
+}
+
+
+
+    }
+    .nav-tabs {
+        display: flex;
+        flex-wrap: wrap; /* Allows the tabs to wrap to the next line if needed */
+        justify-content: space-around; /* Centers tabs and ensures even spacing */
+    }
+    
+    .nav-tabs .nav-item {
+        display: inline-block; /* Change from block to inline-block */
+        margin-bottom: 0; /* Remove bottom margin if any */
+    }
+
+    .nav-tabs .nav-link {
+        padding: 10px; /* Adjust padding as needed for better spacing */
+        font-size: 0.9rem; /* Adjust font size for better fit */
+    }
+    
+    .tab-content {
+        width: 100%; /* Ensure the tab content takes full width */
+    }
+    .back-btn-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn svg {
+            margin-right: 8px;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .back-btn:focus {
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+        }
+        .table {
+    width: 100%;
+    table-layout: auto; /* Ensure the table takes full width and adjusts to content */
+}
     </style>
 </head>
 <body>
