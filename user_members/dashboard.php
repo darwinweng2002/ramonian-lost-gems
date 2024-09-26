@@ -182,7 +182,7 @@ if (!$is_guest) {
         .swal2-overlay {
             overflow: auto;             /* Allow scrolling of the page if necessary */
         }
-        @media (max-width: 512px) {
+        @media (max-width: 412px) {
         /* Adjust logo size */
         .logo img {
             max-height: 40px; /* Smaller logo for smaller screens */
