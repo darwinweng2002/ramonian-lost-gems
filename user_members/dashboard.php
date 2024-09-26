@@ -3,9 +3,19 @@
 include '../config.php';
 
 // Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
-    exit;
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
+    die("User not logged in");
+}
+
+// Get the user ID and user type
+if (isset($_SESSION['user_id'])) {
+    // Regular user
+    $userId = $_SESSION['user_id'];
+    $userType = 'user_member'; // Table for regular users
+} elseif (isset($_SESSION['staff_id'])) {
+    // Staff user
+    $userId = $_SESSION['staff_id'];
+    $userType = 'user_staff'; // Table for staff users
 }
 
 // Fetch the user's information from the database
