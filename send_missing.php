@@ -248,11 +248,11 @@ if (isset($userId)) {
         <label for="owner">Owner's Name:</label>
         <?php if (isset($first_name) && isset($last_name) && isset($email)) { ?>
     <!-- Logged-in User: Autofill Finder's Name with both first and last names and Disable Field -->
-    <input type="text" name="founder" id="founder" value="<?php echo htmlspecialchars($first_name . ' ' . $last_name); ?>" readonly>
+    <input type="text" name="owner" id="owner" value="<?php echo htmlspecialchars($first_name . ' ' . $last_name); ?>" readonly>
     <p>Your name is automatically set as the Owner.</p>
 <?php } else { ?>
     <!-- Guest User: Show Finder's Name Input -->
-    <input type="text" name="founder" id="founder" placeholder="Enter finder's name" required>
+    <input type="text" name="owner" id="owner" placeholder="Enter owner's name" required>
 <?php } ?>
             <label for="title">Item Name:</label>
             <input type="text" name="title" id="title" placeholder="Enter item name" required>
