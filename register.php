@@ -474,6 +474,27 @@ body {
             });
         });
     });
+    document.getElementById('user_type').addEventListener('change', function() {
+    var userType = this.value;
+    var studentFields = document.getElementById('student-fields');
+    var staffFields = document.getElementById('staff-fields');
+    var collegeContainer = document.getElementById('college-container');
+
+    // Show/hide fields based on the selected user type
+    if (userType === 'student') {
+      studentFields.style.display = 'block';
+      staffFields.style.display = 'none';
+      collegeContainer.style.display = 'block';
+    } else if (userType === 'faculty') {
+      studentFields.style.display = 'none';
+      staffFields.style.display = 'none';
+      collegeContainer.style.display = 'block';
+    } else if (userType === 'staff') {
+      studentFields.style.display = 'none';
+      staffFields.style.display = 'block';
+      collegeContainer.style.display = 'none'; // Staff don't have college/department
+    }
+  });
 </script>
 
 
