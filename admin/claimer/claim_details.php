@@ -111,7 +111,7 @@ img:hover {
 
 /* New CSS for fixing the logo size */
 .logo img {
-    max-height: 80px; /* Set this to control the max height */
+    max-height: 55px; /* Set this to control the max height */
     width: auto; /* Maintain aspect ratio */
     display: inline-block;
     vertical-align: middle;
