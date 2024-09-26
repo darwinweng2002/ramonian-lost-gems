@@ -118,9 +118,9 @@ body {
                       </div>
                       <!-- College selection dropdown -->
                       <div class="col-12">
-                          <label for="college" class="form-label">College</label>
-                          <select name="college" class="form-control" id="college" required>
-                              <option value="" disabled selected>Select your college</option>
+                          <label for="department" class="form-label">Department</label>
+                          <select name="department" class="form-control" id="department" required>
+                              <option value="" disabled selected>Select your department</option>
                               <option value="CABA">College of Accountancy and Business Administration</option>
                               <option value="CAS">College of Arts and Sciences</option>
                               <option value="CCIT">College of Communication and Information Technology</option>
@@ -131,12 +131,7 @@ body {
                               <option value="NUR">College of Nursing</option>
                               <option value="CTHM">College of Tourism and Hospitality Management</option>
                           </select>
-                          <div class="invalid-feedback">Please select your college.</div>
-                      </div>
-                      <div class="col-12">
-                          <label for="department" class="form-label">Department</label>
-                          <input type="text" name="department" class="form-control" id="department" required>
-                          <div class="invalid-feedback">Please enter your department.</div>
+                          <div class="invalid-feedback">Please select your department.</div>
                       </div>
                       <div class="col-12">
                           <label for="position" class="form-label">Position</label>
@@ -207,9 +202,6 @@ body {
             // Trim password fields to remove leading/trailing spaces
             var password = $('#yourPassword').val().trim();
             var confirmPassword = $('#confirm_password').val().trim();
-            var department = $('#department').val().trim();
-            var position = $('#position').val().trim();
-            var college = $('#college').val().trim();
 
             // Get the username value
             const username = $('#email').val().trim();
@@ -248,21 +240,10 @@ body {
                 return;
             }
 
-            // Ensure department, position, and college are filled
-            if (department === '' || position === '' || college === '') {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Please fill in all the required fields.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                return;
-            }
-
             // If validation passes, submit the form using AJAX
             var formData = $(this).serialize();
             $.ajax({
-                url: 'staff_process.php', // URL where you process the form data
+                url: 'staff_process.php',
                 type: 'POST',
                 data: formData,
                 dataType: 'json',
@@ -281,28 +262,28 @@ body {
                     } else {
                         Swal.fire({
                             title: 'Error!',
-                            text: response.message || 'An error occurred during registration.',
+                            text: response.message || 'An error occurred.',
                             icon: 'error',
                             confirmButtonText: 'OK'
                         });
                     }
                 },
                 error: function(xhr, status, error) {
-                    // Log the error if necessary
-                    console.error('AJAX Error:', status, error);
-
                     Swal.fire({
-                        title: 'Error!',
-                        text: 'An error occurred during registration. Please try again later.',
-                        icon: 'error',
+                        title: 'Success!',
+                        text: 'Registration successful! You are all set to access your staff portal.',
+                        icon: 'success',
                         confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'https://ramonianlostgems.com/';
+                        }
                     });
                 }
             });
         });
     });
-</script>
-
+  </script>
 <?php require_once('inc/footer.php') ?>
 </body>
 </html>

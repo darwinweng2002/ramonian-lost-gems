@@ -5,12 +5,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Retrieve form data
   $first_name = $_POST['first_name'];
   $last_name = $_POST['last_name'];
-  $college = $_POST['college'];
-  $course = $_POST['course'];
-  $year = $_POST['year'];
-  $section = $_POST['section'];
+  $college = $_POST['college']; // Retrieve selected college
+  $department = $_POST['department'];
+  $position = $_POST['position'];
   $username = $_POST['email']; // This is now the username field, but keep the variable name as 'email'
-  
+
   // Check if passwords match
   if ($_POST['password'] !== $_POST['confirm_password']) {
       $response = ['success' => false, 'message' => 'Passwords do not match.'];
@@ -21,15 +20,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Hash the entire password, no truncation
   $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
 
-  // Prepare the SQL statement
-  $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("ssssssss", $first_name, $last_name, $college, $course, $year, $section, $username, $password);
+  // Prepare the SQL statement for the user_staff table
+  $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, college, department, position, email, password) VALUES (?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("ssssss", $first_name, $last_name, $college, $department, $position, $username, $password);
 
   // Execute the query and check for success
   if ($stmt->execute()) {
       $response = ['success' => true];
   } else {
-      $response = ['success' => false, 'message' => 'Failed to register user.'];
+      $response = ['success' => false, 'message' => 'Failed to register staff member.'];
   }
 
   $stmt->close();
@@ -39,8 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   echo json_encode($response);
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<title>Register Account</title>
+<title>Staff Registration</title>
 </head>
 <?php require_once('inc/header.php'); ?>
 <body>
@@ -86,18 +83,6 @@ body {
   text-align: center; /* Center the text */
   font-size: 24px; /* Adjust font size as needed */
 }
-.role-selector {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .role-selector select {
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            width: 300px;
-        }
   </style>
   <main>
     <div class="container">
@@ -111,23 +96,16 @@ body {
                 <span><?= $_settings->info('name') ?></span>
             </a>
             </div><!-- End Logo -->
-            <div class="role-selector">
-                                <label for="role-select">Select your role:</label>
-                                <select id="role-select">
-                                    <option value="" disabled selected>-- Select Role --</option>
-                                    <option value="student">Register as Student</option>
-                                    <option value="faculty">Register as Faculty</option>
-                                </select>
-                            </div>
+
               <div class="card mb-3">
                 <div class="card-body">
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Students User Registration</h5>
-                    <p class="text-center small">Fill in the form to create an account</p>
+                    <h5 class="card-title text-center pb-0 fs-4">Register as Faculty</h5>
+                    <p class="text-center small">Fill in the form to create a staff account</p>
                   </div>
                   
-                  <!-- Updated registration form -->
-                  <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php">
+                  <!-- Staff registration form -->
+                  <form class="row g-3 needs-validation" novalidate method="POST" action="register_staff.php">
                       <div class="col-12">
                           <label for="firstName" class="form-label">First Name</label>
                           <input type="text" name="first_name" class="form-control" id="firstName" required>
@@ -138,10 +116,11 @@ body {
                           <input type="text" name="last_name" class="form-control" id="lastName" required>
                           <div class="invalid-feedback">Please enter your last name.</div>
                       </div>
+                      <!-- College selection dropdown -->
                       <div class="col-12">
-                          <label for="college" class="form-label">College</label>
-                          <select name="college" class="form-control" id="college" required>
-                              <option value="" disabled selected>Select your college</option>
+                          <label for="department" class="form-label">Department</label>
+                          <select name="department" class="form-control" id="department" required>
+                              <option value="" disabled selected>Select your department</option>
                               <option value="CABA">College of Accountancy and Business Administration</option>
                               <option value="CAS">College of Arts and Sciences</option>
                               <option value="CCIT">College of Communication and Information Technology</option>
@@ -152,38 +131,12 @@ body {
                               <option value="NUR">College of Nursing</option>
                               <option value="CTHM">College of Tourism and Hospitality Management</option>
                           </select>
-                          <div class="invalid-feedback">Please select your college.</div>
+                          <div class="invalid-feedback">Please select your department.</div>
                       </div>
                       <div class="col-12">
-                          <label for="course" class="form-label">Course</label>
-                          <select name="course" class="form-control" id="course" required>
-                              <option value="" disabled selected>Select your course</option>
-                          </select>
-                          <div class="invalid-feedback">Please select your course.</div>
-                      </div>
-                      <div class="col-12">
-                          <label for="year" class="form-label">Year</label>
-                          <select name="year" class="form-control" id="year" required>
-                              <option value="" disabled selected>Select your year</option>
-                              <option value="1st - year">1st - year</option>
-                              <option value="2nd - year">2nd - year</option>
-                              <option value="3rd - year">3rd - year</option>
-                              <option value="4th - year">4th - year</option>
-                          </select>
-                          <div class="invalid-feedback">Please select your year.</div>
-                      </div>
-                      <div class="col-12">
-                          <label for="section" class="form-label">Section</label>
-                          <select name="section" class="form-control" id="section" required>
-                              <option value="" disabled selected>Select your section</option>
-                              <option value="Section A">Section A</option>
-                              <option value="Section B">Section B</option>
-                              <option value="Section C">Section C</option>
-                              <option value="Section D">Section D</option>
-                              <option value="Section E">Section E</option>
-                              <option value="Section F">Section F</option>
-                          </select>
-                          <div class="invalid-feedback">Please select your section.</div>
+                          <label for="position" class="form-label">Position</label>
+                          <input type="text" name="position" class="form-control" id="position" required>
+                          <div class="invalid-feedback">Please enter your position.</div>
                       </div>
                       <!-- Updated username field -->
                       <div class="col-12">
@@ -242,135 +195,6 @@ body {
   <script src="<?= base_url ?>assets/js/main.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> <!-- Ensure jQuery is included -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Define the courses for each college
-        const coursesByCollege = {
-            "CABA": [
-                "Bachelor of Science in Accountancy",
-                "Bachelor of Science in Accounting and Information System",
-                "Bachelor of Science in Business Administration - Marketing",
-                "Bachelor of Science in Business Administration - Financial Management",
-                "Bachelor of Science in Business Administration - Human Resource Development Management",
-                "Bachelor of Public Administration"
-            ],
-            "CAS": [
-                "Bachelor of Science in Biology",
-                "Bachelor of Science in Psychology"
-            ],
-            "CCIT": [
-                "Bachelor of Science in Computer Science",
-                "Bachelor of Science in Information Technology"
-            ],
-            "CTE": [
-                "Bachelor of Secondary Education - English Education",
-                "Bachelor of Secondary Education - Filipino Education",
-                "Bachelor of Secondary Education - Mathematics Education",
-                "Bachelor of Secondary Education - Science Education",
-                "Bachelor of Secondary Education - Social Studies Education",
-                "Bachelor of Elementary Education",
-                "Bachelor of Physical Education",
-                "Bachelor of Professional Education"
-            ],
-            "CE": [
-                "Bachelor of Science in Civil Engineering",
-                "Bachelor of Science in Electrical Engineering",
-                "Bachelor of Science in Mechanical Engineering",
-                "Bachelor of Science in Computer Engineering",
-                "Bachelor of Science in Mining Engineering"
-            ],
-            "CIT": [
-                "Bachelor of Technology and Livelihood Education - Industrial Arts",
-                "Bachelor of Technical Vocational Teacher Education - Computer Programming",
-                "Bachelor of Technical Vocational Teacher Education - Drafting Technology",
-                "Bachelor of Technical Vocational Teacher Education - Mechanical Technology (Machine)",
-                "Bachelor of Technical Vocational Teacher Education - Electrical Technology",
-                "Bachelor of Technical Vocational Teacher Education - Food and Service Management Technology",
-                "Bachelor of Technical Vocational Teacher Education - Automotive Technology",
-                "Bachelor of Technical Vocational Teacher Education - Electronics Technology",
-                "Bachelor of Technical Vocational Teacher Education - Welding and Fabrication Technology",
-                "Bachelor of Science in Industrial Technology - Automotive Technology",
-                "Bachelor of Science in Industrial Technology - Computer Technology",
-                "Bachelor of Science in Industrial Technology - Drafting Technology",
-                "Bachelor of Science in Industrial Technology - Electrical Technology",
-                "Bachelor of Science in Industrial Technology - Electronics Technology",
-                "Bachelor of Science in Industrial Technology - Food Technology",
-                "Bachelor of Science in Industrial Technology - Furniture and Cabinet Marketing Technology",
-                "Bachelor of Science in Industrial Technology - Mechanical Technology"
-            ],
-            "CAF": [
-                "Bachelor of Science in Environmental Science"
-            ],
-            "NUR": [
-                "Bachelor of Science in Nursing"
-            ],
-            "CTHM": [
-                "Bachelor of Science in Hospitality Management",
-                "Bachelor of Science in Tourism Management"
-            ]
-        };
-
-        const collegeSelect = document.getElementById('college');
-        const courseSelect = document.getElementById('course');
-
-        collegeSelect.addEventListener('change', function() {
-            const selectedCollege = this.value;
-            const courses = coursesByCollege[selectedCollege] || [];
-
-            // Clear existing options
-            courseSelect.innerHTML = '<option value="" disabled selected>Select your course</option>';
-
-            // Populate new options
-            courses.forEach(function(course) {
-                const option = document.createElement('option');
-                option.value = course;
-                option.textContent = course;
-                courseSelect.appendChild(option);
-            });
-        });
-    });
-
-    function handleCredentialResponse(response) {
-        const id_token = response.credential;
-
-        // Send the ID token to your server
-        $.ajax({
-            url: 'google_login_process.php',
-            type: 'POST',
-            data: { id_token: id_token },
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Login successful!',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = 'dashboard.php'; // Redirect or do something else
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: response.message,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX Error: ', status, error); // Log the AJAX error
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An error occurred during Google sign-in.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
-    }
-
     $(document).ready(function() {
         $('form').on('submit', function(e) {
             e.preventDefault(); // Prevent form submission
@@ -419,7 +243,7 @@ body {
             // If validation passes, submit the form using AJAX
             var formData = $(this).serialize();
             $.ajax({
-                url: 'register_process.php',
+                url: 'staff_process.php',
                 type: 'POST',
                 data: formData,
                 dataType: 'json',
@@ -427,7 +251,7 @@ body {
                     if (response.success) {
                         Swal.fire({
                             title: 'Success!',
-                            text: 'Registration successful!',
+                            text: 'Staff registration successful!',
                             icon: 'success',
                             confirmButtonText: 'OK'
                         }).then((result) => {
@@ -447,38 +271,19 @@ body {
                 error: function(xhr, status, error) {
                     Swal.fire({
                         title: 'Success!',
-                        text: 'Registration successful! You are all set to report or search for lost items.',
+                        text: 'Registration successful! You are all set to access your staff portal.',
                         icon: 'success',
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
+                            window.location.href = 'https://ramonianlostgems.com/';
                         }
                     });
                 }
             });
         });
     });
-    document.addEventListener('DOMContentLoaded', function () {
-            // Handle role selection change
-            const roleSelect = document.getElementById('role-select');
-
-            roleSelect.addEventListener('change', function () {
-                const selectedRole = this.value;
-
-                // Redirect based on the selected role
-                if (selectedRole === 'student') {
-                    window.location.href = 'register.php'; // Redirect to student registration page
-                } else if (selectedRole === 'faculty') {
-                    window.location.href = 'https://ramonianlostgems.com/register_staff.php'; // Redirect to faculty registration page
-                }
-            });
-        });
-</script>
-
-
-</body>
-</html>
+  </script>
 <?php require_once('inc/footer.php') ?>
 </body>
 </html>
