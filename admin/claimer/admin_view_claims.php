@@ -179,6 +179,13 @@ $result = $conn->query($sql);
                             <a href='https://ramonianlostgems.com/admin/claimer/claim_details.php?id=" . $row['id'] . "' class='btn btn-info btn-sm'>View</a>
                         </td>";
                         echo "</tr>";
+                        echo "<td>
+    <form action='delete_claim.php' method='POST' style='display:inline;' onsubmit='return confirm(\"Are you sure you want to delete this claim?\");'>
+        <input type='hidden' name='claim_id' value='" . $row['id'] . "'>
+        <button type='submit' class='btn btn-danger btn-sm'>Delete</button>
+    </form>
+    <a href='https://ramonianlostgems.com/admin/claimer/claim_details.php?id=" . $row['id'] . "' class='btn btn-info btn-sm'>View</a>
+</td>";
                     }
                 } else {
                     echo "<tr><td colspan='12' class='no-data'>No claims found.</td></tr>";
