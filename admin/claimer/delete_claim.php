@@ -23,26 +23,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['claim_id'])) {
             } else {
                 // Log the error in deletion
                 error_log("Error executing query: " . $stmt->error);
-                header('Location: view_claims.php?delete_error=1');
+                header('Location: admin_view_claims.php?delete_error=1');
                 exit();
             }
             $stmt->close();
         } else {
             // Log the error if the statement fails
             error_log("Failed to prepare statement: " . $conn->error);
-            header('Location: view_claims.php?delete_error=1');
+            header('Location: admin_view_claims.php?delete_error=1');
             exit();
         }
     } else {
         // Log if the claim_id is invalid
         error_log("Invalid claim ID: " . $claimId);
-        header('Location: view_claims.php?delete_error=1');
+        header('Location: admin_view_claims.php?delete_error=1');
         exit();
     }
 } else {
     // Log if the POST request or claim_id is missing
     error_log("Invalid request or missing claim_id");
-    header('Location: view_claims.php?delete_error=1');
+    header('Location: admin_view_claims.php?delete_error=1');
     exit();
 }
 
