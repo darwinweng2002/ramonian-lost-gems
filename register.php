@@ -283,8 +283,7 @@ body {
           </div>
         </div>
       </section>
-    </div>
-    <div class="back-btn-container">
+      <div class="back-btn-container">
     <button class="back-btn" onclick="history.back()">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
             <line x1="19" y1="12" x2="5" y2="12"/>
@@ -293,6 +292,8 @@ body {
         Back
     </button>
 </div>
+    </div>
+    
   </main>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
   <script src="<?= base_url ?>assets/js/jquery-3.6.4.min.js"></script>
