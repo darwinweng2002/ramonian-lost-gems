@@ -5,16 +5,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data and validate
     $first_name = trim($_POST['first_name']);
     $last_name = trim($_POST['last_name']);
-    $college = trim($_POST['college']);
-    $course = trim($_POST['course']);
-    $year = trim($_POST['year']);
-    $section = trim($_POST['section']);
     $username = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
+    $user_type = $_POST['user_type']; // Added field for user type
 
-    // Check if all required fields are provided
-    if (empty($first_name) || empty($last_name) || empty($college) || empty($course) || empty($year) || empty($section) || empty($username) || empty($password)) {
+    // Validate required fields
+    if (empty($first_name) || empty($last_name) || empty($username) || empty($password)) {
         $response = ['success' => false, 'message' => 'Please fill in all the required fields.'];
         echo json_encode($response);
         exit;
@@ -34,35 +31,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Hash the password before inserting into the database
+    // Hash the password
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-    // Check if the username already exists in the database
+    // Handle fields based on user type
+    $college = null;
+    $course = null;
+    $year = null;
+    $section = null;
+    $position = null;
+
+    if ($user_type === 'student') {
+        $college = trim($_POST['college']);
+        $course = trim($_POST['course']);
+        $year = trim($_POST['year']);
+        $section = trim($_POST['section']);
+    } else if ($user_type === 'faculty') {
+        $college = trim($_POST['college']); // Department for faculty
+    } else if ($user_type === 'staff') {
+        $position = trim($_POST['position']); // Position for staff
+    }
+
+    // Check if the username already exists
     $stmt = $conn->prepare("SELECT id FROM user_member WHERE email = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        // Username already exists
         $response = ['success' => false, 'message' => 'This username is already taken.'];
         echo json_encode($response);
         $stmt->close();
         $conn->close();
         exit;
     }
-
     $stmt->close();
 
-    // Prepare the SQL statement to insert new user
-    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    if ($stmt === false) {
-        $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
-        echo json_encode($response);
-        exit;
-    }
-
-    $stmt->bind_param("ssssssss", $first_name, $last_name, $college, $course, $year, $section, $username, $hashed_password);
+    // Prepare the SQL statement to insert a new user
+    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, user_type, college, course, year, section, position, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssssssss", $first_name, $last_name, $user_type, $college, $course, $year, $section, $position, $username, $hashed_password);
 
     // Execute the query and check for success
     if ($stmt->execute()) {

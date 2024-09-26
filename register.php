@@ -119,18 +119,18 @@ body {
             box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
         }
   </style>
-  <main>
+   <main>
     <div class="container">
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-            <div class="d-flex justify-content-center py-4">
-            <a href="#" class="logo d-flex align-items-center w-auto">
-                <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
-                <span><?= $_settings->info('name') ?></span>
-            </a>
-            </div><!-- End Logo -->
+              <div class="d-flex justify-content-center py-4">
+                <a href="#" class="logo d-flex align-items-center w-auto">
+                  <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
+                  <span><?= $_settings->info('name') ?></span>
+                </a>
+              </div><!-- End Logo -->
 
               <div class="card mb-3">
                 <div class="card-body">
@@ -138,117 +138,131 @@ body {
                     <h5 class="card-title text-center pb-0 fs-4">User Registration</h5>
                     <p class="text-center small">Fill in the form to create an account</p>
                   </div>
-                  
+
                   <!-- Updated registration form -->
                   <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php">
-                      <div class="col-12">
-                          <label for="firstName" class="form-label">First Name</label>
-                          <input type="text" name="first_name" class="form-control" id="firstName" required>
-                          <div class="invalid-feedback">Please enter your first name.</div>
-                      </div>
-                      <div class="col-12">
-                          <label for="lastName" class="form-label">Last Name</label>
-                          <input type="text" name="last_name" class="form-control" id="lastName" required>
-                          <div class="invalid-feedback">Please enter your last name.</div>
-                      </div>
-                      <div class="col-12">
-                          <label for="college" class="form-label">College</label>
-                          <select name="college" class="form-control" id="college" required>
-                              <option value="" disabled selected>Select your college</option>
-                              <option value="CABA">College of Accountancy and Business Administration</option>
-                              <option value="CAS">College of Arts and Sciences</option>
-                              <option value="CCIT">College of Communication and Information Technology</option>
-                              <option value="CTE">College of Teacher Education</option>
-                              <option value="CE">College of Engineering</option>
-                              <option value="CIT">College of Industrial Technology</option>
-                              <option value="CAF">College of Agriculture and Forestry</option>
-                              <option value="NUR">College of Nursing</option>
-                              <option value="CTHM">College of Tourism and Hospitality Management</option>
-                          </select>
-                          <div class="invalid-feedback">Please select your college.</div>
-                      </div>
-                      <div class="col-12">
-                          <label for="course" class="form-label">Course</label>
-                          <select name="course" class="form-control" id="course" required>
-                              <option value="" disabled selected>Select your course</option>
-                          </select>
-                          <div class="invalid-feedback">Please select your course.</div>
-                      </div>
-                      <div class="col-12">
-                          <label for="year" class="form-label">Year</label>
-                          <select name="year" class="form-control" id="year" required>
-                              <option value="" disabled selected>Select your year</option>
-                              <option value="1st - year">1st - year</option>
-                              <option value="2nd - year">2nd - year</option>
-                              <option value="3rd - year">3rd - year</option>
-                              <option value="4th - year">4th - year</option>
-                          </select>
-                          <div class="invalid-feedback">Please select your year.</div>
-                      </div>
-                      <div class="col-12">
-                          <label for="section" class="form-label">Section</label>
-                          <select name="section" class="form-control" id="section" required>
-                              <option value="" disabled selected>Select your section</option>
-                              <option value="Section A">Section A</option>
-                              <option value="Section B">Section B</option>
-                              <option value="Section C">Section C</option>
-                              <option value="Section D">Section D</option>
-                              <option value="Section E">Section E</option>
-                              <option value="Section F">Section F</option>
-                          </select>
-                          <div class="invalid-feedback">Please select your section.</div>
-                      </div>
-                      <!-- Updated username field -->
-                      <div class="col-12">
-                      <label for="email" class="form-label">Username</label> 
-                      <input type="text" name="email" class="form-control" id="email" pattern="^[a-zA-Z0-9]+$" required>
-                      <div class="invalid-feedback">Please enter a valid username (alphanumeric characters only, no "@" or email-like formats).</div>
-                      </div>
-                      <!-- Password and Confirm Password Fields -->
-                      <div class="col-12">
-                          <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
-                          <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
-                          <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
-                      </div>
-                      <div class="col-12">
-                          <label for="confirm_password" class="form-label">Confirm Password</label>
-                          <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
-                          <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
-                      </div>
-                      <div class="col-12">
-                          <button class="btn btn-primary w-100" type="submit">Register</button>
+                    
+                    <!-- User Type Selection -->
+                    <div class="col-12">
+                        <label for="userType" class="form-label">User Type</label>
+                        <select name="user_type" class="form-control" id="userType" required>
+                            <option value="" disabled selected>Select User Type</option>
+                            <option value="student">Student</option>
+                            <option value="faculty">Faculty</option>
+                            <option value="staff">Staff</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a user type.</div>
+                    </div>
+
+                    <!-- First Name -->
+                    <div class="col-12">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" name="first_name" class="form-control" id="firstName" required>
+                        <div class="invalid-feedback">Please enter your first name.</div>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="col-12">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" name="last_name" class="form-control" id="lastName" required>
+                        <div class="invalid-feedback">Please enter your last name.</div>
+                    </div>
+
+                    <!-- College / Department / Position (depends on user type) -->
+                    <div class="col-12">
+                        <label for="college" class="form-label" id="collegeLabel">College</label>
+                        <select name="college" class="form-control" id="college" required>
+                            <option value="" disabled selected>Select your college/department</option>
+                            <option value="CABA">College of Accountancy and Business Administration</option>
+                            <option value="CAS">College of Arts and Sciences</option>
+                            <option value="CCIT">College of Communication and Information Technology</option>
+                            <option value="CTE">College of Teacher Education</option>
+                            <option value="CE">College of Engineering</option>
+                            <option value="CIT">College of Industrial Technology</option>
+                            <option value="CAF">College of Agriculture and Forestry</option>
+                            <option value="NUR">College of Nursing</option>
+                            <option value="CTHM">College of Tourism and Hospitality Management</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your college/department/position.</div>
+                    </div>
+
+                    <!-- Course (only for students) -->
+                    <div class="col-12" id="courseField">
+                        <label for="course" class="form-label">Course</label>
+                        <select name="course" class="form-control" id="course">
+                            <option value="" disabled selected>Select your course</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your course.</div>
+                    </div>
+
+                    <!-- Year (only for students) -->
+                    <div class="col-12" id="yearField">
+                        <label for="year" class="form-label">Year</label>
+                        <select name="year" class="form-control" id="year">
+                            <option value="" disabled selected>Select your year</option>
+                            <option value="1st - year">1st - year</option>
+                            <option value="2nd - year">2nd - year</option>
+                            <option value="3rd - year">3rd - year</option>
+                            <option value="4th - year">4th - year</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your year.</div>
+                    </div>
+
+                    <!-- Section (only for students) -->
+                    <div class="col-12" id="sectionField">
+                        <label for="section" class="form-label">Section</label>
+                        <select name="section" class="form-control" id="section">
+                            <option value="" disabled selected>Select your section</option>
+                            <option value="Section A">Section A</option>
+                            <option value="Section B">Section B</option>
+                            <option value="Section C">Section C</option>
+                            <option value="Section D">Section D</option>
+                        </select>
+                        <div class="invalid-feedback">Please select your section.</div>
+                    </div>
+
+                    <!-- Position (only for staff) -->
+                    <div class="col-12" id="positionField" style="display: none;">
+                        <label for="position" class="form-label">Position/Job</label>
+                        <input type="text" name="position" class="form-control" id="position">
+                        <div class="invalid-feedback">Please enter your position/job title.</div>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="col-12">
+                        <label for="email" class="form-label">Username</label> 
+                        <input type="text" name="email" class="form-control" id="email" pattern="^[a-zA-Z0-9]+$" required>
+                        <div class="invalid-feedback">Please enter a valid username (alphanumeric characters only).</div>
+                    </div>
+
+                    <!-- Password and Confirm Password Fields -->
+                    <div class="col-12">
+                        <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
+                        <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
+                        <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="confirm_password" class="form-label">Confirm Password</label>
+                        <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
+                        <div class="invalid-feedback">Passwords do not match.</div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="col-12">
+                        <button class="btn btn-primary w-100" type="submit">Register</button>
+                    </div>
                   </form>
-                  <!-- End form -->
-                  
-                  <div id="g_id_onload"
-                       data-client_id="462546722729-vflluo934lv9qei2jbeaqcib5sllh9t6.apps.googleusercontent.com"
-                       data-context="signin"
-                       data-ux_mode="popup"
-                       data-callback="handleCredentialResponse"
-                       data-auto_prompt="false">
-                  </div>
-                  <div class="g_id_signin"
-                       data-type="standard"
-                       data-shape="rectangular"
-                       data-theme="outline"
-                       data-text="signin_with"
-                       data-size="large"
-                       data-logo_alignment="left">
-                  </div>
+
+                  <br>
+
+                </div>
               </div>
+
             </div>
           </div>
         </div>
       </section>
-      <div class="back-btn-container">
-    <button class="back-btn" onclick="history.back()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
-            <line x1="19" y1="12" x2="5" y2="12"/>
-            <polyline points="12 19 5 12 12 5"/>
-        </svg>
-        Back
-    </button>
-</div>
     </div>
   </main>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
@@ -480,6 +494,37 @@ body {
                 }
             });
         });
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+      const userTypeSelect = document.getElementById('userType');
+      const collegeLabel = document.getElementById('collegeLabel');
+      const courseField = document.getElementById('courseField');
+      const yearField = document.getElementById('yearField');
+      const sectionField = document.getElementById('sectionField');
+      const positionField = document.getElementById('positionField');
+
+      userTypeSelect.addEventListener('change', function () {
+        const userType = this.value;
+
+        // Reset fields
+        courseField.style.display = 'none';
+        yearField.style.display = 'none';
+        sectionField.style.display = 'none';
+        positionField.style.display = 'none';
+
+        // Adjust fields based on user type
+        if (userType === 'student') {
+          collegeLabel.textContent = 'College';
+          courseField.style.display = 'block';
+          yearField.style.display = 'block';
+          sectionField.style.display = 'block';
+        } else if (userType === 'faculty') {
+          collegeLabel.textContent = 'Department';
+        } else if (userType === 'staff') {
+          collegeLabel.textContent = 'Department';
+          positionField.style.display = 'block';
+        }
+      });
     });
 </script>
 
