@@ -287,11 +287,8 @@ if (isset($userId)) {
                 </svg> Contact Information:
             </label>
             <input type="text" id="contact" name="contact" pattern="[0-9]{10,11}" placeholder="Enter contact information" required>
-            <label for="time_found">
-    Time Found:
-</label>
-<input type="datetime-local" name="time_found" id="time_found" required>
-
+            <label for="time_missing">Time Missing:</label>
+            <input type="datetime-local" name="time_missing" id="time_missing" required>
            
             <label for="images">Upload Images:</label> <!-- Added the text label here -->
 <input type="file" name="images[]" id="images" multiple onchange="previewImages()">
@@ -350,7 +347,7 @@ if (isset($userId)) {
     document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
 });
 document.addEventListener('DOMContentLoaded', function() {
-        const dateTimeInput = document.getElementById('time_found');
+        const dateTimeInput = document.getElementById('time_missing');
 
         // Get the current date and time in the format required for the datetime-local input
         const now = new Date();
