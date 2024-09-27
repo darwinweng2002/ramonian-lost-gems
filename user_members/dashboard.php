@@ -406,7 +406,7 @@ if (!$is_guest) {
         <tbody>
             <?php foreach ($claimer as $claim): ?>
                 <tr>
-                    <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
+                <td><a href="https://ramonianlostgems.com/itemss/published_items.php?id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
                     <td><?= htmlspecialchars($claim['claim_date']) ?></td>
                     <td class="<?= $claim['status'] === 'approved' ? 'status-approved' : ($claim['status'] === 'rejected' ? 'status-declined' : 'status-pending') ?>">
                         <?= htmlspecialchars(ucfirst($claim['status'])) ?>
