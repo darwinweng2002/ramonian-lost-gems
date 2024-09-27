@@ -1,41 +1,51 @@
 <?php  
-// Include the database configuration file
-include 'config.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  // Retrieve form data
-  $first_name = $_POST['first_name'];
-  $last_name = $_POST['last_name'];
-  $department = $_POST['department'];
-  $position = $_POST['position'];
-  $username = $_POST['email']; // This is now the username field, but keep the variable name as 'email'
+    // Retrieve form data
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $user_type = $_POST['user_type'];
+    $username = $_POST['email'];
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
 
-  // Check if passwords match
-  if ($_POST['password'] !== $_POST['confirm_password']) {
-      $response = ['success' => false, 'message' => 'Passwords do not match.'];
-      echo json_encode($response);
-      exit;
-  }
+    // Check if passwords match
+    if ($password !== $confirm_password) {
+        $response = ['success' => false, 'message' => 'Passwords do not match.'];
+        echo json_encode($response);
+        exit;
+    }
 
-  // Hash the entire password, no truncation
-  $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
+    // Hash the password
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-  // Prepare the SQL statement for the user_staff table
-  $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, department, position, email, password) VALUES (?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("ssssss", $first_name, $last_name, $department, $position, $username, $password);
+    // Check user type and set fields accordingly
+    if ($user_type === 'staff') {
+        $department = $_POST['department'];
+        $role = null;
+    } else {
+        $department = null;
+        $role = $_POST['role']; // Non-teaching staff have a role/position instead of a department
+    }
 
-  // Execute the query and check for success
-  if ($stmt->execute()) {
-      $response = ['success' => true];
-  } else {
-      $response = ['success' => false, 'message' => 'Failed to register staff member.'];
-  }
+    // Prepare the SQL query to insert into the database
+    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssss", $first_name, $last_name, $username, $hashed_password, $department, $role, $user_type);
 
-  $stmt->close();
-  $conn->close();
+    // Execute the query
+    if ($stmt->execute()) {
+        $response = ['success' => true, 'message' => 'User registered successfully!'];
+    } else {
+        $response = ['success' => false, 'message' => 'Registration failed.'];
+    }
 
-  // Return a JSON response
-  echo json_encode($response);
+    // Close statement and connection
+    $stmt->close();
+    $conn->close();
+
+    // Return a JSON response
+    echo json_encode($response);
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
