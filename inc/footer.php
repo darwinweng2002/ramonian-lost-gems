@@ -61,7 +61,6 @@
       &copy; Copyright <strong><span>Ramonian Lost Gems</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
-    <a href="<?= base_url ?>">
      <img style="height: 25px; width: 25px;" src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
     </div>
   </footer><!-- End Footer -->
