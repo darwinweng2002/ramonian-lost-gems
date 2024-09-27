@@ -404,15 +404,21 @@ $message_stmt->close();
                                     </ul>
 
                                     <!-- Display tabs -->
-                                    <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
-                                        <li class="nav-item" role="presentation">
-                                            <a class="nav-link active" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">Claim History</a>
+                                    <ul class="list-group mb-3">
+                                        <!-- Only show the department if the user is teaching -->
+                                        <?php if (!$is_non_teaching): ?>
+                                            <li class="list-group-item d-flex justify-content-between">
+                                                <strong>Department:</strong>
+                                                <span><?= htmlspecialchars($department ?? '') ?></span>
+                                            </li>
+                                        <?php endif; ?>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <strong>Position:</strong>
+                                            <span><?= htmlspecialchars($position ?? '') ?></span>
                                         </li>
-                                        <li class="nav-item" role="presentation">
-                                            <a class="nav-link" id="found-items-tab" data-bs-toggle="tab" href="#found-items" role="tab" aria-controls="found-items" aria-selected="false">Posted Found Items</a>
-                                        </li>
-                                        <li class="nav-item" role="presentation">
-                                            <a class="nav-link" id="missing-items-tab" data-bs-toggle="tab" href="#missing-items" role="tab" aria-controls="missing-items" aria-selected="false">Posted Missing Items</a>
+                                        <li class="list-group-item d-flex justify-content-between">
+                                            <strong>Email:</strong>
+                                            <span><?= htmlspecialchars($email ?? '') ?></span>
                                         </li>
                                     </ul>
 
