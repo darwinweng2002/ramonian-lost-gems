@@ -13,6 +13,9 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Enable error reporting for debugging MySQL errors
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 // Get claim ID from URL
 $claimId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -23,14 +26,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status'])) {
     // Update claim status in the database
     $update_sql = "UPDATE claimer SET status = ? WHERE id = ?";
     $stmt = $conn->prepare($update_sql);
-    $stmt->bind_param('si', $new_status, $claimId);
-    $stmt->execute();
+    
+    if (!$stmt) {
+        die('MySQL prepare failed: ' . $conn->error);
+    }
 
-    if ($stmt->affected_rows > 0) {
-        echo "<script>alert('Claim status updated successfully!'); window.location.href = 'claim_details.php?id={$claimId}';</script>";
+    $stmt->bind_param('si', $new_status, $claimId);
+    
+    if ($stmt->execute()) {
+        // Check if any rows were actually updated
+        if ($stmt->affected_rows > 0) {
+            echo "<script>alert('Claim status updated successfully!'); window.location.href = 'claim_details.php?id={$claimId}';</script>";
+        } else {
+            echo "<script>alert('No changes made. The status might already be set to the selected value.'); window.location.href = 'claim_details.php?id={$claimId}';</script>";
+        }
     } else {
         echo "<script>alert('Failed to update claim status.'); window.location.href = 'claim_details.php?id={$claimId}';</script>";
     }
+
     $stmt->close();
 }
 
