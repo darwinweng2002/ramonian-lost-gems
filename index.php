@@ -166,7 +166,7 @@ if (isset($_POST['guest_login'])) {
               </form>
                   <br>
                   <button class="btn btn-primary w-100"><a style="color: #fff;" href="https://ramonianlostgems.com/admin/login.php">Login as Admin</a></button>
-          
+                     <br>
                     <br>
                   <button class="btn btn-primary w-100"><a style="color: #fff;" href="https://ramonianlostgems.com/staff_login.php">Login as Faculty</a></button>
               
