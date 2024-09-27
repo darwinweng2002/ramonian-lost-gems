@@ -11,7 +11,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Check if the user is logged in as either a regular user or staff
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
-    header('Location: login.php');
+    // If the user is not logged in, redirect them to the login page with a message
+    header('Location: login.php?message=access_denied');
     exit();
 }
 
