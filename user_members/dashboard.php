@@ -61,7 +61,7 @@ if (!$is_guest) {
     $claim_stmt = $conn->prepare("
         SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
         FROM claimer c 
-        JOIN item_list i ON c.item_id = i.id 
+        JOIN message_history i ON c.item_id = i.id 
         WHERE c.user_id = ?
     ");
     $claim_stmt->bind_param("i", $user_id);
@@ -77,6 +77,7 @@ if (!$is_guest) {
     }
     $claim_stmt->close();
 }
+
 
 
 // Fetch the user's posted missing items history
@@ -407,14 +408,15 @@ if (!$is_guest) {
                 <tr>
                     <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
                     <td><?= htmlspecialchars($claim['claim_date']) ?></td>
-                    <td class="<?= $claim['status'] === 'Approved' ? 'status-approved' : ($claim['status'] === 'Declined' ? 'status-declined' : '') ?>">
-                        <?= htmlspecialchars($claim['status']) ?>
+                    <td class="<?= $claim['status'] === 'approved' ? 'status-approved' : ($claim['status'] === 'rejected' ? 'status-declined' : 'status-pending') ?>">
+                        <?= htmlspecialchars(ucfirst($claim['status'])) ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 </div>
+
 
 
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
