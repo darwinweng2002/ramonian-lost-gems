@@ -1,20 +1,4 @@
 <?php
-include '../config.php';
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Start the session if not already started
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Check if the user is logged in as either a regular user or staff
-if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
-    header('Location: login.php');
-    exit();
-}
-
 // Determine user type and fetch user info accordingly
 if (isset($_SESSION['user_id'])) {
     // Regular user
@@ -22,10 +6,10 @@ if (isset($_SESSION['user_id'])) {
     $userType = 'user_member';
     $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, section FROM user_member WHERE id = ?";
 } elseif (isset($_SESSION['staff_id'])) {
-    // Staff user
+    // Staff user - Removed 'type' as the column doesn't exist
     $claimantId = $_SESSION['staff_id'];
     $userType = 'user_staff';
-    $sqlClaimant = "SELECT first_name, last_name, email, department, position, type FROM user_staff WHERE id = ?";
+    $sqlClaimant = "SELECT first_name, last_name, email, department, position FROM user_staff WHERE id = ?";
 }
 
 // Database connection
@@ -43,8 +27,8 @@ $stmtClaimant->execute();
 $claimantResult = $stmtClaimant->get_result();
 $claimantData = $claimantResult->fetch_assoc();
 
-// Determine if the user is non-teaching based on the 'type' field in the staff_user table
-$isNonTeaching = isset($claimantData['type']) && $claimantData['type'] === 'non-teaching';
+// Determine if the user is non-teaching based on the position field instead of 'type'
+$isNonTeaching = isset($claimantData['position']) && strtolower($claimantData['position']) === 'non-teaching';
 
 // Fetch item data based on the item ID
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
