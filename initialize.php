@@ -24,6 +24,3 @@ if(!defined('DB_NAME')) define('DB_NAME',"u450897284_lfis_db");
 
 
 
-
-
-
