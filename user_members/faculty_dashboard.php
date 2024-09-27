@@ -30,6 +30,7 @@ $stmt->bind_result($first_name, $last_name, $department, $position, $email, $ava
 $stmt->fetch();
 $stmt->close();
 
+
 // Handle avatar upload
 if (isset($_POST['upload_avatar'])) {
     if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
@@ -404,22 +405,25 @@ $is_non_teaching = empty($department);
 </ul>
                                     <!-- Display tabs -->
                                     <ul class="list-group mb-3">
-                                        <!-- Only show the department if the user is teaching -->
-                                        <?php if (!$is_non_teaching): ?>
-                                            <li class="list-group-item d-flex justify-content-between">
-                                                <strong>Department:</strong>
-                                                <span><?= htmlspecialchars($department ?? '') ?></span>
-                                            </li>
-                                        <?php endif; ?>
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <strong>Position:</strong>
-                                            <span><?= htmlspecialchars($position ?? '') ?></span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <strong>Email:</strong>
-                                            <span><?= htmlspecialchars($email ?? '') ?></span>
-                                        </li>
-                                    </ul>
+    <!-- Only show the department if the user is teaching -->
+    <?php if (!$is_non_teaching): ?>
+        <li class="list-group-item d-flex justify-content-between">
+            <strong>Department:</strong>
+            <span><?= htmlspecialchars($department ?? 'N/A') ?></span>
+        </li>
+    <?php endif; ?>
+    
+    <li class="list-group-item d-flex justify-content-between">
+        <strong>Position:</strong>
+        <span><?= htmlspecialchars($position ?? 'N/A') ?></span>
+    </li>
+
+    <li class="list-group-item d-flex justify-content-between">
+        <strong>Email:</strong>
+        <span><?= htmlspecialchars($email ?? 'N/A') ?></span>
+    </li>
+</ul>
+
 
                                     <div class="tab-content">
                                         <!-- Claim History Tab -->
