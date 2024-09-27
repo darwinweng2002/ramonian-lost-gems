@@ -226,10 +226,19 @@ if (isset($_POST['guest_login'])) {
   <script src="<?= base_url ?>assets/vendor/php-email-form/validate.js"></script>
   <script src="<?= base_url ?>assets/js/main.js"></script>
   <script>
-   $(document).ready(function() {
-    end_loader();
+  $(document).ready(function() {
+    // Ensure loader shows when clicking Admin Login, Faculty Login, or Register links
+    $(document).on('click', 'a[href="https://ramonianlostgems.com/admin/login.php"], a[href="https://ramonianlostgems.com/staff_login.php"], a[href="https://ramonianlostgems.com/register.php"]', function(e) {
+        // Show the loader
+        $('#loader').show();
+    });
 
-    // Check if there's an error message
+    // Show loader on form submission for user login and guest login
+    $('form').on('submit', function(e) {
+        $('#loader').show();
+    });
+
+    // Check if there's an error message and show it
     <?php if ($error_message): ?>
       Swal.fire({
         icon: 'error',
@@ -238,19 +247,7 @@ if (isset($_POST['guest_login'])) {
         confirmButtonText: 'OK'
       });
     <?php endif; ?>
-
-    // Show loader on form submission
-    $('form').on('submit', function(e) {
-      // Show the loader
-      $('#loader').show();
-    });
-
-    // Add loader for Admin Login and Faculty Login links
-    $('a[href="https://ramonianlostgems.com/admin/login.php"], a[href="https://ramonianlostgems.com/register.php"],  a[href="https://ramonianlostgems.com/staff_login.php"]').on('click', function(e) {
-      // Show the loader
-      $('#loader').show();
-    });
-  });
+});
 
   // Function to handle Google Sign-In response (already existing)
   function handleCredentialResponse(response) {
