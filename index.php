@@ -246,7 +246,7 @@ if (isset($_POST['guest_login'])) {
     });
 
     // Add loader for Admin Login and Faculty Login links
-    $('a[href="https://ramonianlostgems.com/admin/login.php"], a[href="https://ramonianlostgems.com/admin/register.php"],  a[href="https://ramonianlostgems.com/staff_login.php"]').on('click', function(e) {
+    $('a[href="https://ramonianlostgems.com/admin/login.php"], a[href="https://ramonianlostgems.com/register.php"],  a[href="https://ramonianlostgems.com/staff_login.php"]').on('click', function(e) {
       // Show the loader
       $('#loader').show();
     });
