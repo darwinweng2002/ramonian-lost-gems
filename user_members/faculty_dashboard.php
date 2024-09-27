@@ -83,6 +83,7 @@ while ($claim_stmt->fetch()) {
 $claim_stmt->close();
 
 // Fetch the staff's posted missing items history
+// Fetch the staff's posted missing items history
 $missing_items = [];
 $missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
 if ($missing_stmt === false) {
@@ -117,6 +118,7 @@ while ($message_stmt->fetch()) {
     ];
 }
 $message_stmt->close();
+
 
 // Determine if the user is non-teaching (department is empty)
 $is_non_teaching = empty($department);
