@@ -60,28 +60,28 @@ if (isset($_POST['upload_avatar'])) {
 }
 
 // Fetch the staff's claim history
-$claims = [];
-$claim_stmt = $conn->prepare("
-    SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
-    FROM claims c 
-    JOIN item_list i ON c.item_id = i.id 
-    WHERE c.user_id = ?
-");
-if ($claim_stmt === false) {
-    die('MySQL prepare failed: ' . $conn->error);
+$claimer = [];
+if (!$is_guest) {
+    // Only fetch claim history for regular users
+    $claim_stmt = $conn->prepare("
+        SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
+        FROM claimer c 
+        JOIN message_history i ON c.item_id = i.id 
+        WHERE c.user_id = ?
+    ");
+    $claim_stmt->bind_param("i", $user_id);
+    $claim_stmt->execute();
+    $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
+    while ($claim_stmt->fetch()) {
+        $claimer[] = [
+            'item_id' => $item_id, 
+            'item_name' => $item_name, 
+            'claim_date' => $claim_date, 
+            'status' => $status
+        ];
+    }
+    $claim_stmt->close();
 }
-$claim_stmt->bind_param("i", $staff_id);
-$claim_stmt->execute();
-$claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
-while ($claim_stmt->fetch()) {
-    $claims[] = [
-        'item_id' => $item_id, 
-        'item_name' => $item_name, 
-        'claim_date' => $claim_date, 
-        'status' => $status
-    ];
-}
-$claim_stmt->close();
 
 // Fetch the staff's posted missing items history
 $missing_items = [];
@@ -427,29 +427,29 @@ $is_non_teaching = empty($department);
 
                                     <div class="tab-content">
                                         <!-- Claim History Tab -->
-                                        <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                            <h5 class="history-title">Claim History</h5>
-                                            <table class="table table-striped claim-history-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Item Name</th>
-                                                        <th>Date Claimed</th>
-                                                        <th>Status</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php foreach ($claims as $claim): ?>
-                                                        <tr>
-                                                            <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
-                                                            <td><?= htmlspecialchars($claim['claim_date']) ?></td>
-                                                            <td class="<?= $claim['status'] == 'Approved' ? 'status-approved' : '' ?>">
-                                                                <?= htmlspecialchars($claim['status']) ?>
-                                                            </td>
-                                                        </tr>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+    <h5 class="history-title">Claim History</h5>
+    <table class="table table-striped claim-history-table">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Date Claimed</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($claimer as $claim): ?>
+                <tr>
+                <td><a href="https://ramonianlostgems.com/itemss/published_items.php?id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
+                    <td><?= htmlspecialchars($claim['claim_date']) ?></td>
+                    <td class="<?= $claim['status'] === 'approved' ? 'status-approved' : ($claim['status'] === 'rejected' ? 'status-declined' : 'status-pending') ?>">
+                        <?= htmlspecialchars(ucfirst($claim['status'])) ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 
                                         <!-- Posted Found Items Tab -->
                                         <div class="tab-pane fade" id="found-items" role="tabpanel" aria-labelledby="found-items-tab">
