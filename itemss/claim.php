@@ -231,7 +231,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="info-section">
         <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
         <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
-        <p>College/Department: <?= htmlspecialchars($claimantData['college']); ?></p>
+        
+        <?php if ($isNonTeaching): ?>
+            <p>Position: <?= htmlspecialchars($claimantData['position']); ?></p>
+        <?php else: ?>
+            <p>College/Department: <?= htmlspecialchars($claimantData['department']); ?></p>
+        <?php endif; ?>
+
         <?php if ($userType == 'user_member'): ?>
             <p>Course: <?= htmlspecialchars($claimantData['course']); ?></p>
             <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section']); ?></p>
