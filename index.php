@@ -168,7 +168,7 @@ if (isset($_POST['guest_login'])) {
                   <button class="btn btn-primary w-100"><a style="color: #fff;" href="https://ramonianlostgems.com/admin/login.php">Login as Admin</a></button>
                      <br>
                     <br>
-                  <button class="btn btn-primary w-100"><a style="color: #fff;" href="https://ramonianlostgems.com/staff_login.php">Login as Faculty</a></button>
+                  <button href="https://ramonianlostgems.com/staff_login.php" class="btn btn-primary w-100" style="color: #fff;">Login as Faculty</button>
               
                   <form method="POST" action="">
                     <div class="col-12">
@@ -181,10 +181,9 @@ if (isset($_POST['guest_login'])) {
 
                   <div class="text-center mt-3">
                   <p>Don't have an account? 
-                  <button class="btn btn-primary w-100"><a style="color: #fff;" href="https://ramonianlostgems.com/register.php">Register here.</a></button>
+                  <button href="https://ramonianlostgems.com/register.php" class="btn btn-primary w-100" style="color: #fff;">Register account here.</button>
                   </p>
               </div>
-
                   <br>
                   <br>
                   <div id="g_id_onload"
