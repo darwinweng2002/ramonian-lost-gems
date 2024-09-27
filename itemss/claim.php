@@ -1,4 +1,5 @@
 <?php
+include '../config.php';
 // Determine user type and fetch user info accordingly
 if (isset($_SESSION['user_id'])) {
     // Regular user
