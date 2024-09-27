@@ -62,6 +62,8 @@ $stmtClaimant->execute();
 $claimantResult = $stmtClaimant->get_result();
 $claimantData = $claimantResult->fetch_assoc();
 
+$isNonTeaching = isset($claimantData['type']) && $claimantData['type'] === 'non-teaching';
+
 // Process the form submission to save the claim request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $item_description = $_POST['item_description'];
