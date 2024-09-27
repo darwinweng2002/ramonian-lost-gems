@@ -17,23 +17,19 @@ $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']
 // Update SQL query to include search functionality
 // Update SQL query to include both user_member and staff_user in the search functionality
 $sql = "
-    SELECT c.id, c.item_id, mh.title AS item_name, um.first_name, um.last_name, c.item_description, c.date_lost, 
-           c.location_lost, c.proof_of_ownership, c.security_question, c.personal_id, c.status, c.claim_date
+    SELECT c.id, c.item_id, mh.title AS item_name, 
+           COALESCE(um.first_name, us.first_name) AS first_name, 
+           COALESCE(um.last_name, us.last_name) AS last_name,
+           c.item_description, c.date_lost, c.location_lost, 
+           c.proof_of_ownership, c.security_question, c.personal_id, 
+           c.status, c.claim_date
     FROM claimer c
     LEFT JOIN message_history mh ON c.item_id = mh.id
     LEFT JOIN user_member um ON c.user_id = um.id
-    WHERE CONCAT_WS(' ', um.first_name, um.last_name, mh.title, c.item_description) LIKE '%$searchTerm%'
-    
-    UNION ALL
-    
-    SELECT c.id, c.item_id, mh.title AS item_name, us.first_name, us.last_name, c.item_description, c.date_lost, 
-           c.location_lost, c.proof_of_ownership, c.security_question, c.personal_id, c.status, c.claim_date
-    FROM claimer c
-    LEFT JOIN message_history mh ON c.item_id = mh.id
     LEFT JOIN user_staff us ON c.user_id = us.id
-    WHERE CONCAT_WS(' ', us.first_name, us.last_name, mh.title, c.item_description) LIKE '%$searchTerm%'
-    
-    ORDER BY claim_date DESC";
+    WHERE CONCAT_WS(' ', COALESCE(um.first_name, us.first_name), COALESCE(um.last_name, us.last_name), mh.title, c.item_description) LIKE '%$searchTerm%'
+    ORDER BY c.claim_date DESC
+";
 
 $result = $conn->query($sql);
 
