@@ -117,6 +117,9 @@ while ($message_stmt->fetch()) {
     ];
 }
 $message_stmt->close();
+
+// Determine if the user is non-teaching (department is empty)
+$is_non_teaching = empty($department);
 ?>
 
 <!DOCTYPE html>
@@ -354,7 +357,7 @@ $message_stmt->close();
 <body>
 <?php require_once('../inc/topBarNav.php') ?>
     <main>
-        <div class="container">
+    <div class="container">
             <section class="section profile min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
                 <div class="container">
                     <div class="row justify-content-center">
@@ -368,7 +371,10 @@ $message_stmt->close();
                             <div class="card mb-3">
                                 <div class="card-body">
                                     <div class="pt-4 pb-2 text-center">
-                                        <h5 class="card-title text-center pb-0 fs-4">Staff Dashboard</h5>
+                                        <!-- Check if the user is non-teaching and change the dashboard title accordingly -->
+                                        <h5 class="card-title text-center pb-0 fs-4">
+                                            <?= $is_non_teaching ? 'Non-Teaching Dashboard' : 'Staff Dashboard' ?>
+                                        </h5>
                                         <div class="d-flex justify-content-center">
                                             <div class="text-center mb-3">
                                             <?php if ($avatar): ?>
@@ -380,7 +386,6 @@ $message_stmt->close();
                                         </div>
                                         <p class="text-center small">Welcome, <?= htmlspecialchars($first_name ?? '') . ' ' . htmlspecialchars($last_name ?? '') ?></p>
                                     </div>
-
                                     <!-- Avatar Upload Form -->
                                     <form action="" method="post" enctype="multipart/form-data">
                                         <input type="file" name="avatar" accept="image/*">
