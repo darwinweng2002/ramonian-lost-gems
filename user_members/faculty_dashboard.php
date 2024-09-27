@@ -83,7 +83,6 @@ while ($claim_stmt->fetch()) {
 $claim_stmt->close();
 
 // Fetch the staff's posted missing items history
-// Fetch the staff's posted missing items history
 $missing_items = [];
 $missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
 if ($missing_stmt === false) {
@@ -118,7 +117,6 @@ while ($message_stmt->fetch()) {
     ];
 }
 $message_stmt->close();
-
 
 // Determine if the user is non-teaching (department is empty)
 $is_non_teaching = empty($department);
@@ -393,7 +391,17 @@ $is_non_teaching = empty($department);
                                         <input type="file" name="avatar" accept="image/*">
                                         <button type="submit" name="upload_avatar" class="btn btn-primary">Upload Avatar</button>
                                     </form>
-
+                                    <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">Claim History</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="found-items-tab" data-bs-toggle="tab" href="#found-items" role="tab" aria-controls="found-items" aria-selected="false">Posted Found Items</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="missing-items-tab" data-bs-toggle="tab" href="#missing-items" role="tab" aria-controls="missing-items" aria-selected="false">Posted Missing Items</a>
+    </li>
+</ul>
                                     <!-- Display tabs -->
                                     <ul class="list-group mb-3">
                                         <!-- Only show the department if the user is teaching -->
