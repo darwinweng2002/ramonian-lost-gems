@@ -60,28 +60,27 @@ if (isset($_POST['upload_avatar'])) {
 }
 
 // Fetch the staff's claim history
+// Fetch the staff's claim history
 $claimer = [];
-if (!$is_guest) {
-    // Only fetch claim history for regular users
-    $claim_stmt = $conn->prepare("
-        SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
-        FROM claimer c 
-        JOIN message_history i ON c.item_id = i.id 
-        WHERE c.user_id = ?
-    ");
-    $claim_stmt->bind_param("i", $user_id);
-    $claim_stmt->execute();
-    $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
-    while ($claim_stmt->fetch()) {
-        $claimer[] = [
-            'item_id' => $item_id, 
-            'item_name' => $item_name, 
-            'claim_date' => $claim_date, 
-            'status' => $status
-        ];
-    }
-    $claim_stmt->close();
+// Fetch claim history for the current user (staff)
+$claim_stmt = $conn->prepare("
+    SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
+    FROM claimer c 
+    JOIN message_history i ON c.item_id = i.id 
+    WHERE c.user_id = ?
+");
+$claim_stmt->bind_param("i", $user_id);
+$claim_stmt->execute();
+$claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
+while ($claim_stmt->fetch()) {
+    $claimer[] = [
+        'item_id' => $item_id, 
+        'item_name' => $item_name, 
+        'claim_date' => $claim_date, 
+        'status' => $status
+    ];
 }
+$claim_stmt->close();
 
 // Fetch the staff's posted missing items history
 $missing_items = [];
