@@ -299,7 +299,12 @@ if (isset($userId)) {
     ?>
     <option value="add_new">Add New Category</option>
 </select>
-
+<div id="newCategoryDiv" style="display: none;">
+    <label for="new_category">
+        New Category:
+    </label>
+    <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
+</div>
 <div id="newCategoryDiv" style="display: none;">
     <label for="new_category">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag-add">
