@@ -227,14 +227,15 @@ $result = $stmt->get_result();
 
                 <!-- Status Update Form -->
                 <form action="" method="POST">
-                    <label for="status">Update Status:</label>
-                    <select name="status" id="status">
-                        <option value="Pending" <?= ($row['status'] === 'Pending') ? 'selected' : '' ?>>Pending</option>
-                        <option value="Approved" <?= ($row['status'] === 'Approved') ? 'selected' : '' ?>>Approved</option>
-                        <option value="Declined" <?= ($row['status'] === 'Declined') ? 'selected' : '' ?>>Declined</option>
-                    </select>
-                    <button type="submit">Update Status</button>
-                </form>
+    <label for="status">Update Status:</label>
+    <select name="status" id="status">
+        <option value="pending" <?= ($row['status'] === 'pending') ? 'selected' : '' ?>>Pending</option>
+        <option value="approved" <?= ($row['status'] === 'approved') ? 'selected' : '' ?>>Approved</option>
+        <option value="rejected" <?= ($row['status'] === 'rejected') ? 'selected' : '' ?>>Rejected</option>
+    </select>
+    <button type="submit">Update Status</button>
+</form>
+
 
                 <!-- Proof of Ownership -->
                 <p><strong>Proof of Ownership:</strong></p>
