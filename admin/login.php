@@ -33,6 +33,39 @@
   text-align: center; /* Center the text */
   font-size: 24px; /* Adjust font size as needed */
 }
+.back-btn-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn svg {
+            margin-right: 8px;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .back-btn:focus {
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+        }
   </style>
   <main>
     <div class="container">
