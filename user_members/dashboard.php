@@ -366,7 +366,6 @@ if (!$is_guest) {
         </li>
     </ul>
 
-
     <!-- Show tab content only for non-guest users -->
     <div class="tab-content">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -407,7 +406,7 @@ if (!$is_guest) {
         <tbody>
             <?php foreach ($claimer as $claim): ?>
                 <tr>
-                <td><a href="https://ramonianlostgems.com/admin/claimer/claim_details.php?id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
+                    <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
                     <td><?= htmlspecialchars($claim['claim_date']) ?></td>
                     <td class="<?= $claim['status'] === 'approved' ? 'status-approved' : ($claim['status'] === 'rejected' ? 'status-declined' : 'status-pending') ?>">
                         <?= htmlspecialchars(ucfirst($claim['status'])) ?>
