@@ -165,13 +165,10 @@ if (isset($_POST['guest_login'])) {
               </div>
               </form>
                   <br>
-                  <div class="col-12">
                   <button href="https://ramonianlostgems.com/admin/login.php" class="btn btn-primary w-100" style="color: #fff;">Login as Admin</button>
                      <br>
                     <br>
-                    <div class="col-12">
                   <button href="https://ramonianlostgems.com/staff_login.php" class="btn btn-primary w-100" style="color: #fff;">Login as Faculty</button>
-                  </div>
                   <form method="POST" action="">
                     <div class="col-12">
                       <br>
