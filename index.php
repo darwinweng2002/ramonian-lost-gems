@@ -226,32 +226,40 @@ if (isset($_POST['guest_login'])) {
   <script src="<?= base_url ?>assets/vendor/php-email-form/validate.js"></script>
   <script src="<?= base_url ?>assets/js/main.js"></script>
   <script>
-    $(document).ready(function() {
-      end_loader();
-      // Check if there's an error message
-      <?php if ($error_message): ?>
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: '<?php echo $error_message; ?>',
-          confirmButtonText: 'OK'
-        });
-      <?php endif; ?>
-      
-      // Show loader on form submission
-      $('form').on('submit', function(e) {
-          // Show the loader
-          $('#loader').show();
+   $(document).ready(function() {
+    end_loader();
+
+    // Check if there's an error message
+    <?php if ($error_message): ?>
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: '<?php echo $error_message; ?>',
+        confirmButtonText: 'OK'
       });
+    <?php endif; ?>
+
+    // Show loader on form submission
+    $('form').on('submit', function(e) {
+      // Show the loader
+      $('#loader').show();
     });
 
-    function handleCredentialResponse(response) {
-        // This function handles the response from Google Sign-In
-        const data = jwt_decode(response.credential);
+    // Add loader for Admin Login and Faculty Login links
+    $('a[href="https://ramonianlostgems.com/admin/login.php"], a[href="https://ramonianlostgems.com/staff_login.php"]').on('click', function(e) {
+      // Show the loader
+      $('#loader').show();
+    });
+  });
 
-        // Show the loader
-        $('#loader').show();
+  // Function to handle Google Sign-In response (already existing)
+  function handleCredentialResponse(response) {
+    const data = jwt_decode(response.credential);
 
+    // Show the loader
+    $('#loader').show();
+         
+        
         // Send the Google ID token to your server for verification and user registration/login
         $.post("google-signin.php", {
             id_token: response.credential,
