@@ -1,12 +1,6 @@
 <?php
 include '../../config.php';
 
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php'); // Adjust this path if necessary
-    exit();
-}
-
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
