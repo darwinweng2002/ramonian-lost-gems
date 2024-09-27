@@ -20,10 +20,12 @@ if (isset($_SESSION['user_id'])) {
     // Regular user
     $claimantId = $_SESSION['user_id'];
     $userType = 'user_member';
+    $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, section FROM user_member WHERE id = ?";
 } elseif (isset($_SESSION['staff_id'])) {
     // Staff user
     $claimantId = $_SESSION['staff_id'];
     $userType = 'user_staff';
+    $sqlClaimant = "SELECT first_name, last_name, email, department AS college FROM user_staff WHERE id = ?";
 }
 
 // Database connection
@@ -36,6 +38,13 @@ if ($conn->connect_error) {
 
 // Get item ID from URL
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// Fetch claimant's user info
+$stmtClaimant = $conn->prepare($sqlClaimant);
+$stmtClaimant->bind_param('i', $claimantId);
+$stmtClaimant->execute();
+$claimantResult = $stmtClaimant->get_result();
+$claimantData = $claimantResult->fetch_assoc();
 
 // Process the form submission to save the claim request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -179,35 +188,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Display Item Information -->
     <h3>Item Information</h3>
-<?php if ($itemData) : ?>
     <div class="info-section">
-        <p>Item Name: <?= htmlspecialchars($itemData['title'] ?? ''); ?></p>
-        <p>Category: <?= htmlspecialchars($itemData['category_name'] ?? ''); ?></p>
-
-        <!-- Check if the founder's name or email is empty -->
-        <?php if (empty($itemData['first_name']) && empty($itemData['email'])): ?>
-            <p>Found by: Guest User</p>
-        <?php else: ?>
-            <p>Found by: <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
-            <p>Email: <?= htmlspecialchars($itemData['email']); ?></p>
-        <?php endif; ?>
-
-        <p>Time Found: <?= htmlspecialchars($itemData['time_found'] ?? ''); ?></p>
-        <p>Location Found: <?= htmlspecialchars($itemData['landmark'] ?? ''); ?></p>
-        <p>Description: <?= htmlspecialchars($itemData['message'] ?? ''); ?></p>
-        <p>Contact: <?= htmlspecialchars($itemData['contact'] ?? ''); ?></p>
+        <!-- Display item information here -->
     </div>
-<?php else : ?>
-    <p>Item not found or not published.</p>
-<?php endif; ?>
-
 
     <!-- Display Claimant's Information -->
     <h3>Your Information</h3>
     <div class="info-section">
         <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
         <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
-        <p>College: <?= htmlspecialchars($claimantData['college']); ?></p>
+        <p>College/Department: <?= htmlspecialchars($claimantData['college']); ?></p>
         <?php if ($userType == 'user_member'): ?>
             <p>Course: <?= htmlspecialchars($claimantData['course']); ?></p>
             <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section']); ?></p>
@@ -215,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <!-- Claim Form -->
-    <form id="claimForm" action="submit_claim.php" method="POST" enctype="multipart/form-data">
+    <form id="claimForm" action="" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="item_id" value="<?= $itemId; ?>">
 
         <div class="form-group">
@@ -274,6 +264,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </html>
 
 <?php
-$stmt->close();
+$stmtClaimant->close();
 $conn->close();
 ?>
