@@ -1,6 +1,4 @@
 <?php
-session_start(); // Start the session at the very beginning
-
 // Include the database configuration file
 include 'config.php'; // Adjust the path if necessary
 
