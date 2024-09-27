@@ -233,19 +233,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Display Claimant's Information -->
     <h3>Your Information</h3>
     <div class="info-section">
-        <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
-        <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
-        
-        <?php if ($isNonTeaching): ?>
-            <p>Position: <?= htmlspecialchars($claimantData['position']); ?></p>
-        <?php else: ?>
-            <p>College/Department: <?= htmlspecialchars($claimantData['department']); ?></p>
-        <?php endif; ?>
+    <p>Name: <?= htmlspecialchars($claimantData['first_name'] ?? '') . ' ' . htmlspecialchars($claimantData['last_name'] ?? ''); ?></p>
+<p>Email: <?= htmlspecialchars($claimantData['email'] ?? ''); ?></p>
 
-        <?php if ($userType == 'user_member'): ?>
-            <p>Course: <?= htmlspecialchars($claimantData['course']); ?></p>
-            <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section']); ?></p>
-        <?php endif; ?>
+<?php if ($isNonTeaching): ?>
+    <p>Position: <?= htmlspecialchars($claimantData['position'] ?? ''); ?></p>
+<?php else: ?>
+    <p>College/Department: <?= htmlspecialchars($claimantData['department'] ?? ''); ?></p>
+<?php endif; ?>
+
+<?php if ($userType == 'user_member'): ?>
+    <p>Course: <?= htmlspecialchars($claimantData['course'] ?? ''); ?></p>
+    <p>Year & Section: <?= htmlspecialchars($claimantData['year'] ?? '') . ' - ' . htmlspecialchars($claimantData['section'] ?? ''); ?></p>
+<?php endif; ?>
     </div>
 
     <!-- Claim Form -->
