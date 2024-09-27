@@ -105,46 +105,63 @@ body {
                   
                   <!-- Staff registration form -->
                   <form class="row g-3 needs-validation" novalidate method="POST" action="register_staff.php">
-                      <div class="col-12">
-                          <label for="firstName" class="form-label">First Name</label>
-                          <input type="text" name="first_name" class="form-control" id="firstName" required>
-                          <div class="invalid-feedback">Please enter your first name.</div>
-                      </div>
-                      <div class="col-12">
-                          <label for="lastName" class="form-label">Last Name</label>
-                          <input type="text" name="last_name" class="form-control" id="lastName" required>
-                          <div class="invalid-feedback">Please enter your last name.</div>
-                      </div>
-                      <div class="col-12">
-                          <label for="department" class="form-label">Department</label>
-                          <input type="text" name="department" class="form-control" id="department" required>
-                          <div class="invalid-feedback">Please enter your department.</div>
-                      </div>
-                      <div class="col-12">
-                          <label for="position" class="form-label">Position</label>
-                          <input type="text" name="position" class="form-control" id="position" required>
-                          <div class="invalid-feedback">Please enter your position.</div>
-                      </div>
-                      <!-- Updated username field -->
-                      <div class="col-12">
-                      <label for="email" class="form-label">Username</label> 
-                      <input type="text" name="email" class="form-control" id="email" pattern="^[a-zA-Z0-9]+$" required>
-                      <div class="invalid-feedback">Please enter a valid username (alphanumeric characters only, no "@" or email-like formats).</div>
-                      </div>
-                      <!-- Password and Confirm Password Fields -->
-                      <div class="col-12">
-                          <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
-                          <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
-                          <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
-                      </div>
-                      <div class="col-12">
-                          <label for="confirm_password" class="form-label">Confirm Password</label>
-                          <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
-                          <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
-                      </div>
-                      <div class="col-12">
-                          <button class="btn btn-primary w-100" type="submit">Register</button>
-                  </form>
+    <div class="col-12">
+        <label for="user_type" class="form-label">User Type</label>
+        <select id="user_type" name="user_type" class="form-control" required>
+            <option value="staff">Staff</option>
+            <option value="non-teaching">Non-teaching</option>
+        </select>
+        <div class="invalid-feedback">Please select a user type.</div>
+    </div>
+
+    <div class="col-12">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" name="first_name" class="form-control" id="firstName" required>
+        <div class="invalid-feedback">Please enter your first name.</div>
+    </div>
+    
+    <div class="col-12">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" name="last_name" class="form-control" id="lastName" required>
+        <div class="invalid-feedback">Please enter your last name.</div>
+    </div>
+
+    <!-- Department Field (for Staff only) -->
+    <div class="col-12">
+        <label for="department" class="form-label">Department</label>
+        <input type="text" name="department" class="form-control" id="department">
+        <div class="invalid-feedback">Please enter your department.</div>
+    </div>
+
+    <!-- Role Field (for Non-teaching only) -->
+    <div class="col-12" id="role_field" style="display: none;">
+        <label for="role" class="form-label">Role/Position</label>
+        <input type="text" name="role" class="form-control" id="role">
+        <div class="invalid-feedback">Please enter the role for non-teaching staff.</div>
+    </div>
+
+    <div class="col-12">
+        <label for="email" class="form-label">Username</label> 
+        <input type="text" name="email" class="form-control" id="email" pattern="^[a-zA-Z0-9]+$" required>
+        <div class="invalid-feedback">Please enter a valid username.</div>
+    </div>
+
+    <div class="col-12">
+        <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
+        <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
+        <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
+    </div>
+
+    <div class="col-12">
+        <label for="confirm_password" class="form-label">Confirm Password</label>
+        <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
+        <div class="invalid-feedback">Passwords do not match.</div>
+    </div>
+
+    <div class="col-12">
+        <button class="btn btn-primary w-100" type="submit">Register</button>
+    </div>
+</form>
                   <!-- End form -->
                   
                   <div id="g_id_onload"
@@ -268,6 +285,17 @@ body {
                     });
                 }
             });
+        });
+    });
+    $(document).ready(function() {
+        $('#user_type').on('change', function() {
+            if ($(this).val() === 'staff') {
+                $('#department').prop('disabled', false);
+                $('#role_field').hide();
+            } else {
+                $('#department').prop('disabled', true);
+                $('#role_field').show();
+            }
         });
     });
   </script>
