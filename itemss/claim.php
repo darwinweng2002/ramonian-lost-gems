@@ -25,8 +25,7 @@ if (isset($_SESSION['user_id'])) {
     // Staff user
     $claimantId = $_SESSION['staff_id'];
     $userType = 'user_staff';
-    // Update: Remove the `type` column and fetch `position` instead
-    $sqlClaimant = "SELECT first_name, last_name, email, department, position FROM user_staff WHERE id = ?";
+    $sqlClaimant = "SELECT first_name, last_name, email, department, position, type FROM user_staff WHERE id = ?";
 }
 
 // Database connection
@@ -37,10 +36,18 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get item ID from URL
-$itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+// Fetch claimant's user info
+$stmtClaimant = $conn->prepare($sqlClaimant);
+$stmtClaimant->bind_param('i', $claimantId);
+$stmtClaimant->execute();
+$claimantResult = $stmtClaimant->get_result();
+$claimantData = $claimantResult->fetch_assoc();
+
+// Determine if the user is non-teaching based on the 'type' field in the staff_user table
+$isNonTeaching = isset($claimantData['type']) && $claimantData['type'] === 'non-teaching';
 
 // Fetch item data based on the item ID
+$itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $sqlItem = "SELECT mh.title, mh.message, mh.landmark, mh.time_found, mh.contact, 
             um.first_name, um.last_name, um.email, c.name AS category_name
             FROM message_history mh
@@ -55,72 +62,6 @@ $resultItem = $stmtItem->get_result();
 
 // Fetch the item data
 $itemData = $resultItem->fetch_assoc();
-
-// Fetch claimant's user info
-$stmtClaimant = $conn->prepare($sqlClaimant);
-$stmtClaimant->bind_param('i', $claimantId);
-$stmtClaimant->execute();
-$claimantResult = $stmtClaimant->get_result();
-$claimantData = $claimantResult->fetch_assoc();
-
-// Check if the user is non-teaching based on `position`
-$isNonTeaching = (isset($claimantData['position']) && $claimantData['position'] === 'non-teaching');
-
-// Process the form submission to save the claim request
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $item_description = $_POST['item_description'];
-    $date_lost = $_POST['date_lost'];
-    $location_lost = $_POST['location_lost'];
-    $proof_of_ownership = $_FILES['proof_of_ownership']['name'];
-    $security_question = $_POST['security_question'];
-    $personal_id = $_FILES['personal_id']['name'];
-    
-    // File Uploads (Move uploaded files to the appropriate folder)
-    $target_dir = "../uploads/claims/";
-    
-    // Upload proof of ownership file
-    if (!empty($proof_of_ownership)) {
-        $target_file_ownership = $target_dir . basename($proof_of_ownership);
-        move_uploaded_file($_FILES["proof_of_ownership"]["tmp_name"], $target_file_ownership);
-    }
-    
-    // Upload personal ID file
-    if (!empty($personal_id)) {
-        $target_file_id = $target_dir . basename($personal_id);
-        move_uploaded_file($_FILES["personal_id"]["tmp_name"], $target_file_id);
-    }
-
-    // Insert the claim into the `claimer` table
-    $sql = "
-        INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id, status, claim_date) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
-    ";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('iissssss', $itemId, $claimantId, $item_description, $date_lost, $location_lost, $proof_of_ownership, $security_question, $personal_id);
-
-    if ($stmt->execute()) {
-        echo "<script>
-            Swal.fire({
-                title: 'Claim Submitted!',
-                text: 'Your claim has been submitted successfully. Please proceed to the SSG office for verification.',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            }).then(function() {
-                window.location.href = 'dashboard.php'; // Redirect to dashboard after submission
-            });
-        </script>";
-    } else {
-        echo "<script>
-            Swal.fire({
-                title: 'Error!',
-                text: 'There was an error submitting your claim. Please try again later.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        </script>";
-    }
-    $stmt->close();
-}
 ?>
 
 <!DOCTYPE html>
@@ -233,19 +174,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Display Claimant's Information -->
     <h3>Your Information</h3>
     <div class="info-section">
-    <p>Name: <?= htmlspecialchars($claimantData['first_name'] ?? '') . ' ' . htmlspecialchars($claimantData['last_name'] ?? ''); ?></p>
-<p>Email: <?= htmlspecialchars($claimantData['email'] ?? ''); ?></p>
+        <p>Name: <?= htmlspecialchars($claimantData['first_name'] ?? '') . ' ' . htmlspecialchars($claimantData['last_name'] ?? ''); ?></p>
+        <p>Email: <?= htmlspecialchars($claimantData['email'] ?? ''); ?></p>
 
-<?php if ($isNonTeaching): ?>
-    <p>Position: <?= htmlspecialchars($claimantData['position'] ?? ''); ?></p>
-<?php else: ?>
-    <p>College/Department: <?= htmlspecialchars($claimantData['department'] ?? ''); ?></p>
-<?php endif; ?>
+        <?php if ($isNonTeaching): ?>
+            <p>Position: <?= htmlspecialchars($claimantData['position'] ?? ''); ?></p>
+        <?php else: ?>
+            <p>College/Department: <?= htmlspecialchars($claimantData['department'] ?? ''); ?></p>
+        <?php endif; ?>
 
-<?php if ($userType == 'user_member'): ?>
-    <p>Course: <?= htmlspecialchars($claimantData['course'] ?? ''); ?></p>
-    <p>Year & Section: <?= htmlspecialchars($claimantData['year'] ?? '') . ' - ' . htmlspecialchars($claimantData['section'] ?? ''); ?></p>
-<?php endif; ?>
+        <?php if ($userType == 'user_member'): ?>
+            <p>Course: <?= htmlspecialchars($claimantData['course'] ?? ''); ?></p>
+            <p>Year & Section: <?= htmlspecialchars($claimantData['year'] ?? '') . ' - ' . htmlspecialchars($claimantData['section'] ?? ''); ?></p>
+        <?php endif; ?>
     </div>
 
     <!-- Claim Form -->
