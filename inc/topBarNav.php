@@ -152,7 +152,7 @@
     <div class="container-lg d-flex justify-content-between px-4">
         <!-- Logo aligned to the left -->
         <div class="logo d-flex align-items-center">
-            <a href="<?= base_url ?>">
+            
                 <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
             </a>
         </div>

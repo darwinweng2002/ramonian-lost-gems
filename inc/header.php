@@ -4,7 +4,8 @@
     <title><?php echo $_settings->info('title') !== false ? $_settings->info('title').' | ' : '' ?><?php echo $_settings->info('name') ?></title>
     
     <!-- Favicons -->
-    
+    <link href="<?= validate_image('logo') ?>" rel="icon">
+    <link href="<?= base_url ?>assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
