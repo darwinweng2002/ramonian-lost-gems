@@ -39,6 +39,22 @@ if ($conn->connect_error) {
 // Get item ID from URL
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
+// Fetch item data based on the item ID
+$sqlItem = "SELECT mh.title, mh.message, mh.landmark, mh.time_found, mh.contact, 
+            um.first_name, um.last_name, um.email, c.name AS category_name
+            FROM message_history mh
+            LEFT JOIN user_member um ON mh.user_id = um.id
+            LEFT JOIN categories c ON mh.category_id = c.id
+            WHERE mh.id = ? AND mh.is_published = 1";
+
+$stmtItem = $conn->prepare($sqlItem);
+$stmtItem->bind_param('i', $itemId);
+$stmtItem->execute();
+$resultItem = $stmtItem->get_result();
+
+// Fetch the item data
+$itemData = $resultItem->fetch_assoc();
+
 // Fetch claimant's user info
 $stmtClaimant = $conn->prepare($sqlClaimant);
 $stmtClaimant->bind_param('i', $claimantId);
@@ -189,28 +205,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Display Item Information -->
     <h3>Item Information</h3>
     <div class="info-section">
-    <h3>Item Information</h3>
-<?php if ($itemData) : ?>
-    <div class="info-section">
-        <p>Item Name: <?= htmlspecialchars($itemData['title'] ?? ''); ?></p>
-        <p>Category: <?= htmlspecialchars($itemData['category_name'] ?? ''); ?></p>
+        <?php if ($itemData): ?>
+            <p>Item Name: <?= htmlspecialchars($itemData['title'] ?? ''); ?></p>
+            <p>Category: <?= htmlspecialchars($itemData['category_name'] ?? ''); ?></p>
 
-        <!-- Check if the founder's name or email is empty -->
-        <?php if (empty($itemData['first_name']) && empty($itemData['email'])): ?>
-            <p>Found by: Guest User</p>
+            <!-- Check if the founder's name or email is empty -->
+            <?php if (empty($itemData['first_name']) && empty($itemData['email'])): ?>
+                <p>Found by: Guest User</p>
+            <?php else: ?>
+                <p>Found by: <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
+                <p>Email: <?= htmlspecialchars($itemData['email']); ?></p>
+            <?php endif; ?>
+
+            <p>Time Found: <?= htmlspecialchars($itemData['time_found'] ?? ''); ?></p>
+            <p>Location Found: <?= htmlspecialchars($itemData['landmark'] ?? ''); ?></p>
+            <p>Description: <?= htmlspecialchars($itemData['message'] ?? ''); ?></p>
+            <p>Contact: <?= htmlspecialchars($itemData['contact'] ?? ''); ?></p>
         <?php else: ?>
-            <p>Found by: <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
-            <p>Email: <?= htmlspecialchars($itemData['email']); ?></p>
+            <p>Item not found or not published.</p>
         <?php endif; ?>
-
-        <p>Time Found: <?= htmlspecialchars($itemData['time_found'] ?? ''); ?></p>
-        <p>Location Found: <?= htmlspecialchars($itemData['landmark'] ?? ''); ?></p>
-        <p>Description: <?= htmlspecialchars($itemData['message'] ?? ''); ?></p>
-        <p>Contact: <?= htmlspecialchars($itemData['contact'] ?? ''); ?></p>
-    </div>
-<?php else : ?>
-    <p>Item not found or not published.</p>
-<?php endif; ?>
     </div>
 
     <!-- Display Claimant's Information -->
@@ -286,5 +299,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php
 $stmtClaimant->close();
+$stmtItem->close();
 $conn->close();
 ?>
