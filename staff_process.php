@@ -2,17 +2,36 @@
 include 'config.php'; // Include the database configuration file
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve form data and validate for faculty user
+    // Retrieve form data and validate
     $first_name = trim($_POST['first_name']);
     $last_name = trim($_POST['last_name']);
-    $department = trim($_POST['department']);
-    $position = trim($_POST['position']);
+    $user_type = trim($_POST['user_type']); // New field for user type (teaching or non-teaching)
     $username = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
 
+    // For teaching staff, department is required
+    if ($user_type === 'teaching') {
+        $department = trim($_POST['department']);
+        $position = null; // No need for position in teaching
+        if (empty($department)) {
+            $response = ['success' => false, 'message' => 'Please enter the department for teaching staff.'];
+            echo json_encode($response);
+            exit;
+        }
+    } else {
+        // For non-teaching staff, position is required and department is disabled
+        $position = trim($_POST['position']);
+        $department = null; // No need for department in non-teaching
+        if (empty($position)) {
+            $response = ['success' => false, 'message' => 'Please enter the role/position for non-teaching staff.'];
+            echo json_encode($response);
+            exit;
+        }
+    }
+
     // Check if all required fields are provided
-    if (empty($first_name) || empty($last_name) || empty($department) || empty($position) || empty($username) || empty($password)) {
+    if (empty($first_name) || empty($last_name) || empty($username) || empty($password)) {
         $response = ['success' => false, 'message' => 'Please fill in all the required fields.'];
         echo json_encode($response);
         exit;
@@ -52,21 +71,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt->close();
 
-    // Prepare the SQL statement to insert new faculty user into user_staff table
-    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, department, position, email, password) VALUES (?, ?, ?, ?, ?, ?)");
+    // Prepare the SQL statement to insert new user
+    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type) VALUES (?, ?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {
         $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
         echo json_encode($response);
         exit;
     }
 
-    $stmt->bind_param("ssssss", $first_name, $last_name, $department, $position, $username, $hashed_password);
+    // Bind parameters based on user type
+    $stmt->bind_param("sssssss", $first_name, $last_name, $username, $hashed_password, $department, $position, $user_type);
 
     // Execute the query and check for success
     if ($stmt->execute()) {
-        $response = ['success' => true, 'message' => 'Faculty registration successful!'];
+        $response = ['success' => true, 'message' => 'Registration successful!'];
     } else {
-        $response = ['success' => false, 'message' => 'Failed to register faculty member.'];
+        $response = ['success' => false, 'message' => 'Failed to register user.'];
     }
 
     $stmt->close();
