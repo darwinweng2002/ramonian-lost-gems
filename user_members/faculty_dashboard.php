@@ -392,22 +392,6 @@ $is_non_teaching = empty($department);
                                         <button type="submit" name="upload_avatar" class="btn btn-primary">Upload Avatar</button>
                                     </form>
 
-                                    <!-- Display Staff User Information -->
-                                    <ul class="list-group mb-3">
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <strong>Department:</strong>
-                                            <span><?= htmlspecialchars($department ?? '') ?></span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <strong>Position:</strong>
-                                            <span><?= htmlspecialchars($position ?? '') ?></span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between">
-                                            <strong>Email:</strong>
-                                            <span><?= htmlspecialchars($email ?? '') ?></span>
-                                        </li>
-                                    </ul>
-
                                     <!-- Display tabs -->
                                     <ul class="list-group mb-3">
                                         <!-- Only show the department if the user is teaching -->
