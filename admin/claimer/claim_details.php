@@ -12,7 +12,25 @@ if ($conn->connect_error) {
 // Get claim ID from URL
 $claimId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Fetch claim details along with associated images
+// Handle form submission for status update
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status'])) {
+    $new_status = $_POST['status'];
+    
+    // Update claim status in the database
+    $update_sql = "UPDATE claimer SET status = ? WHERE id = ?";
+    $stmt = $conn->prepare($update_sql);
+    $stmt->bind_param('si', $new_status, $claimId);
+    $stmt->execute();
+    
+    if ($stmt->affected_rows > 0) {
+        echo "<script>alert('Claim status updated successfully!'); window.location.href = 'claim_details.php?id={$claimId}';</script>";
+    } else {
+        echo "<script>alert('Failed to update claim status.'); window.location.href = 'claim_details.php?id={$claimId}';</script>";
+    }
+    $stmt->close();
+}
+
+// Fetch claim details
 $sql = "SELECT c.id, c.item_id, mh.title AS item_name, um.first_name, um.last_name, c.item_description, c.date_lost, 
         c.location_lost, c.proof_of_ownership, c.security_question, c.personal_id, c.status, c.claim_date,
         GROUP_CONCAT(mi.image_path) AS image_paths
@@ -22,7 +40,6 @@ $sql = "SELECT c.id, c.item_id, mh.title AS item_name, um.first_name, um.last_na
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         WHERE c.id = ?
         GROUP BY c.id";
-
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $claimId);
 $stmt->execute();
@@ -31,9 +48,7 @@ $result = $stmt->get_result();
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<?php require_once('../inc/header.php'); ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claim Details</title>
@@ -157,6 +172,18 @@ img:hover {
                 <p><strong>Security Question:</strong> <?= htmlspecialchars($row['security_question']); ?></p>
                 <p><strong>Status:</strong> <?= htmlspecialchars($row['status']); ?></p>
                 <p><strong>Claim Date:</strong> <?= htmlspecialchars($row['claim_date']); ?></p>
+                <p><strong>Status:</strong> <?= htmlspecialchars($row['status']); ?></p>
+        
+        <!-- Form to update the claim status -->
+        <form action="" method="POST">
+            <label for="status">Update Status:</label>
+            <select name="status" id="status">
+                <option value="Pending" <?= ($row['status'] === 'Pending') ? 'selected' : '' ?>>Pending</option>
+                <option value="Approved" <?= ($row['status'] === 'Approved') ? 'selected' : '' ?>>Approved</option>
+                <option value="Declined" <?= ($row['status'] === 'Declined') ? 'selected' : '' ?>>Declined</option>
+            </select>
+            <button type="submit">Update Status</button>
+        </form>
 
                <!-- Display claimant's proof of ownership -->
 <div class="image-container">

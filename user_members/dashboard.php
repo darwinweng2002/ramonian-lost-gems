@@ -393,28 +393,29 @@ if (!$is_guest) {
         </div>
 
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-            <h5 class="history-title">Claim History</h5>
-            <table class="table table-striped claim-history-table">
-                <thead>
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Date Claimed</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($claimer as $claimer): ?>
-                        <tr>
-                            <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
-                            <td><?= htmlspecialchars($claim['claim_date']) ?></td>
-                            <td class="<?= $claim['status'] == 'Approved' ? 'status-approved' : '' ?>">
-                                <?= htmlspecialchars($claim['status']) ?>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+    <h5 class="history-title">Claim History</h5>
+    <table class="table table-striped claim-history-table">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Date Claimed</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($claimer as $claim): ?>
+                <tr>
+                    <td><a href="<?= base_url ?>?page=items/view&id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
+                    <td><?= htmlspecialchars($claim['claim_date']) ?></td>
+                    <td class="<?= $claim['status'] === 'Approved' ? 'status-approved' : ($claim['status'] === 'Declined' ? 'status-declined' : '') ?>">
+                        <?= htmlspecialchars($claim['status']) ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
 
         <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
     <h5 class="history-title">Posted Found Items</h5>
