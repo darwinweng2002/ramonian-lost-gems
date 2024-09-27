@@ -366,6 +366,7 @@ if (!$is_guest) {
         </li>
     </ul>
 
+
     <!-- Show tab content only for non-guest users -->
     <div class="tab-content">
         <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
