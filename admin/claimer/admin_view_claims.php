@@ -30,7 +30,7 @@ $sql = "
            c.location_lost, c.proof_of_ownership, c.security_question, c.personal_id, c.status, c.claim_date
     FROM claimer c
     LEFT JOIN message_history mh ON c.item_id = mh.id
-    LEFT JOIN staff_user us ON c.user_id = us.id
+    LEFT JOIN user_staff us ON c.user_id = us.id
     WHERE CONCAT_WS(' ', us.first_name, us.last_name, mh.title, c.item_description) LIKE '%$searchTerm%'
     
     ORDER BY claim_date DESC";
