@@ -402,7 +402,7 @@ if (!$is_guest) {
                 <th>Date Claimed</th>
                 <th>Status</th>
             </tr>
-        </thead><a href='view_missing.php?id=" . $itemId . "'>";
+        </thead>
         <tbody>
             <?php foreach ($claimer as $claim): ?>
                 <tr>
