@@ -23,7 +23,7 @@ ob_start();
     // Use JavaScript for the confirmation dialog
     if (confirm('Are you sure you want to logout?')) {
         alert('You have successfully logged out.');
-        window.location.href = 'https://ramonianlostgems.com/login.php';
+        window.location.href = 'https://ramonianlostgems.com/';
     } else {
         window.location.href = 'index.php'; // or wherever you want to redirect if canceled
     }
