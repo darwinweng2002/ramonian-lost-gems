@@ -25,7 +25,7 @@ if (isset($_SESSION['user_id'])) {
     // Staff user
     $claimantId = $_SESSION['staff_id'];
     $userType = 'user_staff';
-    $sqlClaimant = "SELECT first_name, last_name, email, department AS college FROM user_staff WHERE id = ?";
+    $sqlClaimant = "SELECT first_name, last_name, email, department, position, type FROM user_staff WHERE id = ?";
 }
 
 // Database connection
@@ -62,6 +62,7 @@ $stmtClaimant->execute();
 $claimantResult = $stmtClaimant->get_result();
 $claimantData = $claimantResult->fetch_assoc();
 
+// Check if the user is non-teaching
 $isNonTeaching = isset($claimantData['type']) && $claimantData['type'] === 'non-teaching';
 
 // Process the form submission to save the claim request
