@@ -158,7 +158,6 @@ if (isset($_POST['guest_login'])) {
             outline: none;
             box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
         }
-
   </style>
   
   <main>
