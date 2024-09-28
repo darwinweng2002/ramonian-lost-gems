@@ -75,12 +75,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'your_gmail_account@gmail.com'; // Add your Gmail account
-            $mail->Password = 'your_gmail_password'; // Add your Gmail password
+            $mail->Username = 'vdarwin860@gmail.com'; // Add your Gmail account
+            $mail->Password = 'justfocusonjavascript800px'; // Add your Gmail password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
-            $mail->setFrom('your_gmail_account@gmail.com', 'Your App Name');
+            $mail->setFrom('vdarwin860@gmail.com', 'Your App Name');
             $mail->addAddress($email);  // Add user email address
 
             $verification_link = "https://yourdomain.com/verify.php?token=$verification_token";
