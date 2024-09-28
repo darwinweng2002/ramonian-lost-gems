@@ -29,6 +29,8 @@ $result = $conn->query($sql);
     <div class="container">
         <br>
         <br>
+        <br>
+        <br>
         <h3>Approved Users - PRMSU Iba</h3>
 
         <table class="table table-striped table-bordered">
