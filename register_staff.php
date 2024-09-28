@@ -1,13 +1,14 @@
 <?php  
 // Include the database configuration file
 include 'config.php';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   // Retrieve form data
   $first_name = $_POST['first_name'];
   $last_name = $_POST['last_name'];
   $department = $_POST['department'];
   $position = $_POST['position'];
-  $username = $_POST['email']; // This is now the username field, but keep the variable name as 'email'
+  $email = $_POST['email']; // This is now the email field
 
   // Check if passwords match
   if ($_POST['password'] !== $_POST['confirm_password']) {
@@ -16,16 +17,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       exit;
   }
 
-  // Hash the entire password, no truncation
+  // Hash the password
   $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
 
+  // Set account status as pending
+  $status = 'pending';
+
   // Prepare the SQL statement for the user_staff table
-  $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, department, position, email, password) VALUES (?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("ssssss", $first_name, $last_name, $department, $position, $username, $password);
+  $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, department, position, email, password, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("sssssss", $first_name, $last_name, $department, $position, $email, $password, $status);
 
   // Execute the query and check for success
   if ($stmt->execute()) {
-      $response = ['success' => true];
+      $response = ['success' => true, 'message' => 'Registration successful! Your account is pending approval.'];
   } else {
       $response = ['success' => false, 'message' => 'Failed to register staff member.'];
   }
@@ -178,10 +182,10 @@ body {
 
     <!-- Username -->
     <div class="col-12">
-        <label for="email" class="form-label">Username</label> 
-        <input type="text" name="email" class="form-control" id="email" pattern="^[a-zA-Z0-9]+$" required>
-        <div class="invalid-feedback">Please enter a valid username.</div>
-    </div>
+                      <label for="email" class="form-label">Email</label> 
+                      <input type="email" name="email" class="form-control" id="email" required>
+                      <div class="invalid-feedback">Please use an active email account</div>
+                    </div>
 
     <!-- Password -->
     <div class="col-12">
@@ -347,6 +351,22 @@ body {
             }
         });
     });
+    document.querySelector('#registrationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var email = document.querySelector('#email').value;
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!emailPattern.test(email)) {
+          Swal.fire({
+            title: 'Error!',
+            text: 'Please enter a valid email address.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        } else {
+          this.submit();
+        }
+      });
   </script>
 <?php require_once('inc/footer.php') ?>
 </body>

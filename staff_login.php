@@ -7,39 +7,33 @@ $error_message = '';
 
 // Check if the form is submitted for staff login
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
-    // Get form data
-    $username = $_POST['email'] ?? ''; // Using null coalescing operator to avoid undefined array key notice
-    $password = $_POST['password'] ?? '';
+  $username = $_POST['email'] ?? '';
+  $password = $_POST['password'] ?? '';
 
-    // Prepare and execute query for staff login
-    if ($stmt = $conn->prepare("SELECT id, password FROM user_staff WHERE email = ?")) { // 'email' column is still used for usernames
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $stmt->store_result();
+  $stmt = $conn->prepare("SELECT id, password, status FROM user_staff WHERE email = ?");
+  $stmt->bind_param("s", $username);
+  $stmt->execute();
+  $stmt->store_result();
 
-        if ($stmt->num_rows > 0) {
-            $stmt->bind_result($staff_id, $hashed_password);
-            $stmt->fetch();
+  if ($stmt->num_rows > 0) {
+      $stmt->bind_result($staff_id, $hashed_password, $status);
+      $stmt->fetch();
 
-            // Verify password
-            if (password_verify($password, $hashed_password)) {
-                // Password is correct, start a session
-                $_SESSION['staff_id'] = $staff_id;
-                $_SESSION['email'] = $username;  // Store the username in the session (same variable for compatibility)
-
-                // Redirect to a protected page
-                header("Location: https://ramonianlostgems.com/main.php");
-                exit();
-            } else {
-                $error_message = 'Invalid username or password.'; // Update message to reflect username
-            }
-        } else {
-            $error_message = 'No staff found with that username.'; // Update message to reflect username
-        }
-    } else {
-        $error_message = 'Error preparing statement: ' . $conn->error;
-    }
+      if ($status == 'pending') {
+          $error_message = 'Your account is still pending approval.';
+      } elseif (password_verify($password, $hashed_password)) {
+          $_SESSION['staff_id'] = $staff_id;
+          $_SESSION['email'] = $username;
+          header("Location: https://ramonianlostgems.com/main.php");
+          exit();
+      } else {
+          $error_message = 'Invalid username or password.';
+      }
+  } else {
+      $error_message = 'No staff found with that username.';
+  }
 }
+
 
 // Check if "Login as Guest" button is clicked
 if (isset($_POST['guest_login'])) {
