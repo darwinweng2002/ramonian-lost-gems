@@ -361,14 +361,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div id="imagePreviewContainer" style="margin-top: 10px;">
         <img id="imagePreview" src="#" alt="Preview will appear here..." style="max-width: 100%; display: none; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
     </div>
-    <small class="text-muted">Upload a clear image of your PRMSU student ID for verification. Only JPG, JPEG, or PNG formats are allowed.</small>
+    <small class="text-muted">Please upload a clear image of your valid PRMSU Student ID (front side only). Ensure that the ID is visible and in JPG or PNG format. This will be used for verification purposes.</small>
 </div>
 
-                            <div class="col-12">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" id="email" required>
-                            <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
-                        </div>
+<div class="col-12">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" name="email" class="form-control" id="email" required>
+    <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
+    <small id="email-taken-message" class="text-danger" style="display: none;">This email is already taken. Please use a different email.</small>
+</div>
                             <div class="col-12">
                                 <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
                                 <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
@@ -567,23 +568,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             });
         });
-        document.getElementById('email').addEventListener('input', function () {
-        const email = this.value;
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        const emailErrorDiv = document.getElementById('email-error');
-        const registerBtn = document.getElementById('register-btn');
+        $(document).ready(function () {
+    // Function to check if the email is already taken
+    $('#email').on('input', function () {
+        var email = $(this).val();
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        var emailErrorDiv = $('#email-error');
+        var registerBtn = $('#register-btn');
+        var emailTakenMessage = $('#email-taken-message');
 
+        // Check if the email is valid
         if (emailPattern.test(email)) {
-            this.classList.remove('is-invalid');
-            emailErrorDiv.style.display = 'none';
-            registerBtn.disabled = false; // Enable the button when the email is valid
+            emailErrorDiv.hide();
+            
+            // AJAX request to check if the email exists
+            $.ajax({
+                url: 'check_email.php',
+                type: 'POST',
+                data: { email: email },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.exists) {
+                        // Email is already taken
+                        emailTakenMessage.show();
+                        registerBtn.prop('disabled', true);
+                    } else {
+                        // Email is available
+                        emailTakenMessage.hide();
+                        registerBtn.prop('disabled', false);
+                    }
+                },
+                error: function () {
+                    console.log("Error checking email availability");
+                }
+            });
         } else {
-            this.classList.add('is-invalid');
-            emailErrorDiv.style.display = 'block';
-            emailErrorDiv.textContent = 'Please enter a valid email address.';
-            registerBtn.disabled = true; // Disable the button when the email is invalid
+            emailErrorDiv.show();
+            emailErrorDiv.text('Please enter a valid email address.');
+            emailTakenMessage.hide();
+            registerBtn.prop('disabled', true);
         }
     });
+});
+
     document.getElementById('school_id').addEventListener('change', function(event) {
         const file = event.target.files[0]; // Get the selected file
         const imagePreview = document.getElementById('imagePreview'); // Get the preview element
