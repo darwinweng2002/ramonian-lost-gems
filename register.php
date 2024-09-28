@@ -241,12 +241,17 @@ body {
                           </select>
                           <div class="invalid-feedback">Please select your section.</div>
                       </div>
+                      <div class="col-12">
+                        <label for="schoolId" class="form-label">School ID (JPEG, PNG)</label>
+                        <input type="file" name="school_id" class="form-control" id="schoolId" accept=".jpg,.jpeg,.png" required>
+                        <div class="invalid-feedback">Please upload a valid school ID (JPEG, PNG).</div>
+                    </div>
                       <!-- Updated username field -->
                       <div class="col-12">
-                      <label for="email" class="form-label">Username</label> 
-                      <input type="text" name="email" class="form-control" id="email" pattern="^[a-zA-Z0-9]+$" required>
-                      <div class="invalid-feedback">Please enter a valid username (alphanumeric characters only, no "@" or email-like formats).</div>
-                      </div>
+                        <label for="email" class="form-label">Email</label> 
+                        <input type="email" name="email" class="form-control" id="email" required>
+                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                    </div>
                       <!-- Password and Confirm Password Fields -->
                       <div class="col-12">
                           <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
