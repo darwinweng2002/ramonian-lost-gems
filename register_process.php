@@ -52,10 +52,12 @@ if (!is_dir($target_dir)) {
 }
 
 if (!move_uploaded_file($_FILES["school_id"]["tmp_name"], $school_id_file)) {
+    error_log('File upload error: ' . print_r($_FILES, true));  // Logs detailed error in PHP error logs
     $response = ['success' => false, 'message' => 'Error uploading school ID.'];
     echo json_encode($response);
     exit;
 }
+
 
 
     // Set user status as "pending"
@@ -73,12 +75,12 @@ if (!move_uploaded_file($_FILES["school_id"]["tmp_name"], $school_id_file)) {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'your_gmail_account@gmail.com';
-            $mail->Password = 'your_gmail_password';
+            $mail->Username = 'vdarwin@gmail.com';
+            $mail->Password = 'justfocusonjavascript800px';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
-            $mail->setFrom('your_gmail_account@gmail.com', 'Your App Name');
+            $mail->setFrom('vdarwin@gmail.com', 'Ramonian Lost Gems');
             $mail->addAddress($email);  // Add user email address
 
             $mail->isHTML(true);
