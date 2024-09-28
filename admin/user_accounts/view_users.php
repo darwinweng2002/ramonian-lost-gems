@@ -313,13 +313,15 @@ function approveUser(event, id) {
                 },
                 body: 'user_id=' + id // Send the user ID in the request body
             })
-            .then(response => response.text())
+            .then(response => response.text())  // Expecting text response
             .then(result => {
                 console.log('Response from server:', result); // Log the response for debugging
+                
+                // Check for success (1) or failure
                 if (result.trim() === '1') {
                     Swal.fire(
                         'Approved!',
-                        'The user has been approved.',
+                        'The user has been approved successfully.',
                         'success'
                     ).then(() => {
                         location.reload(); // Reload the page to reflect changes
@@ -327,22 +329,22 @@ function approveUser(event, id) {
                 } else {
                     Swal.fire(
                         'Error!',
-                        'An error occurred while approving the user.',
+                        'An error occurred while approving the user. Please try again.',
                         'error'
                     );
                 }
             })
-            .catch(() => {
+            .catch((error) => {
+                console.error('Error occurred during approval:', error);
                 Swal.fire(
                     'Error!',
-                    'An error occurred while approving the user.',
+                    'An unexpected error occurred while approving the user. Please try again.',
                     'error'
                 );
             });
         }
     });
 }
-
 </script>
 
 
