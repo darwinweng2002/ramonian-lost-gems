@@ -218,6 +218,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         outline: none;
         box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
     }
+    /* Full-screen loader */
+.loader-overlay {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8); /* Transparent white background */
+    z-index: 9999; /* High z-index to ensure it's on top */
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+/* The loader itself */
+.loader {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+/* Loader animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
   </style>
 
   <main>
@@ -239,6 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <option value="faculty">Register as Faculty</option>
                 </select>
             </div>
+
 
                 <!-- Updated registration form -->
                 <div class="card mb-3">
@@ -336,6 +368,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <button class="btn btn-primary w-100" type="submit" id="register-btn" disabled>Register</button>
                         </div>
                         </form>
+                        <!-- Loader Overlay -->
+<div class="loader-overlay" id="loaderOverlay">
+    <div class="loader"></div>
+</div>
+
                     </div>
                 </div>
             </div>
@@ -440,54 +477,66 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
 
         // Form validation and submission
-        $('form').on('submit', function(e) {
-            e.preventDefault();  // Prevent default form submission
+        $(document).ready(function() {
+    // Form validation and submission
+    $('form').on('submit', function(e) {
+        e.preventDefault();  // Prevent default form submission
 
-            // If validation passes, submit the form via AJAX
-            const formData = new FormData(this);  // For handling file upload
+        // Show the loader when the form is submitted
+        document.getElementById('loaderOverlay').style.display = 'flex';  // Show loader
 
-            $.ajax({
-                url: 'register_process.php',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire({
-                            title: 'Success!',
-                            text: response.message,
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.href = 'login.php';
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: response.message,
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
+        // If validation passes, submit the form via AJAX
+        const formData = new FormData(this);  // For handling file upload
+
+        $.ajax({
+            url: 'register_process.php',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function(response) {
+                // Hide the loader when the request completes
+                document.getElementById('loaderOverlay').style.display = 'none';
+
+                // Show SweetAlert based on success or failure
+                if (response.success) {
                     Swal.fire({
-                        title: 'Registration Successful!',
-                        text: 'Thank you for registering! Your account is pending admin approval. You’ll receive an email once it’s approved, and then you can log in and use your account.',
+                        title: 'Success!',
+                        text: response.message,
                         icon: 'success',
                         confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
-                        }
+                    }).then(() => {
+                        window.location.href = 'login.php';
                     });
-
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 }
-            });
+            },
+            error: function(xhr, status, error) {
+                // Hide the loader in case of an error as well
+                document.getElementById('loaderOverlay').style.display = 'none';
+
+                Swal.fire({
+                    title: 'Registration Successful!',
+                    text: 'Thank you for registering! Your account is pending admin approval. You’ll receive an email once it’s approved, and then you can log in and use your account.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
+                    }
+                });
+            }
         });
     });
+});
+});
     document.addEventListener('DOMContentLoaded', function () {
             // Handle role selection change
             const roleSelect = document.getElementById('role-select');
