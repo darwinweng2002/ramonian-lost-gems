@@ -346,11 +346,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <small class="text-muted">Please upload a clear image of your valid PRMSU Student ID (front side only). Ensure that the ID is visible and in JPG or PNG format. This will be used for verification purposes.</small>
                         </div>
 
-                            <div class="col-12">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" id="email" required>
-                            <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
-                        </div>
+                        <div class="col-12">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" id="email" required>
+                        <div class="invalid-feedback" id="email-error" style="display:none;">Please enter a valid email address.</div>
+                    </div>
+
                             <div class="col-12">
                                 <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
                                 <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
@@ -474,62 +475,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Form validation and submission
          // Form validation and submission
          $(document).ready(function() {
-    // Form validation and submission
-    $('form').on('submit', function(e) {
-        e.preventDefault();  // Prevent default form submission
+    $('#email').on('input', function() {
+        var email = $(this).val();
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        var emailErrorDiv = $('#email-error');
+        var registerBtn = $('#register-btn');
 
-        // Show the loader when the form is submitted
-        document.getElementById('loaderOverlay').style.display = 'flex';  // Show loader
+        // Clear any previous error messages
+        emailErrorDiv.hide();
 
-        // If validation passes, submit the form via AJAX
-        const formData = new FormData(this);  // For handling file upload
-
-        $.ajax({
-            url: 'register_process.php',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            success: function(response) {
-                // Hide the loader when the request completes
-                document.getElementById('loaderOverlay').style.display = 'none';
-
-                // Show SweetAlert based on success or failure
-                if (response.success) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.href = 'login.php';
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: response.message,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            },
-            error: function(xhr, status, error) {
-                // Hide the loader in case of an error as well
-                document.getElementById('loaderOverlay').style.display = 'none';
-
-                Swal.fire({
-                    title: 'Registration Successful!',
-                    text: 'Thank you for registering! Your account is pending admin approval. You’ll receive an email once it’s approved, and then you can log in and use your account.',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
+        // Check if email matches the valid pattern
+        if (emailPattern.test(email)) {
+            // Make an AJAX request to check if the email is already registered
+            $.ajax({
+                url: 'check_email.php', // URL to the PHP file
+                type: 'POST',
+                data: { email: email },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.exists) {
+                        // Email is already registered
+                        emailErrorDiv.text('This email is already registered.');
+                        emailErrorDiv.show();
+                        registerBtn.prop('disabled', true); // Disable register button
+                    } else {
+                        // Email is not registered
+                        emailErrorDiv.hide();
+                        registerBtn.prop('disabled', false); // Enable register button
                     }
-                });
-            }
-        });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error in email check:', error);
+                }
+            });
+        } else {
+            // If the email is invalid
+            emailErrorDiv.text('Please enter a valid email address.');
+            emailErrorDiv.show();
+            registerBtn.prop('disabled', true); // Disable register button
+        }
     });
 });
 });

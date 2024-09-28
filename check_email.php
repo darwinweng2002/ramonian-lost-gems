@@ -4,7 +4,7 @@ include 'config.php';
 if (isset($_POST['email'])) {
     $email = $_POST['email'];
 
-    // Check if email exists in the database
+    // Prepare the SQL statement to check if the email exists
     $stmt = $conn->prepare("SELECT id FROM user_member WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
