@@ -207,13 +207,21 @@ $result = $conn->query($sql);
                 <td><?= htmlspecialchars($row['year']) ?></td>
                 <td><?= htmlspecialchars($row['section']) ?></td>
                 <td><?= htmlspecialchars($row['email']) ?></td> <!-- Corrected Email Column -->
-                <td>
-                    <div class="d-flex justify-content-center">
-                        <button class="btn btn-delete btn-sm" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
-                            <i class="fa fa-trash"></i> Delete
-                        </button>
-                    </div>
-                </td> <!-- Corrected Actions Column -->
+                <!-- Add Approve Button in Table -->
+<td>
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-delete btn-sm" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
+            <i class="fa fa-trash"></i> Delete
+        </button>
+        <?php if ($row['status'] !== 'approved'): ?> <!-- Check if the user is already approved -->
+        <button class="btn btn-success btn-sm ms-2" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
+            <i class="fa fa-check"></i> Approve
+        </button>
+        <?php else: ?>
+        <span class="badge bg-success ms-2">Approved</span>
+        <?php endif; ?>
+    </div>
+</td>
             </tr>
         <?php endwhile; ?>
     <?php else: ?>
@@ -276,6 +284,55 @@ $result = $conn->query($sql);
                 Swal.fire(
                     'Error!',
                     'An error occurred while deleting the user.',
+                    'error'
+                );
+            });
+        }
+    });
+}
+function approveUser(event, id) {
+    event.preventDefault(); // Prevent default form submission
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You are about to approve this user!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, approve it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('approve_user.php', { // Use approve_user.php as the backend script
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'user_id=' + id // Send the user ID in the request body
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log('Response from server:', result); // Log the response for debugging
+                if (result.trim() === '1') {
+                    Swal.fire(
+                        'Approved!',
+                        'The user has been approved.',
+                        'success'
+                    ).then(() => {
+                        location.reload(); // Reload the page to reflect changes
+                    });
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while approving the user.',
+                        'error'
+                    );
+                }
+            })
+            .catch(() => {
+                Swal.fire(
+                    'Error!',
+                    'An error occurred while approving the user.',
                     'error'
                 );
             });
