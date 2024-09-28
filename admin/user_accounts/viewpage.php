@@ -146,9 +146,9 @@ $conn->close();
 <body>
 
 <?php
-// Ensure correct path to the topBarNav and navigation
-require_once('../inc/topBarNav.php');
 require_once('../inc/navigation.php');
+require_once('../inc/topBarNav.php');
+
 ?>
 
 <div class="container">
