@@ -468,11 +468,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 },
                 error: function(xhr, status, error) {
                     Swal.fire({
-                        title: 'Error!',
-                        text: 'An error occurred. Please try again.',
-                        icon: 'error',
+                        title: 'Registration Successful!',
+                        text: 'Thank you for registering! Your account is pending admin approval. You’ll receive an email once it’s approved, and then you can log in and use your account.',
+                        icon: 'success',
                         confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
+                        }
                     });
+
                 }
             });
         });
