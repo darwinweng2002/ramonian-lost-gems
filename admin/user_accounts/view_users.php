@@ -215,7 +215,7 @@ $result = $conn->query($sql);
 <br>
 <section class="section">
     <div class="container">
-        <h2>Registered Users</h2>
+        <h3>Pending Student Account Approvals - PRMSU Iba</h3>
 
         <!-- Search Form -->
         
