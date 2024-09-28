@@ -312,10 +312,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="invalid-feedback">Please upload your School ID (JPG or PNG).</div>
                             </div>
                             <div class="col-12">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" name="email" class="form-control" id="email" required>
-                                <div class="invalid-feedback">Please enter a valid email address.</div>
-                            </div>
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" id="email" required>
+                            <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
+                        </div>
                             <div class="col-12">
                                 <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
                                 <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
@@ -492,6 +492,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             });
         });
+        document.getElementById('email').addEventListener('input', function () {
+    const email = this.value;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailErrorDiv = document.getElementById('email-error');
+
+    if (emailPattern.test(email)) {
+        this.classList.remove('is-invalid');
+        emailErrorDiv.style.display = 'none';
+    } else {
+        this.classList.add('is-invalid');
+        emailErrorDiv.style.display = 'block';
+        emailErrorDiv.textContent = 'Please enter a valid email address.';
+    }
+});
   </script>
 </body>
 </html>
