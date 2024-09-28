@@ -12,8 +12,8 @@ if ($conn->connect_error) {
 // Search functionality
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
-// Fetch all users
-$sql = "SELECT * FROM user_staff WHERE CONCAT(first_name, ' ', last_name, email, user_type) LIKE '%$searchTerm%' AND status = 'pending'";
+// Fetch all users (both pending and approved)
+$sql = "SELECT * FROM user_staff WHERE CONCAT(first_name, ' ', last_name, email, user_type) LIKE '%$searchTerm%' AND status IN ('pending', 'approved')";
 $result = $conn->query($sql);
 ?>
 
@@ -22,7 +22,7 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Pending Accounts</title>
+    <title>Admin - Faculty Users</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
@@ -184,16 +184,20 @@ $result = $conn->query($sql);
                                 <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
                                     <i class="fas fa-eye"></i> View Details
                                 </a>
-                                <button class="btn btn-success btn-sm ms-2" onclick="approveUser(<?= $row['id'] ?>)">
-                                    <i class="fas fa-check"></i> Approve
-                                </button>
+                                <?php if ($row['status'] === 'pending'): ?>
+                                    <button class="btn btn-success btn-sm ms-2" onclick="approveUser(<?= $row['id'] ?>)">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                <?php endif; ?>
                                 <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= $row['id'] ?>)">
                                     <i class="fas fa-trash-alt"></i> Delete
                                 </button>
                             </div>
                         </td>
                         <td>
-                            <span class="badge bg-warning"><?= $row['status'] === 'pending' ? 'Pending' : 'Approved' ?></span>
+                            <span class="badge <?= $row['status'] === 'pending' ? 'bg-warning' : 'bg-success' ?>">
+                                <?= ucfirst($row['status']) ?>
+                            </span>
                         </td>
                     </tr>
                 <?php endwhile; ?>
