@@ -74,6 +74,15 @@ $conn->close();
             font-weight: bold;
             color: #555;
         }
+        .school-id-image {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
@@ -112,7 +121,13 @@ $conn->close();
             <span class="label">Registration Date: </span><?= htmlspecialchars($user['registration_date']) ?>
         </div>
         <div>
-            <span class="label">School ID File: </span><a href="uploads/school_ids/<?= htmlspecialchars($user['school_id_file']) ?>" target="_blank">View School ID</a>
+            <span class="label">School ID: </span>
+            <!-- Display the uploaded School ID image -->
+            <?php if (!empty($user['school_id_file']) && file_exists("uploads/school_ids/" . $user['school_id_file'])): ?>
+                <img src="uploads/school_ids/<?= htmlspecialchars($user['school_id_file']) ?>" alt="School ID" class="school-id-image">
+            <?php else: ?>
+                <p>No School ID uploaded.</p>
+            <?php endif; ?>
         </div>
     </div>
     <div class="text-center mt-4">
