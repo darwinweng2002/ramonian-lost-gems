@@ -28,39 +28,131 @@ $result = $conn->query($sql);
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <style>
         body {
+            font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             padding: 20px;
         }
+
         .container {
+            margin: 30px auto;
+            max-width: 1200px;
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        .table th, .table td {
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .table-responsive {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
             text-align: center;
         }
-        .search-input {
-            margin-bottom: 20px;
-            width: 300px;
+
+        th {
+            white-space: nowrap;
+            background-color: #f2f2f2;
+            color: #444;
         }
-        .btn-action {
-            display: inline-flex;
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn {
+            border-radius: 5px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: #fff;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+        }
+
+        .btn-info:hover {
+            background-color: #138496;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* Input group for search */
+        .input-group {
+            display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 5px 10px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .search-input {
+            border: 1px solid #ddd;
+            border-right: none;
+            padding: 10px;
+            flex-grow: 1;
+            outline: none;
+            width: 200px;
+        }
+
+        .search-button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-button:hover {
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 class="text-center">Registered Users</h2>
+    <h2>Registered Faculty Users</h2>
 
     <!-- Search Form -->
-    <form class="d-flex mb-4" method="GET" action="">
-        <input class="form-control search-input" type="text" name="search" placeholder="Search users..." value="<?= htmlspecialchars($searchTerm) ?>">
-        <button class="btn btn-success ms-2" type="submit">Search</button>
+    <form class="search-form d-flex mb-4" method="GET" action="">
+        <div class="input-group">
+            <input class="search-input form-control" type="text" name="search" placeholder="Search users..." value="<?= htmlspecialchars($searchTerm) ?>">
+            <button class="search-button btn" type="submit">Search</button>
+        </div>
     </form>
 
     <div class="table-responsive">
@@ -84,18 +176,18 @@ $result = $conn->query($sql);
                         <td><?= htmlspecialchars($row['first_name']) ?></td>
                         <td><?= htmlspecialchars($row['last_name']) ?></td>
                         <td><?= htmlspecialchars($row['college']) ?></td>
-                        <td><?= htmlspecialchars($row['position']) ?></td> <!-- Assuming position holds course/role -->
-                        <td><?= htmlspecialchars($row['department']) ?></td> <!-- Assuming department for year -->
+                        <td><?= htmlspecialchars($row['position']) ?></td>
+                        <td><?= htmlspecialchars($row['department']) ?></td>
                         <td><?= htmlspecialchars($row['email']) ?></td>
                         <td>
                             <div class="d-flex justify-content-center">
-                                <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm btn-action">
+                                <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
                                     <i class="fas fa-eye"></i> View Details
                                 </a>
-                                <button class="btn btn-success btn-sm ms-2 btn-action" onclick="approveUser(<?= $row['id'] ?>)">
+                                <button class="btn btn-success btn-sm ms-2" onclick="approveUser(<?= $row['id'] ?>)">
                                     <i class="fas fa-check"></i> Approve
                                 </button>
-                                <button class="btn btn-danger btn-sm ms-2 btn-action" onclick="deleteUser(<?= $row['id'] ?>)">
+                                <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= $row['id'] ?>)">
                                     <i class="fas fa-trash-alt"></i> Delete
                                 </button>
                             </div>
