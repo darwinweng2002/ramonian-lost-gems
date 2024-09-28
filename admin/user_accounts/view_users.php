@@ -14,7 +14,8 @@ $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']
 
 // Update SQL query to include search functionality
 $sql = "SELECT * FROM user_member WHERE 
-        CONCAT_WS(' ', first_name, last_name, course, year, section, email) LIKE '%$searchTerm%'";
+        CONCAT_WS(' ', first_name, last_name, course, year, section, email) LIKE '%$searchTerm%'
+        AND status != 'approved'";
 
 $result = $conn->query($sql);
 ?>
@@ -244,45 +245,42 @@ $result = $conn->query($sql);
 <tbody>
     <?php if ($result->num_rows > 0): ?>
         <?php while($row = $result->fetch_assoc()): ?>
-            <tr>
+            <tr data-id="<?= htmlspecialchars($row['id']) ?>">
                 <td><?= htmlspecialchars($row['first_name']) ?></td>
                 <td><?= htmlspecialchars($row['last_name']) ?></td>
                 <td><?= htmlspecialchars($row['college']) ?></td>
                 <td><?= htmlspecialchars($row['course']) ?></td>
                 <td><?= htmlspecialchars($row['year']) ?></td>
                 <td><?= htmlspecialchars($row['section']) ?></td>
-                <td><?= htmlspecialchars($row['email']) ?></td> <!-- Corrected Email Column -->
-                <!-- Add Approve Button in Table -->
+                <td><?= htmlspecialchars($row['email']) ?></td>
                 <td>
-    <div class="d-flex justify-content-center">
-        <a href="viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-            <i class="fa fa-eye"></i> View Details
-        </a>
-        <button class="btn btn-delete btn-sm ms-2" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
-            <i class="fa fa-trash"></i> Delete
-        </button>
-        <?php if ($row['status'] !== 'approved'): ?> <!-- Check if the user is already approved -->
-        <button class="btn btn-success btn-sm ms-2" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
-            <i class="fa fa-check"></i> Approve
-        </button>
-        <?php else: ?>
-        <span class="badge bg-success ms-2">Approved</span>
-        <?php endif; ?>
-    </div>
-</td>
+                    <div class="d-flex justify-content-center">
+                        <a href="viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+                            <i class="fa fa-eye"></i> View Details
+                        </a>
+                        <button class="btn btn-delete btn-sm ms-2" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
+                        <?php if ($row['status'] !== 'approved'): ?> 
+                        <button class="btn btn-success btn-sm ms-2" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                            <i class="fa fa-check"></i> Approve
+                        </button>
+                        <?php else: ?>
+                        <span class="badge bg-success ms-2">Approved</span>
+                        <?php endif; ?>
+                    </div>
+                </td>
             </tr>
         <?php endwhile; ?>
     <?php else: ?>
         <tr>
             <td colspan="8" class="no-data">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-x">
-                    <path d="M2 21a8 8 0 0 1 11.873-7"/><circle cx="10" cy="8" r="5"/><path d="m17 17 5 5"/><path d="m22 17-5 5"/>
-                </svg> 
                 No registered users found.
             </td>
         </tr>
     <?php endif; ?>
 </tbody>
+
 
             </table>
         </div>
@@ -351,7 +349,7 @@ function approveUser(event, id) {
         confirmButtonText: 'Yes, approve it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('approve_users.php', { // Use approve_user.php as the backend script
+            fetch('approve_users.php', { // Use the backend script to handle approval
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -369,7 +367,11 @@ function approveUser(event, id) {
                         'The user has been approved successfully.',
                         'success'
                     ).then(() => {
-                        location.reload(); // Reload the page to reflect changes
+                        // Remove the approved row from the table without refreshing the page
+                        const userRow = document.querySelector(`tr[data-id="${id}"]`);
+                        if (userRow) {
+                            userRow.remove(); // Remove the approved user from the table
+                        }
                     });
                 } else {
                     Swal.fire(
