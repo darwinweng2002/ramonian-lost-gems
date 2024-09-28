@@ -7,7 +7,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 include 'config.php';
 
-// Include PHPMailer for email notifications (add PHPMailer to your project)
+// Include PHPMailer for email notifications
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -15,7 +15,6 @@ use PHPMailer\PHPMailer\Exception;
 require 'PHPMailer-master/src/Exception.php';
 require 'PHPMailer-master/src/PHPMailer.php';
 require 'PHPMailer-master/src/SMTP.php';
-
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data
@@ -26,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $year = $_POST['year'];
     $section = $_POST['section'];
     $email = $_POST['email']; // Email for username
-    
+
     // Check if passwords match
     if ($_POST['password'] !== $_POST['confirm_password']) {
         $response = ['success' => false, 'message' => 'Passwords do not match.'];
@@ -104,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Handle email sending error
         }
 
-        $response = ['success' => true, 'message' => 'Successfully registered! Please wait for admin approval. You will receive an email once your account is approved.'];
+        $response = ['success' => true, 'message' => 'Successfully registered! Please wait for admin approval.'];
     } else {
         $response = ['success' => false, 'message' => 'Failed to register user.'];
     }
@@ -532,6 +531,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         confirmButtonText: 'OK'
                     });
                 } else {
+                    // Handle other errors
                     Swal.fire({
                         title: 'Error!',
                         text: response.message,
@@ -554,6 +554,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
     });
 });
+
 
 });
     document.addEventListener('DOMContentLoaded', function () {
