@@ -124,8 +124,10 @@ $conn->close();
             <span class="label">School ID: </span>
             <?php
             // Check if school_id_file is not NULL and the file exists
-            if (!empty($user['school_id_file']) && file_exists($user['school_id_file'])) {
-                echo '<img src="' . htmlspecialchars($user['school_id_file']) . '" alt="School ID" class="school-id-image">';
+            if (!empty($user['school_id_file'])) {
+                // Correctly construct the URL using the stored path
+                $file_path = htmlspecialchars($user['school_id_file']);
+                echo '<img src="uploads/school_ids/' . $file_path . '" alt="School ID" class="school-id-image">';
             } else {
                 echo '<p>No School ID uploaded.</p>';
             }
