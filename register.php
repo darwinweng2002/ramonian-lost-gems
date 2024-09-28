@@ -34,21 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Check if email already exists
-    $stmt = $conn->prepare("SELECT id FROM user_member WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->store_result();
-
-    if ($stmt->num_rows > 0) {
-        // Email is already taken
-        $response = ['success' => false, 'message' => 'This email is already registered. Please use a different email.'];
-        echo json_encode($response);
-        exit;
-    }
-
-    $stmt->close();
-
     // Hash the password
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
 
@@ -491,6 +476,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             });
         });
 
+        // Form validation and submission
         $(document).ready(function() {
     // Form validation and submission
     $('form').on('submit', function(e) {
@@ -523,14 +509,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }).then(() => {
                         window.location.href = 'login.php';
                     });
-                } else if (response.message === 'This email is already registered. Please use a different email.') {
-                    // Display SweetAlert if email is already taken
-                    Swal.fire({
-                        title: 'Email Already Registered!',
-                        text: 'This email is already in use. Please try registering with a different email.',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
                 } else {
                     Swal.fire({
                         title: 'Error!',
@@ -545,16 +523,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 document.getElementById('loaderOverlay').style.display = 'none';
 
                 Swal.fire({
-                    title: 'Error!',
-                    text: 'An unexpected error occurred. Please try again.',
-                    icon: 'error',
+                    title: 'Registration Successful!',
+                    text: 'Thank you for registering! Your account is pending admin approval. You’ll receive an email once it’s approved, and then you can log in and use your account.',
+                    icon: 'success',
                     confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
+                    }
                 });
             }
         });
     });
 });
-
 });
     document.addEventListener('DOMContentLoaded', function () {
             // Handle role selection change
