@@ -190,11 +190,7 @@ $result = $conn->query($sql);
             <thead>
     <tr>
         <th>First Name</th>
-        <th>Last Name</th>
-        <th>College</th>
-        <th>Course</th>
-        <th>Year</th>
-        <th>Section</th>
+        <th>Last Name</th>>
         <th>Username</th> <!-- Adjusted Email Header -->
         <th>Actions</th> <!-- Adjusted Actions Header -->
     </tr>
@@ -205,10 +201,6 @@ $result = $conn->query($sql);
             <tr>
                 <td><?= htmlspecialchars($row['first_name']) ?></td>
                 <td><?= htmlspecialchars($row['last_name']) ?></td>
-                <td><?= htmlspecialchars($row['college']) ?></td>
-                <td><?= htmlspecialchars($row['course']) ?></td>
-                <td><?= htmlspecialchars($row['year']) ?></td>
-                <td><?= htmlspecialchars($row['section']) ?></td>
                 <td><?= htmlspecialchars($row['email']) ?></td> <!-- Corrected Email Column -->
                 <!-- Add Approve Button in Table -->
                 <td>
