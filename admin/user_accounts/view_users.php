@@ -306,7 +306,7 @@ function approveUser(event, id) {
         confirmButtonText: 'Yes, approve it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('approve_user.php', { // Use approve_user.php as the backend script
+            fetch('approve_users.php', { // Use approve_user.php as the backend script
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
