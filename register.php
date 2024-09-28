@@ -338,8 +338,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="col-12">
                             <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
                             <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
-                            <small class="form-text text-muted">Please upload a clear image of your valid PRMSU Student ID (front side only). Ensure that the ID is visible and in JPG or PNG format. This will be used for verification purposes.</small>
                             <div class="invalid-feedback">Please upload your School ID (JPG or PNG).</div>
+                            <!-- Image preview container -->
+                            <div id="imagePreviewContainer" style="margin-top: 10px;">
+                                <img id="imagePreview" src="#" alt="Preview will appear here..." style="max-width: 100%; display: none; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
+                            </div>
+                            <small class="text-muted">Please upload a clear image of your valid PRMSU Student ID (front side only). Ensure that the ID is visible and in JPG or PNG format. This will be used for verification purposes.</small>
                         </div>
 
                             <div class="col-12">
@@ -559,6 +563,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             emailErrorDiv.style.display = 'block';
             emailErrorDiv.textContent = 'Please enter a valid email address.';
             registerBtn.disabled = true; // Disable the button when the email is invalid
+        }
+    });
+    document.getElementById('school_id').addEventListener('change', function(event) {
+        const file = event.target.files[0]; // Get the selected file
+        const imagePreview = document.getElementById('imagePreview'); // Get the preview element
+
+        if (file) {
+            const reader = new FileReader(); // Create a FileReader to read the file
+
+            reader.onload = function(e) {
+                // Set the preview image's src to the file's data URL
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block'; // Display the image
+            }
+
+            reader.readAsDataURL(file); // Read the file as a Data URL (base64 encoded string)
+        } else {
+            imagePreview.src = ''; // Clear the preview if no file is selected
+            imagePreview.style.display = 'none'; // Hide the image
         }
     });
   </script>
