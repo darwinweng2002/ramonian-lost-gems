@@ -72,9 +72,10 @@ $result = $conn->query($sql);
             padding: 12px;
             text-align: center;
         }
+
         th {
-    white-space: nowrap; /* Prevents wrapping */
-}
+            white-space: nowrap; /* Prevents wrapping */
+        }
 
         thead th {
             background-color: #f2f2f2;
@@ -107,56 +108,50 @@ $result = $conn->query($sql);
             background-color: #c82333;
         }
 
-        /* Style for the input group */
-.input-group {
-    display: flex;
-    align-items: center;
-    border-radius: 8px; /* Adds the border-radius to the entire group */
-    overflow: hidden;   /* Ensures the border-radius applies to all child elements */
-}
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+            cursor: not-allowed;
+        }
 
-/* Search input field */
-.search-input {
-    border: 1px solid #ddd;
-    border-right: none;
-    border-radius: 0; /* Reset any default border radius */
-    padding: 10px;
-    outline: none;
-    box-shadow: none;
-    width: 200px;
-    flex-grow: 1;
-}
+        .input-group {
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            overflow: hidden;
+        }
 
-/* Button */
-.search-button {
-    border-radius: 0;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    padding: 10px 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-left: -5px;
-}
+        .search-input {
+            border: 1px solid #ddd;
+            padding: 10px;
+            outline: none;
+            width: 200px;
+            flex-grow: 1;
+        }
 
-/* Button hover */
-.search-button:hover {
-    background-color: #218838;
-}
+        .search-button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-/* Icon styling */
-.input-group-text {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-right: none;
-    color: #333;
-}
+        .search-button:hover {
+            background-color: #218838;
+        }
 
-.input-group-text i {
-    font-size: 14px;
-}
+        .input-group-text {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            color: #333;
+        }
 
+        .input-group-text i {
+            font-size: 14px;
+        }
 
         .no-data {
             text-align: center;
@@ -164,92 +159,84 @@ $result = $conn->query($sql);
             color: #333;
             padding: 30px 0;
         }
-        .btn-secondary {
-    background-color: #6c757d;
-    color: #fff;
-    cursor: not-allowed;
-}
 
     </style>
 </head>
 <body>
 <?php require_once('../inc/topBarNav.php') ?>
-<?php require_once('../inc/navigation.php') ?> 
-<br>
-<br>
+<?php require_once('../inc/navigation.php') ?>
+<br><br>
+
 <section class="section">
     <div class="container">
         <h2>Registered Users</h2>
 
         <!-- Search Form -->
-        
-<form class="search-form" method="GET" action="view_users.php">
-    <div class="input-group">
-        <span class="input-group-text"><i class="fas fa-search"></i></span>
-        <input type="text" name="search" class="search-input form-control" placeholder="Search users..." value="<?= htmlspecialchars($searchTerm) ?>">
-        <button type="submit" class="search-button">Search</button>
-    </div>
-</form>
+        <form class="search-form" method="GET" action="view_users.php">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" name="search" class="search-input form-control" placeholder="Search users..." value="<?= htmlspecialchars($searchTerm) ?>">
+                <button type="submit" class="search-button">Search</button>
+            </div>
+        </form>
 
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
-            <thead>
-    <tr>
-    <th>User Type</th>
-    <th>First Name</th>
-    <th>Last Name</th>
-    <th>Email</th>
-    <th>Position</th>
-    <th>Department</th>
-    <th>Registration Date</th>
- <!-- Adjusted Email Header -->
-    <th>Actions</th> <!-- Adjusted Actions Header -->
-    </tr>
-</thead>
-<tbody>
-    <?php if ($result->num_rows > 0): ?>
-        <?php while($row = $result->fetch_assoc()): ?>
-            <tr>
-    <td><?= htmlspecialchars($row['first_name'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
-    <td><?= htmlspecialchars($row['last_name'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
-    <td><?= htmlspecialchars($row['email'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
-    <!-- Approve Button Code -->
-    <td>
-        <div class="d-flex justify-content-center">
-            <a href="view_user.php?id=<?= htmlspecialchars($row['id'] ?? '', ENT_QUOTES, 'UTF-8') ?>" class="btn btn-info btn-sm">
-                <i class="fas fa-eye"></i> View Details
-            </a>
-            <button id="approve-btn-<?= htmlspecialchars($row['id'] ?? '', ENT_QUOTES, 'UTF-8') ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id'] ?? '', ENT_QUOTES, 'UTF-8') ?>)">
-                <i class="fas fa-check"></i> Approve
-            </button>
-            <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id'] ?? '', ENT_QUOTES, 'UTF-8') ?>)">
-                <i class="fas fa-trash-alt"></i> Delete
-            </button>
-        </div>
-    </td>
-</tr>
-
-        <?php endwhile; ?>
-    <?php else: ?>
-        <tr>
-            <td colspan="8" class="no-data">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-x">
-                    <path d="M2 21a8 8 0 0 1 11.873-7"/><circle cx="10" cy="8" r="5"/><path d="m17 17 5 5"/><path d="m22 17-5 5"/>
-                </svg> 
-                No registered users found.
-            </td>
-        </tr>
-    <?php endif; ?>
-</tbody>
-
+                <thead>
+                    <tr>
+                        <th>User Type</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Position</th>
+                        <th>Department</th>
+                        <th>Registration Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($result->num_rows > 0): ?>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($row['user_type'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['first_name'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['last_name'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['email'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['position'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['department'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['registration_date'] ?? 'N/A') ?></td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </a>
+                                        <?php if ($row['status'] !== 'approved'): ?>
+                                            <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                                                <i class="fas fa-check"></i> Approve
+                                            </button>
+                                        <?php else: ?>
+                                            <button class="btn btn-secondary btn-sm ms-2" disabled>Approved</button>
+                                        <?php endif; ?>
+                                        <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="8" class="no-data">No registered users found.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
             </table>
         </div>
     </div>
 </section>
-<script>
-  function deleteUser(event, id) {
-    event.preventDefault(); // Prevent default form submission
 
+<script>
+function deleteUser(id) {
     Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -260,45 +247,27 @@ $result = $conn->query($sql);
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('delete_users.php', {
+            fetch('delete_user.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'id=' + id
             })
             .then(response => response.text())
             .then(result => {
-                console.log('Response from server:', result); // Log the response for debugging
                 if (result.trim() === '1') {
-                    Swal.fire(
-                        'Deleted!',
-                        'The user has been deleted.',
-                        'success'
-                    ).then(() => {
-                        location.reload(); // Reload the page to reflect changes
-                    });
+                    Swal.fire('Deleted!', 'The user has been deleted.', 'success')
+                    .then(() => location.reload());
                 } else {
-                    Swal.fire(
-                        'Error!',
-                        'An error occurred while deleting the user.',
-                        'error'
-                    );
+                    Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
                 }
             })
-            .catch(() => {
-                Swal.fire(
-                    'Error!',
-                    'An error occurred while deleting the user.',
-                    'error'
-                );
-            });
+            .catch(() => Swal.fire('Error!', 'An error occurred while deleting the user.', 'error'));
         }
     });
 }
-function approveUser(event, id) {
-    event.preventDefault(); // Prevent default form submission
 
+function approveUser(event, id) {
+    event.preventDefault();
     Swal.fire({
         title: 'Are you sure?',
         text: "You are about to approve this user!",
@@ -311,40 +280,30 @@ function approveUser(event, id) {
         if (result.isConfirmed) {
             fetch('approve_user.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'user_id=' + id
             })
-            .then(response => response.text())  // Expecting text response
+            .then(response => response.text())
             .then(result => {
                 if (result.trim() === '1') {
-                    // Change the button to "Approved" and disable it
                     const approveBtn = document.getElementById('approve-btn-' + id);
-                    approveBtn.classList.remove('btn-success');  // Remove the success class
-                    approveBtn.classList.add('btn-secondary');   // Change to a secondary (disabled) button
-                    approveBtn.innerHTML = 'Approved';           // Update text
-                    approveBtn.disabled = true;                  // Disable the button
-                    
+                    approveBtn.classList.replace('btn-success', 'btn-secondary');
+                    approveBtn.innerHTML = 'Approved';
+                    approveBtn.disabled = true;
                     Swal.fire('Approved!', 'The user has been approved.', 'success');
                 } else {
                     Swal.fire('Error!', 'An error occurred while approving the user.', 'error');
                 }
             })
-            .catch((error) => {
-                console.error('Error occurred during approval:', error);
-                Swal.fire('Error!', 'An unexpected error occurred while approving the user.', 'error');
-            });
+            .catch(() => Swal.fire('Error!', 'An unexpected error occurred.', 'error'));
         }
     });
 }
-
 </script>
-
 
 <?php
 $conn->close();
+require_once('../inc/footer.php');
 ?>
-<?php require_once('../inc/footer.php') ?>
 </body>
 </html>
