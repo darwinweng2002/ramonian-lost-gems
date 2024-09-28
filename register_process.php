@@ -64,7 +64,7 @@ if (!move_uploaded_file($_FILES["school_id"]["tmp_name"], $school_id_file)) {
     $status = 'pending';
 
     // Prepare the SQL statement
-    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password, avatar, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password, school_id_file, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssssssss", $first_name, $last_name, $college, $course, $year, $section, $email, $password, $school_id_file, $status);
 
     // Execute the query and check for success

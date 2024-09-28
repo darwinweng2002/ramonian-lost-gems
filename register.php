@@ -232,6 +232,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <span><?= $_settings->info('name') ?></span>
                     </a>
                 </div>
+                <div class="role-selector">
+                <select id="role-select" class="form-select">
+                    <option value="" disabled selected>Register as</option>
+                    <option value="student">Register as Student</option>
+                    <option value="faculty">Register as Faculty</option>
+                </select>
+            </div>
 
                 <!-- Updated registration form -->
                 <div class="card mb-3">
