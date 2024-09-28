@@ -360,8 +360,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         const coursesByCollege = {
             "CABA": [
                 "Bachelor of Science in Accountancy",
-                "Bachelor of Science in Business Administration - Marketing"
-                // Add more courses here
+                "Bachelor of Science in Accounting and Information System",
+                "Bachelor of Science in Business Administration - Marketing",
+                "Bachelor of Science in Business Administration - Financial Management",
+                "Bachelor of Science in Business Administration - Human Resource Development Management",
+                "Bachelor of Public Administration"
+
             ],
             "CAS": [
                 "Bachelor of Science in Biology",
@@ -371,7 +375,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 "Bachelor of Science in Computer Science",
                 "Bachelor of Science in Information Technology"
             ],
-            // Add more colleges and courses as needed
+            "CTE": [
+                "Bachelor of Secondary Education - English Education",
+                "Bachelor of Secondary Education - Filipino Education",
+                "Bachelor of Secondary Education - Mathematics Education",
+                "Bachelor of Secondary Education - Science Education",
+                "Bachelor of Secondary Education - Social Studies Education",
+                "Bachelor of Elementary Education",
+                "Bachelor of Physical Education",
+                "Bachelor of Professional Education"
+            ],
+            "CE": [
+                "Bachelor of Science in Civil Engineering",
+                "Bachelor of Science in Electrical Engineering",
+                "Bachelor of Science in Mechanical Engineering",
+                "Bachelor of Science in Computer Engineering",
+                "Bachelor of Science in Mining Engineering"
+            ],
+            "CIT": [
+                "Bachelor of Technology and Livelihood Education - Industrial Arts",
+                "Bachelor of Technical Vocational Teacher Education - Computer Programming",
+                "Bachelor of Technical Vocational Teacher Education - Drafting Technology",
+                "Bachelor of Technical Vocational Teacher Education - Mechanical Technology (Machine)",
+                "Bachelor of Technical Vocational Teacher Education - Electrical Technology",
+                "Bachelor of Technical Vocational Teacher Education - Food and Service Management Technology",
+                "Bachelor of Technical Vocational Teacher Education - Automotive Technology",
+                "Bachelor of Technical Vocational Teacher Education - Electronics Technology",
+                "Bachelor of Technical Vocational Teacher Education - Welding and Fabrication Technology",
+                "Bachelor of Science in Industrial Technology - Automotive Technology",
+                "Bachelor of Science in Industrial Technology - Computer Technology",
+                "Bachelor of Science in Industrial Technology - Drafting Technology",
+                "Bachelor of Science in Industrial Technology - Electrical Technology",
+                "Bachelor of Science in Industrial Technology - Electronics Technology",
+                "Bachelor of Science in Industrial Technology - Food Technology",
+                "Bachelor of Science in Industrial Technology - Furniture and Cabinet Marketing Technology",
+                "Bachelor of Science in Industrial Technology - Mechanical Technology"
+            ],
+            "CAF": [
+                "Bachelor of Science in Environmental Science"
+            ],
+            "NUR": [
+                "Bachelor of Science in Nursing"
+            ],
+            "CTHM": [
+                "Bachelor of Science in Hospitality Management",
+                "Bachelor of Science in Tourism Management"
+            ]
         };
 
         $('#college').on('change', function() {
