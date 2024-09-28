@@ -123,11 +123,16 @@ $conn->close();
         <div>
             <span class="label">School ID: </span>
             <!-- Display the uploaded School ID image -->
-            <?php if (!empty($user['school_id_file']) && file_exists("../uploads/school_ids/" . $user['school_id_file'])): ?>
-                <img src="../uploads/school_ids/<?= htmlspecialchars($user['school_id_file']) ?>" alt="School ID" class="school-id-image">
-            <?php else: ?>
-                <p>No School ID uploaded.</p>
-            <?php endif; ?>
+            <?php
+            // Check if the file is present and exists in the uploads folder
+            $schoolIdPath = 'uploads/school_ids/' . $user['school_id_file'];
+
+            if (!empty($user['school_id_file']) && file_exists($schoolIdPath)) {
+                echo '<img src="' . htmlspecialchars($schoolIdPath) . '" alt="School ID" class="school-id-image">';
+            } else {
+                echo '<p>No School ID uploaded.</p>';
+            }
+            ?>
         </div>
     </div>
     <div class="text-center mt-4">
