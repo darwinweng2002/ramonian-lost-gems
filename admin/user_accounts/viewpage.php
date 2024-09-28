@@ -141,7 +141,8 @@ $conn->close();
     </style>
 </head>
 <body>
-
+<?php require_once('../inc/topBarNav.php') ?>
+<?php require_once('../inc/navigation.php') ?> 
 <div class="container">
     <h2>User Details</h2>
     <div class="user-info">
