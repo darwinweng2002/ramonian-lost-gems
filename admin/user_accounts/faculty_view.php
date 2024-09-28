@@ -210,30 +210,25 @@ $result = $conn->query($sql);
     <?php if ($result->num_rows > 0): ?>
         <?php while($row = $result->fetch_assoc()): ?>
             <tr>
-            <td><?= htmlspecialchars($row['user_type']) ?></td>
-                        <td><?= htmlspecialchars($row['first_name']) ?></td>
-                        <td><?= htmlspecialchars($row['last_name']) ?></td>
-                        <td><?= htmlspecialchars($row['email']) ?></td>
-                        <td><?= htmlspecialchars($row['position']) ?></td>
-                        <td><?= htmlspecialchars($row['department']) ?></td>
-                        <td><?= htmlspecialchars($row['registration_date']) ?></td>
- <!-- Corrected Email Column -->
-                <!-- Add Approve Button in Table -->
-                <td>
-    <div class="d-flex justify-content-center">
-        <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-            <i class="fas fa-eye"></i> View Details
-        </a>
-        <button id="approve-btn-<?= $row['id'] ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= $row['id'] ?>)">
-            <i class="fas fa-check"></i> Approve
-        </button>
-        <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= $row['id'] ?>)">
-            <i class="fas fa-trash-alt"></i> Delete
-        </button>
-    </div>
-</td>
+    <td><?= htmlspecialchars($row['first_name'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
+    <td><?= htmlspecialchars($row['last_name'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
+    <td><?= htmlspecialchars($row['email'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
+    <!-- Approve Button Code -->
+    <td>
+        <div class="d-flex justify-content-center">
+            <a href="view_user.php?id=<?= htmlspecialchars($row['id'] ?? '', ENT_QUOTES, 'UTF-8') ?>" class="btn btn-info btn-sm">
+                <i class="fas fa-eye"></i> View Details
+            </a>
+            <button id="approve-btn-<?= htmlspecialchars($row['id'] ?? '', ENT_QUOTES, 'UTF-8') ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id'] ?? '', ENT_QUOTES, 'UTF-8') ?>)">
+                <i class="fas fa-check"></i> Approve
+            </button>
+            <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id'] ?? '', ENT_QUOTES, 'UTF-8') ?>)">
+                <i class="fas fa-trash-alt"></i> Delete
+            </button>
+        </div>
+    </td>
+</tr>
 
-            </tr>
         <?php endwhile; ?>
     <?php else: ?>
         <tr>
