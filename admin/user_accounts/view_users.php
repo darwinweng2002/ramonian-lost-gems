@@ -208,9 +208,12 @@ $result = $conn->query($sql);
                 <td><?= htmlspecialchars($row['section']) ?></td>
                 <td><?= htmlspecialchars($row['email']) ?></td> <!-- Corrected Email Column -->
                 <!-- Add Approve Button in Table -->
-<td>
+                <td>
     <div class="d-flex justify-content-center">
-        <button class="btn btn-delete btn-sm" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
+        <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+            <i class="fa fa-eye"></i> View Details
+        </a>
+        <button class="btn btn-delete btn-sm ms-2" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
             <i class="fa fa-trash"></i> Delete
         </button>
         <?php if ($row['status'] !== 'approved'): ?> <!-- Check if the user is already approved -->

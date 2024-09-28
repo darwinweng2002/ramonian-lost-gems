@@ -77,7 +77,7 @@ if (!move_uploaded_file($_FILES["school_id"]["tmp_name"], $school_id_file)) {
             $mail->SMTPAuth = true;
             $mail->Username = 'vdarwin@gmail.com';
             $mail->Password = 'justfocusonjavascript800px';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->SMTPSecure = 'ssl';
             $mail->Port = 587;
 
             $mail->setFrom('vdarwin@gmail.com', 'Ramonian Lost Gems');
