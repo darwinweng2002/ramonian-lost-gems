@@ -428,6 +428,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             });
         });
     });
+    document.addEventListener('DOMContentLoaded', function () {
+            // Handle role selection change
+            const roleSelect = document.getElementById('role-select');
+
+            roleSelect.addEventListener('change', function () {
+                const selectedRole = this.value;
+
+                // Redirect based on the selected role
+                if (selectedRole === 'student') {
+                    window.location.href = 'https://ramonianlostgems.com/register.php/'; // Redirect to student registration page
+                } else if (selectedRole === 'faculty') {
+                    window.location.href = 'https://ramonianlostgems.com/register_staff.php'; // Redirect to faculty registration page
+                }
+            });
+        });
   </script>
 </body>
 </html>
