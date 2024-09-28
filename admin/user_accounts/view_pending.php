@@ -1,18 +1,16 @@
-<?php // Update path to vendor/autoload.php
+<?php
+require '../../vendor/autoload.php';  // Correct the path to autoload.php
+
+// Include the database configuration file
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+session_start();
 include '../../config.php';
 
-// Database connection
-$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// PHPMailer classes
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-
 
 // Check if admin is logged in (you should already have admin session logic)
 
@@ -26,12 +24,11 @@ if (isset($_POST['approve'])) {
 
     if ($stmt->execute()) {
         // Fetch the email of the user to send the approval email
-        $stmt = $conn->prepare("SELECT email, first_name FROM user_member WHERE id = ?");
+        $stmt = $conn->prepare("SELECT email FROM user_member WHERE id = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
-        $stmt->bind_result($email, $first_name);
+        $stmt->bind_result($email);
         $stmt->fetch();
-        $stmt->close();
 
         // Send approval email using PHPMailer
         $mail = new PHPMailer(true);
@@ -39,26 +36,22 @@ if (isset($_POST['approve'])) {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'your_gmail_account@gmail.com'; // Your Gmail account
-            $mail->Password = 'your_gmail_password'; // Your Gmail App password (use App Password)
+            $mail->Username = 'your_gmail_account@gmail.com';
+            $mail->Password = 'your_gmail_password';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
             $mail->setFrom('your_gmail_account@gmail.com', 'Your App Name');
-            $mail->addAddress($email);  // Add user email address
+            $mail->addAddress($email);
 
             $mail->isHTML(true);
             $mail->Subject = 'Account Approved';
-            $mail->Body    = "Hello $first_name,<br>Your account has been approved! You can now log in.";
+            $mail->Body    = "Hello,<br>Your account has been approved! You can now log in.";
 
             $mail->send();
-            echo "Email sent to $email"; // Optional: for debugging
         } catch (Exception $e) {
-            // Handle email sending error
-            echo "Email could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
-    } else {
-        echo "Error updating user status: " . $stmt->error;
     }
 }
 
