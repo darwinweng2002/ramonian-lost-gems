@@ -307,10 +307,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="invalid-feedback">Please select your section.</div>
                             </div>
                             <div class="col-12">
-                                <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
-                                <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
-                                <div class="invalid-feedback">Please upload your School ID (JPG or PNG).</div>
-                            </div>
+    <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
+    <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
+    <small class="form-text text-muted">Please upload a clear image of your valid PRMSU Student ID (front side only). Ensure that the ID is visible and in JPG or PNG format. This will be used for verification purposes.</small>
+    <div class="invalid-feedback">Please upload your School ID (JPG or PNG).</div>
+</div>
+
                             <div class="col-12">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" name="email" class="form-control" id="email" required>
