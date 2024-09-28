@@ -520,7 +520,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 Swal.fire({
                     title: 'Registration Successful!',
-                    text: 'Thank you for registering! Your account is pending admin approval. You’ll receive an email once it’s approved, and then you can log in and use your account.',
+                    text: 'Thank you for registering. Your account is currently pending approval by the admin. The admins will review your submission, including the school ID you provided, before approving your account. Once approved, you will be able to log in and access your account.',
                     icon: 'success',
                     confirmButtonText: 'OK'
                 }).then((result) => {
