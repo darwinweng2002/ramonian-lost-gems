@@ -151,7 +151,7 @@ require_once('../inc/topBarNav.php');
 require_once('../inc/navigation.php');
 ?>
 
-<div class="container">
+
     <h2>User Details</h2>
     <div class="user-info">
         <p><strong>First Name:</strong> <?= htmlspecialchars($user['first_name']) ?></p>
@@ -181,7 +181,6 @@ require_once('../inc/navigation.php');
     <div class="back-link">
         <a href="view_users.php" class="btn btn-primary">Back to Users List</a>
     </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 
