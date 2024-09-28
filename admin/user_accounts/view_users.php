@@ -210,7 +210,7 @@ $result = $conn->query($sql);
                 <!-- Add Approve Button in Table -->
                 <td>
     <div class="d-flex justify-content-center">
-        <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+        <a href="viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
             <i class="fa fa-eye"></i> View Details
         </a>
         <button class="btn btn-delete btn-sm ms-2" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
