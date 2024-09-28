@@ -57,8 +57,6 @@ $result = $conn->query($sql);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
-            overflow-x: auto; /* Enable horizontal scroll for mobile */
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
         }
 
         table {
@@ -69,8 +67,10 @@ $result = $conn->query($sql);
         th, td {
             padding: 12px;
             text-align: center;
-            white-space: nowrap; /* Prevents wrapping on mobile */
         }
+        th {
+    white-space: nowrap; /* Prevents wrapping */
+}
 
         thead th {
             background-color: #f2f2f2;
@@ -104,50 +104,55 @@ $result = $conn->query($sql);
         }
 
         /* Style for the input group */
-        .input-group {
-            display: flex;
-            align-items: center;
-            border-radius: 8px;
-            overflow: hidden;
-        }
+.input-group {
+    display: flex;
+    align-items: center;
+    border-radius: 8px; /* Adds the border-radius to the entire group */
+    overflow: hidden;   /* Ensures the border-radius applies to all child elements */
+}
 
-        /* Search input field */
-        .search-input {
-            border: 1px solid #ddd;
-            border-right: none;
-            padding: 10px;
-            outline: none;
-            width: 200px;
-            flex-grow: 1;
-        }
+/* Search input field */
+.search-input {
+    border: 1px solid #ddd;
+    border-right: none;
+    border-radius: 0; /* Reset any default border radius */
+    padding: 10px;
+    outline: none;
+    box-shadow: none;
+    width: 200px;
+    flex-grow: 1;
+}
 
-        /* Button */
-        .search-button {
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            padding: 10px 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-left: -5px;
-        }
+/* Button */
+.search-button {
+    border-radius: 0;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: -5px;
+}
 
-        /* Button hover */
-        .search-button:hover {
-            background-color: #218838;
-        }
+/* Button hover */
+.search-button:hover {
+    background-color: #218838;
+}
 
-        /* Icon styling */
-        .input-group-text {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 10px;
-            color: #333;
-        }
+/* Icon styling */
+.input-group-text {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-right: none;
+    color: #333;
+}
 
-        .input-group-text i {
-            font-size: 14px;
-        }
+.input-group-text i {
+    font-size: 14px;
+}
+
 
         .no-data {
             text-align: center;
@@ -155,9 +160,8 @@ $result = $conn->query($sql);
             color: #333;
             padding: 30px 0;
         }
-
-        /* Media Queries for Responsive Design */
-        @media (max-width: 768px) {
+     /* Media Queries for Responsive Design */
+     @media (max-width: 512px) {
             .container {
                 padding: 15px;
                 margin: 20px auto;
