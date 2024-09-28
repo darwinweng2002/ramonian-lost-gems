@@ -171,7 +171,7 @@ body {
             <div class="role-selector">
     <select id="role-select" class="form-select">
         <option value="" disabled selected>Register as</option>
-        <option value="student">Register as Student</option>
+        <option value="student">Register as Nothing</option>
         <option value="faculty">Register as Faculty</option>
     </select>
 </div>
