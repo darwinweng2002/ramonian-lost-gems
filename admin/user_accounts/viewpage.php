@@ -141,13 +141,8 @@ $conn->close();
     </style>
 </head>
 <body>
-
-<?php
-// Ensure correct path for the topBarNav and navigation
-require_once('../inc/topBarNav.php');
-require_once('../inc/navigation.php');
-?>
-
+<?php require_once('../inc/topBarNav.php') ?>
+<?php require_once('../inc/navigation.php') ?> 
 <div class="container">
     <h2>User Details</h2>
     <div class="user-info">
@@ -182,11 +177,7 @@ require_once('../inc/navigation.php');
 
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 
-<?php
-// Ensure the footer is correctly included
-require_once('../inc/footer.php');
-?>
-
+<?php require_once('../inc/footer.php') ?>
 </body>
 </html>
 
