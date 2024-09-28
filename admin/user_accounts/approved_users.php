@@ -17,12 +17,15 @@ $result = $conn->query($sql);
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<?php require_once('../inc/header.php') ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Approved Users</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<?php require_once('../inc/topBarNav.php') ?>
+<?php require_once('../inc/navigation.php') ?> 
     <div class="container">
         <h3>Approved Users - PRMSU Iba</h3>
 
@@ -59,5 +62,6 @@ $result = $conn->query($sql);
             </tbody>
         </table>
     </div>
+    <?php require_once('../inc/footer.php') ?>
 </body>
 </html>
