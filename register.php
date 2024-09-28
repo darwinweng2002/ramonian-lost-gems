@@ -314,7 +314,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div id="imagePreviewContainer" style="margin-top: 10px;">
         <img id="imagePreview" src="#" alt="Preview will appear here..." style="max-width: 100%; display: none; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
     </div>
-    <small class="text-muted">*Upload a clear image of your PRMSU student ID for verification. Only JPG, JPEG, or PNG formats are allowed.</small>
+    <small class="text-muted">Upload a clear image of your PRMSU student ID for verification. Only JPG, JPEG, or PNG formats are allowed.</small>
 </div>
 
                             <div class="col-12">
