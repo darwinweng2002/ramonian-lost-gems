@@ -8,14 +8,12 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
-include 'config.php';
+include '../../config.php';
+
+// Database connection
+$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
 
 // Check if admin is logged in (you should already have admin session logic)
-if (!isset($_SESSION['admin_logged_in'])) {
-    // Redirect to login page if the admin is not logged in
-    header("Location: admin_login.php");
-    exit();
-}
 
 // Handle approval
 if (isset($_POST['approve'])) {
