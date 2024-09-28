@@ -17,7 +17,7 @@ $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']
 
 // Update SQL query to include search functionality
 $sql = "SELECT * FROM user_staff WHERE 
-        CONCAT_WS(' ', first_name, last_name, course, year, section, email) LIKE '%$searchTerm%'";
+        CONCAT_WS(' ', first_name, last_name,  email) LIKE '%$searchTerm%'";
 
 $result = $conn->query($sql);
 ?>
