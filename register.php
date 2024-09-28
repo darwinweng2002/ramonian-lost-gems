@@ -381,7 +381,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
                             </div>
                             <div class="col-12">
-    <button class="btn btn-primary w-100" type="submit" id="register-btn" disabled>Register</button>
+    <button class="btn btn-primary w-100" type="submit" id="register-btn">Register</button>
 </div>
                         </form>
                         <!-- Loader Overlay -->
