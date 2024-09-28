@@ -125,7 +125,7 @@ $conn->close();
             <!-- Display the uploaded School ID image -->
             <?php
             // Check if the file is present and exists in the uploads folder
-            $schoolIdPath = base_url . 'uploads/school_ids/' . $user['school_id_file'];
+            $schoolIdPath = base_url . '../uploads/school_ids/' . $user['school_id_file'];
 
             if (!empty($user['school_id_file']) && file_exists($schoolIdPath)) {
                 echo '<img src="' . htmlspecialchars($schoolIdPath) . '" alt="School ID" class="school-id-image">';
