@@ -579,6 +579,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Check if the email matches the correct pattern
         if (emailPattern.test(email)) {
+            console.log('Valid email entered'); // Debugging statement
+
             emailErrorDiv.hide(); // Hide error if email is valid
 
             // Make the button temporarily disabled while checking
@@ -591,6 +593,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 data: { email: email },
                 dataType: 'json',
                 success: function (response) {
+                    console.log('AJAX response: ', response); // Debugging statement
+
                     if (response.exists) {
                         // Email is already taken
                         emailTakenMessage.show();
@@ -599,16 +603,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         // Email is available
                         emailTakenMessage.hide();
                         registerBtn.prop('disabled', false); // Enable register button
+                        console.log('Email is available, enabling register button'); // Debugging statement
                     }
                 },
-                error: function () {
-                    // If there is an error in the AJAX request, make sure the button is disabled
-                    console.log("Error checking email availability");
+                error: function (xhr, status, error) {
+                    // If there is an error in the AJAX request
+                    console.error('Error in AJAX request: ', error);
                     registerBtn.prop('disabled', true);
                 }
             });
         } else {
             // If email is invalid, show the error and keep the button disabled
+            console.log('Invalid email entered'); // Debugging statement
             emailErrorDiv.show();
             emailErrorDiv.text('Please enter a valid email address.');
             emailTakenMessage.hide();
@@ -616,8 +622,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     });
 });
-
-
 
     document.getElementById('school_id').addEventListener('change', function(event) {
         const file = event.target.files[0]; // Get the selected file

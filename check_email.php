@@ -3,8 +3,7 @@ include 'config.php';
 
 if (isset($_POST['email'])) {
     $email = $_POST['email'];
-
-    // Prepare and bind to avoid SQL injection
+    // Check for the email in the database
     $stmt = $conn->prepare("SELECT id FROM user_member WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -21,4 +20,3 @@ if (isset($_POST['email'])) {
     $stmt->close();
     $conn->close();
 }
-?>
