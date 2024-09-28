@@ -41,7 +41,10 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php require_once('../inc/header.php') ?>
+    <?php
+    // Ensure the path to the header is correct
+    require_once('../../inc/header.php'); 
+    ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Details</title>
@@ -141,8 +144,13 @@ $conn->close();
     </style>
 </head>
 <body>
-<?php require_once('../inc/topBarNav.php') ?>
-<?php require_once('../inc/navigation.php') ?> 
+
+<?php
+// Ensure correct path to the topBarNav and navigation
+require_once('../../inc/topBarNav.php');
+require_once('../../inc/navigation.php');
+?>
+
 <div class="container">
     <h2>User Details</h2>
     <div class="user-info">
@@ -176,6 +184,11 @@ $conn->close();
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
-<?php require_once('../inc/footer.php') ?>
+
+<?php
+// Ensure the path to the footer is correct
+require_once('../../inc/footer.php');
+?>
+
 </body>
 </html>
