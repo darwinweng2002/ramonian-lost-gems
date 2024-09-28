@@ -52,9 +52,6 @@ if (isset($_POST['guest_login'])) {
     exit();
 }
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -296,6 +293,31 @@ if (isset($_POST['guest_login'])) {
     $('#yourEmail, #yourPassword').on('keyup', function() {
       checkForm();
     });
+  });
+  $(document).ready(function() {
+    // Check if there's an error message and show it with SweetAlert
+    <?php if ($error_message): ?>
+      <?php if (strpos($error_message, 'awaiting admin approval') !== false): ?>
+        // Use SweetAlert with a custom icon for the "pending" status
+        Swal.fire({
+          icon: 'info',
+          title: 'Pending Approval',
+          text: '<?php echo $error_message; ?>',
+          confirmButtonText: 'OK',
+          customClass: {
+            icon: 'swal-custom-icon'  // Custom class if needed
+          }
+        });
+      <?php else: ?>
+        // Default SweetAlert error message
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: '<?php echo $error_message; ?>',
+          confirmButtonText: 'OK'
+        });
+      <?php endif; ?>
+    <?php endif; ?>
   });
 </script>
 
