@@ -27,6 +27,8 @@ $result = $conn->query($sql);
 <?php require_once('../inc/topBarNav.php') ?>
 <?php require_once('../inc/navigation.php') ?> 
     <div class="container">
+        <br>
+        <br>
         <h3>Approved Users - PRMSU Iba</h3>
 
         <table class="table table-striped table-bordered">
