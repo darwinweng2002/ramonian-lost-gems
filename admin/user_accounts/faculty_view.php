@@ -15,9 +15,10 @@ if ($conn->connect_error) {
 // Initialize search term
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
-// Update SQL query to include search functionality
-$sql = "SELECT * FROM user_staff WHERE 
-        CONCAT_WS(' ', first_name, last_name,  email) LIKE '%$searchTerm%'";
+// Update SQL query to include search functionality based on relevant columns
+$sql = "SELECT id, user_type, first_name, last_name, email, avatar, position, department, registration_date, status 
+        FROM user_staff 
+        WHERE CONCAT_WS(' ', first_name, last_name, email, user_type, position, department) LIKE '%$searchTerm%'";
 
 $result = $conn->query($sql);
 ?>
@@ -71,11 +72,9 @@ $result = $conn->query($sql);
             padding: 12px;
             text-align: center;
         }
-        th {
-    white-space: nowrap; /* Prevents wrapping */
-}
 
-        thead th {
+        th {
+            white-space: nowrap;
             background-color: #f2f2f2;
             color: #444;
         }
@@ -106,142 +105,141 @@ $result = $conn->query($sql);
             background-color: #c82333;
         }
 
-        /* Style for the input group */
-.input-group {
-    display: flex;
-    align-items: center;
-    border-radius: 8px; /* Adds the border-radius to the entire group */
-    overflow: hidden;   /* Ensures the border-radius applies to all child elements */
-}
-
-/* Search input field */
-.search-input {
-    border: 1px solid #ddd;
-    border-right: none;
-    border-radius: 0; /* Reset any default border radius */
-    padding: 10px;
-    outline: none;
-    box-shadow: none;
-    width: 200px;
-    flex-grow: 1;
-}
-
-/* Button */
-.search-button {
-    border-radius: 0;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    padding: 10px 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-left: -5px;
-}
-
-/* Button hover */
-.search-button:hover {
-    background-color: #218838;
-}
-
-/* Icon styling */
-.input-group-text {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-right: none;
-    color: #333;
-}
-
-.input-group-text i {
-    font-size: 14px;
-}
-
-
-        .no-data {
-            text-align: center;
-            font-size: 1.2rem;
-            color: #333;
-            padding: 30px 0;
+        .btn-approve {
+            background-color: #28a745;
+            border: none;
         }
 
+        .btn-approve:hover {
+            background-color: #218838;
+        }
+
+        .btn-view {
+            background-color: #17a2b8;
+            border: none;
+        }
+
+        .btn-view:hover {
+            background-color: #138496;
+        }
+
+        /* Style for the input group */
+        .input-group {
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .search-input {
+            border: 1px solid #ddd;
+            border-right: none;
+            padding: 10px;
+            flex-grow: 1;
+        }
+
+        .search-button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 16px;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #218838;
+        }
+
+        .avatar-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
-<?php require_once('../inc/topBarNav.php') ?>
-<?php require_once('../inc/navigation.php') ?> 
-<br>
-<br>
-<section class="section">
-    <div class="container">
-        <h2>Registered Users</h2>
 
-        <!-- Search Form -->
-        
-<form class="search-form" method="GET" action="view_users.php">
-    <div class="input-group">
-        <span class="input-group-text"><i class="fas fa-search"></i></span>
-        <input type="text" name="search" class="search-input form-control" placeholder="Search users..." value="<?= htmlspecialchars($searchTerm) ?>">
-        <button type="submit" class="search-button">Search</button>
-    </div>
-</form>
+<div class="container">
+    <h2>Registered Users</h2>
 
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-            <thead>
-    <tr>
-        <th>First Name</th>
-        <th>Last Name</th>>
-        <th>Username</th> <!-- Adjusted Email Header -->
-        <th>Actions</th> <!-- Adjusted Actions Header -->
-    </tr>
-</thead>
-<tbody>
-    <?php if ($result->num_rows > 0): ?>
-        <?php while($row = $result->fetch_assoc()): ?>
-            <tr>
-                <td><?= htmlspecialchars($row['first_name']) ?></td>
-                <td><?= htmlspecialchars($row['last_name']) ?></td>
-                <td><?= htmlspecialchars($row['email']) ?></td> <!-- Corrected Email Column -->
-                <!-- Add Approve Button in Table -->
-                <td>
-    <div class="d-flex justify-content-center">
-        <a href="viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-            <i class="fa fa-eye"></i> View Details
-        </a>
-        <button class="btn btn-delete btn-sm ms-2" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
-            <i class="fa fa-trash"></i> Delete
-        </button>
-        <?php if ($row['status'] !== 'approved'): ?> <!-- Check if the user is already approved -->
-        <button class="btn btn-success btn-sm ms-2" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
-            <i class="fa fa-check"></i> Approve
-        </button>
-        <?php else: ?>
-        <span class="badge bg-success ms-2">Approved</span>
-        <?php endif; ?>
-    </div>
-</td>
-            </tr>
-        <?php endwhile; ?>
-    <?php else: ?>
-        <tr>
-            <td colspan="8" class="no-data">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-x">
-                    <path d="M2 21a8 8 0 0 1 11.873-7"/><circle cx="10" cy="8" r="5"/><path d="m17 17 5 5"/><path d="m22 17-5 5"/>
-                </svg> 
-                No registered users found.
-            </td>
-        </tr>
-    <?php endif; ?>
-</tbody>
-
-            </table>
+    <!-- Search Form -->
+    <form class="search-form" method="GET" action="view_users.php">
+        <div class="input-group">
+            <input type="text" name="search" class="search-input form-control" placeholder="Search users..." value="<?= htmlspecialchars($searchTerm) ?>">
+            <button type="submit" class="search-button">Search</button>
         </div>
-    </div>
-</section>
-<script>
-  function deleteUser(event, id) {
-    event.preventDefault(); // Prevent default form submission
+    </form>
 
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User Type</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Avatar</th>
+                    <th>Position</th>
+                    <th>Department</th>
+                    <th>Registration Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php if ($result->num_rows > 0): ?>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($row['id']) ?></td>
+                        <td><?= htmlspecialchars($row['user_type']) ?></td>
+                        <td><?= htmlspecialchars($row['first_name']) ?></td>
+                        <td><?= htmlspecialchars($row['last_name']) ?></td>
+                        <td><?= htmlspecialchars($row['email']) ?></td>
+                        <td>
+                            <?php if (!empty($row['avatar'])): ?>
+                                <img src="<?= htmlspecialchars($row['avatar']) ?>" class="avatar-img" alt="Avatar">
+                            <?php else: ?>
+                                <span>No Avatar</span>
+                            <?php endif; ?>
+                        </td>
+                        <td><?= htmlspecialchars($row['position']) ?></td>
+                        <td><?= htmlspecialchars($row['department']) ?></td>
+                        <td><?= htmlspecialchars($row['registration_date']) ?></td>
+                        <td>
+                            <span class="badge <?= $row['status'] === 'pending' ? 'bg-warning' : ($row['status'] === 'active' ? 'bg-success' : 'bg-danger') ?>">
+                                <?= htmlspecialchars($row['status']) ?>
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <a href="viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-view btn-sm">
+                                    <i class="fa fa-eye"></i> View
+                                </a>
+                                <button class="btn btn-delete btn-sm ms-2" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                                    <i class="fa fa-trash"></i> Delete
+                                </button>
+                                <?php if ($row['status'] === 'pending'): ?>
+                                    <button class="btn btn-approve btn-sm ms-2" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                                        <i class="fa fa-check"></i> Approve
+                                    </button>
+                                <?php endif; ?>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="11" class="text-center">No registered users found.</td>
+                </tr>
+            <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function deleteUser(event, id) {
+    event.preventDefault();
     Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -261,36 +259,18 @@ $result = $conn->query($sql);
             })
             .then(response => response.text())
             .then(result => {
-                console.log('Response from server:', result); // Log the response for debugging
                 if (result.trim() === '1') {
-                    Swal.fire(
-                        'Deleted!',
-                        'The user has been deleted.',
-                        'success'
-                    ).then(() => {
-                        location.reload(); // Reload the page to reflect changes
-                    });
+                    Swal.fire('Deleted!', 'The user has been deleted.', 'success').then(() => location.reload());
                 } else {
-                    Swal.fire(
-                        'Error!',
-                        'An error occurred while deleting the user.',
-                        'error'
-                    );
+                    Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
                 }
-            })
-            .catch(() => {
-                Swal.fire(
-                    'Error!',
-                    'An error occurred while deleting the user.',
-                    'error'
-                );
             });
         }
     });
 }
-function approveUser(event, id) {
-    event.preventDefault(); // Prevent default form submission
 
+function approveUser(event, id) {
+    event.preventDefault();
     Swal.fire({
         title: 'Are you sure?',
         text: "You are about to approve this user!",
@@ -301,47 +281,25 @@ function approveUser(event, id) {
         confirmButtonText: 'Yes, approve it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('approve_user.php', { // Use approve_user.php as the backend script
+            fetch('approve_user.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: 'user_id=' + id // Send the user ID in the request body
+                body: 'user_id=' + id
             })
-            .then(response => response.text())  // Expecting text response
+            .then(response => response.text())
             .then(result => {
-                console.log('Response from server:', result); // Log the response for debugging
-                
-                // Check for success (1) or failure
                 if (result.trim() === '1') {
-                    Swal.fire(
-                        'Approved!',
-                        'The user has been approved successfully.',
-                        'success'
-                    ).then(() => {
-                        location.reload(); // Reload the page to reflect changes
-                    });
+                    Swal.fire('Approved!', 'The user has been approved.', 'success').then(() => location.reload());
                 } else {
-                    Swal.fire(
-                        'Error!',
-                        'An error occurred while approving the user. Please try again.',
-                        'error'
-                    );
+                    Swal.fire('Error!', 'An error occurred while approving the user.', 'error');
                 }
-            })
-            .catch((error) => {
-                console.error('Error occurred during approval:', error);
-                Swal.fire(
-                    'Error!',
-                    'An unexpected error occurred while approving the user. Please try again.',
-                    'error'
-                );
             });
         }
     });
 }
 </script>
-
 
 <?php
 $conn->close();
