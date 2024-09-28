@@ -9,31 +9,10 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Handle approve and delete actions
-if (isset($_POST['approve'])) {
-    $user_id = $_POST['user_id'];
-
-    // Update user status to 'approved'
-    $stmt = $conn->prepare("UPDATE user_staff SET status = 'approved' WHERE id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $stmt->close();
-}
-
-if (isset($_POST['delete'])) {
-    $user_id = $_POST['user_id'];
-
-    // Delete the user account
-    $stmt = $conn->prepare("DELETE FROM user_staff WHERE id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $stmt->close();
-}
-
 // Search functionality
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
-// Fetch all users with status 'pending'
+// Fetch all users
 $sql = "SELECT * FROM user_staff WHERE CONCAT(first_name, ' ', last_name, email, user_type) LIKE '%$searchTerm%' AND status = 'pending'";
 $result = $conn->query($sql);
 ?>
@@ -46,6 +25,7 @@ $result = $conn->query($sql);
     <title>Admin - Pending Accounts</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <style>
         body {
             background-color: #f8f9fa;
@@ -64,6 +44,12 @@ $result = $conn->query($sql);
             margin-bottom: 20px;
             width: 300px;
         }
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+        }
     </style>
 </head>
 <body>
@@ -77,60 +63,153 @@ $result = $conn->query($sql);
         <button class="btn btn-success ms-2" type="submit">Search</button>
     </form>
 
-    <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>College</th>
-                <th>Course</th>
-                <th>Year</th>
-                <th>Section</th>
-                <th>Email</th>
-                <th>Actions</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php if ($result->num_rows > 0): ?>
-            <?php while ($row = $result->fetch_assoc()): ?>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
                 <tr>
-                    <td><?= htmlspecialchars($row['first_name']) ?></td>
-                    <td><?= htmlspecialchars($row['last_name']) ?></td>
-                    <td><?= htmlspecialchars($row['college']) ?></td>
-                    <td><?= htmlspecialchars($row['position']) ?></td> <!-- Assuming position holds course/role -->
-                    <td><?= htmlspecialchars($row['department']) ?></td> <!-- Assuming department for year -->
-                    <td><?= htmlspecialchars($row['user_type']) ?></td> <!-- Assuming user_type is section -->
-                    <td><?= htmlspecialchars($row['email']) ?></td>
-                    <td>
-                        <div class="d-flex justify-content-center">
-                            <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-                                <i class="fas fa-eye"></i> View Details
-                            </a>
-                            <form method="POST" class="ms-2">
-                                <input type="hidden" name="user_id" value="<?= $row['id'] ?>">
-                                <button type="submit" name="approve" class="btn btn-success btn-sm">
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>College</th>
+                    <th>Position</th>
+                    <th>Department</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php if ($result->num_rows > 0): ?>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($row['first_name']) ?></td>
+                        <td><?= htmlspecialchars($row['last_name']) ?></td>
+                        <td><?= htmlspecialchars($row['college']) ?></td>
+                        <td><?= htmlspecialchars($row['position']) ?></td> <!-- Assuming position holds course/role -->
+                        <td><?= htmlspecialchars($row['department']) ?></td> <!-- Assuming department for year -->
+                        <td><?= htmlspecialchars($row['email']) ?></td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm btn-action">
+                                    <i class="fas fa-eye"></i> View Details
+                                </a>
+                                <button class="btn btn-success btn-sm ms-2 btn-action" onclick="approveUser(<?= $row['id'] ?>)">
                                     <i class="fas fa-check"></i> Approve
                                 </button>
-                                <button type="submit" name="delete" class="btn btn-danger btn-sm ms-2">
+                                <button class="btn btn-danger btn-sm ms-2 btn-action" onclick="deleteUser(<?= $row['id'] ?>)">
                                     <i class="fas fa-trash-alt"></i> Delete
                                 </button>
-                            </form>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge bg-warning"><?= $row['status'] === 'pending' ? 'Pending' : 'Approved' ?></span>
-                    </td>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-warning"><?= $row['status'] === 'pending' ? 'Pending' : 'Approved' ?></span>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="8" class="text-center">No registered users found.</td>
                 </tr>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <tr>
-                <td colspan="9" class="text-center">No registered users found.</td>
-            </tr>
-        <?php endif; ?>
-        </tbody>
-    </table>
+            <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script>
+function approveUser(userId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You are about to approve this user!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, approve it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('approve_user.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'user_id=' + userId
+            })
+            .then(response => response.text())
+            .then(result => {
+                if (result.trim() === '1') {
+                    Swal.fire(
+                        'Approved!',
+                        'The user has been approved.',
+                        'success'
+                    ).then(() => {
+                        location.reload(); // Reload the page to reflect changes
+                    });
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while approving the user.',
+                        'error'
+                    );
+                }
+            })
+            .catch(error => {
+                Swal.fire(
+                    'Error!',
+                    'An unexpected error occurred.',
+                    'error'
+                );
+            });
+        }
+    });
+}
+
+function deleteUser(userId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('delete_users.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'user_id=' + userId
+            })
+            .then(response => response.text())
+            .then(result => {
+                if (result.trim() === '1') {
+                    Swal.fire(
+                        'Deleted!',
+                        'The user has been deleted.',
+                        'success'
+                    ).then(() => {
+                        location.reload(); // Reload the page to reflect changes
+                    });
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while deleting the user.',
+                        'error'
+                    );
+                }
+            })
+            .catch(error => {
+                Swal.fire(
+                    'Error!',
+                    'An unexpected error occurred.',
+                    'error'
+                );
+            });
+        }
+    });
+}
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
