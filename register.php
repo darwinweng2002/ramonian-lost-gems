@@ -381,8 +381,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
                             </div>
                             <div class="col-12">
-    <button class="btn btn-primary w-100" type="submit" id="register-btn">Register</button>
-</div>
+                            <button class="btn btn-primary w-100" type="submit" id="register-btn" disabled>Register</button>
+                        </div>
                         </form>
                         <!-- Loader Overlay -->
 <div class="loader-overlay" id="loaderOverlay">
@@ -569,6 +569,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             });
         });
         $(document).ready(function () {
+    // Function to check if the email is already taken
     $('#email').on('input', function () {
         var email = $(this).val();
         var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -576,46 +577,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         var registerBtn = $('#register-btn');
         var emailTakenMessage = $('#email-taken-message');
 
-        // Clear any previous messages
-        emailErrorDiv.hide();
-        emailTakenMessage.hide();
-
-        // Check if email is valid based on regex pattern
+        // Check if the email is valid
         if (emailPattern.test(email)) {
-            // Disable the register button until we get confirmation from the server
-            registerBtn.prop('disabled', true);
-
-            // Make an AJAX request to check if the email is already taken
+            emailErrorDiv.hide();
+            
+            // AJAX request to check if the email exists
             $.ajax({
-                url: 'check_email.php', // Make sure this path is correct
+                url: 'check_email.php',
                 type: 'POST',
                 data: { email: email },
                 dataType: 'json',
                 success: function (response) {
-                    // If email is taken, show the warning and keep button disabled
                     if (response.exists) {
-                        emailTakenMessage.text('This email is already registered.');
+                        // Email is already taken
                         emailTakenMessage.show();
                         registerBtn.prop('disabled', true);
                     } else {
-                        // If email is available, enable the register button
+                        // Email is available
+                        emailTakenMessage.hide();
                         registerBtn.prop('disabled', false);
                     }
                 },
-                error: function (xhr, status, error) {
-                    console.error('Error in email check:', error);
-                    registerBtn.prop('disabled', true);
+                error: function () {
+                    console.log("Error checking email availability");
                 }
             });
         } else {
-            // If the email is not valid, show error and disable the button
-            emailErrorDiv.text('Please enter a valid email address.');
             emailErrorDiv.show();
+            emailErrorDiv.text('Please enter a valid email address.');
+            emailTakenMessage.hide();
             registerBtn.prop('disabled', true);
         }
     });
 });
-
 
     document.getElementById('school_id').addEventListener('change', function(event) {
         const file = event.target.files[0]; // Get the selected file
