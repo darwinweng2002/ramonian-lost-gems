@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $course = $_POST['course'];
     $year = $_POST['year'];
     $section = $_POST['section'];
-    $email = $_POST['email']; // Updated from username to email
+    $email = $_POST['email'];
   
     // Check if passwords match
     if ($_POST['password'] !== $_POST['confirm_password']) {
@@ -109,8 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
+    // Close statement without closing connection
     $stmt->close();
-    $conn->close();
 
     // Return a JSON response
     echo json_encode($response);
