@@ -48,37 +48,94 @@ $conn->close();
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #000;
-            padding: 20px;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            padding: 40px 20px;
         }
+
         .container {
-            max-width: 800px;
+            max-width: 700px;
             margin: auto;
-            padding: 20px;
             background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
+
         h2 {
             text-align: center;
-            margin-bottom: 20px;
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 25px;
         }
+
+        .user-info {
+            margin-top: 20px;
+        }
+
         .user-info p {
-            margin: 10px 0;
+            margin-bottom: 12px;
+            font-size: 16px;
         }
-        .proof-image, .id-image {
-            max-width: 200px;
-            max-height: 150px;
-            width: auto;
-            height: auto;
-            border-radius: 5px;
-            cursor: pointer;
+
+        .user-info p strong {
+            color: #555;
+        }
+
+        .proof-image {
+            width: 100%;
+            max-width: 300px;
+            margin: 15px auto;
+            display: block;
+            border-radius: 8px;
+            border: 2px solid #e1e1e1;
             transition: transform 0.3s ease;
         }
-        .proof-image:hover, .id-image:hover {
+
+        .proof-image:hover {
             transform: scale(1.05);
+        }
+
+        .btn {
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .back-link {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        /* Lightbox styling */
+        .lightbox {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .btn {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -102,9 +159,7 @@ $conn->close();
         <?php
         // Check if school_id_file is not NULL
         if (!empty($user['school_id_file'])) {
-            // Ensure the path is correctly generated
-            $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);  // Add leading '/' to make it relative to the root
-            echo '<p>Image Path: ' . $schoolIdPath . '</p>'; // Debugging line to show the path
+            $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);
             echo '<a href="' . $schoolIdPath . '" data-lightbox="school-id" data-title="School ID">
                     <img src="' . $schoolIdPath . '" alt="School ID" class="proof-image" />
                   </a>';
@@ -113,7 +168,7 @@ $conn->close();
         }
         ?>
     </div>
-    <div class="text-center mt-4">
+    <div class="back-link">
         <a href="view_users.php" class="btn btn-primary">Back to Users List</a>
     </div>
 </div>
