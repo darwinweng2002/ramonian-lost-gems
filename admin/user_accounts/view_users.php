@@ -160,7 +160,66 @@ $result = $conn->query($sql);
             color: #333;
             padding: 30px 0;
         }
+     /* Media Queries for Responsive Design */
+     @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 20px auto;
+                max-width: 95%;
+            }
 
+            h2 {
+                font-size: 24px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 8px;
+                white-space: normal; /* Allow wrapping on small screens */
+            }
+
+            .btn {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+
+            .input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .search-button {
+                width: 100%;
+            }
+
+            /* Hide less important columns for mobile */
+            .hide-mobile {
+                display: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+            h2 {
+                font-size: 18px;
+            }
+
+            th, td {
+                padding: 6px;
+            }
+
+            .btn {
+                font-size: 10px;
+                padding: 5px 8px;
+            }
+        }
     </style>
 </head>
 <body>
