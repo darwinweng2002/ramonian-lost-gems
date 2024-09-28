@@ -76,7 +76,7 @@ if (!move_uploaded_file($_FILES["school_id"]["tmp_name"], $school_id_file)) {
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = 'vdarwin@gmail.com';
-            $mail->Password = 'justfocusonjavascript800px';
+            $mail->Password = '';
             $mail->SMTPSecure = 'ssl';
             $mail->Port = 587;
 
