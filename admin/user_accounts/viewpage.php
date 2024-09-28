@@ -5,9 +5,6 @@ include '../../config.php';
 $conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
 
 // Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 // Fetch user details from the database
 $sql = "SELECT first_name, last_name, verified, email, school_id_file, registration_date, college, course, year, section, status 
         FROM user_member 
