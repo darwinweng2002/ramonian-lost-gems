@@ -218,37 +218,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         outline: none;
         box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
     }
-    /* Full-screen loader */
-.loader-overlay {
-    display: none; /* Initially hidden */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8); /* Transparent white background */
-    z-index: 9999; /* High z-index to ensure it's on top */
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-}
-
-/* The loader itself */
-.loader {
-    border: 8px solid #f3f3f3; /* Light grey */
-    border-top: 8px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1s linear infinite;
-}
-
-/* Loader animation */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
   </style>
 
   <main>
@@ -270,7 +239,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <option value="faculty">Register as Faculty</option>
                 </select>
             </div>
-
 
                 <!-- Updated registration form -->
                 <div class="card mb-3">
@@ -341,12 +309,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="col-12">
     <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
     <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
+    <small class="form-text text-muted">Please upload a clear image of your valid PRMSU Student ID (front side only). Ensure that the ID is visible and in JPG or PNG format. This will be used for verification purposes.</small>
     <div class="invalid-feedback">Please upload your School ID (JPG or PNG).</div>
-    <!-- Image preview container -->
-    <div id="imagePreviewContainer" style="margin-top: 10px;">
-        <img id="imagePreview" src="#" alt="Preview will appear here..." style="max-width: 100%; display: none; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
-    </div>
-    <small class="text-muted">Upload a clear image of your PRMSU student ID for verification. Only JPG, JPEG, or PNG formats are allowed.</small>
 </div>
 
                             <div class="col-12">
@@ -368,11 +332,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <button class="btn btn-primary w-100" type="submit" id="register-btn" disabled>Register</button>
                         </div>
                         </form>
-                        <!-- Loader Overlay -->
-<div class="loader-overlay" id="loaderOverlay">
-    <div class="loader"></div>
-</div>
-
                     </div>
                 </div>
             </div>
@@ -477,66 +436,54 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
 
         // Form validation and submission
-        $(document).ready(function() {
-    // Form validation and submission
-    $('form').on('submit', function(e) {
-        e.preventDefault();  // Prevent default form submission
+        $('form').on('submit', function(e) {
+            e.preventDefault();  // Prevent default form submission
 
-        // Show the loader when the form is submitted
-        document.getElementById('loaderOverlay').style.display = 'flex';  // Show loader
+            // If validation passes, submit the form via AJAX
+            const formData = new FormData(this);  // For handling file upload
 
-        // If validation passes, submit the form via AJAX
-        const formData = new FormData(this);  // For handling file upload
-
-        $.ajax({
-            url: 'register_process.php',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            success: function(response) {
-                // Hide the loader when the request completes
-                document.getElementById('loaderOverlay').style.display = 'none';
-
-                // Show SweetAlert based on success or failure
-                if (response.success) {
+            $.ajax({
+                url: 'register_process.php',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = 'login.php';
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
                     Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
+                        title: 'Registration Successful!',
+                        text: 'Thank you for registering! Your account is pending admin approval. You’ll receive an email once it’s approved, and then you can log in and use your account.',
                         icon: 'success',
                         confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.href = 'login.php';
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
+                        }
                     });
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: response.message,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            },
-            error: function(xhr, status, error) {
-                // Hide the loader in case of an error as well
-                document.getElementById('loaderOverlay').style.display = 'none';
 
-                Swal.fire({
-                    title: 'Registration Successful!',
-                    text: 'Thank you for registering! Your account is pending admin approval. You’ll receive an email once it’s approved, and then you can log in and use your account.',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
-                    }
-                });
-            }
+                }
+            });
         });
     });
-});
-});
     document.addEventListener('DOMContentLoaded', function () {
             // Handle role selection change
             const roleSelect = document.getElementById('role-select');
@@ -567,25 +514,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             emailErrorDiv.style.display = 'block';
             emailErrorDiv.textContent = 'Please enter a valid email address.';
             registerBtn.disabled = true; // Disable the button when the email is invalid
-        }
-    });
-    document.getElementById('school_id').addEventListener('change', function(event) {
-        const file = event.target.files[0]; // Get the selected file
-        const imagePreview = document.getElementById('imagePreview'); // Get the preview element
-
-        if (file) {
-            const reader = new FileReader(); // Create a FileReader to read the file
-
-            reader.onload = function(e) {
-                // Set the preview image's src to the file's data URL
-                imagePreview.src = e.target.result;
-                imagePreview.style.display = 'block'; // Display the image
-            }
-
-            reader.readAsDataURL(file); // Read the file as a Data URL (base64 encoded string)
-        } else {
-            imagePreview.src = ''; // Clear the preview if no file is selected
-            imagePreview.style.display = 'none'; // Hide the image
         }
     });
   </script>
