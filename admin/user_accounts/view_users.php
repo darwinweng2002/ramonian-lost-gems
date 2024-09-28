@@ -46,7 +46,7 @@ $result = $conn->query($sql);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        h2 {
+        h3 {
             text-align: center;
             color: #333;
             margin-bottom: 20px;
