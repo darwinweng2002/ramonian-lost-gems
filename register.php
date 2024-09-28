@@ -195,6 +195,11 @@ body {
                           <div class="invalid-feedback">Please enter your first name.</div>
                       </div>
                       <div class="col-12">
+                          <label for="firstName" class="form-label">First Name</label>
+                          <input type="text" name="first_name" class="form-control" id="firstName" required>
+                          <div class="invalid-feedback">Please enter your first name.</div>
+                      </div>
+                      <div class="col-12">
                           <label for="lastName" class="form-label">Last Name</label>
                           <input type="text" name="last_name" class="form-control" id="lastName" required>
                           <div class="invalid-feedback">Please enter your last name.</div>
