@@ -101,9 +101,11 @@ $conn->close();
         <!-- Display School ID -->
         <p><strong>School ID:</strong></p>
         <?php
-        // Check if school_id_file is not NULL and the file exists
+        // Check if school_id_file is not NULL
         if (!empty($user['school_id_file'])) {
-            $schoolIdPath = 'uploads/school_ids/' . htmlspecialchars($user['school_id_file']);  // Add leading '/' to make it relative to the root
+            // Ensure the path is correctly generated
+            $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);  // Add leading '/' to make it relative to the root
+            echo '<p>Image Path: ' . $schoolIdPath . '</p>'; // Debugging line to show the path
             echo '<a href="' . $schoolIdPath . '" data-lightbox="school-id" data-title="School ID">
                     <img src="' . $schoolIdPath . '" alt="School ID" class="proof-image" />
                   </a>';
