@@ -250,18 +250,22 @@ function deleteUser(id) {
             fetch('delete_users.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'id=' + id
+                body: new URLSearchParams({ id }) // Use URLSearchParams for POST parameters
             })
             .then(response => response.text())
             .then(result => {
-                if (result.trim() === '1') {
+                console.log('Delete result:', result); // For debugging
+                if (result.trim() === '1') {  // Ensure the backend returns '1' on successful deletion
                     Swal.fire('Deleted!', 'The user has been deleted.', 'success')
                     .then(() => location.reload());
                 } else {
                     Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
                 }
             })
-            .catch(() => Swal.fire('Error!', 'An error occurred while deleting the user.', 'error'));
+            .catch((error) => {
+                console.error('Delete error:', error);
+                Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
+            });
         }
     });
 }
@@ -281,10 +285,11 @@ function approveUser(event, id) {
             fetch('approve_user.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'user_id=' + id
+                body: new URLSearchParams({ user_id: id }) // Use URLSearchParams for POST parameters
             })
             .then(response => response.text())
             .then(result => {
+                console.log('Approval result:', result); // For debugging
                 if (result.trim() === '1') {
                     const approveBtn = document.getElementById('approve-btn-' + id);
                     approveBtn.classList.replace('btn-success', 'btn-secondary');
@@ -295,10 +300,14 @@ function approveUser(event, id) {
                     Swal.fire('Error!', 'An error occurred while approving the user.', 'error');
                 }
             })
-            .catch(() => Swal.fire('Error!', 'An unexpected error occurred.', 'error'));
+            .catch((error) => {
+                console.error('Approval error:', error);
+                Swal.fire('Error!', 'An unexpected error occurred.', 'error');
+            });
         }
     });
 }
+
 </script>
 
 <?php
