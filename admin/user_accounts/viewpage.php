@@ -41,16 +41,106 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php require_once('../inc/header.php') ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .user-info {
+            margin-top: 20px;
+        }
+
+        .user-info p {
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .user-info p strong {
+            color: #555;
+        }
+
+        .proof-image {
+            width: 100%;
+            max-width: 300px;
+            margin: 15px auto;
+            display: block;
+            border-radius: 8px;
+            border: 2px solid #e1e1e1;
+            transition: transform 0.3s ease;
+        }
+
+        .proof-image:hover {
+            transform: scale(1.05);
+        }
+
+        .btn {
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .back-link {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        /* Lightbox styling */
+        .lightbox {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .btn {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
-<?php require_once('../inc/topBarNav.php') ?>
-<?php require_once('../inc/navigation.php') ?> 
+
 <div class="container">
     <h2>User Details</h2>
     <div class="user-info">
@@ -84,6 +174,5 @@ $conn->close();
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
-<?php require_once('../inc/footer.php') ?>
 </body>
 </html>
