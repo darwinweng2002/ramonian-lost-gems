@@ -579,11 +579,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Check if the email matches the correct pattern
         if (emailPattern.test(email)) {
-            emailErrorDiv.hide();
-            
+            emailErrorDiv.hide(); // Hide error if email is valid
+
+            // Make the button temporarily disabled while checking
+            registerBtn.prop('disabled', true);
+
             // AJAX request to check if the email exists
             $.ajax({
-                url: 'check_email.php',
+                url: 'check_email.php', // Make sure this path is correct
                 type: 'POST',
                 data: { email: email },
                 dataType: 'json',
@@ -599,10 +602,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
                 },
                 error: function () {
+                    // If there is an error in the AJAX request, make sure the button is disabled
                     console.log("Error checking email availability");
+                    registerBtn.prop('disabled', true);
                 }
             });
         } else {
+            // If email is invalid, show the error and keep the button disabled
             emailErrorDiv.show();
             emailErrorDiv.text('Please enter a valid email address.');
             emailTakenMessage.hide();
@@ -610,6 +616,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     });
 });
+
 
 
     document.getElementById('school_id').addEventListener('change', function(event) {
