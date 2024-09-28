@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $course = $_POST['course'];
     $year = $_POST['year'];
     $section = $_POST['section'];
-    $email = $_POST['email']; // Use email as username for now
-
+    $email = $_POST['email']; // Updated from username to email
+  
     // Check if passwords match
     if ($_POST['password'] !== $_POST['confirm_password']) {
         $response = ['success' => false, 'message' => 'Passwords do not match.'];
@@ -33,26 +33,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
 
     // Handle file upload (School ID)
-    $target_dir = "uploads/school_ids/";
-    $school_id_file = $target_dir . basename($_FILES["school_id"]["name"]);
-    $imageFileType = strtolower(pathinfo($school_id_file, PATHINFO_EXTENSION));
+    // Handle file upload (School ID)
+$target_dir = "uploads/school_ids/";
+$school_id_file = $target_dir . basename($_FILES["school_id"]["name"]);
+$imageFileType = strtolower(pathinfo($school_id_file, PATHINFO_EXTENSION));
 
-    // Check if file is a valid image type by MIME type
-    $valid_mime_types = ['image/jpeg', 'image/png'];
-    $file_mime_type = mime_content_type($_FILES["school_id"]["tmp_name"]);
+// Check if file is a valid image type
+$valid_file_types = ['jpg', 'jpeg', 'png'];
+if (!in_array($imageFileType, $valid_file_types)) {
+    $response = ['success' => false, 'message' => 'Invalid file format for school ID. Only JPG, JPEG, and PNG are allowed.'];
+    echo json_encode($response);
+    exit;
+}
 
-    if (!in_array($file_mime_type, $valid_mime_types)) {
-        $response = ['success' => false, 'message' => 'Invalid file format for school ID. Only JPG, JPEG, and PNG are allowed.'];
-        echo json_encode($response);
-        exit;
-    }
+// Attempt to move the uploaded file
+if (!is_dir($target_dir)) {
+    mkdir($target_dir, 0777, true);  // Ensure the target directory exists
+}
 
-    // Attempt to move the uploaded file
-    if (!move_uploaded_file($_FILES["school_id"]["tmp_name"], $school_id_file)) {
-        $response = ['success' => false, 'message' => 'Error uploading school ID.'];
-        echo json_encode($response);
-        exit;
-    }
+if (!move_uploaded_file($_FILES["school_id"]["tmp_name"], $school_id_file)) {
+    $response = ['success' => false, 'message' => 'Error uploading school ID.'];
+    echo json_encode($response);
+    exit;
+}
+
 
     // Set user status as "pending"
     $status = 'pending';
