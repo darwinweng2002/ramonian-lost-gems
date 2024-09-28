@@ -98,7 +98,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $response = ['success' => false, 'message' => 'Failed to register user.'];
     }
-
+    try {
+        $mail->send();
+        echo 'Message has been sent';
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+    }
+    
     $stmt->close();
     $conn->close();
 
