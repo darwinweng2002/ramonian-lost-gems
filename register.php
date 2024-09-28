@@ -327,8 +327,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
                             </div>
                             <div class="col-12">
-                                <button class="btn btn-primary w-100" type="submit">Register</button>
-                            </div>
+                            <button class="btn btn-primary w-100" type="submit" id="register-btn" disabled>Register</button>
+                        </div>
                         </form>
                     </div>
                 </div>
@@ -498,19 +498,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             });
         });
         document.getElementById('email').addEventListener('input', function () {
-    const email = this.value;
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const emailErrorDiv = document.getElementById('email-error');
+        const email = this.value;
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const emailErrorDiv = document.getElementById('email-error');
+        const registerBtn = document.getElementById('register-btn');
 
-    if (emailPattern.test(email)) {
-        this.classList.remove('is-invalid');
-        emailErrorDiv.style.display = 'none';
-    } else {
-        this.classList.add('is-invalid');
-        emailErrorDiv.style.display = 'block';
-        emailErrorDiv.textContent = 'Please enter a valid email address.';
-    }
-});
+        if (emailPattern.test(email)) {
+            this.classList.remove('is-invalid');
+            emailErrorDiv.style.display = 'none';
+            registerBtn.disabled = false; // Enable the button when the email is valid
+        } else {
+            this.classList.add('is-invalid');
+            emailErrorDiv.style.display = 'block';
+            emailErrorDiv.textContent = 'Please enter a valid email address.';
+            registerBtn.disabled = true; // Disable the button when the email is invalid
+        }
+    });
   </script>
 </body>
 </html>
