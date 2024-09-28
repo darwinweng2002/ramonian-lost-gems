@@ -41,7 +41,6 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php require_once('../inc/header.php'); // Ensure the correct path is used ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Details</title>
@@ -141,8 +140,7 @@ $conn->close();
     </style>
 </head>
 <body>
-<?php require_once('../inc/topBarNav.php') ?>
-<?php require_once('../inc/navigation.php') ?> 
+
 <div class="container">
     <h2>User Details</h2>
     <div class="user-info">
@@ -161,7 +159,7 @@ $conn->close();
         <?php
         // Check if school_id_file is not NULL
         if (!empty($user['school_id_file'])) {
-            $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);  // Ensures path starts from the root
+            $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);
             echo '<a href="' . $schoolIdPath . '" data-lightbox="school-id" data-title="School ID">
                     <img src="' . $schoolIdPath . '" alt="School ID" class="proof-image" />
                   </a>';
@@ -176,10 +174,5 @@ $conn->close();
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
-
-<?php require_once('../inc/footer.php') ?>
 </body>
 </html>
-
-<?php
-$conn->close();
