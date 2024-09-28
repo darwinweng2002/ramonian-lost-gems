@@ -381,8 +381,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
                             </div>
                             <div class="col-12">
-                            <button class="btn btn-primary w-100" type="submit" id="register-btn" disabled>Register</button>
-                        </div>
+    <button class="btn btn-primary w-100" type="submit" id="register-btn" disabled>Register</button>
+</div>
                         </form>
                         <!-- Loader Overlay -->
 <div class="loader-overlay" id="loaderOverlay">
@@ -577,7 +577,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         var registerBtn = $('#register-btn');
         var emailTakenMessage = $('#email-taken-message');
 
-        // Check if the email is valid
+        // Check if the email matches the correct pattern
         if (emailPattern.test(email)) {
             emailErrorDiv.hide();
             
@@ -591,11 +591,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if (response.exists) {
                         // Email is already taken
                         emailTakenMessage.show();
-                        registerBtn.prop('disabled', true);
+                        registerBtn.prop('disabled', true); // Disable register button
                     } else {
                         // Email is available
                         emailTakenMessage.hide();
-                        registerBtn.prop('disabled', false);
+                        registerBtn.prop('disabled', false); // Enable register button
                     }
                 },
                 error: function () {
@@ -606,10 +606,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             emailErrorDiv.show();
             emailErrorDiv.text('Please enter a valid email address.');
             emailTakenMessage.hide();
-            registerBtn.prop('disabled', true);
+            registerBtn.prop('disabled', true); // Keep register button disabled
         }
     });
 });
+
 
     document.getElementById('school_id').addEventListener('change', function(event) {
         const file = event.target.files[0]; // Get the selected file
