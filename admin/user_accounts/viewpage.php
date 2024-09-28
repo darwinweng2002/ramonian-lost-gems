@@ -176,6 +176,9 @@ $conn->close();
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
+<?php
+$conn->close();
+?>
 <?php require_once('../inc/footer.php') ?>
 </body>
 </html>
