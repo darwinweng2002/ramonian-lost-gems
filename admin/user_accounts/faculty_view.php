@@ -5,9 +5,6 @@ include '../../config.php';
 $conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
 
 // Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 if (isset($_POST['approve'])) {
     $user_id = $_POST['user_id'];
