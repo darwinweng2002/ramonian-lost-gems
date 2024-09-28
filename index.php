@@ -1,8 +1,8 @@
 <?php
-session_start(); // Start the session at the very beginning
+session_start(); // Start the session
 
 // Include the database configuration file
-include 'config.php'; // Adjust the path if necessary
+include 'config.php';
 
 // Variable to hold the error message
 $error_message = '';
@@ -10,50 +10,49 @@ $error_message = '';
 // Check if the form is submitted for regular login
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
     // Get form data
-    $username = $_POST['email'] ?? ''; // Using null coalescing operator to avoid undefined array key notice
+    $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
     // Prepare and execute query
-    if ($stmt = $conn->prepare("SELECT id, password FROM user_member WHERE email = ?")) { // 'email' column is still used for usernames
-        $stmt->bind_param("s", $username);
+    if ($stmt = $conn->prepare("SELECT id, password, status FROM user_member WHERE email = ?")) {
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
-            $stmt->bind_result($user_id, $hashed_password);
+            $stmt->bind_result($user_id, $hashed_password, $status);
             $stmt->fetch();
 
-            // Verify password
-            if (password_verify($password, $hashed_password)) {
-                // Password is correct, start a session
+            if ($status === 'pending') {
+                $error_message = 'Your account is awaiting admin approval. Please wait for an email confirmation.';
+            } elseif (password_verify($password, $hashed_password)) {
+                // Start session and store user info
                 $_SESSION['user_id'] = $user_id;
-                $_SESSION['email'] = $username;  // Store the username in the session (same variable for compatibility)
+                $_SESSION['email'] = $email;
 
-                // Redirect to a protected page
+                // Redirect to protected page
                 header("Location: https://ramonianlostgems.com/main.php");
                 exit();
             } else {
-                $error_message = 'Invalid username or password.'; // Update message to reflect username
+                $error_message = 'Invalid email or password.';
             }
         } else {
-            $error_message = 'No user found with that username.'; // Update message to reflect username
+            $error_message = 'No user found with that email.';
         }
     } else {
         $error_message = 'Error preparing statement: ' . $conn->error;
     }
 }
 
-// Check if "Login as Guest" button is clicked
+// Handle "Login as Guest"
 if (isset($_POST['guest_login'])) {
-  // Generate a unique guest session ID
-  $_SESSION['user_id'] = 'guest_' . bin2hex(random_bytes(5)); // Unique guest ID
-  $_SESSION['email'] = 'guest@example.com';  // Identifier remains generic for guests
-
-  // Redirect guest user to the main page
-  header("Location: https://ramonianlostgems.com/main.php");
-  exit();
+    $_SESSION['user_id'] = 'guest_' . bin2hex(random_bytes(5));
+    $_SESSION['email'] = 'guest@example.com';
+    header("Location: https://ramonianlostgems.com/main.php");
+    exit();
 }
 ?>
+
 
 
 <!DOCTYPE html>
