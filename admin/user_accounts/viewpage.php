@@ -124,7 +124,7 @@ $conn->close();
             <span class="label">School ID: </span>
             <!-- Display the uploaded School ID image -->
             <?php if (!empty($user['school_id_file']) && file_exists("../uploads/school_ids/" . $user['school_id_file'])): ?>
-                <img src="uploads/school_ids/<?= htmlspecialchars($user['school_id_file']) ?>" alt="School ID" class="school-id-image">
+                <img src="../uploads/school_ids/<?= htmlspecialchars($user['school_id_file']) ?>" alt="School ID" class="school-id-image">
             <?php else: ?>
                 <p>No School ID uploaded.</p>
             <?php endif; ?>
