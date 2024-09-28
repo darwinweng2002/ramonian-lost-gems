@@ -1,5 +1,4 @@
-<?php
-require '../../vendor/autoload.php';  // Update path to vendor/autoload.php
+<?php // Update path to vendor/autoload.php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -7,7 +6,6 @@ include '../../config.php';
 
 // Database connection
 $conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
-require 'vendor/autoload.php';
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
