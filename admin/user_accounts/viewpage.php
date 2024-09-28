@@ -42,7 +42,7 @@ $conn->close();
 <html lang="en">
 <head>
     <?php
-    // Ensure the path to the header is correct
+    // Include the header, ensuring the path is correct
     require_once('../../inc/header.php'); 
     ?>
     <meta charset="UTF-8">
@@ -146,9 +146,9 @@ $conn->close();
 <body>
 
 <?php
-require_once('../inc/navigation.php');
-require_once('../inc/topBarNav.php');
-
+// Include topBarNav and navigation, ensuring paths are correct
+require_once('../../inc/topBarNav.php');
+require_once('../../inc/navigation.php');
 ?>
 
 <div class="container">
@@ -186,8 +186,8 @@ require_once('../inc/topBarNav.php');
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 
 <?php
-// Ensure the path to the footer is correct
-require_once('../inc/footer.php');
+// Include footer, ensuring the path is correct
+require_once('../../inc/footer.php');
 ?>
 
 </body>
