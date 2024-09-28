@@ -1,37 +1,72 @@
-<?php  
-// Include the database configuration file
-include 'config.php';
+<?php
+include 'config.php'; // Include the database configuration file
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve form data
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
-    $college = $_POST['college'];
-    $course = $_POST['course'];
-    $year = $_POST['year'];
-    $section = $_POST['section'];
-    $username = $_POST['email']; // This is now the username field, but keep the variable name as 'email'
-  
+    // Retrieve form data and validate
+    $first_name = trim($_POST['first_name']);
+    $last_name = trim($_POST['last_name']);
+    $college = trim($_POST['college']);
+    $course = trim($_POST['course']);
+    $year = trim($_POST['year']);
+    $section = trim($_POST['section']);
+    $username = trim($_POST['email']);
+    $password = trim($_POST['password']);
+    $confirm_password = trim($_POST['confirm_password']);
+
+    // Check if all required fields are provided
+    if (empty($first_name) || empty($last_name) || empty($college) || empty($course) || empty($year) || empty($section) || empty($username) || empty($password)) {
+        $response = ['success' => false, 'message' => 'Please fill in all the required fields.'];
+        echo json_encode($response);
+        exit;
+    }
+
     // Check if passwords match
-    if ($_POST['password'] !== $_POST['confirm_password']) {
+    if ($password !== $confirm_password) {
         $response = ['success' => false, 'message' => 'Passwords do not match.'];
         echo json_encode($response);
         exit;
     }
 
-    // Hash the entire password, no truncation
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
+    // Validate password length (8-16 characters)
+    if (strlen($password) < 8 || strlen($password) > 16) {
+        $response = ['success' => false, 'message' => 'Password must be between 8 and 16 characters long.'];
+        echo json_encode($response);
+        exit;
+    }
 
-    // Set the status of the user to "pending"
-    $status = 'pending';  // New users are set to "pending" by default.
+    // Hash the password before inserting into the database
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-    // Prepare the SQL statement
-    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssssss", $first_name, $last_name, $college, $course, $year, $section, $username, $password, $status);
+    // Check if the username already exists in the database
+    $stmt = $conn->prepare("SELECT id FROM user_member WHERE email = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        // Username already exists
+        $response = ['success' => false, 'message' => 'This username is already taken.'];
+        echo json_encode($response);
+        $stmt->close();
+        $conn->close();
+        exit;
+    }
+
+    $stmt->close();
+
+    // Prepare the SQL statement to insert new user
+    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    if ($stmt === false) {
+        $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
+        echo json_encode($response);
+        exit;
+    }
+
+    $stmt->bind_param("ssssssss", $first_name, $last_name, $college, $course, $year, $section, $username, $hashed_password);
 
     // Execute the query and check for success
     if ($stmt->execute()) {
-        $response = ['success' => true, 'message' => 'Registration successful! Your account is pending approval.'];
+        $response = ['success' => true, 'message' => 'Registration successful!'];
     } else {
         $response = ['success' => false, 'message' => 'Failed to register user.'];
     }
@@ -42,3 +77,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Return a JSON response
     echo json_encode($response);
 }
+?>

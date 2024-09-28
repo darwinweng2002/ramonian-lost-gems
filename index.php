@@ -7,44 +7,36 @@ include 'config.php'; // Adjust the path if necessary
 // Variable to hold the error message
 $error_message = '';
 
-// Check if the form is submitted for regular login (not guest login)
+// Check if the form is submitted for regular login
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
     // Get form data
     $username = $_POST['email'] ?? ''; // Using null coalescing operator to avoid undefined array key notice
     $password = $_POST['password'] ?? '';
 
     // Prepare and execute query
-    if ($stmt = $conn->prepare("SELECT id, password, status FROM user_member WHERE email = ?")) { // 'email' column is still used for usernames
+    if ($stmt = $conn->prepare("SELECT id, password FROM user_member WHERE email = ?")) { // 'email' column is still used for usernames
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
-            $stmt->bind_result($user_id, $hashed_password, $status);
+            $stmt->bind_result($user_id, $hashed_password);
             $stmt->fetch();
 
             // Verify password
             if (password_verify($password, $hashed_password)) {
-                // Check if the account is approved
-                if ($status === 'approved') {
-                    // Account is approved, proceed with login
-                    $_SESSION['user_id'] = $user_id;
-                    $_SESSION['email'] = $username;  // Store the username in the session (same variable for compatibility)
+                // Password is correct, start a session
+                $_SESSION['user_id'] = $user_id;
+                $_SESSION['email'] = $username;  // Store the username in the session (same variable for compatibility)
 
-                    // Redirect to a protected page
-                    header("Location: https://ramonianlostgems.com/main.php");
-                    exit();
-                } else {
-                    // Account is not approved yet
-                    $error_message = 'Your account is still pending approval. Please wait for admin approval.';
-                }
+                // Redirect to a protected page
+                header("Location: https://ramonianlostgems.com/main.php");
+                exit();
             } else {
-                // Incorrect password
-                $error_message = 'Invalid username or password.';
+                $error_message = 'Invalid username or password.'; // Update message to reflect username
             }
         } else {
-            // No user found with that username
-            $error_message = 'No user found with that username.';
+            $error_message = 'No user found with that username.'; // Update message to reflect username
         }
     } else {
         $error_message = 'Error preparing statement: ' . $conn->error;
@@ -62,7 +54,6 @@ if (isset($_POST['guest_login'])) {
   exit();
 }
 ?>
-
 
 
 <!DOCTYPE html>
@@ -191,7 +182,7 @@ if (isset($_POST['guest_login'])) {
                   </form>
 
                   <div class="text-center mt-3">
-                  <p>Don't  
+                  <p>Don't have an account? 
                   <a href="https://ramonianlostgems.com/register.php" class="btn btn-primary w-100" style="color: #fff;">Register account here.</a>
                   </p>
               </div>
@@ -307,18 +298,6 @@ if (isset($_POST['guest_login'])) {
       checkForm();
     });
   });
-  $(document).ready(function() {
-    // Check if there's an error message and show it
-    <?php if ($error_message): ?>
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: '<?php echo $error_message; ?>',
-        confirmButtonText: 'OK'
-      });
-    <?php endif; ?>
-});
-
 </script>
 
 <?php require_once('inc/footer.php') ?>

@@ -171,7 +171,7 @@ body {
             <div class="role-selector">
     <select id="role-select" class="form-select">
         <option value="" disabled selected>Register as</option>
-        <option value="student">Register as Nothing</option>
+        <option value="student">Register as Student</option>
         <option value="faculty">Register as Faculty</option>
     </select>
 </div>
@@ -184,11 +184,6 @@ body {
                   
                   <!-- Updated registration form -->
                   <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php">
-                  <div class="col-12">
-                        <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
-                        <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
-                        <div class="invalid-feedback">Please upload your School ID (JPG or PNG).</div>
-                    </div>
                       <div class="col-12">
                           <label for="firstName" class="form-label">First Name</label>
                           <input type="text" name="first_name" class="form-control" id="firstName" required>
@@ -248,10 +243,10 @@ body {
                       </div>
                       <!-- Updated username field -->
                       <div class="col-12">
-                      <label for="email" class="form-label">Email</label>
-                      <input type="email" name="email" class="form-control" id="email" required>
-                      <div class="invalid-feedback">Please enter a valid email.</div>
-                    </div>
+                      <label for="email" class="form-label">Username</label> 
+                      <input type="text" name="email" class="form-control" id="email" pattern="^[a-zA-Z0-9]+$" required>
+                      <div class="invalid-feedback">Please enter a valid username (alphanumeric characters only, no "@" or email-like formats).</div>
+                      </div>
                       <!-- Password and Confirm Password Fields -->
                       <div class="col-12">
                           <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
@@ -263,7 +258,6 @@ body {
                           <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
                           <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
                       </div>
-                          <!-- School ID Upload Field -->
                       <div class="col-12">
                           <button class="btn btn-primary w-100" type="submit">Register</button>
                   </form>
