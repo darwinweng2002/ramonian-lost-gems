@@ -147,8 +147,8 @@ $conn->close();
 
 <?php
 // Ensure correct path to the topBarNav and navigation
-require_once('../../inc/topBarNav.php');
-require_once('../../inc/navigation.php');
+require_once('../inc/topBarNav.php');
+require_once('../inc/navigation.php');
 ?>
 
 <div class="container">
@@ -187,7 +187,7 @@ require_once('../../inc/navigation.php');
 
 <?php
 // Ensure the path to the footer is correct
-require_once('../../inc/footer.php');
+require_once('../inc/footer.php');
 ?>
 
 </body>
