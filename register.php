@@ -346,11 +346,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <small class="text-muted">Please upload a clear image of your valid PRMSU Student ID (front side only). Ensure that the ID is visible and in JPG or PNG format. This will be used for verification purposes.</small>
                         </div>
 
-                            <div class="col-12">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" id="email" required>
-                            <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
-                        </div>
+                        <div class="col-12">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" id="email" required>
+                        <div class="invalid-feedback" id="email-error" style="display:none;">Please enter a valid email address.</div>
+                    </div>
+
                             <div class="col-12">
                                 <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
                                 <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
@@ -473,7 +474,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Form validation and submission
          // Form validation and submission
-        $(document).ready(function() {
+         $(document).ready(function() {
     $('#email').on('input', function() {
         var email = $(this).val();
         var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -515,7 +516,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     });
 });
-
 });
     document.addEventListener('DOMContentLoaded', function () {
             // Handle role selection change
