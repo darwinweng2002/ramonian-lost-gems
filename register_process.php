@@ -3,13 +3,6 @@
 include 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if the form data is complete
-    if (!isset($_POST['first_name'], $_POST['last_name'], $_POST['college'], $_POST['course'], $_POST['year'], $_POST['section'], $_POST['email'], $_POST['password'], $_POST['confirm_password'])) {
-        $response = ['success' => false, 'message' => 'Please fill in all the required fields.'];
-        echo json_encode($response);
-        exit;
-    }
-
     // Retrieve form data
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
@@ -17,18 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $course = $_POST['course'];
     $year = $_POST['year'];
     $section = $_POST['section'];
-    $email = $_POST['email']; // Use email
-
+    $email = $_POST['email']; // Updated from username to email
+  
     // Check if passwords match
     if ($_POST['password'] !== $_POST['confirm_password']) {
         $response = ['success' => false, 'message' => 'Passwords do not match.'];
-        echo json_encode($response);
-        exit;
-    }
-
-    // Validate email format
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $response = ['success' => false, 'message' => 'Invalid email format.'];
         echo json_encode($response);
         exit;
     }
@@ -41,9 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $school_id_file = $target_dir . basename($_FILES["school_id"]["name"]);
     $imageFileType = strtolower(pathinfo($school_id_file, PATHINFO_EXTENSION));
 
-    // Check if file is a valid image type
-    $valid_file_types = ['jpg', 'jpeg', 'png'];
-    if (!in_array($imageFileType, $valid_file_types)) {
+    // Check if file is a valid image type by MIME type
+    $valid_mime_types = ['image/jpeg', 'image/png'];
+    $file_mime_type = mime_content_type($_FILES["school_id"]["tmp_name"]);
+
+    if (!in_array($file_mime_type, $valid_mime_types)) {
         $response = ['success' => false, 'message' => 'Invalid file format for school ID. Only JPG, JPEG, and PNG are allowed.'];
         echo json_encode($response);
         exit;
@@ -76,3 +64,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Return a JSON response
     echo json_encode($response);
 }
+?>
