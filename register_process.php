@@ -66,12 +66,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Set user status as "pending" until verification is complete
     $status = 'pending';
 
-    // Prepare the SQL statement
-    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password, school_id_file, status, verification_token, token_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssssssss", $first_name, $last_name, $college, $course, $year, $section, $email, $password, $school_id_file, $status, $verification_token, $token_expiration);
+    try {
+        // Prepare the SQL statement
+        $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password, school_id_file, status, verification_token, token_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssssssss", $first_name, $last_name, $college, $course, $year, $section, $email, $password, $school_id_file, $status, $verification_token, $token_expiration);
 
-    // Execute the query and check for success
-    if ($stmt->execute()) {
+        // Execute the query
+        $stmt->execute();
+
         // Send email to the user with the verification link
         $mail = new PHPMailer(true);
         try {
@@ -98,16 +100,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         $response = ['success' => true, 'message' => 'Successfully registered! Please check your email to verify your account.'];
-    } else {
-        $response = ['success' => false, 'message' => 'Failed to register user.'];
+    } catch (mysqli_sql_exception $e) {
+        // Handle duplicate email error
+        if ($e->getCode() == 1062) {  // Duplicate entry error code in MySQL
+            $response = ['success' => false, 'message' => 'This email is already registered. Please use a different email.'];
+        } else {
+            $response = ['success' => false, 'message' => 'Failed to register user. Please try again later.'];
+        }
     }
-    try {
-        $mail->send();
-        echo 'Message has been sent';
-    } catch (Exception $e) {
-        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-    }
-    
+
     $stmt->close();
     $conn->close();
 
