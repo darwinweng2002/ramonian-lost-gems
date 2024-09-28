@@ -184,16 +184,11 @@ body {
                   
                   <!-- Updated registration form -->
                   <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php">
-                  <div class="col-12">
+                  
                         <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
                         <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
                         <div class="invalid-feedback">Please upload your School ID (JPG or PNG).</div>
-                    </div>
-                      <div class="col-12">
-                          <label for="firstName" class="form-label">First Name</label>
-                          <input type="text" name="first_name" class="form-control" id="firstName" required>
-                          <div class="invalid-feedback">Please enter your first name.</div>
-                      </div>
+                    
                       <div class="col-12">
                           <label for="firstName" class="form-label">First Name</label>
                           <input type="text" name="first_name" class="form-control" id="firstName" required>
