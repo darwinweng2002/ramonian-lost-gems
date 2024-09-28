@@ -2,296 +2,183 @@
 include '../../config.php';
 
 // Database connection
-$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Initialize search term
-$searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
+// Get user ID from URL
+$user_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Update SQL query to include search functionality
-$sql = "SELECT * FROM user_member WHERE CONCAT_WS(' ', first_name, last_name, course, year, section, email) LIKE '%$searchTerm%'";
+if ($user_id <= 0) {
+    echo "Invalid user ID";
+    exit;
+}
 
-$result = $conn->query($sql);
+// Fetch user details from the database
+$sql = "SELECT first_name, last_name, email, school_id_file, registration_date, college, course, year, section, status 
+        FROM user_member 
+        WHERE id = ?";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $user = $result->fetch_assoc();
+} else {
+    echo "User not found";
+    exit;
+}
+
+$stmt->close();
+$conn->close();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-<?php require_once('../inc/header.php') ?>
 <head>
+<?php require_once('../inc/header.php') ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-    <title>View Users</title>
+    <title>User Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f7f7f7;
             color: #333;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
         .container {
-            margin: 30px auto;
-            max-width: 1200px;
+            max-width: 700px;
+            margin: auto;
             background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
             text-align: center;
+            font-size: 28px;
             color: #333;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
-        .table-responsive {
-            background: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
+        .user-info {
+            margin-top: 20px;
         }
 
-        table {
+        .user-info p {
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .user-info p strong {
+            color: #555;
+        }
+
+        .proof-image {
             width: 100%;
-            border-collapse: collapse;
+            max-width: 300px;
+            margin: 15px auto;
+            display: block;
+            border-radius: 8px;
+            border: 2px solid #e1e1e1;
+            transition: transform 0.3s ease;
         }
 
-        th, td {
-            padding: 12px;
-            text-align: center;
-        }
-
-        thead th {
-            background-color: #f2f2f2;
-            color: #444;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tbody tr:hover {
-            background-color: #f1f1f1;
+        .proof-image:hover {
+            transform: scale(1.05);
         }
 
         .btn {
-            border-radius: 5px;
-            padding: 8px 12px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            color: #fff;
-        }
-
-        .btn-delete {
-            background-color: #dc3545;
-            border: none;
-        }
-
-        .btn-delete:hover {
-            background-color: #c82333;
-        }
-
-        .input-group {
-            display: flex;
-            align-items: center;
             border-radius: 8px;
-            overflow: hidden;
+            padding: 12px 20px;
+            font-size: 16px;
+            text-transform: uppercase;
         }
 
-        .search-input {
-            border: 1px solid #ddd;
-            padding: 10px;
-            outline: none;
-            flex-grow: 1;
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
         }
 
-        .search-button {
-            background-color: #28a745;
-            color: #fff;
-            padding: 10px 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        .btn-primary:hover {
+            background-color: #0056b3;
         }
 
-        .search-button:hover {
-            background-color: #218838;
+        .back-link {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        /* Lightbox styling */
+        .lightbox {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .btn {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
-    <?php require_once('../inc/topBarNav.php') ?>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-2">
-                <?php require_once('../inc/navigation.php') ?>
-            </div>
-            <div class="col-md-10">
-                <section class="section">
-                    <div class="container">
-                        <h2>Registered Users</h2>
+<?php require_once('../inc/topBarNav.php') ?>
+<?php require_once('../inc/navigation.php') ?> 
+<div class="container">
+    <h2>User Details</h2>
+    <div class="user-info">
+        <p><strong>First Name:</strong> <?= htmlspecialchars($user['first_name']) ?></p>
+        <p><strong>Last Name:</strong> <?= htmlspecialchars($user['last_name']) ?></p>
+        <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
+        <p><strong>College:</strong> <?= htmlspecialchars($user['college']) ?></p>
+        <p><strong>Course:</strong> <?= htmlspecialchars($user['course']) ?></p>
+        <p><strong>Year:</strong> <?= htmlspecialchars($user['year']) ?></p>
+        <p><strong>Section:</strong> <?= htmlspecialchars($user['section']) ?></p>
+        <p><strong>Status:</strong> <?= htmlspecialchars($user['status']) ?></p>
+        <p><strong>Registration Date:</strong> <?= htmlspecialchars($user['registration_date']) ?></p>
 
-                        <!-- Search Form -->
-                        <form class="search-form" method="GET" action="view_users.php">
-                            <div class="input-group">
-                                <input type="text" name="search" class="search-input form-control" placeholder="Search users..." value="<?= htmlspecialchars($searchTerm) ?>">
-                                <button type="submit" class="search-button">Search</button>
-                            </div>
-                        </form>
-
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>College</th>
-                                        <th>Course</th>
-                                        <th>Year</th>
-                                        <th>Section</th>
-                                        <th>Email</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if ($result->num_rows > 0): ?>
-                                        <?php while($row = $result->fetch_assoc()): ?>
-                                            <tr>
-                                                <td><?= htmlspecialchars($row['first_name']) ?></td>
-                                                <td><?= htmlspecialchars($row['last_name']) ?></td>
-                                                <td><?= htmlspecialchars($row['college']) ?></td>
-                                                <td><?= htmlspecialchars($row['course']) ?></td>
-                                                <td><?= htmlspecialchars($row['year']) ?></td>
-                                                <td><?= htmlspecialchars($row['section']) ?></td>
-                                                <td><?= htmlspecialchars($row['email']) ?></td>
-                                                <td>
-                                                    <div class="d-flex justify-content-center">
-                                                        <a href="viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-                                                            <i class="fa fa-eye"></i> View Details
-                                                        </a>
-                                                        <button class="btn btn-delete btn-sm ms-2" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
-                                                            <i class="fa fa-trash"></i> Delete
-                                                        </button>
-                                                        <?php if ($row['status'] !== 'approved'): ?>
-                                                            <button class="btn btn-success btn-sm ms-2" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
-                                                                <i class="fa fa-check"></i> Approve
-                                                            </button>
-                                                        <?php else: ?>
-                                                            <span class="badge bg-success ms-2">Approved</span>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php endwhile; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="8" class="no-data">
-                                                No registered users found.
-                                            </td>
-                                        </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
+        <!-- Display School ID -->
+        <p><strong>School ID:</strong></p>
+        <?php
+        // Check if school_id_file is not NULL
+        if (!empty($user['school_id_file'])) {
+            $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);
+            echo '<a href="' . $schoolIdPath . '" data-lightbox="school-id" data-title="School ID">
+                    <img src="' . $schoolIdPath . '" alt="School ID" class="proof-image" />
+                  </a>';
+        } else {
+            echo '<p>No School ID uploaded.</p>';
+        }
+        ?>
     </div>
-    <script>
-        function deleteUser(event, id) {
-            event.preventDefault();
+    <div class="back-link">
+        <a href="view_users.php" class="btn btn-primary">Back to Users List</a>
+    </div>
+</div>
 
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch('delete_user.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: 'id=' + id
-                    })
-                    .then(response => response.text())
-                    .then(result => {
-                        if (result.trim() === '1') {
-                            Swal.fire(
-                                'Deleted!',
-                                'The user has been deleted.',
-                                'success'
-                            ).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
-                        }
-                    })
-                    .catch(() => {
-                        Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
-                    });
-                }
-            });
-        }
-
-        function approveUser(event, id) {
-            event.preventDefault();
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You are about to approve this user!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, approve it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch('approve_users.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: 'user_id=' + id
-                    })
-                    .then(response => response.text())
-                    .then(result => {
-                        if (result.trim() === '1') {
-                            Swal.fire(
-                                'Approved!',
-                                'The user has been approved successfully.',
-                                'success'
-                            ).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire('Error!', 'An error occurred while approving the user. Please try again.', 'error');
-                        }
-                    })
-                    .catch(() => {
-                        Swal.fire('Error!', 'An unexpected error occurred while approving the user. Please try again.', 'error');
-                    });
-                }
-            });
-        }
-    </script>
-
-    <?php require_once('../inc/footer.php') ?>
-</body>
-</html>
-
+<script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 <?php
 $conn->close();
+?>
+<?php require_once('../inc/footer.php') ?>
+</body>
+</html>
