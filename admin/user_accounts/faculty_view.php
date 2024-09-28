@@ -164,6 +164,11 @@ $result = $conn->query($sql);
             color: #333;
             padding: 30px 0;
         }
+        .btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+    cursor: not-allowed;
+}
 
     </style>
 </head>
@@ -216,21 +221,18 @@ $result = $conn->query($sql);
                 <!-- Add Approve Button in Table -->
                 <td>
     <div class="d-flex justify-content-center">
-        <a href="viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-            <i class="fa fa-eye"></i> View Details
+        <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+            <i class="fas fa-eye"></i> View Details
         </a>
-        <button class="btn btn-delete btn-sm ms-2" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
-            <i class="fa fa-trash"></i> Delete
+        <button id="approve-btn-<?= $row['id'] ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= $row['id'] ?>)">
+            <i class="fas fa-check"></i> Approve
         </button>
-        <?php if ($row['status'] !== 'approved'): ?> <!-- Check if the user is already approved -->
-        <button class="btn btn-success btn-sm ms-2" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
-            <i class="fa fa-check"></i> Approve
+        <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= $row['id'] ?>)">
+            <i class="fas fa-trash-alt"></i> Delete
         </button>
-        <?php else: ?>
-        <span class="badge bg-success ms-2">Approved</span>
-        <?php endif; ?>
     </div>
 </td>
+
             </tr>
         <?php endwhile; ?>
     <?php else: ?>
@@ -312,45 +314,36 @@ function approveUser(event, id) {
         confirmButtonText: 'Yes, approve it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('approve_user.php', { // Use approve_user.php as the backend script
+            fetch('approve_user.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: 'user_id=' + id // Send the user ID in the request body
+                body: 'user_id=' + id
             })
             .then(response => response.text())  // Expecting text response
             .then(result => {
-                console.log('Response from server:', result); // Log the response for debugging
-                
-                // Check for success (1) or failure
                 if (result.trim() === '1') {
-                    Swal.fire(
-                        'Approved!',
-                        'The user has been approved successfully.',
-                        'success'
-                    ).then(() => {
-                        location.reload(); // Reload the page to reflect changes
-                    });
+                    // Change the button to "Approved" and disable it
+                    const approveBtn = document.getElementById('approve-btn-' + id);
+                    approveBtn.classList.remove('btn-success');  // Remove the success class
+                    approveBtn.classList.add('btn-secondary');   // Change to a secondary (disabled) button
+                    approveBtn.innerHTML = 'Approved';           // Update text
+                    approveBtn.disabled = true;                  // Disable the button
+                    
+                    Swal.fire('Approved!', 'The user has been approved.', 'success');
                 } else {
-                    Swal.fire(
-                        'Error!',
-                        'An error occurred while approving the user. Please try again.',
-                        'error'
-                    );
+                    Swal.fire('Error!', 'An error occurred while approving the user.', 'error');
                 }
             })
             .catch((error) => {
                 console.error('Error occurred during approval:', error);
-                Swal.fire(
-                    'Error!',
-                    'An unexpected error occurred while approving the user. Please try again.',
-                    'error'
-                );
+                Swal.fire('Error!', 'An unexpected error occurred while approving the user.', 'error');
             });
         }
     });
 }
+
 </script>
 
 
