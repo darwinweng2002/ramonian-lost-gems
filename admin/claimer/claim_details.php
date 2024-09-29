@@ -48,13 +48,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status'])) {
 }
 
 // Fetch claim details
+// Fetch claim details
 $sql = "
     SELECT 
         c.id, 
         c.item_id, 
         mh.title AS item_name, 
         COALESCE(um.first_name, us.first_name) AS first_name, 
-        COALESCE(um.last_name, us.last_name) AS last_name,
+        COALESCE(um.last_name, us.last_name) AS last_name, 
         c.item_description, 
         c.date_lost, 
         c.location_lost, 
@@ -67,10 +68,11 @@ $sql = "
     FROM claimer c
     LEFT JOIN message_history mh ON c.item_id = mh.id
     LEFT JOIN user_member um ON c.user_id = um.id
-    LEFT JOIN user_staff us ON c.staff_id = us.id
+    LEFT JOIN user_staff us ON c.user_id = us.id
     LEFT JOIN message_images mi ON mh.id = mi.message_id
     WHERE c.id = ?
     GROUP BY c.id";
+
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $claimId);
