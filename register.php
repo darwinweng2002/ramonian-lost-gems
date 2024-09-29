@@ -277,7 +277,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <h5 class="card-title text-center pb-0 fs-4">Students User Registration</h5>
                             <p class="text-center small">Fill in the form to create an account</p>
                         </div>
-                        
+                        <div class="role-selector">
+                        <label for="user_type" class="form-label">Register as</label>
+                        <select id="user_type" class="form-control" name="user_type" required>
+                            <option value="" disabled selected>Select user type</option>
+                            <option value="student">Student</option>
+                            <option value="junior_high">Junior High</option>
+                            <option value="senior_high">Senior High</option>
+                        </select>
+                        </div>
+
                         <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php" enctype="multipart/form-data">
                             <div class="col-12">
                                 <label for="firstName" class="form-label">First Name</label>
@@ -584,6 +593,96 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             imagePreview.src = ''; // Clear the preview if no file is selected
             imagePreview.style.display = 'none'; // Hide the image
         }
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        const userTypeSelect = document.getElementById('role-select');
+        const collegeField = document.getElementById('college');
+        const courseField = document.getElementById('course');
+        const yearField = document.getElementById('year');
+        const sectionField = document.getElementById('section');
+        const gradeField = document.createElement('select'); // For Grade
+        const trackOrStrandField = document.createElement('select'); // For Track/Strand
+
+        // Configure the Grade field
+        gradeField.setAttribute('name', 'grade');
+        gradeField.setAttribute('id', 'grade');
+        gradeField.classList.add('form-control');
+        gradeField.innerHTML = `
+            <option value="" disabled selected>Select your grade</option>
+            <option value="Grade 7">Grade 7</option>
+            <option value="Grade 8">Grade 8</option>
+            <option value="Grade 9">Grade 9</option>
+            <option value="Grade 10">Grade 10</option>
+            <option value="Grade 11">Grade 11</option>
+            <option value="Grade 12">Grade 12</option>
+        `;
+
+        // Configure the Track/Strand field (only for Senior High)
+        trackOrStrandField.setAttribute('name', 'track_or_strand');
+        trackOrStrandField.setAttribute('id', 'track_or_strand');
+        trackOrStrandField.classList.add('form-control');
+        trackOrStrandField.innerHTML = `
+            <option value="" disabled selected>Select your track or strand</option>
+            <option value="STEM">STEM</option>
+            <option value="ABM">ABM</option>
+            <option value="HUMSS">HUMSS</option>
+            <option value="TVL">TVL</option>
+            <option value="GAS">GAS</option>
+        `;
+
+        // Listen for changes in user type selection
+        userTypeSelect.addEventListener('change', function () {
+            const selectedRole = this.value;
+
+            if (selectedRole === 'junior_high') {
+                // Show the Grade field, hide College, Course, Year, Section
+                collegeField.parentElement.style.display = 'none';
+                courseField.parentElement.style.display = 'none';
+                yearField.parentElement.style.display = 'none';
+                sectionField.parentElement.style.display = 'none';
+
+                // Append Grade field to the form
+                if (!document.getElementById('grade')) {
+                    sectionField.parentElement.insertAdjacentElement('afterend', gradeField);
+                }
+
+                // Remove Track/Strand field (not needed for Junior High)
+                if (document.getElementById('track_or_strand')) {
+                    document.getElementById('track_or_strand').remove();
+                }
+
+            } else if (selectedRole === 'senior_high') {
+                // Show the Grade and Track/Strand fields, hide College, Course, Year, Section
+                collegeField.parentElement.style.display = 'none';
+                courseField.parentElement.style.display = 'none';
+                yearField.parentElement.style.display = 'none';
+                sectionField.parentElement.style.display = 'none';
+
+                // Append Grade field
+                if (!document.getElementById('grade')) {
+                    sectionField.parentElement.insertAdjacentElement('afterend', gradeField);
+                }
+
+                // Append Track/Strand field
+                if (!document.getElementById('track_or_strand')) {
+                    gradeField.parentElement.insertAdjacentElement('afterend', trackOrStrandField);
+                }
+            } else {
+                // Show College, Course, Year, Section for regular users (e.g., students, faculty)
+                collegeField.parentElement.style.display = 'block';
+                courseField.parentElement.style.display = 'block';
+                yearField.parentElement.style.display = 'block';
+                sectionField.parentElement.style.display = 'block';
+
+                // Remove Grade and Track/Strand fields
+                if (document.getElementById('grade')) {
+                    document.getElementById('grade').remove();
+                }
+                if (document.getElementById('track_or_strand')) {
+                    document.getElementById('track_or_strand').remove();
+                }
+            }
+        });
     });
   </script>
 </body>
