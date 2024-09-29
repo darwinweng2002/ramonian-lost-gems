@@ -63,10 +63,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Attempt to move the uploaded file
     if (!move_uploaded_file($_FILES["school_id"]["tmp_name"], $school_id_file)) {
+        error_log('File upload error: ' . print_r($_FILES, true)); // Logs detailed error
         $response = ['success' => false, 'message' => 'Error uploading school ID.'];
         echo json_encode($response);
         exit;
     }
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mime = $finfo->file($_FILES['school_id']['tmp_name']);
+    $valid_mime_types = ['image/jpeg', 'image/png'];
+    
+    if (!in_array($mime, $valid_mime_types)) {
+        $response = ['success' => false, 'message' => 'Invalid file format for school ID. Only JPG, JPEG, and PNG are allowed.'];
+        echo json_encode($response);
+        exit;
+    }
+    
 
     // Set user status as "pending"
     $status = 'pending';
