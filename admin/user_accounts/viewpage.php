@@ -167,7 +167,6 @@ $conn->close();
             echo '<p>No School ID uploaded.</p>';
         }
         ?>
-
     </div>
     <div class="back-link">
         <a href="view_users.php" class="btn btn-primary">Back to Users List</a>
