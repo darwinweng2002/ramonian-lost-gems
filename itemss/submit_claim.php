@@ -9,7 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $dateLost = htmlspecialchars(trim($_POST['date_lost']));
     $locationLost = htmlspecialchars(trim($_POST['location_lost']));
     $securityQuestion = htmlspecialchars(trim($_POST['security_question']));
-    $claimantId = $_SESSION['user_id'];
+    
+    // Identify the claimant ID based on whether user is member or staff
+    $claimantId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : $_SESSION['staff_id'];
 
     // Directory for uploading files
     $uploadDir = '../uploads/claims/';
@@ -61,4 +63,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
     $conn->close();
 }
-?>

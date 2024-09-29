@@ -91,6 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id, status, claim_date) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
     ";
+
+    // Use claimantId regardless of whether it's a user_member or user_staff
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('iissssss', $itemId, $claimantId, $item_description, $date_lost, $location_lost, $proof_of_ownership, $security_question, $personal_id);
 
@@ -117,8 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $stmt->close();
 }
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -31,6 +31,7 @@ $sql = "
     ORDER BY c.claim_date DESC
 ";
 
+
 $result = $conn->query($sql);
 
 ?>
