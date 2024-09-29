@@ -329,7 +329,7 @@ if (!emailRegex.test(email)) {
                 error: function(xhr, status, error) {
                     Swal.fire({
                         title: 'Success!',
-                        text: 'Registration successful! You are all set to access your account as faculty.',
+                        text: 'Your registration was successful! Please wait for the admin to review and approve your account. Once your account is approved, you will be able to log in. Thank you for your patience.',
                         icon: 'success',
                         confirmButtonText: 'OK'
                     }).then((result) => {
