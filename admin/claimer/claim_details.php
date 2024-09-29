@@ -53,8 +53,8 @@ $sql = "
         c.id, 
         c.item_id, 
         mh.title AS item_name, 
-        um.first_name, 
-        um.last_name, 
+        COALESCE(um.first_name, us.first_name) AS first_name, 
+        COALESCE(um.last_name, us.last_name) AS last_name,
         c.item_description, 
         c.date_lost, 
         c.location_lost, 
@@ -67,6 +67,7 @@ $sql = "
     FROM claimer c
     LEFT JOIN message_history mh ON c.item_id = mh.id
     LEFT JOIN user_member um ON c.user_id = um.id
+    LEFT JOIN user_staff us ON c.staff_id = us.id
     LEFT JOIN message_images mi ON mh.id = mi.message_id
     WHERE c.id = ?
     GROUP BY c.id";
@@ -217,6 +218,7 @@ $result = $stmt->get_result();
                     </div>
                 <?php endif; ?>
 
+                <!-- Fetch claimant's name from either user_member or user_staff -->
                 <p><strong>Claimant Name:</strong> <?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></p>
                 <p><strong>Description:</strong> <?= htmlspecialchars($row['item_description']); ?></p>
                 <p><strong>Date Lost:</strong> <?= htmlspecialchars($row['date_lost']); ?></p>
@@ -227,15 +229,14 @@ $result = $stmt->get_result();
 
                 <!-- Status Update Form -->
                 <form action="" method="POST">
-    <label for="status">Update Status:</label>
-    <select name="status" id="status">
-        <option value="pending" <?= ($row['status'] === 'pending') ? 'selected' : '' ?>>Pending</option>
-        <option value="approved" <?= ($row['status'] === 'approved') ? 'selected' : '' ?>>Approved</option>
-        <option value="rejected" <?= ($row['status'] === 'rejected') ? 'selected' : '' ?>>Rejected</option>
-    </select>
-    <button type="submit">Update Status</button>
-</form>
-
+                    <label for="status">Update Status:</label>
+                    <select name="status" id="status">
+                        <option value="pending" <?= ($row['status'] === 'pending') ? 'selected' : '' ?>>Pending</option>
+                        <option value="approved" <?= ($row['status'] === 'approved') ? 'selected' : '' ?>>Approved</option>
+                        <option value="rejected" <?= ($row['status'] === 'rejected') ? 'selected' : '' ?>>Rejected</option>
+                    </select>
+                    <button type="submit">Update Status</button>
+                </form>
 
                 <!-- Proof of Ownership -->
                 <p><strong>Proof of Ownership:</strong></p>
