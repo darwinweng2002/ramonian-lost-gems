@@ -159,7 +159,7 @@ $conn->close();
         <?php
         // Check if school_id_file is not NULL
         if (!empty($user['school_id_file'])) {
-            $schoolIdPath = '/uploads/school_ids/' . htmlspecialchars($user['school_id_file']) . '?' . time();
+            $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);
             echo '<a href="' . $schoolIdPath . '" data-lightbox="school-id" data-title="School ID">
                     <img src="' . $schoolIdPath . '" alt="School ID" class="proof-image" />
                   </a>';
