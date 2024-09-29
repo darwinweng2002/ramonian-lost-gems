@@ -62,7 +62,7 @@
                   </div>
                   <div class="ps-3">
                     <?php 
-                    $Items = $conn->query("SELECT * FROM `claims` where `status` = 1")->num_rows;
+                    $Items = $conn->query("SELECT * FROM `claimer` where `status` = 1")->num_rows;
                     ?>
                     <h6><?= format_num($Items) ?></h6>
                     <!-- <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span> -->
@@ -97,14 +97,14 @@
           <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
             <div class="card info-card">
               <div class="card-body">
-                <h5 class="card-title">Item Entry <span>| Published</span></h5>
+                <h5 class="card-title">Reported Item <span>| Published</span></h5>
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-primary bg-opacity-25 text-primary">
                     <i class="bi bi-question-octagon"></i>
                   </div>
                   <div class="ps-3">
                     <?php 
-                    $items = $conn->query("SELECT * FROM `item_list` where `status` = 1")->num_rows;
+                    $items = $conn->query("SELECT * FROM `item_list` where `status` = 2")->num_rows;
                     ?>
                     <h6><?= format_num($items) ?></h6>
                     <!-- <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span> -->
