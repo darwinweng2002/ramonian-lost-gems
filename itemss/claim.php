@@ -171,18 +171,11 @@ $claimantData = $claimantResult->fetch_assoc();
     </div>
 
     <!-- Display Claimant's Information -->
-     <h3>Your Information</h3>
+    <h3>Your Information</h3>
     <div class="info-section">
         <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
         <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
-
-        <!-- Check if user is from staff and of type non-teaching, display position; otherwise, show college/department -->
-        <?php if ($userType == 'user_staff' && $claimantData['user_type'] === 'non-teaching'): ?>
-            <p>Position: <?= htmlspecialchars($claimantData['position']); ?></p>
-        <?php else: ?>
-            <p>College/Department: <?= htmlspecialchars($claimantData['college']); ?></p>
-        <?php endif; ?>
-
+        <p>College/Department: <?= htmlspecialchars($claimantData['college']); ?></p>
         <?php if ($userType == 'user_member'): ?>
             <p>Course: <?= htmlspecialchars($claimantData['course']); ?></p>
             <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section']); ?></p>
