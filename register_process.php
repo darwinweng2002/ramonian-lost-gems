@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Handle email sending error
         }
 
-        $response = ['success' => true, 'message' => 'Your registration was successful! Please wait for the admin to review and approve your account. Once your account is approved, you will be able to log in. Thank you for your patience.'];
+        $response = ['success' => true, 'message' => 'Successfully registered! Please check your email to verify your account.'];
     } catch (mysqli_sql_exception $e) {
         // Handle duplicate email error
         if ($e->getCode() == 1062) {  // Duplicate entry error code in MySQL
