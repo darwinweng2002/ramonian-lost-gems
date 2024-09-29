@@ -60,8 +60,8 @@ if (isset($_POST['upload_avatar'])) {
 
 if (isset($_SESSION['staff_id'])) {
     $staff_id = $_SESSION['staff_id'];
-    echo "Debug: Staff ID = " . $staff_id; // Debugging line
-
+    
+    // Fetch claim history for staff user
     $claim_stmt = $conn->prepare("
         SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
         FROM claimer c 
@@ -71,17 +71,19 @@ if (isset($_SESSION['staff_id'])) {
     $claim_stmt->bind_param("i", $staff_id);
     $claim_stmt->execute();
     $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
+    
     while ($claim_stmt->fetch()) {
-        echo "Debug: Item Fetched: " . $item_name . " - " . $status; // Debugging line
         $claimer[] = [
-            'item_id' => $item_id, 
-            'item_name' => $item_name, 
-            'claim_date' => $claim_date, 
+            'item_id' => $item_id,
+            'item_name' => $item_name,
+            'claim_date' => $claim_date,
             'status' => $status
         ];
     }
+    
     $claim_stmt->close();
 }
+
 
 
 // Fetch the staff's posted missing items history
