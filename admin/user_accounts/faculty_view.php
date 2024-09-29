@@ -20,6 +20,7 @@ $sql = "SELECT id, user_type, first_name, last_name, email, avatar, position, de
         FROM user_staff 
         WHERE CONCAT_WS(' ', first_name, last_name, email, user_type, position, department) LIKE '%$searchTerm%'";
 
+
 $result = $conn->query($sql);
 ?>
 
@@ -198,7 +199,7 @@ $result = $conn->query($sql);
     <?php if ($result->num_rows > 0): ?>
         <?php while ($row = $result->fetch_assoc()): ?>
             <tr>
-                <td><?= htmlspecialchars($row['user_type'] ?? 'N/A') ?></td> <!-- Make sure 'user_type' exists -->
+            <td><?= htmlspecialchars($row['user_type'] ?? 'N/A') ?></td>            <!-- Make sure 'user_type' exists -->
                 <td><?= htmlspecialchars($row['first_name'] ?? 'N/A') ?></td>
                 <td><?= htmlspecialchars($row['last_name'] ?? 'N/A') ?></td>
                 <td><?= htmlspecialchars($row['email'] ?? 'N/A') ?></td>
