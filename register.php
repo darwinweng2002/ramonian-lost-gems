@@ -277,7 +277,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <h5 class="card-title text-center pb-0 fs-4">Students User Registration</h5>
                             <p class="text-center small">Fill in the form to create an account</p>
                         </div>
-                        <div class="role-selector">
+                <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php" enctype="multipart/form-data">
+                <div class="role-selector">
                   <label for="role-select">Register as</label>
                   <select id="role-select" class="form-select">
                       <option value="" disabled selected>Register as</option>
@@ -286,8 +287,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                       <option value="senior_high">Register as Senior High</option>
                   </select>
                 </div>
-
-                <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php" enctype="multipart/form-data">
     <div class="col-12">
         <label for="firstName" class="form-label">First Name</label>
         <input type="text" name="first_name" class="form-control" id="firstName" required>
