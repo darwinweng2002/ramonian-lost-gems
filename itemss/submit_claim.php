@@ -1,6 +1,9 @@
 <?php
 include '../config.php';
 
+// Start session to access session variables
+session_start();
+
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get the data from the form
@@ -9,9 +12,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $dateLost = htmlspecialchars(trim($_POST['date_lost']));
     $locationLost = htmlspecialchars(trim($_POST['location_lost']));
     $securityQuestion = htmlspecialchars(trim($_POST['security_question']));
-    
-    // Identify the claimant ID based on whether user is member or staff
-    $claimantId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : $_SESSION['staff_id'];
+
+    // Identify the claimant ID based on whether user is a member or staff
+    if (isset($_SESSION['user_id'])) {
+        $claimantId = $_SESSION['user_id']; // If the claimant is a user
+        $userType = 'user_id';
+    } elseif (isset($_SESSION['staff_id'])) {
+        $claimantId = $_SESSION['staff_id']; // If the claimant is a staff
+        $userType = 'staff_id';
+    } else {
+        echo "User not logged in.";
+        exit;
+    }
 
     // Directory for uploading files
     $uploadDir = '../uploads/claims/';
@@ -47,9 +59,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Insert the claim into the database
-    $sql = "INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    // Insert the claim into the database with user or staff handling
+    $sql = "INSERT INTO claimer (item_id, $userType, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id, status, claim_date)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())";
+    
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('iissssss', $itemId, $claimantId, $itemDescription, $dateLost, $locationLost, $proofOfOwnershipPath, $securityQuestion, $personalIdPath);
     
@@ -63,3 +76,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
     $conn->close();
 }
+?>

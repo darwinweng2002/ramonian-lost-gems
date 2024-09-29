@@ -61,7 +61,10 @@ if (isset($_POST['upload_avatar'])) {
 // Fetch the staff's claim history
 $claimer = [];
 
-// Fetch claim history for staff users (use `staff_id` instead of `user_id`)
+// Fetch the staff's claim history
+$claimer = [];
+
+// Fetch claim history for staff users (check for claims linked to staff_id)
 $claim_stmt = $conn->prepare("
     SELECT c.item_id, mh.title AS item_name, c.claim_date, c.status 
     FROM claimer c 
@@ -80,6 +83,7 @@ while ($claim_stmt->fetch()) {
     ];
 }
 $claim_stmt->close();
+
 
 
 // Fetch the staff's posted missing items history
