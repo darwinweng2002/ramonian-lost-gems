@@ -179,7 +179,10 @@ body {
         <input type="text" name="position" class="form-control" id="position">
         <div class="invalid-feedback">Please enter your role/position.</div>
     </div>
-
+    <div class="form-group">
+        <label for="id_file">Upload ID (JPG, PNG):</label>
+        <input type="file" name="id_file" class="form-control" id="id_file" accept=".jpg,.jpeg,.png" required>
+    </div>
     <!-- Username -->
     <div class="col-12">
                       <label for="email" class="form-label">Email</label> 
