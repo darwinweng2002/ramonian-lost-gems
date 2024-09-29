@@ -284,7 +284,7 @@ function approveUser(event, id) {
         confirmButtonText: 'Yes, approve it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('approve_user.php', {
+            fetch('../approve_user.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({ user_id: id }) // Use URLSearchParams for POST parameters
