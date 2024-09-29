@@ -58,10 +58,12 @@ if (isset($_POST['upload_avatar'])) {
     }
 }
 
+// Fetch the user's claim history for staff users
+$claimer = [];
+
 if (isset($_SESSION['staff_id'])) {
+    // Fetch claim history for staff
     $staff_id = $_SESSION['staff_id'];
-    
-    // Fetch claim history for staff user
     $claim_stmt = $conn->prepare("
         SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
         FROM claimer c 
@@ -71,18 +73,20 @@ if (isset($_SESSION['staff_id'])) {
     $claim_stmt->bind_param("i", $staff_id);
     $claim_stmt->execute();
     $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
-    
     while ($claim_stmt->fetch()) {
         $claimer[] = [
-            'item_id' => $item_id,
-            'item_name' => $item_name,
-            'claim_date' => $claim_date,
+            'item_id' => $item_id, 
+            'item_name' => $item_name, 
+            'claim_date' => $claim_date, 
             'status' => $status
         ];
     }
-    
     $claim_stmt->close();
 }
+
+// Show the claim history in the staff dashboard as you did for regular users
+?>
+
 
 
 

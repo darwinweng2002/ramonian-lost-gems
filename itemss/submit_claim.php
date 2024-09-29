@@ -1,28 +1,27 @@
 <?php
+// Adjust the claim submission logic
+
 if (isset($_SESSION['staff_id'])) {
-    // Staff user
+    // For staff user
     $claimantId = $_SESSION['staff_id'];
-    $userType = 'staff'; // Indicate it's a staff user
-    
-    // Insert the claim into the claimer table for staff users
-    $stmt = $conn->prepare("
-        INSERT INTO claimer 
-        (item_id, staff_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id, status, claim_date) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
-    ");
-    $stmt->bind_param('iissssss', $itemId, $claimantId, $item_description, $date_lost, $location_lost, $proof_of_ownership, $security_question, $personal_id);
-    
+    $isStaff = 1;  // Flag to identify it's a staff member
 } elseif (isset($_SESSION['user_id'])) {
-    // Regular user
+    // For regular user
     $claimantId = $_SESSION['user_id'];
-    
-    // Insert the claim into the claimer table for regular users
-    $stmt = $conn->prepare("
-        INSERT INTO claimer 
-        (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id, status, claim_date) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
-    ");
-    $stmt->bind_param('iissssss', $itemId, $claimantId, $item_description, $date_lost, $location_lost, $proof_of_ownership, $security_question, $personal_id);
+    $isStaff = 0;  // Regular user
+}
+
+// Insert the claim into the `claimer` table
+$sql = "
+    INSERT INTO claimer (item_id, user_id, staff_id, is_staff, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id, status, claim_date) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+";
+
+$stmt = $conn->prepare($sql);
+if ($isStaff) {
+    $stmt->bind_param('iiiiisssss', $itemId, null, $claimantId, $isStaff, $item_description, $date_lost, $location_lost, $proof_of_ownership, $security_question, $personal_id);
+} else {
+    $stmt->bind_param('iiiiisssss', $itemId, $claimantId, null, $isStaff, $item_description, $date_lost, $location_lost, $proof_of_ownership, $security_question, $personal_id);
 }
 
 if ($stmt->execute()) {
@@ -33,7 +32,7 @@ if ($stmt->execute()) {
             icon: 'success',
             confirmButtonText: 'OK'
         }).then(function() {
-            window.location.href = 'dashboard.php'; // Redirect to dashboard after submission
+            window.location.href = 'dashboard.php'; 
         });
     </script>";
 } else {
@@ -46,8 +45,5 @@ if ($stmt->execute()) {
         });
     </script>";
 }
-
 $stmt->close();
-$conn->close();
-
 ?>
