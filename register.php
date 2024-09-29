@@ -278,14 +278,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <p class="text-center small">Fill in the form to create an account</p>
                         </div>
                         <div class="role-selector">
-                        <label for="user_type" class="form-label">Register as</label>
-                        <select id="user_type" class="form-control" name="user_type" required>
-                            <option value="" disabled selected>Select user type</option>
-                            <option value="student">Student</option>
-                            <option value="junior_high">Junior High</option>
-                            <option value="senior_high">Senior High</option>
-                        </select>
-                        </div>
+                  <label for="role-select">Register as</label>
+                  <select id="role-select" class="form-select">
+                      <option value="" disabled selected>Register as</option>
+                      <option value="student">Register as Student</option>
+                      <option value="junior_high">Register as Junior High</option>
+                      <option value="senior_high">Register as Senior High</option>
+                  </select>
+                </div>
 
                         <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php" enctype="multipart/form-data">
                             <div class="col-12">
