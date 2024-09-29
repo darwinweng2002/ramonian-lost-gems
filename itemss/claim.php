@@ -229,14 +229,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Display Claimant's Information -->
     <h3>Your Information</h3>
     <div class="info-section">
-        <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
-        <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
-        <p>College/Department: <?= htmlspecialchars($claimantData['college']); ?></p>
-        <?php if ($userType == 'user_member'): ?>
-            <p>Course: <?= htmlspecialchars($claimantData['course']); ?></p>
-            <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section']); ?></p>
-        <?php endif; ?>
-    </div>
+    <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
+    <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
+
+    <!-- Display College for user_member, and Department for user_staff -->
+    <?php if ($userType == 'user_member'): ?>
+        <p>College: <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
+        <p>Course: <?= htmlspecialchars($claimantData['course'] ?? 'N/A'); ?></p>
+        <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section'] ?? 'N/A'); ?></p>
+    <?php elseif ($userType == 'user_staff'): ?>
+        <p>Department: <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
+    <?php endif; ?>
+</div>
+
 
     <!-- Claim Form -->
     <form id="claimForm" action="" method="POST" enctype="multipart/form-data">
