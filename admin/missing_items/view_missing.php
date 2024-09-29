@@ -49,15 +49,90 @@ if (isset($_GET['id'])) {
     <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
-        /* Your existing styles */
+       body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 70px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin: 30px auto;
+            width: 90%;
+            max-width: 1200px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .message-box {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .message-box p {
+            margin: 10px 0;
+        }
+        .message-box img {
+            max-width: 100%;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+        }
+        .message-box img:hover {
+            transform: scale(1.1);
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .publish-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            right: 80px;
+        }
+        .publish-btn:hover {
+            background-color: #218838;
+        }
+        .container .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+            object-fit: cover;
+            display: block;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
 <?php require_once('../inc/topBarNav.php') ?>
 <?php require_once('../inc/navigation.php') ?> 
-
-<div class="container">
-    <h1>View Missing Item Details</h1>
+    <div class="container">
+         <h1>View Missing Item Details</h1>
     <?php
     if ($result->num_rows > 0) {
         $items = [];
@@ -100,83 +175,176 @@ if (isset($_GET['id'])) {
             $status = intval($itemData['status']);
 
             echo "<div class='message-box'>";
+                
+                if ($avatar) {
+                    $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
+                    echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
+                } else {
+                    echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                }
 
-            if ($avatar) {
-                $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
-                echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
-            } else {
-                echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
-            }
-
-            echo "<p><strong>Item Name:</strong> " . $title . "</p>";
-            echo "<p><strong>Owner Name:</strong> " . $owner . "</p>";
-
-            // Check if user is a guest
+                echo "<p><strong>Item Name:</strong> " . $title . "</p>";
+                echo "<p><strong>Owner Name:</strong> " . $owner . "</p>";
+                // Check if user is a guest
             if (empty($firstName) || empty($college)) {
                 echo "<p><strong>User Info:</strong> Guest User</p>";
             } else {
                 echo "<p><strong>User Name:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
             }
+                echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
+                echo "<p><strong>Date and time the item was lost:</strong> " . $timeMissing . "</p>";
+                echo "<p><strong>Description:</strong> " . $description . "</p>";
+                echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
+                echo "<p><strong>Contact:</strong> " . $contact . "</p>";
 
-            echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
-            echo "<p><strong>Date and time the item was lost:</strong> " . $timeMissing . "</p>";
-            echo "<p><strong>Description:</strong> " . $description . "</p>";
-            echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
-            echo "<p><strong>Contact:</strong> " . $contact . "</p>";
-
-            // Status dropdown
-            echo "<div class='form-group col-lg-12 col-md-12 col-sm-12 col-xs-12'>";
-            echo "<label for='status' class='control-label'>Status</label>";
-            echo "<select name='status' id='status-" . $itemId . "' class='form-select form-select-sm rounded-0' required='required'>";
-            echo "<option value='0' " . ($status == 0 ? 'selected' : '') . ">Pending</option>";
-            echo "<option value='1' " . ($status == 1 ? 'selected' : '') . ">Published</option>";
-            echo "<option value='2' " . ($status == 2 ? 'selected' : '') . ">Claimed</option>";
-            echo "<option value='3' " . ($status == 3 ? 'selected' : '') . ">Surrendered</option>";
-            echo "</select>";
-            echo "<button class='btn btn-primary save-status-btn' data-id='" . $itemId . "'>Save Status</button>";
-            echo "</div>";
-
-            echo "<dt class='text-muted'>Status</dt>";
-            if ($status == 1) {
-                echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
-            } elseif ($status == 2) {
-                echo "<span class='badge bg-success px-3 rounded-pill'>Claimed</span>";
-            } elseif ($status == 3) {
-                echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
-            } else {
-                echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
-            }
-
-            if (!empty($itemData['images'])) {
-                echo "<p><strong>Images:</strong></p>";
-                echo "<div class='image-grid'>";
-                foreach ($itemData['images'] as $imagePath) {
-                    echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='item-" . htmlspecialchars($itemId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
-                }
+                // Status dropdown
+                echo "<div class='form-group col-lg-12 col-md-12 col-sm-12 col-xs-12'>";
+                echo "<label for='status' class='control-label'>Status</label>";
+                echo "<select name='status' id='status-".$itemId."' class='form-select form-select-sm rounded-0' required='required'>";
+                echo "<option value='0' " . ($status == 0 ? 'selected' : '') . ">Pending</option>";
+                echo "<option value='1' " . ($status == 1 ? 'selected' : '') . ">Published</option>";
+                echo "<option value='2' " . ($status == 2 ? 'selected' : '') . ">Claimed</option>";
+                echo "<option value='3' " . ($status == 3 ? 'selected' : '') . ">Surrendered</option>";
+                echo "</select>";
+                echo "<button class='btn btn-primary save-status-btn' data-id='" . $itemId . "'>Save Status</button>";
                 echo "</div>";
-            } else {
-                echo "<p>No images available.</p>";
+
+                echo "<dt class='text-muted'>Status</dt>";
+                if ($status == 1) {
+                    echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
+                } elseif ($status == 2) {
+                    echo "<span class='badge bg-success px-3 rounded-pill'>Claimed</span>";
+                } elseif ($status == 3) {
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
+                } else {
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";   
+                }
+
+                if (!empty($itemData['images'])) {
+                    echo "<p><strong>Images:</strong></p>";
+                    echo "<div class='image-grid'>";
+                    foreach ($itemData['images'] as $imagePath) {
+                        echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='item-" . htmlspecialchars($itemId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
+                    }
+                    echo "</div>";
+                } else {
+                    echo "<p>No images available.</p>";
+                }
+
+                echo "<button class='publish-btn' data-id='" . htmlspecialchars($itemId) . "'>Publish</button>";
+                echo "<button class='delete-btn' data-id='" . htmlspecialchars($itemId) . "'>Delete</button>";
+                echo "</div>";
             }
-
-            echo "<button class='publish-btn' data-id='" . htmlspecialchars($itemId) . "'>Publish</button>";
-            echo "<button class='delete-btn' data-id='" . htmlspecialchars($itemId) . "'>Delete</button>";
-            echo "</div>";
+        } else {
+            echo "<p>No details available for this item.</p>";
         }
-    } else {
-        echo "<p>No details available for this item.</p>";
-    }
-    ?>
-</div>
+        ?>
+    </div>
 
-<!-- Include JavaScript files -->
-<script src="../js/jquery.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Include JavaScript files -->
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    $(document).ready(function() {
+        // Function to update status
+        $('.save-status-btn').on('click', function() {
+            var itemId = $(this).data('id');
+            var selectedStatus = $('#status-' + itemId).val();
 
-<!-- Your existing JavaScript code for status updates and deletion -->
-<?php require_once('../inc/footer.php'); ?>
+            $.ajax({
+                url: 'update_status.php',
+                type: 'POST',
+                data: {
+                    id: itemId,
+                    status: selectedStatus
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire('Success', 'The status has been updated successfully.', 'success')
+                        .then(() => location.reload());
+                    } else {
+                        Swal.fire('Error', 'Failed to update status.', 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire('Error', 'An error occurred while updating the status.', 'error');
+                }
+            });
+        });
+
+        // Publish button functionality
+        $('.publish-btn').on('click', function() {
+            var itemId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to publish this missing item?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, publish it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'publish_message.php',
+                        type: 'POST',
+                        data: { id: itemId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Published!', 'The missing item has been successfully published.', 'success')
+                                .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error', 'Failed to publish the missing item.', 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'An error occurred while publishing the item.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+
+        // Delete button functionality
+        $('.delete-btn').on('click', function() {
+            var itemId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you really want to delete this missing item?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'delete_message.php',
+                        type: 'POST',
+                        data: { id: itemId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Deleted!', 'The missing item has been deleted.', 'success')
+                                .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error', 'Failed to delete the missing item.', 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error', 'An error occurred while deleting the item.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+    </script>
+    <?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
 
