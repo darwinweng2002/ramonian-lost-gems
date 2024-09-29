@@ -60,7 +60,7 @@ $result = $conn->query($sql);
                             <td>
     <?php if (!empty($row['school_id_file'])): ?>
         <!-- Assuming that school_id_file already contains the correct relative path -->
-        <img src="<?= base_url ?>uploads/school_ids/<?= htmlspecialchars($row['school_id_file']) ?>" alt="School ID" style="width: 100px; height: auto;">
+        <img src="<?= base_url ?>/uploads/school_ids/<?= htmlspecialchars($row['school_id_file']) ?>" alt="School ID" style="width: 100px; height: auto;">
     <?php else: ?>
         <span>No ID Uploaded</span>
     <?php endif; ?>
