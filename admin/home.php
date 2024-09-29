@@ -104,7 +104,7 @@
                   </div>
                   <div class="ps-3">
                     <?php 
-                    $items = $conn->query("SELECT * FROM `message_history` where `status` = 2")->num_rows;
+                    $items = $conn->query("SELECT * FROM `message_history` where `status` = 0")->num_rows;
                     ?>
                     <h6><?= format_num($items) ?></h6>
                     <!-- <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span> -->
