@@ -260,22 +260,21 @@ body {
             var password = $('#yourPassword').val().trim();
             var confirmPassword = $('#confirm_password').val().trim();
 
-           // Get the email value
-const email = $('#email').val().trim();
+            // Get the username value
+            const username = $('#email').val().trim();
 
-// Define a regex for validating a legitimate email format
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            // Disallow email-like formats in the username
+            const emailRegex = /@|\.com|\.net|\.org|\.edu/i;
+            if (emailRegex.test(username)) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Usernames cannot contain "@" or resemble email addresses.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
 
-// Check if the email matches the correct format
-if (!emailRegex.test(email)) {
-    Swal.fire({
-        title: 'Error!',
-        text: 'Please enter a valid email address.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-    });
-    return;
-}
             // Password length validation (min 8, max 16)
             if (password.length < 8 || password.length > 16) {
                 Swal.fire({
