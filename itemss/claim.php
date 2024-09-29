@@ -63,7 +63,6 @@ $claimantResult = $stmtClaimant->get_result();
 $claimantData = $claimantResult->fetch_assoc();
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,9 +70,75 @@ $claimantData = $claimantResult->fetch_assoc();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claim This Item</title>
+
+    <!-- SweetAlert and CSS Integration -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* Your CSS Styles */
+        body {
+            font-family: 'Helvetica', Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding-top: 70px;
+            margin: 0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+        h1, h3 {
+            color: #333;
+            text-align: center;
+            font-weight: normal;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+            color: #555;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            background-color: #fafafa;
+            color: #333;
+            transition: border-color 0.3s ease;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: center;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        .info-section p {
+            font-size: 1rem;
+            color: #444;
+            margin-bottom: 10px;
+        }
+        .info-section strong {
+            color: #000;
+        }
     </style>
 </head>
 <body>
@@ -126,7 +191,39 @@ $claimantData = $claimantResult->fetch_assoc();
 
     <!-- Claim Form -->
     <form id="claimForm" action="" method="POST" enctype="multipart/form-data">
-        <!-- Claim Form Fields -->
+        <input type="hidden" name="item_id" value="<?= $itemId; ?>">
+
+        <div class="form-group">
+            <label for="item_description">Describe the item (e.g., color, model, size, etc.):</label>
+            <textarea id="item_description" name="item_description" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="date_lost">When did you lose the item?</label>
+            <input type="date" id="date_lost" name="date_lost" required>
+        </div>
+
+        <div class="form-group">
+            <label for="location_lost">Where did you lose the item?</label>
+            <input type="text" id="location_lost" name="location_lost" required>
+        </div>
+
+        <div class="form-group">
+            <label for="proof_of_ownership">Upload proof of ownership (e.g., receipt, serial number, photo):</label>
+            <input type="file" id="proof_of_ownership" name="proof_of_ownership" accept="image/*,application/pdf">
+        </div>
+
+        <div class="form-group">
+            <label for="security_question">Security Question (e.g., contents in the pocket):</label>
+            <input type="text" id="security_question" name="security_question" required>
+        </div>
+
+        <div class="form-group">
+            <label for="personal_id">Upload your ID (student card, national ID, etc.):</label>
+            <input type="file" id="personal_id" name="personal_id" accept="image/*,application/pdf" required>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Claim</button>
     </form>
 </div>
 
@@ -134,12 +231,15 @@ $claimantData = $claimantResult->fetch_assoc();
 <script>
     document.getElementById('claimForm').addEventListener('submit', function(e) {
         e.preventDefault();
+
+        // Assuming form is valid
         Swal.fire({
             title: 'Claim Submitted!',
-            text: 'Submission successful. Please proceed to the SSG office for verification to claim the item.',
+            text: 'Submission successful. Please proceed to the SSG office (located on the 3rd floor of the OSA Building) for verification to claim the item.',
             icon: 'success',
             confirmButtonText: 'OK'
         }).then(function() {
+            // Proceed with form submission
             e.target.submit();
         });
     });
