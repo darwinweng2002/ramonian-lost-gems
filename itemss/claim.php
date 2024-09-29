@@ -25,7 +25,7 @@ if (isset($_SESSION['user_id'])) {
     // Staff user
     $claimantId = $_SESSION['staff_id'];
     $userType = 'user_staff';
-    $sqlClaimant = "SELECT first_name, last_name, email, department AS college FROM user_staff WHERE id = ?";
+    $sqlClaimant = "SELECT first_name, last_name, email, department AS college, position FROM user_staff WHERE id = ?";
 }
 
 // Database connection
