@@ -25,7 +25,7 @@ if (isset($_SESSION['user_id'])) {
     // Staff user
     $claimantId = $_SESSION['staff_id'];
     $userType = 'user_staff';
-    $sqlClaimant = "SELECT first_name, last_name, email, department AS college, position, user_type FROM user_staff WHERE id = ?";
+    $sqlClaimant = "SELECT first_name, last_name, email, department AS college FROM user_staff WHERE id = ?";
 }
 
 // Database connection
@@ -62,7 +62,63 @@ $stmtClaimant->execute();
 $claimantResult = $stmtClaimant->get_result();
 $claimantData = $claimantResult->fetch_assoc();
 
+// Process the form submission to save the claim request
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $item_description = $_POST['item_description'];
+    $date_lost = $_POST['date_lost'];
+    $location_lost = $_POST['location_lost'];
+    $proof_of_ownership = $_FILES['proof_of_ownership']['name'];
+    $security_question = $_POST['security_question'];
+    $personal_id = $_FILES['personal_id']['name'];
+    
+    // File Uploads (Move uploaded files to the appropriate folder)
+    $target_dir = "../uploads/claims/";
+    
+    // Upload proof of ownership file
+    if (!empty($proof_of_ownership)) {
+        $target_file_ownership = $target_dir . basename($proof_of_ownership);
+        move_uploaded_file($_FILES["proof_of_ownership"]["tmp_name"], $target_file_ownership);
+    }
+    
+    // Upload personal ID file
+    if (!empty($personal_id)) {
+        $target_file_id = $target_dir . basename($personal_id);
+        move_uploaded_file($_FILES["personal_id"]["tmp_name"], $target_file_id);
+    }
+
+    // Insert the claim into the `claimer` table
+    $sql = "
+        INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id, status, claim_date) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+    ";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('iissssss', $itemId, $claimantId, $item_description, $date_lost, $location_lost, $proof_of_ownership, $security_question, $personal_id);
+
+    if ($stmt->execute()) {
+        echo "<script>
+            Swal.fire({
+                title: 'Claim Submitted!',
+                text: 'Your claim has been submitted successfully. Please proceed to the SSG office for verification.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location.href = 'dashboard.php'; // Redirect to dashboard after submission
+            });
+        </script>";
+    } else {
+        echo "<script>
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error submitting your claim. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        </script>";
+    }
+    $stmt->close();
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
