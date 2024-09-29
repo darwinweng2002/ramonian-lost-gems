@@ -287,25 +287,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                   </select>
                 </div>
 
-                        <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php" enctype="multipart/form-data">
-                            <div class="col-12">
-                                <label for="firstName" class="form-label">First Name</label>
-                                <input type="text" name="first_name" class="form-control" id="firstName" required>
-                                <div class="invalid-feedback">Please enter your first name.</div>
-                            </div>
+                <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php" enctype="multipart/form-data">
+    <div class="col-12">
+        <label for="firstName" class="form-label">First Name</label>
+        <input type="text" name="first_name" class="form-control" id="firstName" required>
+        <div class="invalid-feedback">Please enter your first name.</div>
+    </div>
 
-                            <div class="col-12">
-                                <label for="lastName" class="form-label">Last Name</label>
-                                <input type="text" name="last_name" class="form-control" id="lastName" required>
-                                <div class="invalid-feedback">Please enter your last name.</div>
-                            </div>
+    <div class="col-12">
+        <label for="lastName" class="form-label">Last Name</label>
+        <input type="text" name="last_name" class="form-control" id="lastName" required>
+        <div class="invalid-feedback">Please enter your last name.</div>
+    </div>
 
-                            <!-- Hidden by default for Junior and Senior High -->
-                            <div id="college_fields" class="hidden">
-                                <div class="col-12">
-                                    <label for="college" class="form-label">College</label>
-                                    <select name="college" class="form-control" id="college">
-                                    <option value="" disabled selected>Select your college</option>
+    <!-- College-related fields (for students only) -->
+    <div id="college_fields" class="col-12">
+        <label for="college" class="form-label">College</label>
+        <select name="college" class="form-control" id="college">
+        <option value="" disabled selected>Select your college</option>
                                     <option value="CABA">College of Accountancy and Business Administration</option>
                                     <option value="CAS">College of Arts and Sciences</option>
                                     <option value="CCIT">College of Communication and Information Technology</option>
@@ -315,100 +314,96 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <option value="CAF">College of Agriculture and Forestry</option>
                                     <option value="NUR">College of Nursing</option>
                                     <option value="CTHM">College of Tourism and Hospitality Management</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select your college.</div>
-                                </div>
+        </select>
+        <div class="invalid-feedback">Please select your college.</div>
 
-                                <div class="col-12">
-                                    <label for="course" class="form-label">Course</label>
-                                    <select name="course" class="form-control" id="course">
-                                        <option value="" disabled selected>Select your course</option>
-                                        <!-- Options for courses -->
-                                    </select>
-                                    <div class="invalid-feedback">Please select your course.</div>
-                                </div>
+        <label for="course" class="form-label">Course</label>
+        <select name="course" class="form-control" id="course">
+            <option value="" disabled selected>Select your course</option>
+        </select>
+        <div class="invalid-feedback">Please select your course.</div>
 
-                                <div class="col-12">
-                                    <label for="year" class="form-label">Year</label>
-                                    <select name="year" class="form-control" id="year">
-                                    <option value="" disabled selected>Select your year</option>
-                                    <option value="1st - year">1st - year</option>
-                                    <option value="2nd - year">2nd - year</option>
-                                    <option value="3rd - year">3rd - year</option>
-                                    <option value="4th - year">4th - year</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select your year.</div>
-                                </div>
+        <label for="year" class="form-label">Year</label>
+        <select name="year" class="form-control" id="year">
+            <option value="" disabled selected>Select your year</option>
+            <option value="1st - year">1st - year</option>
+            <option value="2nd - year">2nd - year</option>
+            <option value="3rd - year">3rd - year</option>
+            <option value="4th - year">4th - year</option>
+        </select>
+        <div class="invalid-feedback">Please select your year.</div>
 
-                                <div class="col-12">
-                                    <label for="section" class="form-label">Section</label>
-                                    <select name="section" class="form-control" id="section">
-                                    <option value="" disabled selected>Select your section</option>
+        <label for="section" class="form-label">Section</label>
+        <select name="section" class="form-control" id="section">
+            <option value="" disabled selected>Select your section</option>
+            <option value="" disabled selected>Select your section</option>
                                     <option value="Section A">Section A</option>
                                     <option value="Section B">Section B</option>
                                     <option value="Section C">Section C</option>
                                     <option value="Section D">Section D</option>
                                     <option value="Section E">Section E</option>
                                     <option value="Section F">Section F</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select your section.</div>
-                                </div>
-                            </div>
+        </select>
+        <div class="invalid-feedback">Please select your section.</div>
+    </div>
 
-                            <!-- Grade field for Junior High & Senior High -->
-                            <div id="grade_fields" class="hidden">
-                                <div class="col-12">
-                                    <label for="grade" class="form-label">Grade</label>
-                                    <select name="grade" class="form-control" id="grade">
-                                        <option value="" disabled selected>Select your grade</option>
-                                        <option value="7">Grade 7</option>
-                                        <option value="8">Grade 8</option>
-                                        <option value="9">Grade 9</option>
-                                        <option value="10">Grade 10</option>
-                                        <option value="11">Grade 11</option>
-                                        <option value="12">Grade 12</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select your grade.</div>
-                                </div>
-                            </div>
+    <!-- Grade field (for Junior High and Senior High) -->
+    <div id="grade_fields" class="col-12">
+        <label for="grade" class="form-label">Grade</label>
+        <select name="grade" class="form-control" id="grade">
+            <option value="" disabled selected>Select your grade</option>
+            <option value="7">Grade 7</option>
+            <option value="8">Grade 8</option>
+            <option value="9">Grade 9</option>
+            <option value="10">Grade 10</option>
+            <option value="11">Grade 11</option>
+            <option value="12">Grade 12</option>
+        </select>
+        <div class="invalid-feedback">Please select your grade.</div>
+    </div>
 
-                            <!-- Track/Strand field for Senior High -->
-                            <div id="track_or_strand_field" class="hidden">
-                                <div class="col-12">
-                                    <label for="track_or_strand" class="form-label">Track or Strand</label>
-                                    <input type="text" name="track_or_strand" class="form-control" id="track_or_strand">
-                                    <div class="invalid-feedback">Please enter your track or strand.</div>
-                                </div>
-                            </div>
+    <!-- Track/Strand field (for Senior High only) -->
+    <div id="track_or_strand_field" class="col-12">
+        <label for="track_or_strand" class="form-label">Track or Strand</label>
+        <select name="track_or_strand" class="form-control" id="track_or_strand">
+            <option value="" disabled selected>Select your track or strand</option>
+            <option value="STEM">STEM</option>
+            <option value="ABM">ABM</option>
+            <option value="HUMSS">HUMSS</option>
+            <option value="TVL">TVL</option>
+            <option value="GAS">GAS</option>
+        </select>
+        <div class="invalid-feedback">Please select your track or strand.</div>
+    </div>
 
-                            <div class="col-12">
-                                <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
-                                <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
-                                <div class="invalid-feedback">Please upload your School ID (JPG or PNG).</div>
-                            </div>
+    <div class="col-12">
+        <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
+        <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
+        <div class="invalid-feedback">Please upload your School ID (JPG or PNG).</div>
+    </div>
 
-                            <div class="col-12">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" name="email" class="form-control" id="email" required>
-                                <div class="invalid-feedback">Please enter a valid email address.</div>
-                            </div>
+    <div class="col-12">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" id="email" required>
+        <div class="invalid-feedback">Please enter a valid email address.</div>
+    </div>
 
-                            <div class="col-12">
-                                <label for="yourPassword" class="form-label">Password</label>
-                                <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" required>
-                                <div class="invalid-feedback">Please enter your password.</div>
-                            </div>
+    <div class="col-12">
+        <label for="yourPassword" class="form-label">Password</label>
+        <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" required>
+        <div class="invalid-feedback">Please enter your password.</div>
+    </div>
 
-                            <div class="col-12">
-                                <label for="confirm_password" class="form-label">Confirm Password</label>
-                                <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" required>
-                                <div class="invalid-feedback">Passwords do not match.</div>
-                            </div>
+    <div class="col-12">
+        <label for="confirm_password" class="form-label">Confirm Password</label>
+        <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" required>
+        <div class="invalid-feedback">Passwords do not match.</div>
+    </div>
 
-                            <div class="col-12">
-                                <button class="btn btn-primary w-100" type="submit">Register</button>
-                            </div>
-                        </form>
+    <div class="col-12">
+        <button class="btn btn-primary w-100" type="submit">Register</button>
+    </div>
+</form>
                         <div class="loader-overlay" id="loaderOverlay">
     <div class="loader"></div>
 </div>
@@ -719,30 +714,54 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
     });
     $(document).ready(function () {
-        $('#role-select').on('change', function () {
-            var selectedRole = $(this).val();
+        // Define the fields
+        const collegeField = $('#college_fields');
+        const gradeField = $('#grade_fields');
+        const trackOrStrandField = $('#track_or_strand_field');
 
-            // Hide all fields initially
-            $('#college_fields').addClass('hidden');
-            $('#grade_fields').addClass('hidden');
-            $('#track_or_strand_field').addClass('hidden');
+        // Initially hide the grade and track/strand fields
+        gradeField.hide();
+        trackOrStrandField.hide();
+
+        // Listen for changes in the role selection
+        $('#role-select').on('change', function () {
+            const selectedRole = $(this).val();
+
+            // Reset all fields visibility
+            collegeField.hide();
+            gradeField.hide();
+            trackOrStrandField.hide();
 
             if (selectedRole === 'student') {
-                // Show college-related fields for students
-                $('#college_fields').removeClass('hidden');
+                // Show college fields if "Student" is selected
+                collegeField.show();
             } else if (selectedRole === 'junior_high') {
-                // Show grade field for Junior High, hide college fields
-                $('#grade_fields').removeClass('hidden');
-                $('#grade option').filter(function() {
-                    return $(this).val() >= 11;  // Hide grade 11 and 12 for Junior High
-                }).hide();
+                // Show grade field for Junior High
+                gradeField.show();
+
+                // Ensure grade options are for grades 7-10
+                $('#grade option').each(function () {
+                    const gradeValue = $(this).val();
+                    if (parseInt(gradeValue) >= 11) {
+                        $(this).hide();  // Hide grades 11 and 12 for Junior High
+                    } else {
+                        $(this).show();  // Show grades 7 to 10
+                    }
+                });
             } else if (selectedRole === 'senior_high') {
-                // Show grade and track_or_strand fields for Senior High
-                $('#grade_fields').removeClass('hidden');
-                $('#track_or_strand_field').removeClass('hidden');
-                $('#grade option').filter(function() {
-                    return $(this).val() <= 10;  // Hide grade 7 to 10 for Senior High
-                }).hide();
+                // Show grade and track/strand fields for Senior High
+                gradeField.show();
+                trackOrStrandField.show();
+
+                // Ensure grade options are for grades 11-12
+                $('#grade option').each(function () {
+                    const gradeValue = $(this).val();
+                    if (parseInt(gradeValue) <= 10) {
+                        $(this).hide();  // Hide grades 7 to 10 for Senior High
+                    } else {
+                        $(this).show();  // Show grades 11 and 12
+                    }
+                });
             }
         });
     });
