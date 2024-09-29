@@ -71,36 +71,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt->close();
 
-    // Handle file upload
-    $target_dir = "uploads/ids/";  // Directory to store uploaded ID images
-    $id_file = $target_dir . basename($_FILES["id_file"]["name"]);
-    $imageFileType = strtolower(pathinfo($id_file, PATHINFO_EXTENSION));
-
-    // Allow certain file formats (jpg, png)
-    $allowed_types = ['jpg', 'jpeg', 'png'];
-    if (!in_array($imageFileType, $allowed_types)) {
-        $response = ['success' => false, 'message' => 'Invalid file format. Only JPG, JPEG, and PNG are allowed.'];
-        echo json_encode($response);
-        exit;
-    }
-
-    // Move the uploaded file to the desired directory
-    if (!move_uploaded_file($_FILES["id_file"]["tmp_name"], $id_file)) {
-        $response = ['success' => false, 'message' => 'Error uploading ID.'];
-        echo json_encode($response);
-        exit;
-    }
-
     // Prepare the SQL statement to insert new user
-    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, id_file) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type) VALUES (?, ?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {
         $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
         echo json_encode($response);
         exit;
     }
 
-    // Bind parameters including the user_type and ID file path
-    $stmt->bind_param("ssssssss", $first_name, $last_name, $username, $hashed_password, $department, $position, $user_type, $id_file);
+    // Bind parameters including the user_type field
+    $stmt->bind_param("sssssss", $first_name, $last_name, $username, $hashed_password, $department, $position, $user_type);
 
     // Execute the query and check for success
     if ($stmt->execute()) {

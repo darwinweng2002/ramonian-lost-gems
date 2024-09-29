@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $status = 'pending';
 
   // Prepare the SQL statement for the user_staff table
-  $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, user_type, position, department, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("sssssss", $first_name, $last_name, $email, $user_type, $position, $department, $status);
+  $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, department, position, email, password, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("sssssss", $first_name, $last_name, $department, $position, $email, $password, $status);
 
   // Execute the query and check for success
   if ($stmt->execute()) {
@@ -179,10 +179,7 @@ body {
         <input type="text" name="position" class="form-control" id="position">
         <div class="invalid-feedback">Please enter your role/position.</div>
     </div>
-    <div class="form-group">
-        <label for="id_file">Upload ID (JPG, PNG):</label>
-        <input type="file" name="id_file" class="form-control" id="id_file" accept=".jpg,.jpeg,.png" required>
-    </div>
+
     <!-- Username -->
     <div class="col-12">
                       <label for="email" class="form-label">Email</label> 
@@ -375,4 +372,3 @@ if (!emailRegex.test(email)) {
 <?php require_once('inc/footer.php') ?>
 </body>
 </html>
-
