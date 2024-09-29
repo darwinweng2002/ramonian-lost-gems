@@ -43,7 +43,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Sige</title>
+    <title>User Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
@@ -142,7 +142,7 @@ $conn->close();
 <body>
 
 <div class="container">
-    <h2>User burat</h2>
+    <h2>User Details</h2>
     <div class="user-info">
         <p><strong>First Name:</strong> <?= htmlspecialchars($user['first_name']) ?></p>
         <p><strong>Last Name:</strong> <?= htmlspecialchars($user['last_name']) ?></p>
