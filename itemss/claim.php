@@ -232,15 +232,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
     <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
 
-    <!-- Display College for user_member, and Department for user_staff -->
+    <!-- Display College for user_member, and Position/Department for user_staff -->
     <?php if ($userType == 'user_member'): ?>
         <p>College: <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
         <p>Course: <?= htmlspecialchars($claimantData['course'] ?? 'N/A'); ?></p>
         <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section'] ?? 'N/A'); ?></p>
     <?php elseif ($userType == 'user_staff'): ?>
-        <p>Department: <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
+        <?php if (!empty($claimantData['position'])): ?>
+            <!-- Display Position for non-teaching staff -->
+            <p>Position: <?= htmlspecialchars($claimantData['position']); ?></p>
+        <?php else: ?>
+            <!-- Display Department for other staff -->
+            <p>Department: <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
+        <?php endif; ?>
     <?php endif; ?>
 </div>
+
 
 
     <!-- Claim Form -->
