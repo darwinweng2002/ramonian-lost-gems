@@ -58,13 +58,17 @@ $result = $conn->query($sql);
                             <td><?= htmlspecialchars($row['section']) ?></td>
                             <td><?= htmlspecialchars($row['email']) ?></td>
                             <td>
-                                <?php if (!empty($row['school_id_file'])): ?>
-                                    <!-- Display the school ID image if it exists -->
-                                    <img src="<?= 'uploads/school_ids/' . htmlspecialchars($row['school_id_file']) ?>" alt="School ID" style="width: 100px; height: auto;">
-                                <?php else: ?>
-                                    <!-- Fallback if no school ID is provided -->
-                                    <span>No ID Uploaded</span>
-                                <?php endif; ?>
+                            <?php
+        // Check if school_id_file is not NULL
+        if (!empty($user['school_id_file'])) {
+            $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);
+            echo '<a href="' . $schoolIdPath . '" data-lightbox="school-id" data-title="School ID">
+                    <img src="' . $schoolIdPath . '" alt="School ID" class="proof-image" />
+                  </a>';
+        } else {
+            echo '<p>No School ID uploaded.</p>';
+        }
+        ?>
                             </td>
                         </tr>
                     <?php endwhile; ?>
