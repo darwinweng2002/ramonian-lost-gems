@@ -195,42 +195,42 @@ $result = $conn->query($sql);
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($result->num_rows > 0): ?>
-                        <?php while ($row = $result->fetch_assoc()): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($row['user_type'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['first_name'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['last_name'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['email'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['position'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['department'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['registration_date'] ?? 'N/A') ?></td>
-                                <td>
-                                <div class="d-flex justify-content-center">
-                                    <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-                                        <i class="fas fa-eye"></i> View Details
-                                    </a>
-                                    <?php if ($row['status'] !== 'active'): ?>  <!-- Check if the user is not yet active -->
-                                        <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
-                                            <i class="fas fa-check"></i> Approve
-                                        </button>
-                                    <?php else: ?>
-                                        <button class="btn btn-secondary btn-sm ms-2" disabled>Approved</button> <!-- Button will show disabled once status is active -->
-                                    <?php endif; ?>
-                                    <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
-                                        <i class="fas fa-trash-alt"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
+    <?php if ($result->num_rows > 0): ?>
+        <?php while ($row = $result->fetch_assoc()): ?>
+            <tr>
+                <td><?= htmlspecialchars($row['user_type'] ?? 'N/A') ?></td> <!-- Make sure 'user_type' exists -->
+                <td><?= htmlspecialchars($row['first_name'] ?? 'N/A') ?></td>
+                <td><?= htmlspecialchars($row['last_name'] ?? 'N/A') ?></td>
+                <td><?= htmlspecialchars($row['email'] ?? 'N/A') ?></td>
+                <td><?= htmlspecialchars($row['position'] ?? 'N/A') ?></td>
+                <td><?= htmlspecialchars($row['department'] ?? 'N/A') ?></td>
+                <td><?= htmlspecialchars($row['registration_date'] ?? 'N/A') ?></td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                        <?php if ($row['status'] !== 'active'): ?>  <!-- Check if the user is not yet active -->
+                            <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                        <?php else: ?>
+                            <button class="btn btn-secondary btn-sm ms-2" disabled>Approved</button> <!-- Button will show disabled once status is active -->
+                        <?php endif; ?>
+                        <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        <?php endwhile; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="8" class="no-data">No registered users found.</td>
+        </tr>
+    <?php endif; ?>
+</tbody>
 
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="8" class="no-data">No registered users found.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
             </table>
         </div>
     </div>

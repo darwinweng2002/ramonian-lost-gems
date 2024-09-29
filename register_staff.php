@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $status = 'pending';
 
   // Prepare the SQL statement for the user_staff table
-  $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, department, position, email, password, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("sssssss", $first_name, $last_name, $department, $position, $email, $password, $status);
+  $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, user_type, position, department, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("sssssss", $first_name, $last_name, $email, $user_type, $position, $department, $status);
 
   // Execute the query and check for success
   if ($stmt->execute()) {
