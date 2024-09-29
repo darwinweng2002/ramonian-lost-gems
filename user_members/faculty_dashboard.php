@@ -58,35 +58,21 @@ if (isset($_POST['upload_avatar'])) {
     }
 }
 
-// Fetch the user's claim history
-$claimer = [];
-if (!$is_guest) {
-    // Determine whether it's a regular user or staff and adjust the query accordingly
-    if (isset($_SESSION['staff_id'])) {
-        // Staff user
-        $staff_id = $_SESSION['staff_id'];
-        $claim_stmt = $conn->prepare("
-            SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
-            FROM claimer c 
-            JOIN message_history i ON c.item_id = i.id 
-            WHERE c.staff_id = ?
-        ");
-        $claim_stmt->bind_param("i", $staff_id);
-    } else {
-        // Regular user
-        $user_id = $_SESSION['user_id'];
-        $claim_stmt = $conn->prepare("
-            SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
-            FROM claimer c 
-            JOIN message_history i ON c.item_id = i.id 
-            WHERE c.user_id = ?
-        ");
-        $claim_stmt->bind_param("i", $user_id);
-    }
+if (isset($_SESSION['staff_id'])) {
+    $staff_id = $_SESSION['staff_id'];
+    echo "Debug: Staff ID = " . $staff_id; // Debugging line
 
+    $claim_stmt = $conn->prepare("
+        SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
+        FROM claimer c 
+        JOIN message_history i ON c.item_id = i.id 
+        WHERE c.staff_id = ?
+    ");
+    $claim_stmt->bind_param("i", $staff_id);
     $claim_stmt->execute();
     $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
     while ($claim_stmt->fetch()) {
+        echo "Debug: Item Fetched: " . $item_name . " - " . $status; // Debugging line
         $claimer[] = [
             'item_id' => $item_id, 
             'item_name' => $item_name, 
@@ -96,6 +82,7 @@ if (!$is_guest) {
     }
     $claim_stmt->close();
 }
+
 
 // Fetch the staff's posted missing items history
 $missing_items = [];
