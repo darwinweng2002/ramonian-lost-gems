@@ -62,14 +62,15 @@ if (isset($_POST['upload_avatar'])) {
 // Fetch the staff's claim history
 // Fetch the staff's claim history
 $claimer = [];
-// Fetch claim history for the current user (staff)
+
+// Fetch claim history for staff users (using `staff_id`)
 $claim_stmt = $conn->prepare("
     SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
     FROM claimer c 
     JOIN message_history i ON c.item_id = i.id 
-    WHERE c.user_id = ?
+    WHERE c.staff_id = ?
 ");
-$claim_stmt->bind_param("i", $user_id);
+$claim_stmt->bind_param("i", $staff_id);
 $claim_stmt->execute();
 $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
 while ($claim_stmt->fetch()) {
@@ -81,6 +82,7 @@ while ($claim_stmt->fetch()) {
     ];
 }
 $claim_stmt->close();
+
 
 // Fetch the staff's posted missing items history
 $missing_items = [];
@@ -426,7 +428,7 @@ $is_non_teaching = empty($department);
 
                                     <div class="tab-content">
                                         <!-- Claim History Tab -->
-                                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                        <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
     <h5 class="history-title">Claim History</h5>
     <table class="table table-striped claim-history-table">
         <thead>
@@ -439,7 +441,7 @@ $is_non_teaching = empty($department);
         <tbody>
             <?php foreach ($claimer as $claim): ?>
                 <tr>
-                <td><a href="https://ramonianlostgems.com/itemss/published_items.php?id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
+                    <td><a href="view_item.php?id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
                     <td><?= htmlspecialchars($claim['claim_date']) ?></td>
                     <td class="<?= $claim['status'] === 'approved' ? 'status-approved' : ($claim['status'] === 'rejected' ? 'status-declined' : 'status-pending') ?>">
                         <?= htmlspecialchars(ucfirst($claim['status'])) ?>
@@ -449,6 +451,7 @@ $is_non_teaching = empty($department);
         </tbody>
     </table>
 </div>
+
 
                                         <!-- Posted Found Items Tab -->
                                         <div class="tab-pane fade" id="found-items" role="tabpanel" aria-labelledby="found-items-tab">
