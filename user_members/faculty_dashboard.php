@@ -62,27 +62,33 @@ if (isset($_POST['upload_avatar'])) {
 $claimer = [];
 
 // Fetch the staff's claim history
+// If the user is staff, fetch the claim history by staff_id
 $claimer = [];
 
-// Fetch claim history for staff users (check for claims linked to staff_id)
-$claim_stmt = $conn->prepare("
-    SELECT c.item_id, mh.title AS item_name, c.claim_date, c.status 
-    FROM claimer c 
-    JOIN message_history mh ON c.item_id = mh.id 
-    WHERE c.staff_id = ?
-");
-$claim_stmt->bind_param("i", $staff_id);
-$claim_stmt->execute();
-$claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
-while ($claim_stmt->fetch()) {
-    $claimer[] = [
-        'item_id' => $item_id, 
-        'item_name' => $item_name, 
-        'claim_date' => $claim_date, 
-        'status' => $status
-    ];
+if (isset($_SESSION['staff_id'])) {
+    $staff_id = $_SESSION['staff_id'];
+    
+    // Modify the query to fetch claims for staff
+    $claim_stmt = $conn->prepare("
+        SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
+        FROM claimer c 
+        JOIN message_history i ON c.item_id = i.id 
+        WHERE c.staff_id = ?
+    ");
+    $claim_stmt->bind_param("i", $staff_id);
+    $claim_stmt->execute();
+    $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
+    while ($claim_stmt->fetch()) {
+        $claimer[] = [
+            'item_id' => $item_id, 
+            'item_name' => $item_name, 
+            'claim_date' => $claim_date, 
+            'status' => $status
+        ];
+    }
+    $claim_stmt->close();
 }
-$claim_stmt->close();
+
 
 
 
