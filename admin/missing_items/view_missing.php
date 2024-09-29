@@ -31,12 +31,12 @@ if (isset($_GET['id'])) {
     LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
     LEFT JOIN categories c ON mi.category_id = c.id
     WHERE mi.id = ?
-";
+    ";
 
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('i', $itemId);
-$stmt->execute();
-$result = $stmt->get_result();
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $itemId);
+    $stmt->execute();
+    $result = $stmt->get_result();
 }
 ?>
 
@@ -132,49 +132,49 @@ $result = $stmt->get_result();
 <?php require_once('../inc/topBarNav.php') ?>
 <?php require_once('../inc/navigation.php') ?> 
     <div class="container">
-        <h1>View Missing Item Details</h1>
-        <?php
-        if ($result->num_rows > 0) {
-            $items = [];
-            while ($row = $result->fetch_assoc()) {
-                if (!isset($items[$row['id']])) {
-                    $items[$row['id']] = [
-                        'description' => $row['description'],
-                        'last_seen_location' => $row['last_seen_location'],
-                        'owner' => $row['owner'],
-                        'time_missing' => $row['time_missing'],
-                        'title' => $row['title'],
-                        'status' => $row['status'],
-                        'first_name' => $row['first_name'],
-                        'college' => $row['college'],
-                        'email' => $row['email'],
-                        'avatar' => $row['avatar'],
-                        'images' => [],
-                        'contact' => $row['contact'],
-                        'category_name' => $row['category_name']
-                    ];
-                }
-                if ($row['image_path']) {
-                    $fullImagePath = base_url . 'uploads/missing_items/' . $row['image_path'];
-                    $items[$row['id']]['images'][] = $fullImagePath;
-                }
+    <h1>View Missing Item Details</h1>
+    <?php
+    if ($result->num_rows > 0) {
+        $items = [];
+        while ($row = $result->fetch_assoc()) {
+            if (!isset($items[$row['id']])) {
+                $items[$row['id']] = [
+                    'description' => $row['description'],
+                    'last_seen_location' => $row['last_seen_location'],
+                    'owner' => $row['owner'],
+                    'time_missing' => $row['time_missing'],
+                    'title' => $row['title'],
+                    'status' => $row['status'],
+                    'first_name' => $row['first_name'],
+                    'college' => $row['college'],
+                    'email' => $row['email'],
+                    'avatar' => $row['avatar'],
+                    'images' => [],
+                    'contact' => $row['contact'],
+                    'category_name' => $row['category_name']
+                ];
             }
+            if ($row['image_path']) {
+                $fullImagePath = base_url . 'uploads/missing_items/' . $row['image_path'];
+                $items[$row['id']]['images'][] = $fullImagePath;
+            }
+        }
 
-            foreach ($items as $itemId => $itemData) {
-                $firstName = htmlspecialchars($itemData['first_name'] ?? '');
-                $email = htmlspecialchars($itemData['email'] ?? '');
-                $college = htmlspecialchars($itemData['college'] ?? '');
-                $title = htmlspecialchars($itemData['title'] ?? '');
-                $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
-                $description = htmlspecialchars($itemData['description'] ?? '');
-                $owner = htmlspecialchars($itemData['owner'] ?? '');
-                $avatar = htmlspecialchars($itemData['avatar'] ?? '');
-                $timeMissing = htmlspecialchars($itemData['time_missing'] ?? '');
-                $contact = htmlspecialchars($itemData['contact'] ?? '');
-                $categoryName = htmlspecialchars($itemData['category_name'] ?? '');
-                $status = intval($itemData['status']);
+        foreach ($items as $itemId => $itemData) {
+            $firstName = htmlspecialchars($itemData['first_name'] ?? '');
+            $email = htmlspecialchars($itemData['email'] ?? '');
+            $college = htmlspecialchars($itemData['college'] ?? '');
+            $title = htmlspecialchars($itemData['title'] ?? '');
+            $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
+            $description = htmlspecialchars($itemData['description'] ?? '');
+            $owner = htmlspecialchars($itemData['owner'] ?? '');
+            $avatar = htmlspecialchars($itemData['avatar'] ?? '');
+            $timeMissing = htmlspecialchars($itemData['time_missing'] ?? '');
+            $contact = htmlspecialchars($itemData['contact'] ?? '');
+            $categoryName = htmlspecialchars($itemData['category_name'] ?? '');
+            $status = intval($itemData['status']);
 
-                echo "<div class='message-box'>";
+            echo "<div class='message-box'>";
                 
                 if ($avatar) {
                     $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
