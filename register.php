@@ -718,6 +718,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         });
     });
+    $(document).ready(function () {
+        $('#role-select').on('change', function () {
+            var selectedRole = $(this).val();
+
+            // Hide all fields initially
+            $('#college_fields').addClass('hidden');
+            $('#grade_fields').addClass('hidden');
+            $('#track_or_strand_field').addClass('hidden');
+
+            if (selectedRole === 'student') {
+                // Show college-related fields for students
+                $('#college_fields').removeClass('hidden');
+            } else if (selectedRole === 'junior_high') {
+                // Show grade field for Junior High, hide college fields
+                $('#grade_fields').removeClass('hidden');
+                $('#grade option').filter(function() {
+                    return $(this).val() >= 11;  // Hide grade 11 and 12 for Junior High
+                }).hide();
+            } else if (selectedRole === 'senior_high') {
+                // Show grade and track_or_strand fields for Senior High
+                $('#grade_fields').removeClass('hidden');
+                $('#track_or_strand_field').removeClass('hidden');
+                $('#grade option').filter(function() {
+                    return $(this).val() <= 10;  // Hide grade 7 to 10 for Senior High
+                }).hide();
+            }
+        });
+    });
   </script>
 </body>
 </html>
