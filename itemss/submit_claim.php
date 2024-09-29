@@ -1,6 +1,5 @@
 <?php
 include '../config.php';
-session_start(); // Ensure session is started
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -10,18 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $dateLost = htmlspecialchars(trim($_POST['date_lost']));
     $locationLost = htmlspecialchars(trim($_POST['location_lost']));
     $securityQuestion = htmlspecialchars(trim($_POST['security_question']));
-    
-    // Determine if the user is from user_member or user_staff
-    if (isset($_SESSION['user_id'])) {
-        $claimantId = $_SESSION['user_id']; // For user_member
-        $isStaff = false;
-    } elseif (isset($_SESSION['staff_id'])) {
-        $claimantId = $_SESSION['staff_id']; // For user_staff
-        $isStaff = true;
-    } else {
-        echo "User not logged in!";
-        exit;
-    }
+    $claimantId = $_SESSION['user_id'];
 
     // Directory for uploading files
     $uploadDir = '../uploads/claims/';
@@ -58,14 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Insert the claim into the database
-    // Include an extra field `is_staff` to differentiate between user_member and user_staff
-    $sql = "INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id, is_staff)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('iissssssi', $itemId, $claimantId, $itemDescription, $dateLost, $locationLost, $proofOfOwnershipPath, $securityQuestion, $personalIdPath, $isStaff);
-
+    $stmt->bind_param('iissssss', $itemId, $claimantId, $itemDescription, $dateLost, $locationLost, $proofOfOwnershipPath, $securityQuestion, $personalIdPath);
+    
     if ($stmt->execute()) {
         echo "Claim submitted successfully!";
+        // Redirect to a success page or provide feedback
     } else {
         echo "Error submitting claim.";
     }

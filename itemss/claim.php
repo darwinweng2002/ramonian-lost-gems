@@ -171,7 +171,7 @@ $claimantData = $claimantResult->fetch_assoc();
     </div>
 
     <!-- Display Claimant's Information -->
-    <h3>Your Information</h3>
+     <h3>Your Information</h3>
     <div class="info-section">
         <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
         <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
