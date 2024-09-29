@@ -452,6 +452,7 @@ $is_non_teaching = empty($department);
     </tbody>
 </table>
 
+
     </table>
 </div>
 
