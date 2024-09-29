@@ -60,7 +60,7 @@ $result = $conn->query($sql);
                             <td>
                                 <?php if (!empty($row['school_id_file'])): ?>
                                     <!-- Display the school ID image if it exists -->
-                                    <img src="<?= 'uploads/school_ids/' . htmlspecialchars($row['school_id_file']) ?>" alt="School ID" style="width: 100px; height: auto;">
+                                    <img src="<?= '/uploads/school_ids/' . htmlspecialchars($row['school_id_file']) ?>" alt="School ID" style="width: 100px; height: auto;">
                                 <?php else: ?>
                                     <!-- Fallback if no school ID is provided -->
                                     <span>No ID Uploaded</span>
