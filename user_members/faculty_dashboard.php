@@ -59,15 +59,17 @@ if (isset($_POST['upload_avatar'])) {
 }
 
 $claimer = [];
-if  {
-    // Only fetch claim history for regular users
+
+if (isset($_SESSION['staff_id'])) {
+    // Fetch claim history for staff
+    $staff_id = $_SESSION['staff_id'];
     $claim_stmt = $conn->prepare("
         SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
         FROM claimer c 
         JOIN message_history i ON c.item_id = i.id 
-        WHERE c.staff_id = ?
+        WHERE c.user_id = ?
     ");
-    $claim_stmt->bind_param("i", $user_id);
+    $claim_stmt->bind_param("i", $staff_id);
     $claim_stmt->execute();
     $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
     while ($claim_stmt->fetch()) {
