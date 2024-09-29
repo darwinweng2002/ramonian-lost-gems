@@ -44,16 +44,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // **Insert for staff users**
-    if (isset($_SESSION['staff_id'])) {
-        $staff_id = $_SESSION['staff_id']; // Get the staff_id from the session
-        $stmt = $conn->prepare("INSERT INTO claimer (item_id, staff_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id, status, claim_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())");
-        $stmt->bind_param('iissssss', $itemId, $staff_id, $itemDescription, $dateLost, $locationLost, $proofOfOwnershipPath, $securityQuestion, $personalIdPath);
-        $stmt->execute();
-        $stmt->close();
-
-        echo "Claim submitted successfully for staff!";
-    }
+    // Insert the claim into the claimer table with staff_id if the user is staff
+if (isset($_SESSION['staff_id'])) {
+    $stmt = $conn->prepare("INSERT INTO claimer (item_id, staff_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id, status, claim_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())");
+    $stmt->bind_param('iissssss', $itemId, $staff_id, $itemDescription, $dateLost, $locationLost, $proofOfOwnershipPath, $securityQuestion, $personalIdPath);
+    $stmt->execute();
+    $stmt->close();
+}
     // **Insert for regular users**
     elseif (isset($_SESSION['user_id'])) {
         $user_id = $_SESSION['user_id']; // Get the user_id from the session

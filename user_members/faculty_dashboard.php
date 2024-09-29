@@ -58,36 +58,33 @@ if (isset($_POST['upload_avatar'])) {
     }
 }
 
-// Fetch the staff's claim history
-$claimer = [];
+// Fetch the staff's claim history based on their staff ID
+$staff_id = $_SESSION['staff_id']; // Get staff ID from the session
+$claimer = []; 
 
-// Fetch the staff's claim history
-// If the user is staff, fetch the claim history by staff_id
-$claimer = [];
+// Prepare the SQL query to fetch the claim history for the logged-in staff
+$claim_stmt = $conn->prepare("
+    SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
+    FROM claimer c 
+    JOIN message_history i ON c.item_id = i.id 
+    WHERE c.staff_id = ? 
+");
+$claim_stmt->bind_param("i", $staff_id); // Bind the staff ID to the query
+$claim_stmt->execute();
+$claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
 
-if (isset($_SESSION['staff_id'])) {
-    $staff_id = $_SESSION['staff_id'];
-    
-    // Modify the query to fetch claims for staff
-    $claim_stmt = $conn->prepare("
-        SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
-        FROM claimer c 
-        JOIN message_history i ON c.item_id = i.id 
-        WHERE c.staff_id = ?
-    ");
-    $claim_stmt->bind_param("i", $staff_id);
-    $claim_stmt->execute();
-    $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
-    while ($claim_stmt->fetch()) {
-        $claimer[] = [
-            'item_id' => $item_id, 
-            'item_name' => $item_name, 
-            'claim_date' => $claim_date, 
-            'status' => $status
-        ];
-    }
-    $claim_stmt->close();
+// Fetch and store the results in an array
+while ($claim_stmt->fetch()) {
+    $claimer[] = [
+        'item_id' => $item_id,
+        'item_name' => $item_name,
+        'claim_date' => $claim_date,
+        'status' => $status
+    ];
 }
+
+$claim_stmt->close();
+
 
 
 
@@ -446,15 +443,21 @@ $is_non_teaching = empty($department);
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($claimer as $claim): ?>
+        <?php if (!empty($claimer)): ?>
+            <?php foreach ($claimer as $claim): ?>
+                <tr>
+                    <td><a href="view_item.php?id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
+                    <td><?= htmlspecialchars($claim['claim_date']) ?></td>
+                    <td class="<?= $claim['status'] === 'approved' ? 'status-approved' : ($claim['status'] === 'rejected' ? 'status-declined' : 'status-pending') ?>">
+                        <?= htmlspecialchars(ucfirst($claim['status'])) ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
             <tr>
-                <td><a href="view_item.php?id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
-                <td><?= htmlspecialchars($claim['claim_date']) ?></td>
-                <td class="<?= $claim['status'] === 'approved' ? 'badge-approved' : ($claim['status'] === 'rejected' ? 'badge-rejected' : 'badge-pending') ?>">
-                    <?= htmlspecialchars(ucfirst($claim['status'])) ?>
-                </td>
+                <td colspan="3">No claims found.</td>
             </tr>
-        <?php endforeach; ?>
+        <?php endif; ?>
     </tbody>
 </table>
 
