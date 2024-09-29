@@ -59,21 +59,21 @@ if (isset($_POST['upload_avatar'])) {
 }
 
 // Fetch the staff's claim history based on their staff ID
-$staff_id = $_SESSION['staff_id']; // Get staff ID from the session
+// Fetch the staff's claim history
+$staff_id = $_SESSION['staff_id']; // Get staff ID from session
 $claimer = []; 
 
-// Prepare the SQL query to fetch the claim history for the logged-in staff
+// Query to fetch claim history based on staff_id
 $claim_stmt = $conn->prepare("
     SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
     FROM claimer c 
     JOIN message_history i ON c.item_id = i.id 
-    WHERE c.staff_id = ? 
+    WHERE c.staff_id = ?
 ");
 $claim_stmt->bind_param("i", $staff_id); // Bind the staff ID to the query
 $claim_stmt->execute();
 $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
 
-// Fetch and store the results in an array
 while ($claim_stmt->fetch()) {
     $claimer[] = [
         'item_id' => $item_id,
@@ -84,11 +84,6 @@ while ($claim_stmt->fetch()) {
 }
 
 $claim_stmt->close();
-
-
-
-
-
 // Fetch the staff's posted missing items history
 $missing_items = [];
 $missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
