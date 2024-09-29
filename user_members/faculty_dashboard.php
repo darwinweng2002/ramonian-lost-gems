@@ -58,14 +58,14 @@ if (isset($_POST['upload_avatar'])) {
     }
 }
 
-// Fetch the staff's claim history (adjusted for staff users)
+// Fetch the staff's claim history
 $claimer = [];
 
-// Fetch claim history for staff users (using `staff_id`)
+// Fetch claim history for staff users (use `staff_id` instead of `user_id`)
 $claim_stmt = $conn->prepare("
-    SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
+    SELECT c.item_id, mh.title AS item_name, c.claim_date, c.status 
     FROM claimer c 
-    JOIN message_history i ON c.item_id = i.id 
+    JOIN message_history mh ON c.item_id = mh.id 
     WHERE c.staff_id = ?
 ");
 $claim_stmt->bind_param("i", $staff_id);
@@ -80,6 +80,7 @@ while ($claim_stmt->fetch()) {
     ];
 }
 $claim_stmt->close();
+
 
 // Fetch the staff's posted missing items history
 $missing_items = [];
@@ -425,26 +426,28 @@ $is_non_teaching = empty($department);
                                     <div class="tab-content">
                                         <!-- Claim History Tab -->
                                         <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-    <h5 class="history-title">Claim History</h5>
-    <table class="table table-striped claim-history-table">
-        <thead>
+                                        <h5 class="history-title">Claim History</h5>
+<table class="table table-striped claim-history-table">
+    <thead>
+        <tr>
+            <th>Item Name</th>
+            <th>Date Claimed</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($claimer as $claim): ?>
             <tr>
-                <th>Item Name</th>
-                <th>Date Claimed</th>
-                <th>Status</th>
+                <td><a href="view_item.php?id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
+                <td><?= htmlspecialchars($claim['claim_date']) ?></td>
+                <td class="<?= $claim['status'] === 'approved' ? 'badge-approved' : ($claim['status'] === 'rejected' ? 'badge-rejected' : 'badge-pending') ?>">
+                    <?= htmlspecialchars(ucfirst($claim['status'])) ?>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($claimer as $claim): ?>
-                <tr>
-                    <td><a href="view_item.php?id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
-                    <td><?= htmlspecialchars($claim['claim_date']) ?></td>
-                    <td class="<?= $claim['status'] === 'approved' ? 'status-approved' : ($claim['status'] === 'rejected' ? 'status-declined' : 'status-pending') ?>">
-                        <?= htmlspecialchars(ucfirst($claim['status'])) ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
     </table>
 </div>
 
