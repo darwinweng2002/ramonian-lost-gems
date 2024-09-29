@@ -1,25 +1,17 @@
 <?php
 include '../../config.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
-    $user_id = intval($_POST['user_id']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user_id = $_POST['user_id'];
 
-    // Connect to the database
-    $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
-
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    // Update the user status to 'approved'
-    $sql = "UPDATE user_staff SET status = 'approved' WHERE id = ?";
-    $stmt = $conn->prepare($sql);
+    // Update user status to "active" (since the approved status is actually 'active' in the table)
+    $stmt = $conn->prepare("UPDATE user_staff SET status = 'active' WHERE id = ?");
     $stmt->bind_param("i", $user_id);
 
     if ($stmt->execute()) {
-        echo '1'; // Success
+        echo '1';  // Return success response
     } else {
-        echo '0'; // Failure
+        echo '0';  // Return failure response
     }
 
     $stmt->close();

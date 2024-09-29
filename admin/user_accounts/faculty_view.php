@@ -206,22 +206,23 @@ $result = $conn->query($sql);
                                 <td><?= htmlspecialchars($row['department'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($row['registration_date'] ?? 'N/A') ?></td>
                                 <td>
-                                    <div class="d-flex justify-content-center">
-                                        <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-                                            <i class="fas fa-eye"></i> View Details
-                                        </a>
-                                        <?php if ($row['status'] !== 'approved'): ?>
-                                            <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
-                                                <i class="fas fa-check"></i> Approve
-                                            </button>
-                                        <?php else: ?>
-                                            <button class="btn btn-secondary btn-sm ms-2" disabled>Approved</button>
-                                        <?php endif; ?>
-                                        <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
-                                            <i class="fas fa-trash-alt"></i> Delete
+                                <div class="d-flex justify-content-center">
+                                    <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
+                                    <?php if ($row['status'] !== 'active'): ?>  <!-- Check if the user is not yet active -->
+                                        <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                                            <i class="fas fa-check"></i> Approve
                                         </button>
-                                    </div>
-                                </td>
+                                    <?php else: ?>
+                                        <button class="btn btn-secondary btn-sm ms-2" disabled>Approved</button> <!-- Button will show disabled once status is active -->
+                                    <?php endif; ?>
+                                    <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
@@ -289,8 +290,7 @@ function approveUser(event, id) {
             })
             .then(response => response.text())
             .then(result => {
-                console.log('Approval result:', result); // For debugging
-                if (result.trim() === '1') {
+                if (result.trim() === '1') {  // Success
                     const approveBtn = document.getElementById('approve-btn-' + id);
                     approveBtn.classList.replace('btn-success', 'btn-secondary');
                     approveBtn.innerHTML = 'Approved';
@@ -307,7 +307,6 @@ function approveUser(event, id) {
         }
     });
 }
-
 </script>
 
 <?php
