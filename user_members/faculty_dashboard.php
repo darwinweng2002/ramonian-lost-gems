@@ -58,7 +58,6 @@ if (isset($_POST['upload_avatar'])) {
     }
 }
 
-// Fetch the user's claim history for staff users
 $claimer = [];
 
 if (isset($_SESSION['staff_id'])) {
@@ -83,10 +82,6 @@ if (isset($_SESSION['staff_id'])) {
     }
     $claim_stmt->close();
 }
-
-// Show the claim history in the staff dashboard as you did for regular users
-?>
-
 
 
 
