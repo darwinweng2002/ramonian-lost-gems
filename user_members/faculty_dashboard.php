@@ -30,7 +30,6 @@ $stmt->bind_result($first_name, $last_name, $department, $position, $email, $ava
 $stmt->fetch();
 $stmt->close();
 
-
 // Handle avatar upload
 if (isset($_POST['upload_avatar'])) {
     if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
@@ -59,8 +58,7 @@ if (isset($_POST['upload_avatar'])) {
     }
 }
 
-// Fetch the staff's claim history
-// Fetch the staff's claim history
+// Fetch the staff's claim history (adjusted for staff users)
 $claimer = [];
 
 // Fetch claim history for staff users (using `staff_id`)
@@ -82,7 +80,6 @@ while ($claim_stmt->fetch()) {
     ];
 }
 $claim_stmt->close();
-
 
 // Fetch the staff's posted missing items history
 $missing_items = [];
@@ -123,7 +120,6 @@ $message_stmt->close();
 // Determine if the user is non-teaching (department is empty)
 $is_non_teaching = empty($department);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
