@@ -142,7 +142,7 @@ $conn->close();
 <body>
 
 <div class="container">
-    <h2>User Details</h2>
+    <h2>User burat</h2>
     <div class="user-info">
         <p><strong>First Name:</strong> <?= htmlspecialchars($user['first_name']) ?></p>
         <p><strong>Last Name:</strong> <?= htmlspecialchars($user['last_name']) ?></p>
