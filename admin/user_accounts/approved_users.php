@@ -27,10 +27,7 @@ $result = $conn->query($sql);
 <?php require_once('../inc/topBarNav.php') ?>
 <?php require_once('../inc/navigation.php') ?> 
     <div class="container">
-        <br>
-        <br>
-        <br>
-        <br>
+        <br><br><br><br>
         <h3>Approved Users - PRMSU Iba</h3>
 
         <table class="table table-striped table-bordered">
@@ -58,17 +55,13 @@ $result = $conn->query($sql);
                             <td><?= htmlspecialchars($row['section']) ?></td>
                             <td><?= htmlspecialchars($row['email']) ?></td>
                             <td>
-                            <?php
-        // Check if school_id_file is not NULL
-        if (!empty($user['school_id_file'])) {
-            $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);
-            echo '<a href="' . $schoolIdPath . '" data-lightbox="school-id" data-title="School ID">
-                    <img src="' . $schoolIdPath . '" alt="School ID" class="proof-image" />
-                  </a>';
-        } else {
-            echo '<p>No School ID uploaded.</p>';
-        }
-        ?>
+                                <?php if (!empty($row['school_id_file'])): ?>
+                                    <!-- Display the school ID image if it exists -->
+                                    <img src="<?= base_url ?>uploads/school_ids/<?= htmlspecialchars($row['school_id_file']) ?>" alt="School ID" style="width: 100px; height: auto;">
+                                <?php else: ?>
+                                    <!-- Fallback if no school ID is provided -->
+                                    <span>No ID Uploaded</span>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php endwhile; ?>
