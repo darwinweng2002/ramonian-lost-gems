@@ -58,7 +58,7 @@ $result = $conn->query($sql);
                             <?php if (!empty($row['school_id_file'])): ?>
                                 <!-- Display the school ID image if it exists -->
                                 <?php
-                                $schoolIdPath = base_url . 'uploads/school_ids/' . htmlspecialchars($row['school_id_file']);
+                                $schoolIdPath = base_url . '../uploads/school_ids/' . htmlspecialchars($row['school_id_file']);
                                 echo '<img src="' . $schoolIdPath . '" alt="School ID" style="width: 100px; height: auto;">';
                                 echo '<br>Path: ' . $schoolIdPath;  // Debugging: output the image path
                                 ?>
