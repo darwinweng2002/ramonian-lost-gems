@@ -308,6 +308,7 @@ function approveUser(event, id) {
         }
     });
 }
+
 </script>
 
 <?php
