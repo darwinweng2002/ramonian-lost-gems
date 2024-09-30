@@ -1,13 +1,5 @@
 <?php
 include '../config.php';
-
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -28,7 +20,7 @@ if (isset($_SESSION['user_id'])) {
     // Regular user
     $claimantId = $_SESSION['user_id'];
     $userType = 'user_member';
-    $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, section, user_type FROM user_member WHERE id = ?";
+    $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, section FROM user_member WHERE id = ?";
 } elseif (isset($_SESSION['staff_id'])) {
     // Staff user
     $claimantId = $_SESSION['staff_id'];
@@ -37,7 +29,12 @@ if (isset($_SESSION['user_id'])) {
 }
 
 // Database connection
+$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
 // Get item ID from URL
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -65,99 +62,62 @@ $stmtClaimant->execute();
 $claimantResult = $stmtClaimant->get_result();
 $claimantData = $claimantResult->fetch_assoc();
 
-// Check if the user is a guest (for user_member)
-$isGuest = false;
-if ($userType === 'user_member' && isset($claimantData['user_type']) && $claimantData['user_type'] === 'guest') {
-    $isGuest = true;
-}
-
 // Process the form submission to save the claim request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if ($isGuest) {
+    $item_description = $_POST['item_description'];
+    $date_lost = $_POST['date_lost'];
+    $location_lost = $_POST['location_lost'];
+    $proof_of_ownership = $_FILES['proof_of_ownership']['name'];
+    $security_question = $_POST['security_question'];
+    $personal_id = $_FILES['personal_id']['name'];
+    
+    // File Uploads (Move uploaded files to the appropriate folder)
+    $target_dir = "../uploads/claims/";
+    
+    // Upload proof of ownership file
+    if (!empty($proof_of_ownership)) {
+        $target_file_ownership = $target_dir . basename($proof_of_ownership);
+        move_uploaded_file($_FILES["proof_of_ownership"]["tmp_name"], $target_file_ownership);
+    }
+    
+    // Upload personal ID file
+    if (!empty($personal_id)) {
+        $target_file_id = $target_dir . basename($personal_id);
+        move_uploaded_file($_FILES["personal_id"]["tmp_name"], $target_file_id);
+    }
+
+    // Insert the claim into the `claimer` table
+    $sql = "
+        INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id, status, claim_date) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+    ";
+
+    // Use claimantId regardless of whether it's a user_member or user_staff
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('iissssss', $itemId, $claimantId, $item_description, $date_lost, $location_lost, $proof_of_ownership, $security_question, $personal_id);
+
+    if ($stmt->execute()) {
         echo "<script>
             Swal.fire({
-                title: 'Access Denied!',
-                text: 'Guest users are not allowed to claim items.',
+                title: 'Claim Submitted!',
+                text: 'Your claim has been submitted successfully. Please proceed to the SSG office for verification.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location.href = 'dashboard.php'; // Redirect to dashboard after submission
+            });
+        </script>";
+    } else {
+        echo "<script>
+            Swal.fire({
+                title: 'Error!',
+                text: 'There was an error submitting your claim. Please try again later.',
                 icon: 'error',
                 confirmButtonText: 'OK'
             });
         </script>";
-    } else {
-        $item_description = $_POST['item_description'];
-        $date_lost = $_POST['date_lost'];
-        $location_lost = $_POST['location_lost'];
-        $proof_of_ownership = $_FILES['proof_of_ownership']['name'];
-        $security_question = $_POST['security_question'];
-        $personal_id = $_FILES['personal_id']['name'];
-        
-        // File Uploads (Move uploaded files to the appropriate folder)
-        $target_dir = "../uploads/claims/";
-        
-        // Upload proof of ownership file
-        if (!empty($proof_of_ownership)) {
-            $target_file_ownership = $target_dir . basename($proof_of_ownership);
-            move_uploaded_file($_FILES["proof_of_ownership"]["tmp_name"], $target_file_ownership);
-        }
-        
-        // Upload personal ID file
-        if (!empty($personal_id)) {
-            $target_file_id = $target_dir . basename($personal_id);
-            move_uploaded_file($_FILES["personal_id"]["tmp_name"], $target_file_id);
-        }
-
-        // Insert the claim into the `claimer` table
-        $sql = "
-            INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id, status, claim_date) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
-        ";
-
-        // Use claimantId regardless of whether it's a user_member or user_staff
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param('iissssss', $itemId, $claimantId, $item_description, $date_lost, $location_lost, $proof_of_ownership, $security_question, $personal_id);
-
-        if ($stmt->execute()) {
-            echo "<script>
-                Swal.fire({
-                    title: 'Claim Submitted!',
-                    text: 'Your claim has been submitted successfully. Please proceed to the SSG office for verification.',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then(function() {
-                    window.location.href = 'dashboard.php'; // Redirect to dashboard after submission
-                });
-            </script>";
-        } else {
-            echo "<script>
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'There was an error submitting your claim. Please try again later.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            </script>";
-        }
-        $stmt->close();
     }
-}
-try {
-    // Your existing SQL query here
-    $stmtItem = $conn->prepare($sqlItem);
-    if ($stmtItem === false) {
-        throw new Exception("Failed to prepare statement: " . $conn->error);
-    }
-
-    $stmtItem->bind_param('i', $itemId);
-    $stmtItem->execute();
-    $resultItem = $stmtItem->get_result();
-
-    if ($resultItem === false) {
-        throw new Exception("Failed to execute statement: " . $stmtItem->error);
-    }
-
-    $itemData = $resultItem->fetch_assoc();
-} catch (Exception $e) {
-    // Log error and display it on the page
-    echo "Error: " . $e->getMessage();
+    $stmt->close();
 }
 
 ?>
@@ -289,9 +249,6 @@ try {
         <?php endif; ?>
     <?php endif; ?>
 </div>
-<?php if ($isGuest): ?>
-        <p style="color: red; text-align: center;">Guest users are not allowed to claim items.</p>
-    <?php else: ?>
 
 
 
