@@ -114,7 +114,7 @@ if (isset($_GET['id'])) {
 
         <div class="profile-image">
             <?php if (!empty($user['profile_image'])): ?>
-                <img src="uploads/profiles/<?= htmlspecialchars($user['profile_image']) ?>" alt="Profile Image">
+                <img src="../../uploads/profiles/<?= htmlspecialchars($user['profile_image']) ?>" alt="Profile Image">
             <?php else: ?>
                 <img src="https://via.placeholder.com/150" alt="No Profile Image">
             <?php endif; ?>
