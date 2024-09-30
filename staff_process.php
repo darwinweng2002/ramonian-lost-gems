@@ -5,10 +5,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data and validate
     $first_name = trim($_POST['first_name']);
     $last_name = trim($_POST['last_name']);
-    $user_type = trim($_POST['user_type']); // Capturing user type
+    $user_type = trim($_POST['user_type']);
     $username = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
+
+    // Handle file upload (profile picture)
+    $profile_image = '';
+    $target_dir = "uploads/profiles/"; // Directory to store uploaded images
+
+    // Check if a file was uploaded
+    if (!empty($_FILES['avatar']['name'])) {
+        $profile_image = basename($_FILES['avatar']['name']);
+        $target_file = $target_dir . $profile_image;
+
+        // Move the uploaded file to the server
+        if (!move_uploaded_file($_FILES['avatar']['tmp_name'], $target_file)) {
+            $response = ['success' => false, 'message' => 'Failed to upload profile picture.'];
+            echo json_encode($response);
+            exit;
+        }
+    }
 
     // For teaching staff, department is required
     if ($user_type === 'teaching') {
@@ -54,14 +71,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Hash the password before inserting into the database
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-    // Check if the username already exists in the database
+    // Check if the email already exists in the database
     $stmt = $conn->prepare("SELECT id FROM user_staff WHERE email = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        // Username already exists
+        // Email already exists
         $response = ['success' => false, 'message' => 'This email is already registered.'];
         echo json_encode($response);
         $stmt->close();
@@ -71,16 +88,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt->close();
 
-    // Prepare the SQL statement to insert new user
-    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    // Prepare the SQL statement to insert new user (including profile_image)
+    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {
         $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
         echo json_encode($response);
         exit;
     }
 
-    // Bind parameters including the user_type field
-    $stmt->bind_param("sssssss", $first_name, $last_name, $username, $hashed_password, $department, $position, $user_type);
+    // Bind parameters including the user_type and profile_image fields
+    $stmt->bind_param("ssssssss", $first_name, $last_name, $username, $hashed_password, $department, $position, $user_type, $profile_image);
 
     // Execute the query and check for success
     if ($stmt->execute()) {
