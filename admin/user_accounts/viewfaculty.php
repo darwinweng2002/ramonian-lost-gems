@@ -130,7 +130,7 @@ if (isset($_GET['id'])) {
         </ul>
 
         <div class="back-btn">
-            <a href="view_users.php"><i class="fas fa-arrow-left"></i> Back to User List</a>
+            <a href="faculty_view.php"><i class="fas fa-arrow-left"></i> Back to User List</a>
         </div>
     </div>
 </section>
