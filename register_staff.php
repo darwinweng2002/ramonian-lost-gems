@@ -1,129 +1,46 @@
-<?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-// Debugging file upload
-echo "<pre>";
-print_r($_FILES);
-echo "</pre>";
+<?php  
+// Include the database configuration file
+include 'config.php';
 
-include 'config.php'; // Include the database configuration file
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Temporary debugging to ensure form data is received correctly
-    var_dump($_POST);
-    var_dump($_FILES);
-    
-    // Database connection debugging
-    if ($conn->connect_error) {
-        die('Database connection error: ' . $conn->connect_error);
-    }
-}
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve form data and validate
-    $first_name = trim($_POST['first_name']);
-    $last_name = trim($_POST['last_name']);
-    $user_type = trim($_POST['user_type']);
-    $username = trim($_POST['email']);
-    $password = trim($_POST['password']);
-    $confirm_password = trim($_POST['confirm_password']);
+  // Retrieve form data
+  $first_name = $_POST['first_name'];
+  $last_name = $_POST['last_name'];
+  $department = $_POST['department'];
+  $position = $_POST['position'];
+  $email = $_POST['email']; // This is now the email field
 
-    // Check if passwords match
-    if ($password !== $confirm_password) {
-        $response = ['success' => false, 'message' => 'Passwords do not match.'];
-        echo json_encode($response);
-        exit;
-    }
+  // Check if passwords match
+  if ($_POST['password'] !== $_POST['confirm_password']) {
+      $response = ['success' => false, 'message' => 'Passwords do not match.'];
+      echo json_encode($response);
+      exit;
+  }
 
-    // Validate password length (8-16 characters)
-    if (strlen($password) < 8 || strlen($password) > 16) {
-        $response = ['success' => false, 'message' => 'Password must be between 8 and 16 characters long.'];
-        echo json_encode($response);
-        exit;
-    }
+  // Hash the password
+  $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
 
-    // Check if file was uploaded
-    if (!isset($_FILES['id_file']) || $_FILES['id_file']['error'] !== UPLOAD_ERR_OK) {
-        $response = ['success' => false, 'message' => 'Please upload your ID.'];
-        echo json_encode($response);
-        exit;
-    }
+  // Set account status as pending
+  $status = 'pending';
 
-    // Handle the uploaded ID file
-    $fileTmpPath = $_FILES['id_file']['tmp_name'];
-    $fileName = $_FILES['id_file']['name'];
-    $fileSize = $_FILES['id_file']['size'];
-    $fileType = $_FILES['id_file']['type'];
-    $fileNameCmps = explode(".", $fileName);
-    $fileExtension = strtolower(end($fileNameCmps));
+  // Prepare the SQL statement for the user_staff table
+  $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, department, position, email, password, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+  $stmt->bind_param("sssssss", $first_name, $last_name, $department, $position, $email, $password, $status);
 
-    // Sanitize file name
-    $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+  // Execute the query and check for success
+  if ($stmt->execute()) {
+      $response = ['success' => true, 'message' => 'Registration successful! Your account is pending approval.'];
+  } else {
+      $response = ['success' => false, 'message' => 'Failed to register staff member.'];
+  }
 
-    // Allowed file extensions
-    $allowedFileExtensions = array('jpg', 'jpeg', 'png', 'pdf');
+  $stmt->close();
+  $conn->close();
 
-    if (in_array($fileExtension, $allowedFileExtensions)) {
-        // Directory where the file will be uploaded
-        $uploadFileDir = 'uploads/ids/';
-        $dest_path = $uploadFileDir . $newFileName;
-
-        // Move the file to the destination directory
-        if (move_uploaded_file($_FILES['id_file']['tmp_name'], $dest_path)) {
-            $id_file = $newFileName;
-        } else {
-            // Check the permissions of the folder
-            if (!is_writable($uploadFileDir)) {
-                $response = ['success' => false, 'message' => 'Upload directory is not writable.'];
-            } else {
-                $response = ['success' => false, 'message' => 'Error moving the uploaded file.'];
-            }
-            echo json_encode($response);
-            exit;
-        }
-    }        
-
-    // Hash the password before inserting into the database
-    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-    // Check if the username already exists in the database
-    $stmt = $conn->prepare("SELECT id FROM user_staff WHERE email = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $stmt->store_result();
-
-    if ($stmt->num_rows > 0) {
-        $response = ['success' => false, 'message' => 'This email is already registered.'];
-        echo json_encode($response);
-        $stmt->close();
-        $conn->close();
-        exit;
-    }
-
-    $stmt->close();
-
-    // Prepare the SQL statement to insert new user
-    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, id_file) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    if ($stmt === false) {
-        die(json_encode(['success' => false, 'message' => 'SQL prepare error: ' . $conn->error]));
-    }
-    
-    // Bind the parameters
-    $stmt->bind_param("ssssssss", $first_name, $last_name, $username, $hashed_password, $department, $position, $user_type, $id_file);
-    
-    // Execute the query
-    if (!$stmt->execute()) {
-        die(json_encode(['success' => false, 'message' => 'SQL execution error: ' . $stmt->error]));
-    }
-    
-
-    $stmt->close();
-    $conn->close();
-
-    // Return a JSON response
-    echo json_encode($response);
+  // Return a JSON response
+  echo json_encode($response);
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -223,7 +140,8 @@ body {
                     <p class="text-center small">Fill in the form to create a staff account</p>
                   </div>
                   
-                  <form class="row g-3 needs-validation" novalidate method="POST" action="register_staff.php" enctype="multipart/form-data">
+                  <!-- Staff registration form -->
+                  <form class="row g-3 needs-validation" novalidate method="POST" action="register_staff.php">
     <!-- User Type Field (Teaching or Non-teaching) -->
     <div class="col-12">
         <label for="user_type" class="form-label">User Type</label>
@@ -248,33 +166,27 @@ body {
         <div class="invalid-feedback">Please enter your last name.</div>
     </div>
 
-   <!-- Department Field (only for Teaching staff) -->
-<div class="col-12">
-    <label for="department" class="form-label">Department</label>
-    <input type="text" name="department" class="form-control" id="department" required>
-    <div class="invalid-feedback">Please enter your department.</div>
-</div>
-
-<!-- Role/Position Field (for Non-teaching staff) -->
-<div class="col-12" id="position_field" style="display: none;">
-    <label for="position" class="form-label">Role/Position</label>
-    <input type="text" name="position" class="form-control" id="position" required>
-    <div class="invalid-feedback">Please enter your role/position.</div>
-</div>
-
-
-    <!-- Email -->
+    <!-- Department Field (only for Teaching staff) -->
     <div class="col-12">
-        <label for="email" class="form-label">Email</label> 
-        <input type="email" name="email" class="form-control" id="email" required>
-        <div class="invalid-feedback">Please use an active email account</div>
+        <label for="department" class="form-label">Department</label>
+        <input type="text" name="department" class="form-control" id="department">
+        <div class="invalid-feedback">Please enter your department.</div>
     </div>
-     <!-- ID File Upload Field -->
-<div class="col-12">
-    <label for="id_file" class="form-label">Upload School ID</label>
-    <input type="file" name="id_file" class="form-control" id="id_file" required>
-    <div class="invalid-feedback">Please upload your school ID.</div>
-</div>
+
+    <!-- Role/Position Field (for Non-teaching staff) -->
+    <div class="col-12" id="position_field" style="display: none;">
+        <label for="position" class="form-label">Role/Position</label>
+        <input type="text" name="position" class="form-control" id="position">
+        <div class="invalid-feedback">Please enter your role/position.</div>
+    </div>
+
+    <!-- Username -->
+    <div class="col-12">
+                      <label for="email" class="form-label">Email</label> 
+                      <input type="email" name="email" class="form-control" id="email" required>
+                      <div class="invalid-feedback">Please use an active email account</div>
+                    </div>
+
     <!-- Password -->
     <div class="col-12">
         <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
@@ -287,7 +199,7 @@ body {
         <label for="confirm_password" class="form-label">Confirm Password</label>
         <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
         <div class="invalid-feedback">Passwords do not match.</div>
-    </div> 
+    </div>
 
     <!-- Submit Button -->
     <div class="col-12">
@@ -341,88 +253,94 @@ body {
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> <!-- Ensure jQuery is included -->
   <script>
     $(document).ready(function() {
-    $('form').on('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission
+        $('form').on('submit', function(e) {
+            e.preventDefault(); // Prevent form submission
 
-        // Create FormData to handle file uploads along with other data
-        var formData = new FormData(this);
+            // Trim password fields to remove leading/trailing spaces
+            var password = $('#yourPassword').val().trim();
+            var confirmPassword = $('#confirm_password').val().trim();
 
-        // Validate the password fields
-        var password = $('#yourPassword').val().trim();
-        var confirmPassword = $('#confirm_password').val().trim();
+           // Get the email value
+const email = $('#email').val().trim();
 
-        // Get the email value and validate it
-        const email = $('#email').val().trim();
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+// Define a regex for validating a legitimate email format
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-        if (!emailRegex.test(email)) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Please enter a valid email address.',
-                icon: 'error',
-                confirmButtonText: 'OK'
+// Check if the email matches the correct format
+if (!emailRegex.test(email)) {
+    Swal.fire({
+        title: 'Error!',
+        text: 'Please enter a valid email address.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+    });
+    return;
+}
+            // Password length validation (min 8, max 16)
+            if (password.length < 8 || password.length > 16) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Password must be between 8 and 16 characters long.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // Confirm password match validation
+            if (password !== confirmPassword) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Passwords do not match.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // If validation passes, submit the form using AJAX
+            var formData = $(this).serialize();
+            $.ajax({
+                url: 'staff_process.php',
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Staff registration successful!',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'https://ramonianlostgems.com';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: response.message || 'An error occurred.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Registration successful! You are all set to access your account as faculty.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'https://ramonianlostgems.com/staff_login.php';
+                        }
+                    });
+                }
             });
-            return;
-        }
-
-        // Check password length
-        if (password.length < 8 || password.length > 16) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Password must be between 8 and 16 characters long.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
-
-        // Check if passwords match
-        if (password !== confirmPassword) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Passwords do not match.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
-
-        $.ajax({
-    url: 'register_staff.php',
-    type: 'POST',
-    data: formData,
-    contentType: false,
-    processData: false,
-    dataType: 'json',  // Make sure the response is JSON formatted
-    success: function(response) {
-        if (response && response.success) {
-            Swal.fire({
-                title: 'Success!',
-                text: response.message || 'Staff registration successful!',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-        } else {
-            Swal.fire({
-                title: 'Error!',
-                text: response.message || 'An error occurred during registration.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        }
-    },
-    error: function(xhr, status, error) {
-        console.error('AJAX Error: ', status, error);
-        Swal.fire({
-            title: 'Error!',
-            text: 'An unexpected error occurred. Please try again later.',
-            icon: 'error',
-            confirmButtonText: 'OK'
         });
-    }
-});
-
-
+    });
     $(document).ready(function() {
         $('#user_type').on('change', function() {
             if ($(this).val() === 'teaching') {
