@@ -41,6 +41,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
+    // Handle department and position based on user type
+    $department = null;
+    $position = null;
+
+    if ($user_type === 'teaching') {
+        $department = trim($_POST['department']);
+    } else {
+        $position = trim($_POST['position']);
+    }
+
     // Database insert
     $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {
@@ -271,20 +281,19 @@ body {
 <script src="<?= base_url ?>assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="<?= base_url ?>assets/vendor/php-email-form/validate.js"></script>
 <script src="<?= base_url ?>assets/js/main.js"></script>
-
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Handle form submission via AJAX
-        $('#registrationForm').on('submit', function(e) {
+        $('#registrationForm').on('submit', function (e) {
             e.preventDefault(); // Prevent default form submission
-            
+
             // Create a new FormData object to capture form fields and file data
             var formData = new FormData(this);
-            
+
             // Simple validation checks
             const password = $('#yourPassword').val().trim();
             const confirmPassword = $('#confirm_password').val().trim();
-            
+
             if (password !== confirmPassword) {
                 Swal.fire({
                     title: 'Error!',
@@ -296,13 +305,13 @@ body {
             }
 
             $.ajax({
-                url: 'register_staff.php',  // Backend PHP file to process the form
+                url: 'staff_process.php', // Backend PHP file to process the form
                 type: 'POST',
                 data: formData,
                 processData: false,  // Prevent jQuery from converting the FormData to a query string
                 contentType: false,  // Prevent jQuery from setting the content type
                 dataType: 'json',
-                success: function(response) {
+                success: function (response) {
                     if (response.success) {
                         Swal.fire({
                             title: 'Success!',
@@ -323,7 +332,7 @@ body {
                         });
                     }
                 },
-                error: function() {
+                error: function () {
                     Swal.fire({
                         title: 'Error!',
                         text: 'An unexpected error occurred during registration.',
@@ -335,15 +344,17 @@ body {
         });
 
         // User type dropdown change listener
-        $('#user_type').on('change', function() {
+        $('#user_type').on('change', function () {
             if ($(this).val() === 'teaching') {
-                $('#department').prop('disabled', false);
+                $('#department').prop('disabled', false).attr('required', true);
                 $('#position_field').hide();
+                $('#position').prop('disabled', true).attr('required', false);
             } else {
-                $('#department').prop('disabled', true);
+                $('#department').prop('disabled', true).attr('required', false);
                 $('#position_field').show();
+                $('#position').prop('disabled', false).attr('required', true);
             }
-        });
+        }).trigger('change'); // Trigger change event on page load
     });
 </script>
 
