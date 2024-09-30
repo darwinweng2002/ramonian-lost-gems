@@ -13,14 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = "DELETE FROM user_staff WHERE id = '$userId'";
 
         if ($conn->query($sql) === TRUE) {
+            // Return success response as JSON
             echo json_encode(['success' => true, 'message' => 'User deleted successfully!']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to delete user. SQL Error: ' . $conn->error]);
+            // Return failure response as JSON
+            echo json_encode(['success' => false, 'message' => 'Failed to delete user.']);
         }
     } else {
+        // Return error response as JSON
         echo json_encode(['success' => false, 'message' => 'Invalid request. Missing user ID.']);
     }
 } else {
+    // Return error response as JSON
     echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
 }
 
