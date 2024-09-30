@@ -20,7 +20,7 @@ if (isset($_SESSION['user_id'])) {
     // Regular user
     $claimantId = $_SESSION['user_id'];
     $userType = 'user_member';
-    $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, section, role FROM user_member WHERE id = ?";
+    $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, section, user_type FROM user_member WHERE id = ?";
 } elseif (isset($_SESSION['staff_id'])) {
     // Staff user
     $claimantId = $_SESSION['staff_id'];
@@ -64,7 +64,7 @@ $claimantData = $claimantResult->fetch_assoc();
 
 // Check if the user is a guest (for user_member)
 $isGuest = false;
-if ($userType === 'user_member' && isset($claimantData['role']) && $claimantData['role'] === 'guest') {
+if ($userType === 'user_member' && isset($claimantData['user_type']) && $claimantData['user_type'] === 'guest') {
     $isGuest = true;
 }
 
