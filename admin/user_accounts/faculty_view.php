@@ -240,7 +240,6 @@ $result = $conn->query($sql);
 </section>
 
 <script>
-// Approve user function
 function approveUser(event, id) {
     event.preventDefault();
     
@@ -254,31 +253,49 @@ function approveUser(event, id) {
         confirmButtonText: 'Yes, approve it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('approve_user.php', {
+            fetch('../approve_user.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({ user_id: id }) // Send user_id as a POST parameter
             })
-            .then(response => response.text())
-            .then(result => {
-                if (result.trim() === '1') {
+            .then(response => response.json()) // Expect a JSON response from the server
+            .then(data => {
+                if (data.success) {
                     const approveBtn = document.getElementById('approve-btn-' + id);
                     approveBtn.classList.replace('btn-success', 'btn-secondary');
                     approveBtn.innerHTML = 'Approved';
                     approveBtn.disabled = true;
 
-                    Swal.fire('Approved!', 'The user has been approved.', 'success');
+                    Swal.fire({
+                        title: 'Approved!',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        location.reload(); // Reload the page after successful approval
+                    });
                 } else {
-                    Swal.fire('Error!', 'An error occurred while approving the user.', 'error');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: data.message || 'An error occurred while approving the user.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 }
             })
             .catch((error) => {
                 console.error('Approval error:', error);
-                Swal.fire('Error!', 'An unexpected error occurred while approving the user.', 'error');
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An unexpected error occurred while approving the user.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             });
         }
     });
 }
+
 
 // Delete user function
 function deleteUser(id) {
@@ -292,27 +309,28 @@ function deleteUser(id) {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('../delete_users.php', {
+            fetch('delete_users.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({ id }) // Use URLSearchParams for POST parameters
             })
-            .then(response => response.text())
-            .then(result => {
-                if (result.trim() === '1') {
-                    Swal.fire('Deleted!', 'The user has been deleted.', 'success')
-                    .then(() => location.reload());
+            .then(response => response.json()) // Expect a JSON response
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('Deleted!', data.message, 'success')
+                    .then(() => location.reload()); // Reload the page after successful deletion
                 } else {
-                    Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
+                    Swal.fire('Error!', data.message || 'An error occurred while deleting the user.', 'error');
                 }
             })
             .catch((error) => {
                 console.error('Delete error:', error);
-                Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
+                Swal.fire('Error!', 'An unexpected error occurred while deleting the user.', 'error');
             });
         }
     });
 }
+
 
 </script>
 
