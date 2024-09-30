@@ -282,7 +282,7 @@ body {
 <script src="<?= base_url ?>assets/vendor/php-email-form/validate.js"></script>
 <script src="<?= base_url ?>assets/js/main.js"></script>
 <script>
-   $(document).ready(function () {
+  $(document).ready(function () {
     // Handle form submission via AJAX
     $('#registrationForm').on('submit', function (e) {
         e.preventDefault(); // Prevent default form submission
@@ -304,6 +304,7 @@ body {
             return;
         }
 
+        // Ajax request to handle the registration form submission
         $.ajax({
             url: 'staff_process.php', // Backend PHP file to process the form
             type: 'POST',
@@ -334,33 +335,27 @@ body {
                     });
                 }
             },
-            success: function () {
+            error: function () {
                 // Handle unexpected errors
                 Swal.fire({
-                    title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = 'https://ramonianlostgems.com'; // Redirect to your desired page
-                        }
-                    });
+                    title: 'Error!',
+                    text: 'An unexpected error occurred during registration.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             }
         });
     });
 
     // User type dropdown change listener
-    $(document).ready(function () {
-        $('#user_type').on('change', function () {
-            if ($(this).val() === 'teaching') {
-                $('#department').prop('disabled', false);
-                $('#position_field').hide();
-            } else {
-                $('#department').prop('disabled', true);
-                $('#position_field').show();
-            }
-        });
+    $('#user_type').on('change', function () {
+        if ($(this).val() === 'teaching') {
+            $('#department').prop('disabled', false);
+            $('#position_field').hide();
+        } else {
+            $('#department').prop('disabled', true);
+            $('#position_field').show();
+        }
     });
 });
 
