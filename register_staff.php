@@ -287,13 +287,48 @@ $(document).ready(function () {
     $('#registrationForm').on('submit', function (e) {
         e.preventDefault(); // Prevent default form submission
 
-        // Create a new FormData object to capture form fields and file data
-        var formData = new FormData(this);
+        // Validate email format
+        const email = $('#email').val().trim();
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/; // Email regex pattern
 
-        // Simple validation checks
+        if (!emailPattern.test(email)) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please enter a valid email address!',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        // Validate that an image is uploaded
+        const profileImage = $('#profile_image').val();
+        if (!profileImage) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please upload a profile picture!',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        // Validate image file type (optional, but recommended)
+        const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+        if (!allowedExtensions.exec(profileImage)) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please upload a valid image file (jpg, jpeg, png, gif).',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        // Simple password validation
         const password = $('#yourPassword').val().trim();
         const confirmPassword = $('#confirm_password').val().trim();
-
+        
         if (password !== confirmPassword) {
             Swal.fire({
                 title: 'Error!',
@@ -303,6 +338,9 @@ $(document).ready(function () {
             });
             return;
         }
+
+        // Create a new FormData object to capture form fields and file data
+        var formData = new FormData(this);
 
         // Ajax request to handle the registration form submission
         $.ajax({
@@ -318,7 +356,7 @@ $(document).ready(function () {
                     Swal.fire({
                         title: 'Success!',
                         text: response.message || 'Registration successful!',
-                        icon: 'success', // Change the icon to success
+                        icon: 'success',
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -338,14 +376,10 @@ $(document).ready(function () {
             error: function () {
                 // Convert the error message to success message for this scenario
                 Swal.fire({
-                    title: 'Success!',  // Change title to Success
-                    text: 'The registration process was completed successfully.', // Message for success
-                    icon: 'success',  // Change the icon to success
+                    title: 'Error!',
+                    text: 'An unexpected error occurred during registration.',
+                    icon: 'error',
                     confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = 'https://ramonianlostgems.com'; // Redirect to your desired page
-                    }
                 });
             }
         });
@@ -362,6 +396,7 @@ $(document).ready(function () {
         }
     });
 });
+
 </script>
 
 <?php require_once('inc/footer.php'); ?>
