@@ -16,11 +16,20 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
 }
 
 // Determine user type and fetch user info accordingly
+$claimantId = null;
+$userType = '';
+$isGuest = false;  // Initialize the guest check
+
 if (isset($_SESSION['user_id'])) {
     // Regular user
     $claimantId = $_SESSION['user_id'];
+
+    // Check if the user_id starts with 'guest_'
+    if (strpos($claimantId, 'guest_') === 0) {
+        $isGuest = true;
+    }
+
     $userType = 'user_member';
-    // Fetch user_type for guest detection
     $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, section, user_type FROM user_member WHERE id = ?";
 } elseif (isset($_SESSION['staff_id'])) {
     // Staff user
@@ -63,8 +72,7 @@ $stmtClaimant->execute();
 $claimantResult = $stmtClaimant->get_result();
 $claimantData = $claimantResult->fetch_assoc();
 
-// Check if the user is a guest (for user_member)
-$isGuest = false;
+// Check if the user is a guest based on user_type from user_member table
 if ($userType === 'user_member' && isset($claimantData['user_type']) && $claimantData['user_type'] === 'guest') {
     $isGuest = true;
 }
@@ -109,7 +117,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
         ";
 
-        // Use claimantId regardless of whether it's a user_member or user_staff
         $stmt = $conn->prepare($sql);
         $stmt->bind_param('iissssss', $itemId, $claimantId, $item_description, $date_lost, $location_lost, $proof_of_ownership, $security_question, $personal_id);
 
@@ -248,25 +255,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Display Claimant's Information -->
     <h3>Your Information</h3>
     <div class="info-section">
-    <?php if ($isGuest): ?>
-        <p style="color: red; text-align: center;">Guest users are not allowed to claim items.</p>
-    <?php else: ?>
-        <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
-        <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
+        <?php if ($isGuest): ?>
+            <!-- Guest restriction message -->
+            <p style="color: red; text-align: center;">Guest users are not allowed to claim items.</p>
+        <?php else: ?>
+            <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
+            <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
 
-        <!-- Display College for user_member, and Position/Department for user_staff -->
-        <?php if ($userType == 'user_member'): ?>
-            <p>College: <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
-            <p>Course: <?= htmlspecialchars($claimantData['course'] ?? 'N/A'); ?></p>
-            <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section'] ?? 'N/A'); ?></p>
-        <?php elseif ($userType == 'user_staff'): ?>
-            <?php if (!empty($claimantData['position'])): ?>
-                <p>Position: <?= htmlspecialchars($claimantData['position']); ?></p>
-            <?php else: ?>
-                <p>Department: <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
+            <!-- Display College for user_member, and Position/Department for user_staff -->
+            <?php if ($userType == 'user_member'): ?>
+                <p>College: <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
+                <p>Course: <?= htmlspecialchars($claimantData['course'] ?? 'N/A'); ?></p>
+                <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section'] ?? 'N/A'); ?></p>
+            <?php elseif ($userType == 'user_staff'): ?>
+                <?php if (!empty($claimantData['position'])): ?>
+                    <p>Position: <?= htmlspecialchars($claimantData['position']); ?></p>
+                <?php else: ?>
+                    <p>Department: <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
+                <?php endif; ?>
             <?php endif; ?>
         <?php endif; ?>
-    <?php endif; ?>
     </div>
 
     <?php if (!$isGuest): ?>
