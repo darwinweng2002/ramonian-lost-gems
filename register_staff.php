@@ -337,11 +337,15 @@ body {
             error: function () {
                 // Handle unexpected errors
                 Swal.fire({
-                    title: 'Error!',
-                    text: 'An unexpected error occurred during registration.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
+                    title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'https://ramonianlostgems.com'; // Redirect to your desired page
+                        }
+                    });
             }
         });
     });
