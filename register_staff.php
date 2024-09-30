@@ -148,144 +148,131 @@ body {
   </style>
   <main>
     <div class="container">
-      <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-            <div class="d-flex justify-content-center py-4">
-            <a href="#" class="logo d-flex align-items-center w-auto">
-                <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
-                <span><?= $_settings->info('name') ?></span>
-            </a>
-            </div><!-- End Logo -->
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                        <div class="d-flex justify-content-center py-4">
+                            <a href="#" class="logo d-flex align-items-center w-auto">
+                                <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
+                                <span><?= $_settings->info('name') ?></span>
+                            </a>
+                        </div><!-- End Logo -->
 
-              <div class="card mb-3">
-                <div class="card-body">
-                  <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Register as Faculty</h5>
-                    <p class="text-center small">Fill in the form to create a staff account</p>
-                  </div>
-                  
-                  <form class="row g-3 needs-validation" novalidate method="POST" action="register_staff.php" enctype="multipart/form-data">
-    <!-- User Type Field (Teaching or Non-teaching) -->
-    <div class="col-12">
-        <label for="user_type" class="form-label">User Type</label>
-        <select id="user_type" name="user_type" class="form-control" required>
-            <option value="teaching">Teaching</option>
-            <option value="non-teaching">Non-teaching</option>
-        </select>
-        <div class="invalid-feedback">Please select the user type.</div>
-    </div>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4">Register as Faculty</h5>
+                                    <p class="text-center small">Fill in the form to create a staff account</p>
+                                </div>
 
-    <!-- First Name -->
-    <div class="col-12">
-        <label for="firstName" class="form-label">First Name</label>
-        <input type="text" name="first_name" class="form-control" id="firstName" required>
-        <div class="invalid-feedback">Please enter your first name.</div>
-    </div>
-    
-    <!-- Last Name -->
-    <div class="col-12">
-        <label for="lastName" class="form-label">Last Name</label>
-        <input type="text" name="last_name" class="form-control" id="lastName" required>
-        <div class="invalid-feedback">Please enter your last name.</div>
-    </div>
+                                <!-- Form starts here -->
+                                <form class="row g-3 needs-validation" id="registrationForm" novalidate method="POST" enctype="multipart/form-data">
+                                    <!-- User Type Field (Teaching or Non-teaching) -->
+                                    <div class="col-12">
+                                        <label for="user_type" class="form-label">User Type</label>
+                                        <select id="user_type" name="user_type" class="form-control" required>
+                                            <option value="teaching">Teaching</option>
+                                            <option value="non-teaching">Non-teaching</option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select the user type.</div>
+                                    </div>
 
-    <!-- Department Field (only for Teaching staff) -->
-    <div class="col-12">
-        <label for="department" class="form-label">Department</label>
-        <input type="text" name="department" class="form-control" id="department">
-        <div class="invalid-feedback">Please enter your department.</div>
-    </div>
+                                    <!-- First Name -->
+                                    <div class="col-12">
+                                        <label for="firstName" class="form-label">First Name</label>
+                                        <input type="text" name="first_name" class="form-control" id="firstName" required>
+                                        <div class="invalid-feedback">Please enter your first name.</div>
+                                    </div>
 
-    <!-- Role/Position Field (for Non-teaching staff) -->
-    <div class="col-12" id="position_field" style="display: none;">
-        <label for="position" class="form-label">Role/Position</label>
-        <input type="text" name="position" class="form-control" id="position">
-        <div class="invalid-feedback">Please enter your role/position.</div>
-    </div>
+                                    <!-- Last Name -->
+                                    <div class="col-12">
+                                        <label for="lastName" class="form-label">Last Name</label>
+                                        <input type="text" name="last_name" class="form-control" id="lastName" required>
+                                        <div class="invalid-feedback">Please enter your last name.</div>
+                                    </div>
 
-    <!-- Email -->
-    <div class="col-12">
-        <label for="email" class="form-label">Email</label> 
-        <input type="email" name="email" class="form-control" id="email" required>
-        <div class="invalid-feedback">Please use an active email account</div>
-    </div>
+                                    <!-- Department Field (only for Teaching staff) -->
+                                    <div class="col-12">
+                                        <label for="department" class="form-label">Department</label>
+                                        <input type="text" name="department" class="form-control" id="department">
+                                        <div class="invalid-feedback">Please enter your department.</div>
+                                    </div>
 
-    <!-- Password -->
-    <div class="col-12">
-        <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
-        <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
-        <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
-    </div>
+                                    <!-- Role/Position Field (for Non-teaching staff) -->
+                                    <div class="col-12" id="position_field" style="display: none;">
+                                        <label for="position" class="form-label">Role/Position</label>
+                                        <input type="text" name="position" class="form-control" id="position">
+                                        <div class="invalid-feedback">Please enter your role/position.</div>
+                                    </div>
 
-    <!-- Confirm Password -->
-    <div class="col-12">
-        <label for="confirm_password" class="form-label">Confirm Password</label>
-        <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
-        <div class="invalid-feedback">Passwords do not match.</div>
-    </div>
+                                    <!-- Email -->
+                                    <div class="col-12">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" name="email" class="form-control" id="email" required>
+                                        <div class="invalid-feedback">Please use an active email account.</div>
+                                    </div>
 
-    <!-- Image Upload (Profile Picture) -->
-   <!-- Image Upload (Profile Picture) -->
-<div class="col-12">
-    <label for="profile_image" class="form-label">Upload Profile Picture</label>
-    <input type="file" name="profile_image" class="form-control" id="profile_image" accept="image/*">
-    <div class="invalid-feedback">Please upload an image file.</div>
-</div>
+                                    <!-- Password -->
+                                    <div class="col-12">
+                                        <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
+                                        <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
+                                        <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
+                                    </div>
 
+                                    <!-- Confirm Password -->
+                                    <div class="col-12">
+                                        <label for="confirm_password" class="form-label">Confirm Password</label>
+                                        <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
+                                        <div class="invalid-feedback">Passwords do not match.</div>
+                                    </div>
 
-    <!-- Submit Button -->
-    <div class="col-12">
-        <button class="btn btn-primary w-100" type="submit">Register</button>
-    </div>
-</form>
-                  <!-- End form -->
-                  
-                  <div id="g_id_onload"
-                       data-client_id="462546722729-vflluo934lv9qei2jbeaqcib5sllh9t6.apps.googleusercontent.com"
-                       data-context="signin"
-                       data-ux_mode="popup"
-                       data-callback="handleCredentialResponse"
-                       data-auto_prompt="false">
-                  </div>
-                  <div class="g_id_signin"
-                       data-type="standard"
-                       data-shape="rectangular"
-                       data-theme="outline"
-                       data-text="signin_with"
-                       data-size="large"
-                       data-logo_alignment="left">
-                  </div>
-              </div>
+                                    <!-- Image Upload (Profile Picture) -->
+                                    <div class="col-12">
+                                        <label for="profile_image" class="form-label">Upload Profile Picture</label>
+                                        <input type="file" name="profile_image" class="form-control" id="profile_image" accept="image/*">
+                                        <div class="invalid-feedback">Please upload an image file.</div>
+                                    </div>
+
+                                    <!-- Submit Button -->
+                                    <div class="col-12">
+                                        <button class="btn btn-primary w-100" type="submit">Register</button>
+                                    </div>
+                                </form>
+                                <!-- End form -->
+
+                            </div>
+                        </div>
+
+                        <div class="back-btn-container">
+                            <button class="back-btn" onclick="history.back()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
+                                    <line x1="19" y1="12" x2="5" y2="12"/>
+                                    <polyline points="12 19 5 12 12 5"/>
+                                </svg>
+                                Back
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="back-btn-container">
-    <button class="back-btn" onclick="history.back()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
-            <line x1="19" y1="12" x2="5" y2="12"/>
-            <polyline points="12 19 5 12 12 5"/>
-        </svg>
-        Back
-    </button>
-</div>
-        </div>
-      </section>
+        </section>
     </div>
-  </main>
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-  <script src="<?= base_url ?>assets/js/jquery-3.6.4.min.js"></script>
-  <script src="<?= base_url ?>assets/vendor/apexcharts/apexcharts.min.js"></script>
-  <script src="<?= base_url ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="<?= base_url ?>assets/vendor/chart.js/chart.umd.js"></script>
-  <script src="<?= base_url ?>assets/vendor/echarts/echarts.min.js"></script>
-  <script src="<?= base_url ?>assets/vendor/quill/quill.min.js"></script>
-  <script src="<?= base_url ?>assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="<?= base_url ?>assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="<?= base_url ?>assets/vendor/php-email-form/validate.js"></script>
-  <script src="<?= base_url ?>assets/js/main.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> <!-- Ensure jQuery is included -->
-  <script>
+</main>
+
+<!-- jQuery and necessary scripts -->
+<script src="<?= base_url ?>assets/js/jquery-3.6.4.min.js"></script>
+<script src="<?= base_url ?>assets/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="<?= base_url ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="<?= base_url ?>assets/vendor/chart.js/chart.umd.js"></script>
+<script src="<?= base_url ?>assets/vendor/echarts/echarts.min.js"></script>
+<script src="<?= base_url ?>assets/vendor/quill/quill.min.js"></script>
+<script src="<?= base_url ?>assets/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="<?= base_url ?>assets/vendor/tinymce/tinymce.min.js"></script>
+<script src="<?= base_url ?>assets/vendor/php-email-form/validate.js"></script>
+<script src="<?= base_url ?>assets/js/main.js"></script>
+
+<script>
     $(document).ready(function() {
         // Handle form submission via AJAX
         $('#registrationForm').on('submit', function(e) {
@@ -346,7 +333,7 @@ body {
                 }
             });
         });
-        
+
         // User type dropdown change listener
         $('#user_type').on('change', function() {
             if ($(this).val() === 'teaching') {
@@ -358,7 +345,8 @@ body {
             }
         });
     });
-  </script>
-<?php require_once('inc/footer.php') ?>
+</script>
+
+<?php require_once('inc/footer.php'); ?>
 </body>
 </html>
