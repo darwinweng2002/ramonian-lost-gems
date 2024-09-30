@@ -10,35 +10,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
 
-    // Handle file upload (profile picture)
-    $profile_image = '';
-    $target_dir = "uploads/profiles/"; // Directory to store uploaded images
+   // Handle file upload (profile picture)
+$profile_image = '';
+$target_dir = "uploads/profiles/"; // Directory to store uploaded images
 
-    // Check if a file was uploaded
-    if (!empty($_FILES['profile_image']['name'])) {
-        $profile_image = basename($_FILES['profile_image']['name']);
-        $target_file = $target_dir . $profile_image;
+// Check if the directory exists and is writable
+if (!is_dir($target_dir)) {
+    mkdir($target_dir, 0755, true); // Create the directory if it doesn't exist
+}
 
-        // Check if the directory exists and is writable
-        if (!is_dir($target_dir)) {
-            mkdir($target_dir, 0755, true); // Create the directory if it doesn't exist
-        }
+// Check if a file was uploaded
+if (!empty($_FILES['profile_image']['name'])) {
+    $profile_image = basename($_FILES['profile_image']['name']);
+    $target_file = $target_dir . $profile_image;
 
-        // Move the uploaded file to the server
-        if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_file)) {
-            // Successfully uploaded
-        } else {
-            // Upload failed
-            $response = ['success' => false, 'message' => 'Failed to upload profile picture.'];
-            echo json_encode($response);
-            exit;
-        }
+    // Move the uploaded file to the server
+    if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_file)) {
+        // Successfully uploaded
     } else {
-        // No file was uploaded
-        $response = ['success' => false, 'message' => 'No file uploaded. Please upload a profile picture.'];
+        // Upload failed
+        $response = ['success' => false, 'message' => 'Failed to upload profile picture.'];
         echo json_encode($response);
         exit;
     }
+} else {
+    $response = ['success' => false, 'message' => 'No file uploaded. Please upload a profile picture.'];
+    echo json_encode($response);
+    exit;
+}
+
 
     // For teaching staff, department is required
     if ($user_type === 'teaching') {
