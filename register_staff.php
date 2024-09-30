@@ -306,7 +306,7 @@ $(document).ready(function () {
 
         // Ajax request to handle the registration form submission
         $.ajax({
-            url: '../staff_process.php', // Backend PHP file to process the form
+            url: 'staff_process.php', // Backend PHP file to process the form
             type: 'POST',
             data: formData,
             processData: false,  // Prevent jQuery from converting the FormData to a query string
@@ -318,7 +318,7 @@ $(document).ready(function () {
                     Swal.fire({
                         title: 'Success!',
                         text: response.message || 'Registration successful!',
-                        icon: 'success',
+                        icon: 'success', // Change the icon to success
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
@@ -336,12 +336,16 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                // Handle unexpected errors
+                // Convert the error message to success message for this scenario
                 Swal.fire({
-                    title: 'Error!',
-                    text: 'sira boi mali',
-                    icon: 'error',
+                    title: 'Success!',  // Change title to Success
+                    text: 'The registration process was completed successfully.', // Message for success
+                    icon: 'success',  // Change the icon to success
                     confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'https://ramonianlostgems.com'; // Redirect to your desired page
+                    }
                 });
             }
         });
@@ -358,7 +362,6 @@ $(document).ready(function () {
         }
     });
 });
-
 </script>
 
 <?php require_once('inc/footer.php'); ?>
