@@ -287,23 +287,24 @@ function approveUser(event, id) {
             fetch('approve_user.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ user_id: id }) // Use URLSearchParams for POST parameters
+                body: new URLSearchParams({ user_id: id }) // Send user_id as a POST parameter
             })
             .then(response => response.text())
             .then(result => {
-                if (result.trim() === '1') {  // Success
+                console.log('Approval result:', result); // Log the result for debugging
+                if (result.trim() === '1') {  // If approval is successful
                     const approveBtn = document.getElementById('approve-btn-' + id);
                     approveBtn.classList.replace('btn-success', 'btn-secondary');
                     approveBtn.innerHTML = 'Approved';
                     approveBtn.disabled = true;
                     Swal.fire('Approved!', 'The user has been approved.', 'success');
                 } else {
-                    Swal.fire('Error!', 'An error occurred while approving the user.', 'error');
+                    Swal.fire('Error!', 'An error occurred while approving the user. Server response: ' + result, 'error');
                 }
             })
             .catch((error) => {
-                console.error('Approval error:', error);
-                Swal.fire('Error!', 'An unexpected error occurred.', 'error');
+                console.error('Approval error:', error);  // Log the error in console for debugging
+                Swal.fire('Error!', 'An unexpected error occurred. ' + error.message, 'error');
             });
         }
     });
