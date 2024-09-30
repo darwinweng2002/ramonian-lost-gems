@@ -334,7 +334,7 @@ body {
                     });
                 }
             },
-            error: function () {
+            success: function () {
                 // Handle unexpected errors
                 Swal.fire({
                     title: 'Success!',
