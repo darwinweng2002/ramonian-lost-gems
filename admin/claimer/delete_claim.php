@@ -1,35 +1,39 @@
 <?php
 include '../../config.php';
+
+// Enable error reporting for debugging purposes
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-header('Content-Type: application/json');
+// Database connection
+$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['claim_id'])) {
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$response = ['success' => false, 'message' => 'An error occurred.'];
+
+if (isset($_POST['claim_id'])) {
     $claimId = intval($_POST['claim_id']);
 
-    // Check if claim ID is valid
-    if ($claimId > 0) {
-        $sql = "DELETE FROM claimer WHERE id = ?";
-        $stmt = $conn->prepare($sql);
+    // Prepare the SQL statement to delete the claim
+    $stmt = $conn->prepare("DELETE FROM claimer WHERE id = ?");
+    $stmt->bind_param('i', $claimId);
 
-        if ($stmt) {
-            $stmt->bind_param('i', $claimId);
-            if ($stmt->execute()) {
-                echo json_encode(['success' => true, 'message' => 'Claim deleted successfully']);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Failed to delete claim. Error: ' . $stmt->error]);
-            }
-            $stmt->close();
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to prepare statement. Error: ' . $conn->error]);
-        }
+    // Check if deletion is successful
+    if ($stmt->execute()) {
+        $response = ['success' => true, 'message' => 'Claim successfully deleted.'];
     } else {
-        echo json_encode(['success' => false, 'message' => 'Invalid claim ID.']);
+        $response = ['success' => false, 'message' => 'Failed to delete the claim.'];
     }
-} else {
-    echo json_encode(['success' => false, 'message' => 'Invalid request or claim ID not set.']);
+
+    $stmt->close();
 }
 
 $conn->close();
+
+// Return JSON response
+echo json_encode($response);

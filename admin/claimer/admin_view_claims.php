@@ -201,31 +201,48 @@ $result = $conn->query($sql);
     </div>
 </div>
 <script>
-    $(document).on('click', '.delete-claim', function() {
-        const claimId = $(this).data('claim-id');
-        const rowElement = $('#claim-row-' + claimId);
+   $(document).on('click', '.delete-claim', function() {
+    const claimId = $(this).data('claim-id');
+    const rowElement = $('#claim-row-' + claimId);
 
-        if (confirm('Are you sure you want to delete this claim?')) {
-            $.ajax({
-                url: '../delete_claim.php',
-                type: 'POST',
-                data: { claim_id: claimId },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        // Remove the row from the table
-                        rowElement.remove();
-                        alert(response.message);
-                    } else {
-                        alert('Error: ' + response.message);
-                    }
-                },
-                error: function() {
-                    alert('An error occurred while trying to delete the claim.');
+    if (confirm('Are you sure you want to delete this claim?')) {
+        $.ajax({
+            url: '../delete_claim.php',
+            type: 'POST',
+            data: { claim_id: claimId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    // Remove the row from the table
+                    rowElement.remove();
+                    // Show success message
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    // Show error message returned from the server
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 }
-            });
-        }
-    });
+            },
+            error: function() {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred while trying to delete the claim.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    }
+});
 </script>
 
 <?php
