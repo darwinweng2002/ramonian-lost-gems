@@ -335,11 +335,11 @@ $(document).ready(function () {
                     });
                 }
             },
-            sucess: function () {
+            success: function () {
                 // Handle unexpected errors
                 Swal.fire({
-                    title: 'Success!',
-                    text: 'An unexpected error occurred during registration.',
+                    title: 'Success',
+                    text: response.message,
                     icon: 'success',
                     confirmButtonText: 'OK'
                 });
