@@ -14,9 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $profile_image = '';
     $target_dir = "uploads/profiles/"; // Directory to store uploaded images
 
+    // Check if the directory exists and create it if not
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0755, true); // Create the directory if it doesn't exist
+    }
+
     // Check if a file was uploaded
     if (!empty($_FILES['profile_image']['name'])) {
-        $profile_image = basename($_FILES['profile_image']['name']);
+        // Create a unique name for the uploaded file to avoid overwriting existing files
+        $profile_image = uniqid() . '_' . basename($_FILES['profile_image']['name']);
         $target_file = $target_dir . $profile_image;
 
         // Move the uploaded file to the server

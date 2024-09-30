@@ -287,11 +287,13 @@ body {
     </div>
 
     <!-- Image Upload (Profile Picture) -->
-    <div class="col-12">
-        <label for="profile_image" class="form-label">Upload Profile Picture</label>
-        <input type="file" name="profile_image" class="form-control" id="profile_image" accept="image/*">
-        <div class="invalid-feedback">Please upload an image file.</div>
-    </div>
+   <!-- Image Upload (Profile Picture) -->
+<div class="col-12">
+    <label for="profile_image" class="form-label">Upload Profile Picture</label>
+    <input type="file" name="profile_image" class="form-control" id="profile_image" accept="image/*">
+    <div class="invalid-feedback">Please upload an image file.</div>
+</div>
+
 
     <!-- Submit Button -->
     <div class="col-12">
