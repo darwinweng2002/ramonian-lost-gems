@@ -217,7 +217,7 @@ body {
                     <p class="text-center small">Fill in the form to create a staff account</p>
                   </div>
                   
-                  <form class="row g-3 needs-validation" novalidate method="POST" action="staff_process.php" enctype="multipart/form-data">
+                  <form class="row g-3 needs-validation" novalidate method="POST" action="register_staff.php" enctype="multipart/form-data">
     <!-- User Type Field (Teaching or Non-teaching) -->
     <div class="col-12">
         <label for="user_type" class="form-label">User Type</label>
