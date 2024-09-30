@@ -282,84 +282,80 @@ body {
 <script src="<?= base_url ?>assets/vendor/php-email-form/validate.js"></script>
 <script src="<?= base_url ?>assets/js/main.js"></script>
 <script>
-   $(document).ready(function () {
-    // Handle form submission via AJAX
-    $('#registrationForm').on('submit', function (e) {
-        e.preventDefault(); // Prevent default form submission
+    $(document).ready(function () {
+        // Handle form submission via AJAX
+        $('#registrationForm').on('submit', function (e) {
+            e.preventDefault(); // Prevent default form submission
 
-        // Create a new FormData object to capture form fields and file data
-        var formData = new FormData(this);
+            // Create a new FormData object to capture form fields and file data
+            var formData = new FormData(this);
 
-        // Simple validation checks
-        const password = $('#yourPassword').val().trim();
-        const confirmPassword = $('#confirm_password').val().trim();
+            // Simple validation checks
+            const password = $('#yourPassword').val().trim();
+            const confirmPassword = $('#confirm_password').val().trim();
 
-        if (password !== confirmPassword) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Passwords do not match!',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
+            if (password !== confirmPassword) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Passwords do not match!',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
 
-        $.ajax({
-            url: 'staff_process.php', // Backend PHP file to process the form
-            type: 'POST',
-            data: formData,
-            processData: false,  // Prevent jQuery from converting the FormData to a query string
-            contentType: false,  // Prevent jQuery from setting the content type
-            dataType: 'json',
-            success: function (response) {
-                if (response.success) {
-                    // Show success message and redirect after confirmation
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = 'https://ramonianlostgems.com'; // Redirect to your desired page
-                        }
-                    });
-                } else {
-                    // Show error message in case of failure
+            $.ajax({
+                url: 'staff_process.php', // Backend PHP file to process the form
+                type: 'POST',
+                data: formData,
+                processData: false,  // Prevent jQuery from converting the FormData to a query string
+                contentType: false,  // Prevent jQuery from setting the content type
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'https://ramonianlostgems.com';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: response.message || 'An error occurred.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function () {
                     Swal.fire({
                         title: 'Error!',
-                        text: response.message || 'An error occurred.',
+                        text: 'An unexpected error occurred during registration.',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
                 }
-            },
-            error: function () {
-                // Handle unexpected errors
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An unexpected error occurred during registration.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
+            });
         });
-    });
 
-    // User type dropdown change listener
-    $(document).ready(function () {
-        $('#user_type').on('change', function () {
-            if ($(this).val() === 'teaching') {
-                $('#department').prop('disabled', false);
-                $('#position_field').hide();
-            } else {
-                $('#department').prop('disabled', true);
-                $('#position_field').show();
-            }
-        });
+        // User type dropdown change listener
+        $(document).ready(function() {
+    $('#user_type').on('change', function() {
+        if ($(this).val() === 'teaching') {
+            $('#department').prop('disabled', false);
+            $('#position_field').hide();
+        } else {
+            $('#department').prop('disabled', true);
+            $('#position_field').show();
+        }
     });
 });
-
+});
 </script>
 
 <?php require_once('inc/footer.php'); ?>
