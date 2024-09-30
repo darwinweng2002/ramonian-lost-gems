@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!$stmt->execute()) {
         // Log error if query execution fails
         error_log('Error executing SQL query: ' . $stmt->error);
-        $response = ['success' => false, 'message' => 'Failed to register staff member.'];
+        $response = ['success' => false, 'message' => 'Failed to register staff member. SQL Error: ' . $stmt->error];
     } else {
         $response = ['success' => true, 'message' => 'Registration successful! Your account is pending approval.'];
     }
