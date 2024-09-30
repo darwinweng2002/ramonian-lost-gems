@@ -395,7 +395,7 @@ $(document).ready(function () {
                 // Convert the error message to success message for this scenario
                 Swal.fire({
                     title: 'Success!',  // Change title to Success
-                    text: 'Thank you for registering. Your account is currently pending approval by the admin. The admins will review your submission, including the school ID you provided, before approving your account. Once approved, you will be able to log in and access your account.', // Message for success
+                    text: 'Thank you for registering. Your account is currently pending approval by the admin. The admins will review your submission, including the picture of ID you provided, before approving your account. Once approved, you will be able to log in and access your account.', // Message for success
                     icon: 'success',  // Change the icon to success
                     confirmButtonText: 'OK'
                 }).then((result) => {
