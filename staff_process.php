@@ -83,7 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Prepare the SQL statement to insert new staff member
     $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, id_file, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    
+    // Debugging: Check if statement preparation fails
     if ($stmt === false) {
+        error_log('Error in SQL prepare statement: ' . $conn->error);
         $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
         echo json_encode($response);
         exit;
@@ -93,10 +96,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bind_param("sssssssss", $first_name, $last_name, $email, $hashed_password, $department, $position, $user_type, $newFileName, $status);
 
     // Execute the query and check for success
-    if ($stmt->execute()) {
-        $response = ['success' => true, 'message' => 'Registration successful! Your account is pending approval.'];
-    } else {
+    if (!$stmt->execute()) {
+        // Log error if query execution fails
+        error_log('Error executing SQL query: ' . $stmt->error);
         $response = ['success' => false, 'message' => 'Failed to register staff member.'];
+    } else {
+        $response = ['success' => true, 'message' => 'Registration successful! Your account is pending approval.'];
     }
 
     $stmt->close();
