@@ -1,3 +1,35 @@
+<?php
+include '../../config.php';
+
+// Database connection
+$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Check if the user ID is provided in the URL
+if (isset($_GET['id'])) {
+    $userId = $conn->real_escape_string($_GET['id']);
+
+    // Fetch the user details from the database
+    $sql = "SELECT first_name, last_name, email, user_type, department, position, profile_image 
+            FROM user_staff 
+            WHERE id = '$userId'";
+
+    $result = $conn->query($sql);
+
+    // Check if the user exists
+    if ($result && $result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+    } else {
+        die("User not found.");
+    }
+} else {
+    die("No user ID provided.");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <?php require_once('../inc/header.php'); ?>
