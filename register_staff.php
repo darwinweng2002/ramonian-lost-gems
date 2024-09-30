@@ -1,44 +1,110 @@
-<?php  
-// Include the database configuration file
-include 'config.php';
+<?php
+include 'config.php'; // Include the database configuration file
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  // Retrieve form data
-  $first_name = $_POST['first_name'];
-  $last_name = $_POST['last_name'];
-  $department = $_POST['department'];
-  $position = $_POST['position'];
-  $email = $_POST['email']; // This is now the email field
+    // Retrieve form data and validate
+    $first_name = trim($_POST['first_name']);
+    $last_name = trim($_POST['last_name']);
+    $user_type = trim($_POST['user_type']);
+    $username = trim($_POST['email']);
+    $password = trim($_POST['password']);
+    $confirm_password = trim($_POST['confirm_password']);
 
-  // Check if passwords match
-  if ($_POST['password'] !== $_POST['confirm_password']) {
-      $response = ['success' => false, 'message' => 'Passwords do not match.'];
-      echo json_encode($response);
-      exit;
-  }
+    // Check if passwords match
+    if ($password !== $confirm_password) {
+        $response = ['success' => false, 'message' => 'Passwords do not match.'];
+        echo json_encode($response);
+        exit;
+    }
 
-  // Hash the password
-  $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
+    // Validate password length (8-16 characters)
+    if (strlen($password) < 8 || strlen($password) > 16) {
+        $response = ['success' => false, 'message' => 'Password must be between 8 and 16 characters long.'];
+        echo json_encode($response);
+        exit;
+    }
 
-  // Set account status as pending
-  $status = 'pending';
+    // Hash the password before inserting into the database
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-  // Prepare the SQL statement for the user_staff table
-  $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, department, position, email, password, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("sssssss", $first_name, $last_name, $department, $position, $email, $password, $status);
+    // Check if the username already exists in the database
+    $stmt = $conn->prepare("SELECT id FROM user_staff WHERE email = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->store_result();
 
-  // Execute the query and check for success
-  if ($stmt->execute()) {
-      $response = ['success' => true, 'message' => 'Registration successful! Your account is pending approval.'];
-  } else {
-      $response = ['success' => false, 'message' => 'Failed to register staff member.'];
-  }
+    if ($stmt->num_rows > 0) {
+        $response = ['success' => false, 'message' => 'This email is already registered.'];
+        echo json_encode($response);
+        $stmt->close();
+        $conn->close();
+        exit;
+    }
 
-  $stmt->close();
-  $conn->close();
+    $stmt->close();
 
-  // Return a JSON response
-  echo json_encode($response);
+    // Handle the uploaded ID file
+    if (isset($_FILES['id_file']) && $_FILES['id_file']['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES['id_file']['tmp_name'];
+        $fileName = $_FILES['id_file']['name'];
+        $fileSize = $_FILES['id_file']['size'];
+        $fileType = $_FILES['id_file']['type'];
+        $fileNameCmps = explode(".", $fileName);
+        $fileExtension = strtolower(end($fileNameCmps));
+
+        // Sanitize file name
+        $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+
+        // Allowed file extensions
+        $allowedFileExtensions = array('jpg', 'jpeg', 'png', 'pdf');
+
+        if (in_array($fileExtension, $allowedFileExtensions)) {
+            // Directory where the file will be uploaded
+            $uploadFileDir = './uploads/ids/';
+            $dest_path = $uploadFileDir . $newFileName;
+
+            // Move the file to the destination directory
+            if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                $id_file = $newFileName; // Store the new file name in the database
+            } else {
+                $response = ['success' => false, 'message' => 'Error moving the uploaded file.'];
+                echo json_encode($response);
+                exit;
+            }
+        } else {
+            $response = ['success' => false, 'message' => 'Invalid file type. Only JPG, PNG, and PDF files are allowed.'];
+            echo json_encode($response);
+            exit;
+        }
+    } else {
+        $response = ['success' => false, 'message' => 'Please upload your ID.'];
+        echo json_encode($response);
+        exit;
+    }
+
+    // Prepare the SQL statement to insert new user
+    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, id_file) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    if ($stmt === false) {
+        $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
+        echo json_encode($response);
+        exit;
+    }
+
+    // Bind parameters including the user_type field and id_file
+    $stmt->bind_param("ssssssss", $first_name, $last_name, $username, $hashed_password, $department, $position, $user_type, $id_file);
+
+    // Execute the query and check for success
+    if ($stmt->execute()) {
+        $response = ['success' => true, 'message' => 'Registration successful!'];
+    } else {
+        $response = ['success' => false, 'message' => 'Failed to register user.'];
+    }
+
+    $stmt->close();
+    $conn->close();
+
+    // Return a JSON response
+    echo json_encode($response);
 }
 ?>
 <!DOCTYPE html>
@@ -185,7 +251,12 @@ body {
         <input type="email" name="email" class="form-control" id="email" required>
         <div class="invalid-feedback">Please use an active email account</div>
     </div>
-
+     <!-- ID File Upload Field -->
+<div class="col-12">
+    <label for="id_file" class="form-label">Upload School ID</label>
+    <input type="file" name="id_file" class="form-control" id="id_file" required>
+    <div class="invalid-feedback">Please upload your school ID.</div>
+</div>
     <!-- Password -->
     <div class="col-12">
         <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
@@ -198,14 +269,7 @@ body {
         <label for="confirm_password" class="form-label">Confirm Password</label>
         <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
         <div class="invalid-feedback">Passwords do not match.</div>
-    </div>
-
-    <!-- Upload ID -->
-    <div class="col-12">
-        <label for="id_file" class="form-label">Upload ID (JPEG, PNG or PDF)</label>
-        <input type="file" name="id_file" class="form-control" id="id_file" required>
-        <div class="invalid-feedback">Please upload your ID file.</div>
-    </div>
+    </div> 
 
     <!-- Submit Button -->
     <div class="col-12">
