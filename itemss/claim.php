@@ -136,6 +136,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     }
 }
+try {
+    // Your existing SQL query here
+    $stmtItem = $conn->prepare($sqlItem);
+    if ($stmtItem === false) {
+        throw new Exception("Failed to prepare statement: " . $conn->error);
+    }
+
+    $stmtItem->bind_param('i', $itemId);
+    $stmtItem->execute();
+    $resultItem = $stmtItem->get_result();
+
+    if ($resultItem === false) {
+        throw new Exception("Failed to execute statement: " . $stmtItem->error);
+    }
+
+    $itemData = $resultItem->fetch_assoc();
+} catch (Exception $e) {
+    // Log error and display it on the page
+    echo "Error: " . $e->getMessage();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
