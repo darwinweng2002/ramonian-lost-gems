@@ -320,7 +320,7 @@ $(document).ready(function () {
         if (!profileImage) {
             Swal.fire({
                 title: 'Error!',
-                text: 'Please upload a profile picture!',
+                text: 'Please upload picture of your ID!',
                 icon: 'error',
                 confirmButtonText: 'OK'
             });
