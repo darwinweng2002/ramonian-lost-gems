@@ -338,6 +338,7 @@ $(document).ready(function () {
             });
             return;
         }
+
         var formData = new FormData(this);
         // Ajax request to handle the registration form submission
         $.ajax({

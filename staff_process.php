@@ -1,11 +1,6 @@
 <?php
 include 'config.php'; // Include the database configuration file
 
-// Enable error reporting for debugging
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data and validate
     $first_name = trim($_POST['first_name']);
@@ -15,36 +10,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
 
-    // Check if passwords match
-    if ($password !== $confirm_password) {
-        echo json_encode(['success' => false, 'message' => 'Passwords do not match.']);
+    // Check if email already exists
+    $stmt = $conn->prepare("SELECT id FROM user_staff WHERE email = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $response = ['success' => false, 'message' => 'This email address is already taken, please use another.'];
+        echo json_encode($response);
         exit;
     }
-
-    // Hash the password
-    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-    // Handle department and position based on user type
-    $department = null;
-    $position = null;
-
-    if ($user_type === 'teaching') {
-        $department = trim($_POST['department']);
-        if (empty($department)) {
-            echo json_encode(['success' => false, 'message' => 'Department is required for teaching staff.']);
-            exit;
-        }
-    } else {
-        $position = trim($_POST['position']);
-        if (empty($position)) {
-            echo json_encode(['success' => false, 'message' => 'Position is required for non-teaching staff.']);
-            exit;
-        }
-    }
+    $stmt->close();
 
     // Handle file upload (profile picture)
     $profile_image = '';
-    $target_dir = "uploads/profiles/";
+    $target_dir = "uploads/profiles/"; // Directory to store uploaded images
 
     // Ensure the directory exists
     if (!is_dir($target_dir)) {
@@ -56,28 +37,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $profile_image = uniqid() . '_' . basename($_FILES['profile_image']['name']);
         $target_file = $target_dir . $profile_image;
 
-        // Validate the image file
-        $file_type = mime_content_type($_FILES['profile_image']['tmp_name']);
-        $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
-
-        if (!in_array($file_type, $allowed_types)) {
-            echo json_encode(['success' => false, 'message' => 'Invalid file type. Only JPG, PNG, and GIF are allowed.']);
-            exit;
-        }
-
         // Move the uploaded file to the server
         if (!move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_file)) {
-            echo json_encode(['success' => false, 'message' => 'Failed to upload profile picture.']);
+            $response = ['success' => false, 'message' => 'Failed to upload profile picture.'];
+            echo json_encode($response);
             exit;
         }
     }
 
-    // Prepare the SQL statement
-    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    // Password validation, hashing, etc.
+    if ($password !== $confirm_password) {
+        $response = ['success' => false, 'message' => 'Passwords do not match.'];
+        echo json_encode($response);
+        exit;
+    }
 
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+    // Handle department and position based on user type
+    $department = null;
+    $position = null;
+
+    if ($user_type === 'teaching') {
+        $department = trim($_POST['department']);
+    } else {
+        $position = trim($_POST['position']);
+    }
+
+    // Database insert
+    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {
-        error_log("SQL prepare error: " . $conn->error); // Log error
-        echo json_encode(['success' => false, 'message' => 'Failed to prepare the database statement.']);
+        $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
+        echo json_encode($response);
         exit;
     }
 
@@ -85,12 +76,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Execute the query and check for success
     if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Registration successful!']);
+        $response = ['success' => true, 'message' => 'Registration successful!'];
     } else {
-        error_log("SQL execute error: " . $stmt->error); // Log error
-        echo json_encode(['success' => false, 'message' => 'Failed to register user.']);
+        $response = ['success' => false, 'message' => 'Failed to register user.'];
     }
 
     $stmt->close();
     $conn->close();
+
+    // Return JSON response
+    echo json_encode($response);
 }
