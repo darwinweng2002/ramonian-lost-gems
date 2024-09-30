@@ -1,6 +1,11 @@
 <?php
 include 'config.php'; // Include the database configuration file
 
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data and validate
     $first_name = trim($_POST['first_name']);
@@ -10,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
 
-    // Validate passwords match
+    // Check if passwords match
     if ($password !== $confirm_password) {
         echo json_encode(['success' => false, 'message' => 'Passwords do not match.']);
         exit;
@@ -31,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Handle file upload (profile picture)
     $profile_image = '';
-    $target_dir = "uploads/profiles/"; // Directory to store uploaded images
+    $target_dir = "uploads/profiles/";
 
     // Ensure the directory exists
     if (!is_dir($target_dir)) {
@@ -50,9 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Database insert
+    // Prepare the SQL statement
     $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
     if ($stmt === false) {
+        error_log("SQL prepare error: " . $conn->error); // Log error
         echo json_encode(['success' => false, 'message' => 'Failed to prepare the database statement.']);
         exit;
     }
@@ -63,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt->execute()) {
         echo json_encode(['success' => true, 'message' => 'Registration successful!']);
     } else {
+        error_log("SQL execute error: " . $stmt->error); // Log error
         echo json_encode(['success' => false, 'message' => 'Failed to register user.']);
     }
 
