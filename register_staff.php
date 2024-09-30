@@ -242,19 +242,20 @@ body {
         <div class="invalid-feedback">Please enter your last name.</div>
     </div>
 
-    <!-- Department Field (only for Teaching staff) -->
-    <div class="col-12">
-        <label for="department" class="form-label">Department</label>
-        <input type="text" name="department" class="form-control" id="department">
-        <div class="invalid-feedback">Please enter your department.</div>
-    </div>
+   <!-- Department Field (only for Teaching staff) -->
+<div class="col-12">
+    <label for="department" class="form-label">Department</label>
+    <input type="text" name="department" class="form-control" id="department" required>
+    <div class="invalid-feedback">Please enter your department.</div>
+</div>
 
-    <!-- Role/Position Field (for Non-teaching staff) -->
-    <div class="col-12" id="position_field" style="display: none;">
-        <label for="position" class="form-label">Role/Position</label>
-        <input type="text" name="position" class="form-control" id="position">
-        <div class="invalid-feedback">Please enter your role/position.</div>
-    </div>
+<!-- Role/Position Field (for Non-teaching staff) -->
+<div class="col-12" id="position_field" style="display: none;">
+    <label for="position" class="form-label">Role/Position</label>
+    <input type="text" name="position" class="form-control" id="position" required>
+    <div class="invalid-feedback">Please enter your role/position.</div>
+</div>
+
 
     <!-- Email -->
     <div class="col-12">
@@ -334,94 +335,93 @@ body {
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> <!-- Ensure jQuery is included -->
   <script>
     $(document).ready(function() {
-        $('form').on('submit', function(e) {
-            e.preventDefault(); // Prevent form submission
+    $('form').on('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
 
-            // Trim password fields to remove leading/trailing spaces
-            var password = $('#yourPassword').val().trim();
-            var confirmPassword = $('#confirm_password').val().trim();
+        // Create FormData to handle file uploads along with other data
+        var formData = new FormData(this);
 
-           // Get the email value
-const email = $('#email').val().trim();
+        // Validate the password fields
+        var password = $('#yourPassword').val().trim();
+        var confirmPassword = $('#confirm_password').val().trim();
 
-// Define a regex for validating a legitimate email format
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        // Get the email value and validate it
+        const email = $('#email').val().trim();
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-// Check if the email matches the correct format
-if (!emailRegex.test(email)) {
-    Swal.fire({
-        title: 'Error!',
-        text: 'Please enter a valid email address.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-    });
-    return;
-}
-            // Password length validation (min 8, max 16)
-            if (password.length < 8 || password.length > 16) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Password must be between 8 and 16 characters long.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                return;
-            }
+        if (!emailRegex.test(email)) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Please enter a valid email address.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
 
-            // Confirm password match validation
-            if (password !== confirmPassword) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Passwords do not match.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                return;
-            }
+        // Check password length
+        if (password.length < 8 || password.length > 16) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Password must be between 8 and 16 characters long.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
 
-            // If validation passes, submit the form using AJAX
-            var formData = $(this).serialize();
-            $.ajax({
-                url: 'staff_process.php',
-                type: 'POST',
-                data: formData,
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire({
-                            title: 'Success!',
-                            text: 'Staff registration successful!',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = 'https://ramonianlostgems.com';
-                            }
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: response.message || 'An error occurred.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                },
-                error: function(xhr, status, error) {
+        // Check if passwords match
+        if (password !== confirmPassword) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Passwords do not match.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        // Submit the form via AJAX
+        $.ajax({
+            url: 'register_staff.php', // Use the correct PHP file
+            type: 'POST',
+            data: formData,
+            contentType: false,  // Do not set contentType for FormData
+            processData: false,  // Do not process FormData into URL-encoded format
+            dataType: 'json',  // Expect JSON response from the server
+            success: function(response) {
+                if (response.success) {
                     Swal.fire({
                         title: 'Success!',
-                        text: 'Your registration was successful! Please wait for the admin to review and approve your account. Once your account is approved, you will be able to log in. Thank you for your patience.',
+                        text: 'Staff registration successful!',
                         icon: 'success',
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = 'https://ramonianlostgems.com/staff_login.php';
+                            window.location.href = 'https://ramonianlostgems.com';
                         }
                     });
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: response.message || 'An error occurred.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 }
-            });
+            },
+            error: function(xhr, status, error) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An unexpected error occurred. Please try again later.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
         });
     });
+});
+
     $(document).ready(function() {
         $('#user_type').on('change', function() {
             if ($(this).val() === 'teaching') {
