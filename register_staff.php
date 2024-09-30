@@ -286,91 +286,68 @@ body {
   <script src="<?= base_url ?>assets/js/main.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> <!-- Ensure jQuery is included -->
   <script>
-   $(document).ready(function() {
-        $('form').on('submit', function(e) {
-            e.preventDefault(); // Prevent form submission
-
-            // Trim password fields to remove leading/trailing spaces
-            var password = $('#yourPassword').val().trim();
-            var confirmPassword = $('#confirm_password').val().trim();
-
-           // Get the email value
-const email = $('#email').val().trim();
-
-// Define a regex for validating a legitimate email format
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-// Check if the email matches the correct format
-if (!emailRegex.test(email)) {
-    Swal.fire({
-        title: 'Error!',
-        text: 'Please enter a valid email address.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-    });
-    return;
-}
-            // Password length validation (min 8, max 16)
-            if (password.length < 8 || password.length > 16) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Password must be between 8 and 16 characters long.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-                return;
-            }
-
-            // Confirm password match validation
+    $(document).ready(function() {
+        // Handle form submission via AJAX
+        $('#registrationForm').on('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            // Create a new FormData object to capture form fields and file data
+            var formData = new FormData(this);
+            
+            // Simple validation checks
+            const password = $('#yourPassword').val().trim();
+            const confirmPassword = $('#confirm_password').val().trim();
+            
             if (password !== confirmPassword) {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'Passwords do not match.',
+                    text: 'Passwords do not match!',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
                 return;
             }
-        $.ajax({
-            url: 'register_staff.php',  // Backend PHP file to process the form
-            type: 'POST',
-            data: formData,
-            processData: false,  // Prevent jQuery from converting the FormData to a query string
-            contentType: false,  // Prevent jQuery from setting the content type
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Staff registration successful!',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = 'https://ramonianlostgems.com';
-                        }
-                    });
-                } else {
+
+            $.ajax({
+                url: 'register_staff.php',  // Backend PHP file to process the form
+                type: 'POST',
+                data: formData,
+                processData: false,  // Prevent jQuery from converting the FormData to a query string
+                contentType: false,  // Prevent jQuery from setting the content type
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'https://ramonianlostgems.com';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: response.message || 'An error occurred.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function() {
                     Swal.fire({
                         title: 'Error!',
-                        text: response.message || 'An error occurred.',
+                        text: 'An unexpected error occurred during registration.',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
                 }
-            },
-            error: function(xhr, status, error) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An unexpected error occurred during registration.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
+            });
         });
-    });
-});
-    $(document).ready(function() {
+        
+        // User type dropdown change listener
         $('#user_type').on('change', function() {
             if ($(this).val() === 'teaching') {
                 $('#department').prop('disabled', false);
@@ -381,22 +358,6 @@ if (!emailRegex.test(email)) {
             }
         });
     });
-    document.querySelector('#registrationForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        var email = document.querySelector('#email').value;
-        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-        if (!emailPattern.test(email)) {
-          Swal.fire({
-            title: 'Error!',
-            text: 'Please enter a valid email address.',
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
-        } else {
-          this.submit();
-        }
-      });
   </script>
 <?php require_once('inc/footer.php') ?>
 </body>
