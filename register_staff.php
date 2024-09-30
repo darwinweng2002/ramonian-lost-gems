@@ -140,8 +140,7 @@ body {
                     <p class="text-center small">Fill in the form to create a staff account</p>
                   </div>
                   
-                  <!-- Staff registration form -->
-                  <form class="row g-3 needs-validation" novalidate method="POST" action="register_staff.php">
+                  <form class="row g-3 needs-validation" novalidate method="POST" action="register_staff.php" enctype="multipart/form-data">
     <!-- User Type Field (Teaching or Non-teaching) -->
     <div class="col-12">
         <label for="user_type" class="form-label">User Type</label>
@@ -180,12 +179,12 @@ body {
         <div class="invalid-feedback">Please enter your role/position.</div>
     </div>
 
-    <!-- Username -->
+    <!-- Email -->
     <div class="col-12">
-                      <label for="email" class="form-label">Email</label> 
-                      <input type="email" name="email" class="form-control" id="email" required>
-                      <div class="invalid-feedback">Please use an active email account</div>
-                    </div>
+        <label for="email" class="form-label">Email</label> 
+        <input type="email" name="email" class="form-control" id="email" required>
+        <div class="invalid-feedback">Please use an active email account</div>
+    </div>
 
     <!-- Password -->
     <div class="col-12">
@@ -199,6 +198,13 @@ body {
         <label for="confirm_password" class="form-label">Confirm Password</label>
         <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
         <div class="invalid-feedback">Passwords do not match.</div>
+    </div>
+
+    <!-- Upload ID -->
+    <div class="col-12">
+        <label for="id_file" class="form-label">Upload ID (JPEG, PNG or PDF)</label>
+        <input type="file" name="id_file" class="form-control" id="id_file" required>
+        <div class="invalid-feedback">Please upload your ID file.</div>
     </div>
 
     <!-- Submit Button -->

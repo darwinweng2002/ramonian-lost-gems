@@ -2,27 +2,54 @@
 include 'config.php'; // Include the database configuration file
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve form data and validate
+    // Retrieve form data
     $first_name = trim($_POST['first_name']);
     $last_name = trim($_POST['last_name']);
-    $user_type = trim($_POST['user_type']); // Capturing user type
+    $user_type = trim($_POST['user_type']);
     $username = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
 
+    // File Upload Handling
+    $uploadDirectory = 'uploads/ids/';
+    $fileName = basename($_FILES['id_file']['name']);
+    $targetFilePath = $uploadDirectory . $fileName;
+    $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+
+    // Validate file upload
+    if (!empty($fileName)) {
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'pdf'];
+        if (in_array(strtolower($fileType), $allowedTypes)) {
+            if (move_uploaded_file($_FILES['id_file']['tmp_name'], $targetFilePath)) {
+                $id_file = $targetFilePath; // Store the file path for later use
+            } else {
+                $response = ['success' => false, 'message' => 'Failed to upload the ID file.'];
+                echo json_encode($response);
+                exit;
+            }
+        } else {
+            $response = ['success' => false, 'message' => 'Invalid file type. Only JPG, JPEG, PNG, and PDF are allowed.'];
+            echo json_encode($response);
+            exit;
+        }
+    } else {
+        $response = ['success' => false, 'message' => 'Please upload your ID.'];
+        echo json_encode($response);
+        exit;
+    }
+
     // For teaching staff, department is required
     if ($user_type === 'teaching') {
         $department = trim($_POST['department']);
-        $position = null; // No need for position in teaching
+        $position = null;
         if (empty($department)) {
             $response = ['success' => false, 'message' => 'Please enter the department for teaching staff.'];
             echo json_encode($response);
             exit;
         }
     } else {
-        // For non-teaching staff, position is required and department is disabled
         $position = trim($_POST['position']);
-        $department = null; // No need for department in non-teaching
+        $department = null;
         if (empty($position)) {
             $response = ['success' => false, 'message' => 'Please enter the role/position for non-teaching staff.'];
             echo json_encode($response);
@@ -54,14 +81,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Hash the password before inserting into the database
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-    // Check if the username already exists in the database
+    // Check if the username (email) already exists in the database
     $stmt = $conn->prepare("SELECT id FROM user_staff WHERE email = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        // Username already exists
         $response = ['success' => false, 'message' => 'This email is already registered.'];
         echo json_encode($response);
         $stmt->close();
@@ -71,16 +97,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt->close();
 
-    // Prepare the SQL statement to insert new user
-    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    // Prepare the SQL statement to insert new user including the id_file
+    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, id_file) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {
         $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
         echo json_encode($response);
         exit;
     }
 
-    // Bind parameters including the user_type field
-    $stmt->bind_param("sssssss", $first_name, $last_name, $username, $hashed_password, $department, $position, $user_type);
+    // Bind parameters including the ID file path
+    $stmt->bind_param("ssssssss", $first_name, $last_name, $username, $hashed_password, $department, $position, $user_type, $id_file);
 
     // Execute the query and check for success
     if ($stmt->execute()) {
