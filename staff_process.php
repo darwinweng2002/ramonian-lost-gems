@@ -1,68 +1,27 @@
 <?php
-include 'config.php'; // Include the database configuration file
+// Include the database configuration file
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+include 'config.php';
+
+// Include PHPMailer for email notifications (optional)
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require 'PHPMailer-master/src/Exception.php';
+require 'PHPMailer-master/src/PHPMailer.php';
+require 'PHPMailer-master/src/SMTP.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data
     $first_name = trim($_POST['first_name']);
     $last_name = trim($_POST['last_name']);
     $user_type = trim($_POST['user_type']);
-    $username = trim($_POST['email']);
+    $email = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
-
-    // File Upload Handling
-    $uploadDirectory = 'uploads/ids/';
-    $fileName = basename($_FILES['id_file']['name']);
-    $targetFilePath = $uploadDirectory . $fileName;
-    $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
-
-    // Validate file upload
-    if (!empty($fileName)) {
-        $allowedTypes = ['jpg', 'jpeg', 'png', 'pdf'];
-        if (in_array(strtolower($fileType), $allowedTypes)) {
-            if (move_uploaded_file($_FILES['id_file']['tmp_name'], $targetFilePath)) {
-                $id_file = $targetFilePath; // Store the file path for later use
-            } else {
-                $response = ['success' => false, 'message' => 'Failed to upload the ID file.'];
-                echo json_encode($response);
-                exit;
-            }
-        } else {
-            $response = ['success' => false, 'message' => 'Invalid file type. Only JPG, JPEG, PNG, and PDF are allowed.'];
-            echo json_encode($response);
-            exit;
-        }
-    } else {
-        $response = ['success' => false, 'message' => 'Please upload your ID.'];
-        echo json_encode($response);
-        exit;
-    }
-
-    // For teaching staff, department is required
-    if ($user_type === 'teaching') {
-        $department = trim($_POST['department']);
-        $position = null;
-        if (empty($department)) {
-            $response = ['success' => false, 'message' => 'Please enter the department for teaching staff.'];
-            echo json_encode($response);
-            exit;
-        }
-    } else {
-        $position = trim($_POST['position']);
-        $department = null;
-        if (empty($position)) {
-            $response = ['success' => false, 'message' => 'Please enter the role/position for non-teaching staff.'];
-            echo json_encode($response);
-            exit;
-        }
-    }
-
-    // Check if all required fields are provided
-    if (empty($first_name) || empty($last_name) || empty($username) || empty($password)) {
-        $response = ['success' => false, 'message' => 'Please fill in all the required fields.'];
-        echo json_encode($response);
-        exit;
-    }
+    $department = $user_type === 'teaching' ? trim($_POST['department']) : null;
+    $position = $user_type !== 'teaching' ? trim($_POST['position']) : null;
 
     // Check if passwords match
     if ($password !== $confirm_password) {
@@ -71,19 +30,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Validate password length (8-16 characters)
-    if (strlen($password) < 8 || strlen($password) > 16) {
-        $response = ['success' => false, 'message' => 'Password must be between 8 and 16 characters long.'];
+    // Hash the password
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+    // Handle file upload (School ID)
+    $target_dir = "uploads/ids/";
+    $school_id_file = $target_dir . basename($_FILES["id_file"]["name"]);
+    $imageFileType = strtolower(pathinfo($school_id_file, PATHINFO_EXTENSION));
+
+    // Check if file is a valid image type
+    $valid_file_types = ['jpg', 'jpeg', 'png', 'pdf'];
+    if (!in_array($imageFileType, $valid_file_types)) {
+        $response = ['success' => false, 'message' => 'Invalid file format for school ID. Only JPG, JPEG, PNG, and PDF are allowed.'];
         echo json_encode($response);
         exit;
     }
 
-    // Hash the password before inserting into the database
-    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+    // Ensure target directory exists
+    if (!is_dir($target_dir)) {
+        mkdir($target_dir, 0777, true);
+    }
 
-    // Check if the username (email) already exists in the database
+    // Generate a unique file name
+    $newFileName = md5(time() . basename($_FILES["id_file"]["name"])) . '.' . $imageFileType;
+    $target_file = $target_dir . $newFileName;
+
+    // Attempt to move the uploaded file
+    if (!move_uploaded_file($_FILES["id_file"]["tmp_name"], $target_file)) {
+        $response = ['success' => false, 'message' => 'Error uploading school ID.'];
+        echo json_encode($response);
+        exit;
+    }
+
+    // Check if the email is already registered
     $stmt = $conn->prepare("SELECT id FROM user_staff WHERE email = ?");
-    $stmt->bind_param("s", $username);
+    $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
 
@@ -97,22 +78,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt->close();
 
-    // Prepare the SQL statement to insert new user including the id_file
-    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, id_file) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    // Set account status as "pending"
+    $status = 'pending';
+
+    // Prepare the SQL statement to insert new staff member
+    $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, id_file, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {
         $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
         echo json_encode($response);
         exit;
     }
 
-    // Bind parameters including the ID file path
-    $stmt->bind_param("ssssssss", $first_name, $last_name, $username, $hashed_password, $department, $position, $user_type, $id_file);
+    // Bind parameters
+    $stmt->bind_param("sssssssss", $first_name, $last_name, $email, $hashed_password, $department, $position, $user_type, $newFileName, $status);
 
     // Execute the query and check for success
     if ($stmt->execute()) {
-        $response = ['success' => true, 'message' => 'Registration successful!'];
+        $response = ['success' => true, 'message' => 'Registration successful! Your account is pending approval.'];
     } else {
-        $response = ['success' => false, 'message' => 'Failed to register user.'];
+        $response = ['success' => false, 'message' => 'Failed to register staff member.'];
     }
 
     $stmt->close();
