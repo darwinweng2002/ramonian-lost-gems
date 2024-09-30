@@ -287,14 +287,50 @@ body {
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> <!-- Ensure jQuery is included -->
   <script>
    $(document).ready(function() {
-    $('#registrationForm').on('submit', function(e) {
-        e.preventDefault(); // Prevent form submission
+        $('form').on('submit', function(e) {
+            e.preventDefault(); // Prevent form submission
 
-        // Create FormData object to include file and form data
-        var formData = new FormData(this);
+            // Trim password fields to remove leading/trailing spaces
+            var password = $('#yourPassword').val().trim();
+            var confirmPassword = $('#confirm_password').val().trim();
 
-        // Custom client-side validation can go here...
+           // Get the email value
+const email = $('#email').val().trim();
 
+// Define a regex for validating a legitimate email format
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+// Check if the email matches the correct format
+if (!emailRegex.test(email)) {
+    Swal.fire({
+        title: 'Error!',
+        text: 'Please enter a valid email address.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+    });
+    return;
+}
+            // Password length validation (min 8, max 16)
+            if (password.length < 8 || password.length > 16) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Password must be between 8 and 16 characters long.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // Confirm password match validation
+            if (password !== confirmPassword) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Passwords do not match.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
         $.ajax({
             url: 'register_staff.php',  // Backend PHP file to process the form
             type: 'POST',
