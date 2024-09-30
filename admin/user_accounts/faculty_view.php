@@ -221,8 +221,9 @@ $result = $conn->query($sql);
                             <button class="btn btn-secondary btn-sm ms-2" disabled>Approved</button> <!-- Button will show disabled once status is active -->
                         <?php endif; ?>
                         <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
-                            <i class="fas fa-trash-alt"></i> Delete
-                        </button>
+    <i class="fas fa-trash-alt"></i> Delete
+</button>
+
                     </div>
                 </td>
             </tr>
