@@ -288,7 +288,7 @@ body {
 
     <!-- Image Upload (Profile Picture) -->
     <div class="col-12">
-        <label for="avatar" class="form-label">Upload Profile Picture</label>
+        <label for="profile_image" class="form-label">Upload Profile Picture</label>
         <input type="file" name="profile_image" class="form-control" id="profile_image" accept="image/*">
         <div class="invalid-feedback">Please upload an image file.</div>
     </div>

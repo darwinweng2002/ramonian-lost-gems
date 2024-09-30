@@ -15,12 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $target_dir = "uploads/profiles/"; // Directory to store uploaded images
 
     // Check if a file was uploaded
-    if (!empty($_FILES['avatar']['name'])) {
-        $profile_image = basename($_FILES['avatar']['name']);
+    if (!empty($_FILES['profile_image']['name'])) {
+        $profile_image = basename($_FILES['profile_image']['name']);
         $target_file = $target_dir . $profile_image;
 
         // Move the uploaded file to the server
-        if (!move_uploaded_file($_FILES['avatar']['tmp_name'], $target_file)) {
+        if (!move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_file)) {
             $response = ['success' => false, 'message' => 'Failed to upload profile picture.'];
             echo json_encode($response);
             exit;
