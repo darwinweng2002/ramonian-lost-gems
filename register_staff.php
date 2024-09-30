@@ -10,6 +10,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
 
+    // Check if email already exists
+    $stmt = $conn->prepare("SELECT id FROM user_staff WHERE email = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $response = ['success' => false, 'message' => 'This email address is already taken, please use another.'];
+        echo json_encode($response);
+        exit;
+    }
+    $stmt->close();
+
     // Handle file upload (profile picture)
     $profile_image = '';
     $target_dir = "uploads/profiles/"; // Directory to store uploaded images
@@ -338,7 +351,6 @@ $(document).ready(function () {
             });
             return;
         }
-
         var formData = new FormData(this);
         // Ajax request to handle the registration form submission
         $.ajax({
@@ -361,6 +373,13 @@ $(document).ready(function () {
                             window.location.href = 'https://ramonianlostgems.com'; // Redirect to your desired page
                         }
                     });
+                } else if (response.message.includes("already taken")) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: response.message || 'This email address is already taken, please use another.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 } else {
                     // Show error message in case of failure
                     Swal.fire({
@@ -372,16 +391,11 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                // Convert the error message to success message for this scenario
                 Swal.fire({
-                    title: 'Success!',  // Change title to Success
-                    text: 'The registration process was completed successfully.', // Message for success
-                    icon: 'success',  // Change the icon to success
+                    title: 'Error!',
+                    text: 'An unexpected error occurred during registration.',
+                    icon: 'error',
                     confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = 'https://ramonianlostgems.com/register_staff.php/'; // Redirect to your desired page
-                    }
                 });
             }
         });
