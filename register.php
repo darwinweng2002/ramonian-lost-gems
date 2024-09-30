@@ -266,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <select id="role-select" class="form-select">
                     <option value="" disabled selected>Register as</option>
                     <option value="student">Register as Student</option>
-                    <option value="faculty">Register as Faculty</option>
+                    <option value="faculty">Register as Employee</option>
                 </select>
             </div>
 

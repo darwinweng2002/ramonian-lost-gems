@@ -36,7 +36,7 @@ if (isset($_GET['id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Faculty Details</title>
+    <title>View Employee Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -118,7 +118,7 @@ if (isset($_GET['id'])) {
 
 <section class="section">
     <div class="container">
-        <h2>Faculty Details</h2>
+        <h2>Employee Details</h2>
 
         <ul class="user-details">
             <li><span>First Name:</span> <?= htmlspecialchars($user['first_name']) ?></li>
