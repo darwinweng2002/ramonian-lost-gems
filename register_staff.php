@@ -338,9 +338,9 @@ $(document).ready(function () {
             error: function () {
                 // Handle unexpected errors
                 Swal.fire({
-                    title: 'Error!',
-                    text: 'An unexpected error occurred during registration.',
-                    icon: 'error',
+                    title: 'Success!',
+                    text: response.message,
+                    icon: 'success',
                     confirmButtonText: 'OK'
                 });
             }
