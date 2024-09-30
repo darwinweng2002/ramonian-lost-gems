@@ -24,6 +24,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
+    // Check if file was uploaded
+    if (!isset($_FILES['id_file']) || $_FILES['id_file']['error'] !== UPLOAD_ERR_OK) {
+        $response = ['success' => false, 'message' => 'Please upload your ID.'];
+        echo json_encode($response);
+        exit;
+    }
+
+    // Handle the uploaded ID file
+    $fileTmpPath = $_FILES['id_file']['tmp_name'];
+    $fileName = $_FILES['id_file']['name'];
+    $fileSize = $_FILES['id_file']['size'];
+    $fileType = $_FILES['id_file']['type'];
+    $fileNameCmps = explode(".", $fileName);
+    $fileExtension = strtolower(end($fileNameCmps));
+
+    // Sanitize file name
+    $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+
+    // Allowed file extensions
+    $allowedFileExtensions = array('jpg', 'jpeg', 'png', 'pdf');
+
+    if (in_array($fileExtension, $allowedFileExtensions)) {
+        // Directory where the file will be uploaded
+        $uploadFileDir = './uploads/ids/';
+        $dest_path = $uploadFileDir . $newFileName;
+
+        // Move the file to the destination directory
+        if (move_uploaded_file($fileTmpPath, $dest_path)) {
+            $id_file = $newFileName; // Store the new file name in the database
+        } else {
+            $response = ['success' => false, 'message' => 'Error moving the uploaded file.'];
+            echo json_encode($response);
+            exit;
+        }
+    } else {
+        $response = ['success' => false, 'message' => 'Invalid file type. Only JPG, PNG, and PDF files are allowed.'];
+        echo json_encode($response);
+        exit;
+    }
+
     // Hash the password before inserting into the database
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
@@ -42,45 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $stmt->close();
-
-    // Handle the uploaded ID file
-    if (isset($_FILES['id_file']) && $_FILES['id_file']['error'] === UPLOAD_ERR_OK) {
-        $fileTmpPath = $_FILES['id_file']['tmp_name'];
-        $fileName = $_FILES['id_file']['name'];
-        $fileSize = $_FILES['id_file']['size'];
-        $fileType = $_FILES['id_file']['type'];
-        $fileNameCmps = explode(".", $fileName);
-        $fileExtension = strtolower(end($fileNameCmps));
-
-        // Sanitize file name
-        $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
-
-        // Allowed file extensions
-        $allowedFileExtensions = array('jpg', 'jpeg', 'png', 'pdf');
-
-        if (in_array($fileExtension, $allowedFileExtensions)) {
-            // Directory where the file will be uploaded
-            $uploadFileDir = './uploads/ids/';
-            $dest_path = $uploadFileDir . $newFileName;
-
-            // Move the file to the destination directory
-            if (move_uploaded_file($fileTmpPath, $dest_path)) {
-                $id_file = $newFileName; // Store the new file name in the database
-            } else {
-                $response = ['success' => false, 'message' => 'Error moving the uploaded file.'];
-                echo json_encode($response);
-                exit;
-            }
-        } else {
-            $response = ['success' => false, 'message' => 'Invalid file type. Only JPG, PNG, and PDF files are allowed.'];
-            echo json_encode($response);
-            exit;
-        }
-    } else {
-        $response = ['success' => false, 'message' => 'Please upload your ID.'];
-        echo json_encode($response);
-        exit;
-    }
 
     // Prepare the SQL statement to insert new user
     $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, id_file) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -107,6 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo json_encode($response);
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
