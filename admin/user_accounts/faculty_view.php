@@ -209,8 +209,9 @@ $result = $conn->query($sql);
                 <td>
                     <div class="d-flex justify-content-center">
                     <a href="viewfaculty.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
+    <i class="fas fa-eye"></i> View Details
+</a>
+
                         <?php if ($row['status'] !== 'active'): ?>  <!-- Check if the user is not yet active -->
                             <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
                                 <i class="fas fa-check"></i> Approve
