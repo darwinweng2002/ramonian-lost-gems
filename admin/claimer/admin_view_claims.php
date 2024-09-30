@@ -207,7 +207,7 @@ $result = $conn->query($sql);
 
         if (confirm('Are you sure you want to delete this claim?')) {
             $.ajax({
-                url: 'delete_claim.php',
+                url: '../delete_claim.php',
                 type: 'POST',
                 data: { claim_id: claimId },
                 dataType: 'json',
