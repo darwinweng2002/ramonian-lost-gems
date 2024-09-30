@@ -59,18 +59,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $dest_path = $uploadFileDir . $newFileName;
 
         // Move the file to the destination directory
-        if (move_uploaded_file($fileTmpPath, $dest_path)) {
-            $id_file = $newFileName; // Store the new file name in the database
+        if (move_uploaded_file($_FILES['id_file']['tmp_name'], $dest_path)) {
+            $id_file = $newFileName;
         } else {
-            $response = ['success' => false, 'message' => 'Error moving the uploaded file.'];
+            // Check the permissions of the folder
+            if (!is_writable($uploadFileDir)) {
+                $response = ['success' => false, 'message' => 'Upload directory is not writable.'];
+            } else {
+                $response = ['success' => false, 'message' => 'Error moving the uploaded file.'];
+            }
             echo json_encode($response);
             exit;
         }
-    } else {
-        $response = ['success' => false, 'message' => 'Invalid file type. Only JPG, PNG, and PDF files are allowed.'];
-        echo json_encode($response);
-        exit;
-    }
+    }        
 
     // Hash the password before inserting into the database
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
@@ -216,7 +217,7 @@ body {
                     <p class="text-center small">Fill in the form to create a staff account</p>
                   </div>
                   
-                  <form class="row g-3 needs-validation" novalidate method="POST" action="register_staff.php" enctype="multipart/form-data">
+    <form class="row g-3 needs-validation" novalidate method="POST" action="register_staff.php" enctype="multipart/form-data">
     <!-- User Type Field (Teaching or Non-teaching) -->
     <div class="col-12">
         <label for="user_type" class="form-label">User Type</label>
