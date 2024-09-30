@@ -208,7 +208,7 @@ $result = $conn->query($sql);
                 <td><?= htmlspecialchars($row['registration_date'] ?? 'N/A') ?></td>
                 <td>
                     <div class="d-flex justify-content-center">
-                        <a href="viewfaculty.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+                    <a href="viewfaculty.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
                             <i class="fas fa-eye"></i> View Details
                         </a>
                         <?php if ($row['status'] !== 'active'): ?>  <!-- Check if the user is not yet active -->
