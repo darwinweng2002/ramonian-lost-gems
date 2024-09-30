@@ -30,8 +30,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($user_type === 'teaching') {
         $department = trim($_POST['department']);
+        if (empty($department)) {
+            echo json_encode(['success' => false, 'message' => 'Department is required for teaching staff.']);
+            exit;
+        }
     } else {
         $position = trim($_POST['position']);
+        if (empty($position)) {
+            echo json_encode(['success' => false, 'message' => 'Position is required for non-teaching staff.']);
+            exit;
+        }
     }
 
     // Handle file upload (profile picture)
@@ -47,6 +55,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Ensure unique file name to avoid conflicts
         $profile_image = uniqid() . '_' . basename($_FILES['profile_image']['name']);
         $target_file = $target_dir . $profile_image;
+
+        // Validate the image file (optional, add more validation as needed)
+        $file_type = mime_content_type($_FILES['profile_image']['tmp_name']);
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+
+        if (!in_array($file_type, $allowed_types)) {
+            echo json_encode(['success' => false, 'message' => 'Invalid file type. Only JPG, PNG, and GIF are allowed.']);
+            exit;
+        }
 
         // Move the uploaded file to the server
         if (!move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_file)) {
@@ -77,4 +94,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
     $conn->close();
 }
-?>
