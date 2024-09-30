@@ -306,7 +306,7 @@ $(document).ready(function () {
 
         // Ajax request to handle the registration form submission
         $.ajax({
-            url: 'staff_process.php', // Backend PHP file to process the form
+            url: '../staff_process.php', // Backend PHP file to process the form
             type: 'POST',
             data: formData,
             processData: false,  // Prevent jQuery from converting the FormData to a query string
