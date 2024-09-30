@@ -317,7 +317,7 @@ $(document).ready(function () {
                     // Show success message and redirect after confirmation
                     Swal.fire({
                         title: 'Success!',
-                        text: response.message,
+                        text: response.message || 'Registration successful!',
                         icon: 'success',
                         confirmButtonText: 'OK'
                     }).then((result) => {
@@ -338,9 +338,9 @@ $(document).ready(function () {
             error: function () {
                 // Handle unexpected errors
                 Swal.fire({
-                    title: 'Success!',
-                    text: response.message,
-                    icon: 'success',
+                    title: 'Error!',
+                    text: 'An unexpected error occurred during registration.',
+                    icon: 'error',
                     confirmButtonText: 'OK'
                 });
             }
