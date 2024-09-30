@@ -375,7 +375,7 @@ $is_non_teaching = empty($department);
                                     <div class="pt-4 pb-2 text-center">
                                         <!-- Check if the user is non-teaching and change the dashboard title accordingly -->
                                         <h5 class="card-title text-center pb-0 fs-4">
-                                            <?= $is_non_teaching ? 'Non-Teaching Dashboard' : 'Staff Dashboard' ?>
+                                            <?= $is_non_teaching ? 'Non-Teaching Dashboard' : 'Employee User Dashboard' ?>
                                         </h5>
                                         <div class="d-flex justify-content-center">
                                             <div class="text-center mb-3">
