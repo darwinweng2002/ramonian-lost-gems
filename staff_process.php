@@ -10,12 +10,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
+    $department = null;
+    $position = null;
+
+    // Ensure the appropriate fields are filled
+    if ($user_type === 'teaching') {
+        $department = trim($_POST['department']);
+        $position = null;
+    } else if ($user_type === 'non-teaching') {
+        $position = trim($_POST['position']);
+        $department = null;
+    }
+
+    // Validate password and confirm password match
+    if ($password !== $confirm_password) {
+        $response = ['success' => false, 'message' => 'Passwords do not match.'];
+        echo json_encode($response);
+        exit;
+    }
+
+    // Hash the password before inserting into the database
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
     // Handle file upload (profile picture)
     $profile_image = '';
     $target_dir = "uploads/profiles/"; // Directory to store uploaded images
 
-    // Check if the directory exists and create it if not
+    // Ensure the directory exists and create it if not
     if (!is_dir($target_dir)) {
         mkdir($target_dir, 0755, true); // Create the directory if it doesn't exist
     }
@@ -28,40 +49,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Move the uploaded file to the server and check if successful
         if (!move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_file)) {
-            echo 'File upload failed!'; // Debugging output
+            $response = ['success' => false, 'message' => 'Failed to upload profile picture.'];
+            echo json_encode($response);
             exit;
-        } else {
-            echo 'File uploaded successfully to ' . $target_file; // Debugging output
         }
-    } else {
-        echo 'No file uploaded'; // Debugging output
-        exit;
     }
-
-    // Proceed with the rest of your code (validate and hash passwords, etc.)
 
     // Prepare the SQL statement to insert new user (including profile_image)
     $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     
     if ($stmt === false) {
-        echo 'Failed to prepare the database statement'; // Debugging output
+        $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
+        echo json_encode($response);
         exit;
     }
 
-    // Bind parameters including the user_type and profile_image fields
-    echo 'Profile image to insert: ' . $profile_image; // Debugging output
-
+    // Bind parameters including the user_type, department/position, and profile_image fields
     $stmt->bind_param("ssssssss", $first_name, $last_name, $username, $hashed_password, $department, $position, $user_type, $profile_image);
 
     // Execute the query and check for success
     if ($stmt->execute()) {
-        echo 'Registration successful!'; // Debugging output
+        $response = ['success' => true, 'message' => 'Registration successful!'];
     } else {
-        echo 'Database insert failed: ' . $stmt->error; // Debugging output
+        $response = ['success' => false, 'message' => 'Failed to register user.'];
     }
 
     $stmt->close();
     $conn->close();
+
+    // Return JSON response
+    echo json_encode($response);
 }
 
 ?>

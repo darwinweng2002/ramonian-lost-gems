@@ -344,18 +344,18 @@ body {
         });
 
         // User type dropdown change listener
-        $('#user_type').on('change', function () {
-            if ($(this).val() === 'teaching') {
-                $('#department').prop('disabled', false).attr('required', true);
-                $('#position_field').hide();
-                $('#position').prop('disabled', true).attr('required', false);
-            } else {
-                $('#department').prop('disabled', true).attr('required', false);
-                $('#position_field').show();
-                $('#position').prop('disabled', false).attr('required', true);
-            }
-        }).trigger('change'); // Trigger change event on page load
+        $(document).ready(function() {
+    $('#user_type').on('change', function() {
+        if ($(this).val() === 'teaching') {
+            $('#department').prop('disabled', false);
+            $('#position_field').hide();
+        } else {
+            $('#department').prop('disabled', true);
+            $('#position_field').show();
+        }
     });
+});
+});
 </script>
 
 <?php require_once('inc/footer.php'); ?>
