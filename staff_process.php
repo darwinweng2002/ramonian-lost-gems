@@ -1,5 +1,4 @@
 <?php
-// Place this in the staff_process.php (registration process)
 include 'config.php'; // Include the database configuration file
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -10,75 +9,64 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
-    $department = null;
-    $position = null;
 
-    // Ensure the appropriate fields are filled
-    if ($user_type === 'teaching') {
-        $department = trim($_POST['department']);
-        $position = null;
-    } else if ($user_type === 'non-teaching') {
-        $position = trim($_POST['position']);
-        $department = null;
-    }
-
-    // Validate password and confirm password match
+    // Validate passwords match
     if ($password !== $confirm_password) {
-        $response = ['success' => false, 'message' => 'Passwords do not match.'];
-        echo json_encode($response);
+        echo json_encode(['success' => false, 'message' => 'Passwords do not match.']);
         exit;
     }
 
-    // Hash the password before inserting into the database
+    // Hash the password
     $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+    // Handle department and position based on user type
+    $department = null;
+    $position = null;
+
+    if ($user_type === 'teaching') {
+        $department = trim($_POST['department']);
+    } else {
+        $position = trim($_POST['position']);
+    }
 
     // Handle file upload (profile picture)
     $profile_image = '';
     $target_dir = "uploads/profiles/"; // Directory to store uploaded images
 
-    // Ensure the directory exists and create it if not
+    // Ensure the directory exists
     if (!is_dir($target_dir)) {
-        mkdir($target_dir, 0755, true); // Create the directory if it doesn't exist
+        mkdir($target_dir, 0755, true); // Create directory if not exists
     }
 
-    // Check if a file was uploaded
     if (!empty($_FILES['profile_image']['name'])) {
-        // Create a unique name for the uploaded file to avoid overwriting existing files
+        // Ensure unique file name to avoid conflicts
         $profile_image = uniqid() . '_' . basename($_FILES['profile_image']['name']);
         $target_file = $target_dir . $profile_image;
 
-        // Move the uploaded file to the server and check if successful
+        // Move the uploaded file to the server
         if (!move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_file)) {
-            $response = ['success' => false, 'message' => 'Failed to upload profile picture.'];
-            echo json_encode($response);
+            echo json_encode(['success' => false, 'message' => 'Failed to upload profile picture.']);
             exit;
         }
     }
 
-    // Prepare the SQL statement to insert new user (including profile_image)
+    // Database insert
     $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    
     if ($stmt === false) {
-        $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
-        echo json_encode($response);
+        echo json_encode(['success' => false, 'message' => 'Failed to prepare the database statement.']);
         exit;
     }
 
-    // Bind parameters including the user_type, department/position, and profile_image fields
     $stmt->bind_param("ssssssss", $first_name, $last_name, $username, $hashed_password, $department, $position, $user_type, $profile_image);
 
     // Execute the query and check for success
     if ($stmt->execute()) {
-        $response = ['success' => true, 'message' => 'Registration successful!'];
+        echo json_encode(['success' => true, 'message' => 'Registration successful!']);
     } else {
-        $response = ['success' => false, 'message' => 'Failed to register user.'];
+        echo json_encode(['success' => false, 'message' => 'Failed to register user.']);
     }
 
     $stmt->close();
     $conn->close();
-
-    // Return JSON response
-    echo json_encode($response);
 }
-
 ?>

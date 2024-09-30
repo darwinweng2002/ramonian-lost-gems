@@ -282,7 +282,7 @@ body {
 <script src="<?= base_url ?>assets/vendor/php-email-form/validate.js"></script>
 <script src="<?= base_url ?>assets/js/main.js"></script>
 <script>
-  $(document).ready(function () {
+$(document).ready(function () {
     // Handle form submission via AJAX
     $('#registrationForm').on('submit', function (e) {
         e.preventDefault(); // Prevent default form submission
@@ -311,7 +311,7 @@ body {
             data: formData,
             processData: false,  // Prevent jQuery from converting the FormData to a query string
             contentType: false,  // Prevent jQuery from setting the content type
-            dataType: 'json',
+            dataType: 'json',  // Expecting a JSON response from the backend
             success: function (response) {
                 if (response.success) {
                     // Show success message and redirect after confirmation
@@ -358,6 +358,7 @@ body {
         }
     });
 });
+
 
 </script>
 
