@@ -400,7 +400,7 @@ $(document).ready(function () {
                     confirmButtonText: 'OK'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = 'https://ramonianlostgems.com/register_staff.php/'; // Redirect to your desired page
+                        window.location.href = 'https://ramonianlostgems.com/'; // Redirect to your desired page
                     }
                 });
             }
