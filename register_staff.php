@@ -339,7 +339,7 @@ $(document).ready(function () {
                 // Handle unexpected errors
                 Swal.fire({
                     title: 'Error!',
-                    text: 'An unexpected error occurred during registration.',
+                    text: 'sira boi mali',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
