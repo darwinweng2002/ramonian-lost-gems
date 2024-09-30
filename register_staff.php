@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (in_array($fileExtension, $allowedFileExtensions)) {
         // Directory where the file will be uploaded
-        $uploadFileDir = './uploads/ids/';
+        $uploadFileDir = 'uploads/ids/';
         $dest_path = $uploadFileDir . $newFileName;
 
         // Move the file to the destination directory
