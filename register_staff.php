@@ -1,4 +1,12 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+// Debugging file upload
+echo "<pre>";
+print_r($_FILES);
+echo "</pre>";
+
 include 'config.php'; // Include the database configuration file
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
