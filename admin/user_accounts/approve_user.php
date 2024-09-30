@@ -1,28 +1,32 @@
 <?php
-include '../../config.php'; // Include your DB configuration
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-// Check if the request method is POST and user_id is set
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
-    $user_id = intval($_POST['user_id']);
+include '../../config.php';
 
-    // Prepare the SQL query to update the status to 'active'
-    $sql = "UPDATE user_staff SET status = 'active' WHERE id = ?";
-    
-    if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param('i', $user_id); // Bind the user_id to the query
+// Ensure this script only handles POST requests
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['user_id'])) {
+        $userId = $conn->real_escape_string($_POST['user_id']);
 
-        if ($stmt->execute()) {
-            echo '1'; // Return success message
+        // Update the user's status to "active"
+        $sql = "UPDATE user_staff SET status = 'active' WHERE id = '$userId'";
+
+        if ($conn->query($sql) === TRUE) {
+            echo '1';  // Success response
         } else {
-            echo '0'; // Return failure message
+            echo '0';  // Error response
+            error_log('SQL Error: ' . $conn->error);  // Log error for debugging
         }
-
-        $stmt->close();
     } else {
-        echo '0'; // Return failure if SQL preparation fails
+        echo '0';  // Missing user_id parameter
+        error_log('Missing user_id in POST request');
     }
 } else {
-    echo '0'; // Invalid request
+    echo '0';  // Wrong request method
+    error_log('Invalid request method');
 }
 
 $conn->close();

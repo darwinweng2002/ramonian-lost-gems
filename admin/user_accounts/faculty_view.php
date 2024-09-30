@@ -240,6 +240,47 @@ $result = $conn->query($sql);
 </section>
 
 <script>
+// Approve user function
+function approveUser(event, id) {
+    event.preventDefault();
+    
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You are about to approve this user!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, approve it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('../approve_user.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ user_id: id }) // Send user_id as a POST parameter
+            })
+            .then(response => response.text())
+            .then(result => {
+                if (result.trim() === '1') {
+                    const approveBtn = document.getElementById('approve-btn-' + id);
+                    approveBtn.classList.replace('btn-success', 'btn-secondary');
+                    approveBtn.innerHTML = 'Approved';
+                    approveBtn.disabled = true;
+
+                    Swal.fire('Approved!', 'The user has been approved.', 'success');
+                } else {
+                    Swal.fire('Error!', 'An error occurred while approving the user.', 'error');
+                }
+            })
+            .catch((error) => {
+                console.error('Approval error:', error);
+                Swal.fire('Error!', 'An unexpected error occurred while approving the user.', 'error');
+            });
+        }
+    });
+}
+
+// Delete user function
 function deleteUser(id) {
     Swal.fire({
         title: 'Are you sure?',
@@ -258,8 +299,7 @@ function deleteUser(id) {
             })
             .then(response => response.text())
             .then(result => {
-                console.log('Delete result:', result); // For debugging
-                if (result.trim() === '1') {  // Ensure the backend returns '1' on successful deletion
+                if (result.trim() === '1') {
                     Swal.fire('Deleted!', 'The user has been deleted.', 'success')
                     .then(() => location.reload());
                 } else {
@@ -269,44 +309,6 @@ function deleteUser(id) {
             .catch((error) => {
                 console.error('Delete error:', error);
                 Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
-            });
-        }
-    });
-}
-
-function approveUser(event, id) {
-    event.preventDefault();
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You are about to approve this user!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, approve it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch('../approve_user.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ user_id: id }) // Send user_id as a POST parameter
-            })
-            .then(response => response.text())
-            .then(result => {
-                console.log('Approval result:', result); // Log the result for debugging
-                if (result.trim() === '1') {  // If approval is successful
-                    const approveBtn = document.getElementById('approve-btn-' + id);
-                    approveBtn.classList.replace('btn-success', 'btn-secondary');
-                    approveBtn.innerHTML = 'Approved';
-                    approveBtn.disabled = true;
-                    Swal.fire('Approved!', 'The user has been approved.', 'success');
-                } else {
-                    Swal.fire('Error!', 'An error occurred while approving the user. Server response: ' + result, 'error');
-                }
-            })
-            .catch((error) => {
-                console.error('Approval error:', error);  // Log the error in console for debugging
-                Swal.fire('Error!', 'An unexpected error occurred. ' + error.message, 'error');
             });
         }
     });
