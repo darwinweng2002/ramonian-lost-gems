@@ -253,7 +253,7 @@ function approveUser(event, id) {
         confirmButtonText: 'Yes, approve it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('../approve_user.php', {
+            fetch('approve_user.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({ user_id: id }) // Send user_id as a POST parameter
@@ -309,7 +309,7 @@ function deleteUser(id) {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('delete_users.php', {
+            fetch('../delete_users.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({ id }) // Use URLSearchParams for POST parameters
