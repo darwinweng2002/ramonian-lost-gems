@@ -252,9 +252,10 @@ body {
 
                                     <!-- Image Upload (Profile Picture) -->
                                     <div class="col-12">
-                                        <label for="profile_image" class="form-label">Upload Profile Picture</label>
+                                        <label for="profile_image" class="form-label">Upload ID</label>
                                         <input type="file" name="profile_image" class="form-control" id="profile_image" accept="image/*">
-                                        <div class="invalid-feedback">Please upload an image file.</div>
+                                        <div class="invalid-feedback">Please upload picture of your ID.</div>
+                                        <small class="text-muted">Please upload a clear image of your valid ID (front side only). Ensure that the ID is visible and in JPG or PNG format. This will be used for verification purposes.</small>
                                     </div>
 
                                     <!-- Submit Button -->
