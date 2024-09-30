@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $profile_image = uniqid() . '_' . basename($_FILES['profile_image']['name']);
         $target_file = $target_dir . $profile_image;
 
-        // Validate the image file (optional, add more validation as needed)
+        // Validate the image file
         $file_type = mime_content_type($_FILES['profile_image']['tmp_name']);
         $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
 
