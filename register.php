@@ -286,7 +286,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                             <div class="col-12">
                                 <label for="lastName" class="form-label">Last Name</label>
-                                <input type="text" placeholder="Please input your last name"  name="last_name" class="form-control" id="lastName" required>
+                                <input type="text"  name="last_name" class="form-control" id="lastName" required>
                                 <div class="invalid-feedback">Please enter your last name.</div>
                             </div>
                             <div class="col-12">
