@@ -19,12 +19,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $profile_image = basename($_FILES['profile_image']['name']);
         $target_file = $target_dir . $profile_image;
 
+        // Check if the directory exists and is writable
+        if (!is_dir($target_dir)) {
+            mkdir($target_dir, 0755, true); // Create the directory if it doesn't exist
+        }
+
         // Move the uploaded file to the server
-        if (!move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_file)) {
+        if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_file)) {
+            // Successfully uploaded
+        } else {
+            // Upload failed
             $response = ['success' => false, 'message' => 'Failed to upload profile picture.'];
             echo json_encode($response);
             exit;
         }
+    } else {
+        // No file was uploaded
+        $response = ['success' => false, 'message' => 'No file uploaded. Please upload a profile picture.'];
+        echo json_encode($response);
+        exit;
     }
 
     // For teaching staff, department is required
