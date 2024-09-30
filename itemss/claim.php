@@ -19,6 +19,7 @@ if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
 $claimantId = null;
 $userType = '';
 $isGuest = false;  // Initialize the guest check
+$isOwner = false;  // Initialize the ownership check
 
 if (isset($_SESSION['user_id'])) {
     // Regular user
@@ -49,8 +50,8 @@ if ($conn->connect_error) {
 // Get item ID from URL
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Fetch item data based on the item ID
-$sqlItem = "SELECT mh.title, mh.message, mh.landmark, mh.time_found, mh.contact, 
+// Fetch item data based on the item ID, including the `user_id` of the poster
+$sqlItem = "SELECT mh.title, mh.message, mh.landmark, mh.time_found, mh.contact, mh.user_id AS poster_id,
             um.first_name, um.last_name, um.email, c.name AS category_name
             FROM message_history mh
             LEFT JOIN user_member um ON mh.user_id = um.id
@@ -77,6 +78,11 @@ if ($userType === 'user_member' && isset($claimantData['user_type']) && $claiman
     $isGuest = true;
 }
 
+// Check if the claimant is the same as the poster (to prevent them from claiming their own post)
+if ($itemData['poster_id'] == $claimantId) {
+    $isOwner = true;
+}
+
 // Process the form submission to save the claim request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($isGuest) {
@@ -84,6 +90,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             Swal.fire({
                 title: 'Access Denied!',
                 text: 'Guest users are not allowed to claim items.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        </script>";
+    } elseif ($isOwner) {
+        echo "<script>
+            Swal.fire({
+                title: 'Access Denied!',
+                text: 'You cannot claim your own post.',
                 icon: 'error',
                 confirmButtonText: 'OK'
             });
@@ -258,6 +273,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($isGuest): ?>
             <!-- Guest restriction message -->
             <p style="color: red; text-align: center;">Guest users are not allowed to claim items.</p>
+        <?php elseif ($isOwner): ?>
+            <!-- Owner restriction message -->
+            <p style="color: red; text-align: center;">You cannot claim your own post.</p>
         <?php else: ?>
             <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
             <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
@@ -277,7 +295,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
     </div>
 
-    <?php if (!$isGuest): ?>
+    <?php if (!$isGuest && !$isOwner): ?>
     <!-- Claim Form -->
     <form id="claimForm" action="" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="item_id" value="<?= $itemId; ?>">
