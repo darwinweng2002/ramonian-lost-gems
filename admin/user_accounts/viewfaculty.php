@@ -92,7 +92,6 @@ if (isset($_GET['id'])) {
 
         .profile-image img {
             max-width: 150px;
-            border-radius: 50%;
         }
 
         .back-btn {
