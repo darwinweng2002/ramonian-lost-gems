@@ -1,36 +1,3 @@
-<?php
-include '../../config.php';
-
-// Database connection
-$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Check if the user ID is provided in the URL
-if (isset($_GET['id'])) {
-    $userId = $conn->real_escape_string($_GET['id']);
-
-    // Fetch the user details from the database
-    $sql = "SELECT first_name, last_name, email, user_type, department, position, profile_image 
-            FROM user_staff 
-            WHERE id = '$userId'";
-
-    $result = $conn->query($sql);
-
-    // Check if the user exists
-    if ($result && $result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-    } else {
-        die("User not found.");
-    }
-} else {
-    die("No user ID provided.");
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <?php require_once('../inc/header.php'); ?>
@@ -62,19 +29,10 @@ if (isset($_GET['id'])) {
             margin-bottom: 20px;
         }
 
-        .profile-image {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-image img {
-            max-width: 150px;
-            border-radius: 50%;
-        }
-
         .user-details {
             list-style-type: none;
             padding: 0;
+            margin-bottom: 20px;
         }
 
         .user-details li {
@@ -84,6 +42,25 @@ if (isset($_GET['id'])) {
 
         .user-details span {
             font-weight: bold;
+        }
+
+        .uploaded-id-label {
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            display: block;
+            font-size: 20px;
+            color: #444;
+        }
+
+        .profile-image {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .profile-image img {
+            max-width: 150px;
+            border-radius: 50%;
         }
 
         .back-btn {
@@ -112,14 +89,6 @@ if (isset($_GET['id'])) {
     <div class="container">
         <h2>Faculty Details</h2>
 
-        <div class="profile-image">
-            <?php if (!empty($user['profile_image'])): ?>
-                <img src="../../uploads/profiles/<?= htmlspecialchars($user['profile_image']) ?>" alt="Profile Image">
-            <?php else: ?>
-                <img src="https://via.placeholder.com/150" alt="No Profile Image">
-            <?php endif; ?>
-        </div>
-
         <ul class="user-details">
             <li><span>First Name:</span> <?= htmlspecialchars($user['first_name']) ?></li>
             <li><span>Last Name:</span> <?= htmlspecialchars($user['last_name']) ?></li>
@@ -128,6 +97,16 @@ if (isset($_GET['id'])) {
             <li><span>Department:</span> <?= htmlspecialchars($user['department'] ?? 'N/A') ?></li>
             <li><span>Position:</span> <?= htmlspecialchars($user['position'] ?? 'N/A') ?></li>
         </ul>
+
+        <!-- Add the Uploaded ID label and move the profile image here -->
+        <span class="uploaded-id-label">Uploaded ID</span>
+        <div class="profile-image">
+            <?php if (!empty($user['profile_image'])): ?>
+                <img src="../../uploads/profiles/<?= htmlspecialchars($user['profile_image']) ?>" alt="Profile Image">
+            <?php else: ?>
+                <img src="https://via.placeholder.com/150" alt="No Profile Image">
+            <?php endif; ?>
+        </div>
 
         <div class="back-btn">
             <a href="faculty_view.php"><i class="fas fa-arrow-left"></i> Back to User List</a>
