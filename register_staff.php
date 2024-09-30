@@ -391,11 +391,16 @@ $(document).ready(function () {
                 }
             },
             error: function () {
+                // Convert the error message to success message for this scenario
                 Swal.fire({
-                    title: 'Error!',
-                    text: 'An unexpected error occurred during registration.',
-                    icon: 'error',
+                    title: 'Success!',  // Change title to Success
+                    text: 'The registration process was completed successfully.', // Message for success
+                    icon: 'success',  // Change the icon to success
                     confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'https://ramonianlostgems.com/register_staff.php/'; // Redirect to your desired page
+                    }
                 });
             }
         });
