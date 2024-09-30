@@ -8,7 +8,16 @@ print_r($_FILES);
 echo "</pre>";
 
 include 'config.php'; // Include the database configuration file
-
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Temporary debugging to ensure form data is received correctly
+    var_dump($_POST);
+    var_dump($_FILES);
+    
+    // Database connection debugging
+    if ($conn->connect_error) {
+        die('Database connection error: ' . $conn->connect_error);
+    }
+}
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data and validate
     $first_name = trim($_POST['first_name']);
@@ -95,20 +104,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Prepare the SQL statement to insert new user
     $stmt = $conn->prepare("INSERT INTO user_staff (first_name, last_name, email, password, department, position, user_type, id_file) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {
-        $response = ['success' => false, 'message' => 'Failed to prepare the database statement.'];
-        echo json_encode($response);
-        exit;
+        die(json_encode(['success' => false, 'message' => 'SQL prepare error: ' . $conn->error]));
     }
-
-    // Bind parameters including the user_type field and id_file
+    
+    // Bind the parameters
     $stmt->bind_param("ssssssss", $first_name, $last_name, $username, $hashed_password, $department, $position, $user_type, $id_file);
-
-    // Execute the query and check for success
-    if ($stmt->execute()) {
-        $response = ['success' => true, 'message' => 'Registration successful!'];
-    } else {
-        $response = ['success' => false, 'message' => 'Failed to register user.'];
+    
+    // Execute the query
+    if (!$stmt->execute()) {
+        die(json_encode(['success' => false, 'message' => 'SQL execution error: ' . $stmt->error]));
     }
+    
 
     $stmt->close();
     $conn->close();
@@ -381,46 +387,41 @@ body {
             return;
         }
 
-        // Submit the form via AJAX
         $.ajax({
-            url: 'register_staff.php', // Use the correct PHP file
-            type: 'POST',
-            data: formData,
-            contentType: false,  // Do not set contentType for FormData
-            processData: false,  // Do not process FormData into URL-encoded format
-            dataType: 'json',  // Expect JSON response from the server
-            success: function(response) {
-                if (response.success) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Staff registration successful!',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = 'https://ramonianlostgems.com';
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: response.message || 'An error occurred.',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            },
-            error: function(xhr, status, error) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An unexpected error occurred. Please try again later.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
+    url: 'register_staff.php',
+    type: 'POST',
+    data: formData,
+    contentType: false,
+    processData: false,
+    dataType: 'json',  // Make sure the response is JSON formatted
+    success: function(response) {
+        if (response && response.success) {
+            Swal.fire({
+                title: 'Success!',
+                text: response.message || 'Staff registration successful!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        } else {
+            Swal.fire({
+                title: 'Error!',
+                text: response.message || 'An error occurred during registration.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    },
+    error: function(xhr, status, error) {
+        console.error('AJAX Error: ', status, error);
+        Swal.fire({
+            title: 'Error!',
+            text: 'An unexpected error occurred. Please try again later.',
+            icon: 'error',
+            confirmButtonText: 'OK'
         });
-    });
+    }
 });
+
 
     $(document).ready(function() {
         $('#user_type').on('change', function() {
