@@ -1,4 +1,4 @@
-<?php
+<?php  
 // Include the database configuration file
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -18,26 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
+    $college = $_POST['college'];
+    $course = $_POST['course'];
+    $year = $_POST['year'];
+    $section = $_POST['section'];
     $email = $_POST['email'];
-    $student_type = $_POST['student_type']; // Add student type: college or high school
-
-    // Set up student data based on student type
-    if ($student_type === 'high_school') {
-        // Set N/A for fields that are irrelevant for high school students
-        $college = 'N/A';
-        $course = 'N/A';
-        $year = 'N/A';
-        $section = 'N/A';
-        $grade_level = $_POST['grade_level']; // High school students have a grade level
-    } else {
-        // College student case
-        $college = $_POST['college'];
-        $course = $_POST['course'];
-        $year = $_POST['year'];
-        $section = $_POST['section'];
-        $grade_level = 'N/A'; // No grade level for college students
-    }
-
+  
     // Check if passwords match
     if ($_POST['password'] !== $_POST['confirm_password']) {
         $response = ['success' => false, 'message' => 'Passwords do not match.'];
@@ -81,12 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $status = 'pending';
 
     try {
-        // Prepare the SQL statement with the grade_level
-        $stmt = $conn->prepare("INSERT INTO user_member 
-            (first_name, last_name, college, course, year, section, email, password, school_id_file, status, verification_token, token_expiration, grade_level) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-        $stmt->bind_param("sssssssssssss", $first_name, $last_name, $college, $course, $year, $section, $email, $password, $school_id_file, $status, $verification_token, $token_expiration, $grade_level);
+        // Prepare the SQL statement
+        $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password, school_id_file, status, verification_token, token_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssssssss", $first_name, $last_name, $college, $course, $year, $section, $email, $password, $school_id_file, $status, $verification_token, $token_expiration);
 
         // Execute the query
         $stmt->execute();
@@ -97,12 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'your_email@gmail.com'; // Add your Gmail account
-            $mail->Password = 'your_password'; // Add your Gmail password
+            $mail->Username = ''; // Add your Gmail account
+            $mail->Password = ''; // Add your Gmail password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
-            $mail->setFrom('your_email@gmail.com', 'Your App Name');
+            $mail->setFrom('vdarwin860@gmail.com', 'Your App Name');
             $mail->addAddress($email);  // Add user email address
 
             $verification_link = "https://yourdomain.com/verify.php?token=$verification_token";
@@ -113,10 +96,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $mail->send();
         } catch (Exception $e) {
-            // Handle email sending error (optional: log error)
+            // Handle email sending error
         }
 
-        $response = ['success' => true, 'message' => 'Your registration was successful! Please verify your email to activate your account.'];
+        $response = ['success' => true, 'message' => 'Your registration was successful! Please wait for the admin to review and approve your account. Once your account is approved, you will be able to log in. Thank you for your patience.'];
     } catch (mysqli_sql_exception $e) {
         // Handle duplicate email error
         if ($e->getCode() == 1062) {  // Duplicate entry error code in MySQL
@@ -126,9 +109,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Close statement
+    // Close statement without closing connection
     $stmt->close();
 
     // Return a JSON response
     echo json_encode($response);
 }
+?>

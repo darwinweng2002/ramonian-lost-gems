@@ -277,13 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <h5 class="card-title text-center pb-0 fs-4">Student User Registration</h5>
                             <p class="text-center small">Fill in the form to create an account</p>
                         </div>
-                        <div class="col-12">
-    <label for="student_type" class="form-label">Are you a College or High School Student?</label>
-    <div>
-        <input type="radio" name="student_type" id="college" value="college" required> College
-        <input type="radio" name="student_type" id="high_school" value="high_school" required> High School
-    </div>
-</div>
+                        
                         <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php" enctype="multipart/form-data">
                             <div class="col-12">
                                 <label for="firstName" class="form-label">First Name</label>
@@ -342,19 +336,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </select>
                                 <div class="invalid-feedback">Please select your section.</div>
                             </div>
-                            <<div class="col-12" id="grade-level-field" style="display: none;">
-    <label for="grade_level" class="form-label">Grade Level</label>
-    <select name="grade_level" id="grade_level" class="form-control">
-        <option value="" disabled selected>Select Grade Level</option>
-        <option value="Grade 7">Grade 7</option>
-        <option value="Grade 8">Grade 8</option>
-        <option value="Grade 9">Grade 9</option>
-        <option value="Grade 10">Grade 10</option>
-        <option value="Grade 11">Grade 11</option>
-        <option value="Grade 12">Grade 12</option>
-    </select>
-    <div class="invalid-feedback">Please select your grade level.</div>
-</div>
                             <div class="col-12">
                             <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
                             <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
@@ -413,24 +394,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <script src="<?= base_url ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="<?= base_url ?>assets/js/main.js"></script>
   <script>
-    $(document).ready(function() {
-    $('input[name="student_type"]').on('change', function() {
-        if ($(this).val() === 'college') {
-            // Show college-related fields, hide grade level
-            $('#college-select, #course-select, #year-select, #section-select').prop('disabled', false);
-            $('#grade-level-field').hide();
-        } else if ($(this).val() === 'high_school') {
-            // Disable college-related fields and set values to N/A
-            $('#college-select').val('N/A').prop('disabled', true);
-            $('#course-select').val('N/A').prop('disabled', true);
-            $('#year-select').val('N/A').prop('disabled', true);
-            $('#section-select').val('N/A').prop('disabled', true);
-            $('#grade-level-field').show(); // Show grade level field
-        }
-    });
-
-    $('#grade-level-field').hide(); // Initially hide the grade level field
-});
     $(document).ready(function() {
         // Populate courses dynamically based on selected college
         const coursesByCollege = {
