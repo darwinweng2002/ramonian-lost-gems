@@ -277,7 +277,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <h5 class="card-title text-center pb-0 fs-4">Student User Registration</h5>
                             <p class="text-center small">Fill in the form to create an account</p>
                         </div>
-                        
+                        <div class="role-selector">
+                        <label for="user_type">Register as</label>
+                        <select id="user_type" name="user_type" class="form-control" required>
+                            <option value="" disabled selected>Select user type</option>
+                            <option value="college">College</option>
+                            <option value="high_school">High School</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a user type.</div>
+                    </div>
                         <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php" enctype="multipart/form-data">
                             <div class="col-12">
                                 <label for="firstName" class="form-label">First Name</label>
@@ -289,6 +297,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <input type="text"  name="last_name" class="form-control" id="lastName" required>
                                 <div class="invalid-feedback">Please enter your last name.</div>
                             </div>
+                            <div id="collegeFields">
                             <div class="col-12">
                                 <label for="college" class="form-label">College</label>
                                 <select name="college" class="form-control" id="college" required>
@@ -336,6 +345,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </select>
                                 <div class="invalid-feedback">Please select your section.</div>
                             </div>
+                            <div id="highSchoolFields" style="display: none;">
+                            <div class="col-12">
+                                <label for="grade" class="form-label">Grade Level</label>
+                                <select name="grade" class="form-control" id="grade" required>
+                                    <option value="" disabled selected>Select your grade</option>
+                                    <option value="7">Grade 7</option>
+                                    <option value="8">Grade 8</option>
+                                    <option value="9">Grade 9</option>
+                                    <option value="10">Grade 10</option>
+                                    <option value="11">Grade 11</option>
+                                    <option value="12">Grade 12</option>
+                                </select>
+                                <div class="invalid-feedback">Please select your grade.</div>
+                            </div>
+</div>
                             <div class="col-12">
                             <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
                             <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
@@ -585,6 +609,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             imagePreview.style.display = 'none'; // Hide the image
         }
     });
+    document.getElementById('user_type').addEventListener('change', function () {
+    const userType = this.value;
+    const collegeFields = document.getElementById('collegeFields');
+    const highSchoolFields = document.getElementById('highSchoolFields');
+
+    if (userType === 'college') {
+        collegeFields.style.display = 'block';
+        highSchoolFields.style.display = 'none';
+        // Enable college fields
+        document.getElementById('college').required = true;
+        document.getElementById('course').required = true;
+        document.getElementById('year').required = true;
+        document.getElementById('section').required = true;
+        document.getElementById('grade').required = false;
+    } else if (userType === 'high_school') {
+        collegeFields.style.display = 'none';
+        highSchoolFields.style.display = 'block';
+        // Disable college fields
+        document.getElementById('college').required = false;
+        document.getElementById('course').required = false;
+        document.getElementById('year').required = false;
+        document.getElementById('section').required = false;
+        document.getElementById('grade').required = true;
+    }
+});
+
   </script>
 </body>
 </html>

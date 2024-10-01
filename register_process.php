@@ -5,7 +5,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 include 'config.php';
 
-// Include PHPMailer for email notifications (add PHPMailer to your project)
+// Include PHPMailer for email notifications
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -18,12 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
-    $college = $_POST['college'];
-    $course = $_POST['course'];
-    $year = $_POST['year'];
-    $section = $_POST['section'];
-    $email = $_POST['email'];
-  
+    $user_type = $_POST['user_type']; // New field to determine user type (College or High School)
+    $email = $_POST['email']; // Email for username
+
     // Check if passwords match
     if ($_POST['password'] !== $_POST['confirm_password']) {
         $response = ['success' => false, 'message' => 'Passwords do not match.'];
@@ -32,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Hash the password
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
     // Handle file upload (School ID)
     $target_dir = "uploads/school_ids/";
@@ -47,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Attempt to move the uploaded file
+    // Ensure the upload directory exists and attempt to move the uploaded file
     if (!is_dir($target_dir)) {
         mkdir($target_dir, 0777, true);  // Ensure the target directory exists
     }
@@ -66,10 +63,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Set user status as "pending" until verification is complete
     $status = 'pending';
 
+    // Handle College and High School Logic
+    if ($user_type === 'college') {
+        // For College users, use provided data
+        $college = $_POST['college'];
+        $course = $_POST['course'];
+        $year = $_POST['year'];
+        $section = $_POST['section'];
+        $grade = null; // No grade for college users
+    } elseif ($user_type === 'high_school') {
+        // For High School users, set college-specific fields to null
+        $college = null;
+        $course = null;
+        $year = null;
+        $section = null;
+        $grade = $_POST['grade']; // Set grade for high school users
+    }
+
     try {
         // Prepare the SQL statement
-        $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password, school_id_file, status, verification_token, token_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssssssssss", $first_name, $last_name, $college, $course, $year, $section, $email, $password, $school_id_file, $status, $verification_token, $token_expiration);
+        $stmt = $conn->prepare("INSERT INTO user_member 
+            (first_name, last_name, email, password, college, course, year, section, grade, school_id_file, status, verification_token, token_expiration) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssssssssss", 
+            $first_name, 
+            $last_name, 
+            $email, 
+            $password, 
+            $college, 
+            $course, 
+            $year, 
+            $section, 
+            $grade, 
+            $school_id_file, 
+            $status, 
+            $verification_token, 
+            $token_expiration
+        );
 
         // Execute the query
         $stmt->execute();
@@ -85,21 +115,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
-            $mail->setFrom('vdarwin860@gmail.com', 'Your App Name');
+            $mail->setFrom('your_email@gmail.com', 'Your App Name');
             $mail->addAddress($email);  // Add user email address
 
             $verification_link = "https://yourdomain.com/verify.php?token=$verification_token";
 
             $mail->isHTML(true);
             $mail->Subject = 'Verify Your Email';
-            $mail->Body    = "Hello $first_name, <br>Click <a href='$verification_link'>here</a> to verify your email and activate your account.";
+            $mail->Body = "Hello $first_name, <br>Click <a href='$verification_link'>here</a> to verify your email and activate your account.";
 
             $mail->send();
         } catch (Exception $e) {
             // Handle email sending error
         }
 
-        $response = ['success' => true, 'message' => 'Your registration was successful! Please wait for the admin to review and approve your account. Once your account is approved, you will be able to log in. Thank you for your patience.'];
+        // Response for successful registration
+        $response = ['success' => true, 'message' => 'Registration successful! Please check your email for verification.'];
     } catch (mysqli_sql_exception $e) {
         // Handle duplicate email error
         if ($e->getCode() == 1062) {  // Duplicate entry error code in MySQL
@@ -109,8 +140,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Close statement without closing connection
+    // Close statement and connection
     $stmt->close();
+    $conn->close();
 
     // Return a JSON response
     echo json_encode($response);
