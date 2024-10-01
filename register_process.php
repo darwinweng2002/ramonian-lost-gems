@@ -1,35 +1,32 @@
-<?php 
+<?php  
 // Include the database configuration file
-include 'config.php'; 
-
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+include 'config.php';
 
-// Include PHPMailer for email notifications
+// Include PHPMailer for email notifications (add PHPMailer to your project)
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+// Correct path to PHPMailer files
 require 'PHPMailer-master/src/Exception.php';
 require 'PHPMailer-master/src/PHPMailer.php';
 require 'PHPMailer-master/src/SMTP.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Sanitize form data
-    $first_name = $conn->real_escape_string($_POST['first_name']);
-    $last_name = $conn->real_escape_string($_POST['last_name']);
-    $college = isset($_POST['college']) ? $conn->real_escape_string($_POST['college']) : NULL;
-    $course = isset($_POST['course']) ? $conn->real_escape_string($_POST['course']) : NULL;
-    $year = isset($_POST['year']) ? $conn->real_escape_string($_POST['year']) : NULL;
-    $section = isset($_POST['section']) ? $conn->real_escape_string($_POST['section']) : NULL;
-    $grade = isset($_POST['grade']) ? $conn->real_escape_string($_POST['grade']) : NULL;
-    $school_type = $conn->real_escape_string($_POST['school_type']);
-    $email = $conn->real_escape_string($_POST['email']);
-  
+    // Retrieve form data
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $college = $_POST['college'];
+    $course = $_POST['course'];
+    $year = $_POST['year'];
+    $section = $_POST['section'];
+    $email = $_POST['email'];
+    $school_type = $_POST['school_type'];
+    $grade = $_POST['grade'];
     // Check if passwords match
     if ($_POST['password'] !== $_POST['confirm_password']) {
-        echo "Passwords do not match.";
-        error_log('Passwords do not match.');
         $response = ['success' => false, 'message' => 'Passwords do not match.'];
         echo json_encode($response);
         exit;
@@ -46,8 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Check if file is a valid image type
     $valid_file_types = ['jpg', 'jpeg', 'png'];
     if (!in_array($imageFileType, $valid_file_types)) {
-        echo "Invalid file format for school ID.";
-        error_log('Invalid file format for school ID.');
         $response = ['success' => false, 'message' => 'Invalid file format for school ID. Only JPG, JPEG, and PNG are allowed.'];
         echo json_encode($response);
         exit;
@@ -59,8 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (!move_uploaded_file($_FILES["school_id"]["tmp_name"], $school_id_file)) {
-        echo "Error uploading school ID.";
-        error_log('File upload error: ' . print_r($_FILES, true));
+        error_log('File upload error: ' . print_r($_FILES, true));  // Logs detailed error in PHP error logs
         $response = ['success' => false, 'message' => 'Error uploading school ID.'];
         echo json_encode($response);
         exit;
@@ -73,64 +67,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Set user status as "pending" until verification is complete
     $status = 'pending';
 
-    // Debug: Print out variables before SQL
-    echo "<pre>";
-    echo "First Name: $first_name\n";
-    echo "Last Name: $last_name\n";
-    echo "Email: $email\n";
-    echo "School Type: $school_type\n";
-    echo "</pre>";
-
     try {
         // Prepare the SQL statement
-        $stmt = $conn->prepare("INSERT INTO user_member 
-            (first_name, last_name, college, course, year, section, grade, school_type, email, password, school_id_file, status, verification_token, token_expiration) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        
-        if (!$stmt) {
-            // If the statement preparation fails
-            die('Prepare failed: (' . $conn->errno . ') ' . $conn->error);
-        }
-
-        // Debug: Check if parameters are being bound correctly
-        echo "SQL Query prepared successfully!";
-
-        $stmt->bind_param("sssssssssssss", $first_name, $last_name, $college, $course, $year, $section, $grade, $school_type, $email, $password, $school_id_file, $status, $verification_token, $token_expiration);
+        $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, school_type, grade, email, password, school_id_file, status, verification_token, token_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssssssssss", $first_name, $last_name, $college, $course, $year, $section, $school_type, $grade,  $email, $password, $school_id_file, $status, $verification_token, $token_expiration);
 
         // Execute the query
-        if ($stmt->execute()) {
-            echo "SQL Query executed successfully!";
-            // Send email to the user with the verification link
-            $mail = new PHPMailer(true);
-            try {
-                $mail->isSMTP();
-                $mail->Host = 'smtp.gmail.com';
-                $mail->SMTPAuth = true;
-                $mail->Username = 'your_email@gmail.com'; // Add your Gmail account
-                $mail->Password = 'your_password'; // Add your Gmail password
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port = 587;
+        $stmt->execute();
 
-                $mail->setFrom('your_email@gmail.com', 'Your App Name');
-                $mail->addAddress($email);  // Add user email address
+        // Send email to the user with the verification link
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = ''; // Add your Gmail account
+            $mail->Password = ''; // Add your Gmail password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
 
-                $verification_link = "https://yourdomain.com/verify.php?token=$verification_token";
+            $mail->setFrom('vdarwin860@gmail.com', 'Your App Name');
+            $mail->addAddress($email);  // Add user email address
 
-                $mail->isHTML(true);
-                $mail->Subject = 'Verify Your Email';
-                $mail->Body    = "Hello $first_name, <br>Click <a href='$verification_link'>here</a> to verify your email and activate your account.";
+            $verification_link = "https://yourdomain.com/verify.php?token=$verification_token";
 
-                $mail->send();
-            } catch (Exception $e) {
-                error_log('Mail Error: ' . $mail->ErrorInfo);
-            }
+            $mail->isHTML(true);
+            $mail->Subject = 'Verify Your Email';
+            $mail->Body    = "Hello $first_name, <br>Click <a href='$verification_link'>here</a> to verify your email and activate your account.";
 
-            $response = ['success' => true, 'message' => 'Your registration was successful! Please wait for the admin to review and approve your account. Once your account is approved, you will be able to log in.'];
-        } else {
-            echo "SQL Query failed!";
-            $response = ['success' => false, 'message' => 'Failed to register user.'];
-            error_log('Execute failed: (' . $stmt->errno . ') ' . $stmt->error);
+            $mail->send();
+        } catch (Exception $e) {
+            // Handle email sending error
         }
+
+        $response = ['success' => true, 'message' => 'Your registration was successful! Please wait for the admin to review and approve your account. Once your account is approved, you will be able to log in. Thank you for your patience.'];
     } catch (mysqli_sql_exception $e) {
         // Handle duplicate email error
         if ($e->getCode() == 1062) {  // Duplicate entry error code in MySQL
@@ -138,12 +108,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $response = ['success' => false, 'message' => 'Failed to register user. Please try again later.'];
         }
-        error_log('MySQL Error: ' . $e->getMessage());
     }
 
-    // Close statement and connection
+    // Close statement without closing connection
     $stmt->close();
-    $conn->close();
 
     // Return a JSON response
     echo json_encode($response);
