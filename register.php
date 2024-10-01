@@ -430,6 +430,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 "Bachelor of Science in Biology",
                 "Bachelor of Science in Psychology"
             ],
+            "N/A": [
+                "N/A"
+            ],
             "CCIT": [
                 "Bachelor of Science in Computer Science",
                 "Bachelor of Science in Information Technology"
