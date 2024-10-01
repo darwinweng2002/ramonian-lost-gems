@@ -25,8 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $course = $_POST['course'];
     $year = $_POST['year'];
     $section = $_POST['section'];
+    $grade = $_POST['grade']; // New grade field
+    $school_type = $_POST['school_type']; // New school type field
     $email = $_POST['email']; // Email for username
-    
+
     // Check if passwords match
     if ($_POST['password'] !== $_POST['confirm_password']) {
         $response = ['success' => false, 'message' => 'Passwords do not match.'];
@@ -61,8 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $status = 'pending';
 
     // Prepare the SQL statement
-    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, email, password, avatar, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssssss", $first_name, $last_name, $college, $course, $year, $section, $email, $password, $school_id_file, $status);
+    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, grade, school_type, email, password, avatar, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssssssss", $first_name, $last_name, $college, $course, $year, $section, $grade, $school_type, $email, $password, $school_id_file, $status);
 
     // Execute the query and check for success
     if ($stmt->execute()) {
@@ -250,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
   </style>
 
-  <main>
+<main>
     <div class="container">
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
@@ -262,30 +264,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <span><?= $_settings->info('name') ?></span>
                     </a>
                 </div>
-                <div class="role-selector">
-                <select id="role-select" class="form-select">
-                    <option value="" disabled selected>Register as</option>
-                    <option value="student">Register as Student</option>
-                    <option value="faculty">Register as Employee</option>
-                </select>
-            </div>
 
-                <!-- Updated registration form -->
+                <!-- Registration form -->
                 <div class="card mb-3">
                     <div class="card-body">
                         <div class="pt-4 pb-2">
                             <h5 class="card-title text-center pb-0 fs-4">Student User Registration</h5>
                             <p class="text-center small">Fill in the form to create an account</p>
                         </div>
-                        <div class="role-selector">
-                        <label for="user_type">Register as</label>
-                        <select id="user_type" name="user_type" class="form-control" required>
-                            <option value="" disabled selected>Select user type</option>
-                            <option value="college">College</option>
-                            <option value="high_school">High School</option>
-                        </select>
-                        <div class="invalid-feedback">Please select a user type.</div>
-                    </div>
+
                         <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php" enctype="multipart/form-data">
                             <div class="col-12">
                                 <label for="firstName" class="form-label">First Name</label>
@@ -294,36 +281,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
                             <div class="col-12">
                                 <label for="lastName" class="form-label">Last Name</label>
-                                <input type="text"  name="last_name" class="form-control" id="lastName" required>
+                                <input type="text" name="last_name" class="form-control" id="lastName" required>
                                 <div class="invalid-feedback">Please enter your last name.</div>
                             </div>
-                            <div id="collegeFields">
+
+                            <!-- New school type field -->
+                            <div class="col-12">
+                                <label for="school_type" class="form-label">Are you a College or High School student?</label>
+                                <select name="school_type" class="form-control" id="school_type" required>
+                                    <option value="1">College</option>
+                                    <option value="0">High School</option>
+                                </select>
+                                <div class="invalid-feedback">Please select your school type.</div>
+                            </div>
+
+                            <!-- Grade field -->
+                            <div class="col-12">
+                                <label for="grade" class="form-label">Grade</label>
+                                <input type="text" name="grade" class="form-control" id="grade" required>
+                                <div class="invalid-feedback">Please enter your grade.</div>
+                            </div>
+
                             <div class="col-12">
                                 <label for="college" class="form-label">College</label>
-                                <select name="college" class="form-control" id="college" required>
+                                <select name="college" class="form-control" id="college">
                                     <option value="" disabled selected>Select your college</option>
-                                    <option value="CABA">College of Accountancy and Business Administration</option>
-                                    <option value="CAS">College of Arts and Sciences</option>
-                                    <option value="CCIT">College of Communication and Information Technology</option>
-                                    <option value="CTE">College of Teacher Education</option>
-                                    <option value="CE">College of Engineering</option>
-                                    <option value="CIT">College of Industrial Technology</option>
-                                    <option value="CAF">College of Agriculture and Forestry</option>
-                                    <option value="NUR">College of Nursing</option>
-                                    <option value="CTHM">College of Tourism and Hospitality Management</option>
+                                    <!-- College options -->
                                 </select>
                                 <div class="invalid-feedback">Please select your college.</div>
                             </div>
+
                             <div class="col-12">
                                 <label for="course" class="form-label">Course</label>
-                                <select name="course" class="form-control" id="course" required>
+                                <select name="course" class="form-control" id="course">
                                     <option value="" disabled selected>Select your course</option>
+                                    <!-- Course options -->
                                 </select>
                                 <div class="invalid-feedback">Please select your course.</div>
                             </div>
+
                             <div class="col-12">
                                 <label for="year" class="form-label">Year</label>
-                                <select name="year" class="form-control" id="year" required>
+                                <select name="year" class="form-control" id="year">
                                     <option value="" disabled selected>Select your year</option>
                                     <option value="1st - year">1st - year</option>
                                     <option value="2nd - year">2nd - year</option>
@@ -332,9 +331,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </select>
                                 <div class="invalid-feedback">Please select your year.</div>
                             </div>
+
                             <div class="col-12">
                                 <label for="section" class="form-label">Section</label>
-                                <select name="section" class="form-control" id="section" required>
+                                <select name="section" class="form-control" id="section">
                                     <option value="" disabled selected>Select your section</option>
                                     <option value="Section A">Section A</option>
                                     <option value="Section B">Section B</option>
@@ -345,54 +345,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </select>
                                 <div class="invalid-feedback">Please select your section.</div>
                             </div>
-                            <div id="highSchoolFields" style="display: none;">
-                            <div class="col-12">
-                                <label for="grade" class="form-label">Grade Level</label>
-                                <select name="grade" class="form-control" id="grade" required>
-                                    <option value="" disabled selected>Select your grade</option>
-                                    <option value="7">Grade 7</option>
-                                    <option value="8">Grade 8</option>
-                                    <option value="9">Grade 9</option>
-                                    <option value="10">Grade 10</option>
-                                    <option value="11">Grade 11</option>
-                                    <option value="12">Grade 12</option>
-                                </select>
-                                <div class="invalid-feedback">Please select your grade.</div>
-                            </div>
-</div>
-                            <div class="col-12">
-                            <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
-                            <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
-                            <div class="invalid-feedback">Please upload your School ID (JPG or PNG).</div>
-                            <!-- Image preview container -->
-                            <div id="imagePreviewContainer" style="margin-top: 10px;">
-                                <img id="imagePreview" src="#" alt="Preview will appear here..." style="max-width: 100%; display: none; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
-                            </div>
-                            <small class="text-muted">Please upload a clear image of your valid PRMSU Student ID (front side only). Ensure that the ID is visible and in JPG or PNG format. This will be used for verification purposes.</small>
-                        </div>
 
                             <div class="col-12">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" id="email" required>
-                            <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
-                        </div>
+                                <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
+                                <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
+                                <div class="invalid-feedback">Please upload your School ID (JPG or PNG).</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" id="email" required>
+                                <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
+                            </div>
+
                             <div class="col-12">
                                 <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
                                 <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
                                 <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
                             </div>
+
                             <div class="col-12">
                                 <label for="confirm_password" class="form-label">Confirm Password</label>
                                 <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
                                 <div class="invalid-feedback">Passwords do not match. Please ensure both passwords are the same.</div>
                             </div>
+
                             <div class="col-12">
-                            <button class="btn btn-primary w-100" type="submit" id="register-btn" disabled>Register</button>
-                        </div>
+                                <button class="btn btn-primary w-100" type="submit" id="register-btn" disabled>Register</button>
+                            </div>
                         </form>
+
                         <div class="loader-overlay" id="loaderOverlay">
-    <div class="loader"></div>
-</div>
+                            <div class="loader"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -609,31 +594,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             imagePreview.style.display = 'none'; // Hide the image
         }
     });
-    document.getElementById('user_type').addEventListener('change', function () {
-    const userType = this.value;
-    const collegeFields = document.getElementById('collegeFields');
-    const highSchoolFields = document.getElementById('highSchoolFields');
-    
-    // Show or hide fields based on the selection
-    if (userType === 'college') {
-        collegeFields.style.display = 'block';
-        highSchoolFields.style.display = 'none';
-        document.getElementById('college').required = true;
-        document.getElementById('course').required = true;
-        document.getElementById('year').required = true;
-        document.getElementById('section').required = true;
-        document.getElementById('grade').required = false;
-    } else if (userType === 'high_school') {
-        collegeFields.style.display = 'none';
-        highSchoolFields.style.display = 'block';
-        document.getElementById('college').required = false;
-        document.getElementById('course').required = false;
-        document.getElementById('year').required = false;
-        document.getElementById('section').required = false;
-        document.getElementById('grade').required = true;
-    }
-});
-
   </script>
 </body>
 </html>
