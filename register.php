@@ -310,6 +310,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <label for="college" class="form-label">College</label>
                                 <select name="college" class="form-control" id="college" required>
                                     <option value="" disabled selected>Select your college</option>
+                                    <option value="N/A">N/A</option>
                                     <option value="CABA">College of Accountancy and Business Administration</option>
                                     <option value="CAS">College of Arts and Sciences</option>
                                     <option value="CCIT">College of Communication and Information Technology</option>
@@ -333,6 +334,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <label for="year" class="form-label">Year</label>
                                 <select name="year" class="form-control" id="year" required>
                                     <option value="" disabled selected>Select your year</option>
+                                    <option value="N/A">N/A</option>
                                     <option value="1st - year">1st - year</option>
                                     <option value="2nd - year">2nd - year</option>
                                     <option value="3rd - year">3rd - year</option>
@@ -344,6 +346,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <label for="section" class="form-label">Section</label>
                                 <select name="section" class="form-control" id="section" required>
                                     <option value="" disabled selected>Select your section</option>
+                                    <option value="N/A">N/A</option>
                                     <option value="Section A">Section A</option>
                                     <option value="Section B">Section B</option>
                                     <option value="Section C">Section C</option>
