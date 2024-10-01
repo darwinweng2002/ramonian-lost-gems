@@ -293,8 +293,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <!-- Grade field -->
                             <div class="col-12">
                                 <label for="grade" class="form-label">Grade</label>
-                                <input type="text" name="grade" class="form-control" id="grade" required>
-                                <div class="invalid-feedback">Please enter your grade.</div>
+                                <select name="grade" class="form-control" id="grade" required>
+                                    <option value="" disabled selected>Select your grade level</option>
+                                    <option value="N/A">N/A</option>
+                                    <option value="7">Grade 7</option>
+                                    <option value="8">Grade 8</option>
+                                    <option value="9">Grade 9</option>
+                                    <option value="10">Grade 10</option>
+                                    <option value="11">Grade 11</option>
+                                    <option value="12">Grade 12</option>
+                                </select>
+                                <div class="invalid-feedback">Please select your section.</div>
+                                <small class="text-muted">Please select N/A if you are not a high school student.</small>
                             </div>
                             <div class="col-12">
                                 <label for="firstName" class="form-label">First Name</label>
