@@ -306,7 +306,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <label for="college" class="form-label">College</label>
                                 <select name="college" class="form-control" id="college">
                                     <option value="" disabled selected>Select your college</option>
-                                    <!-- College options -->
+                                    <option value="CABA">College of Accountancy and Business Administration</option>
+                                    <option value="CAS">College of Arts and Sciences</option>
+                                    <option value="CCIT">College of Communication and Information Technology</option>
+                                    <option value="CTE">College of Teacher Education</option>
+                                    <option value="CE">College of Engineering</option>
+                                    <option value="CIT">College of Industrial Technology</option>
+                                    <option value="CAF">College of Agriculture and Forestry</option>
+                                    <option value="NUR">College of Nursing</option>
+                                    <option value="CTHM">College of Tourism and Hospitality Management</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your college.</div>
                             </div>
