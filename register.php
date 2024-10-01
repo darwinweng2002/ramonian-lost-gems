@@ -613,11 +613,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     const userType = this.value;
     const collegeFields = document.getElementById('collegeFields');
     const highSchoolFields = document.getElementById('highSchoolFields');
-
+    
+    // Show or hide fields based on the selection
     if (userType === 'college') {
         collegeFields.style.display = 'block';
         highSchoolFields.style.display = 'none';
-        // Enable college fields
         document.getElementById('college').required = true;
         document.getElementById('course').required = true;
         document.getElementById('year').required = true;
@@ -626,7 +626,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else if (userType === 'high_school') {
         collegeFields.style.display = 'none';
         highSchoolFields.style.display = 'block';
-        // Disable college fields
         document.getElementById('college').required = false;
         document.getElementById('course').required = false;
         document.getElementById('year').required = false;
