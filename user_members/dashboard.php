@@ -372,7 +372,7 @@ if (!$is_guest) {
             <ul class="list-group mb-3">
             <li class="list-group-item d-flex justify-content-between">
                     <strong>Level:</strong>
-                    <span><?= htmlspecialchars($school_type ?? '') ?></span>
+                    <span><?= htmlspecialchars($school_type == 1 ? 'College' : 'High School') ?></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <strong>Course:</strong>
