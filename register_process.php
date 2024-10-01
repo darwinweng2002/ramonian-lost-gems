@@ -1,9 +1,10 @@
-<?php  
+<?php 
 // Include the database configuration file
+include 'config.php'; 
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-include 'config.php';
 
 // Include PHPMailer for email notifications (add PHPMailer to your project)
 use PHPMailer\PHPMailer\PHPMailer;
@@ -15,16 +16,16 @@ require 'PHPMailer-master/src/PHPMailer.php';
 require 'PHPMailer-master/src/SMTP.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve form data
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
-    $college = $_POST['college'];
-    $course = $_POST['course'];
-    $year = $_POST['year'];
-    $section = $_POST['section'];
-    $grade = $_POST['grade']; // New grade field
-    $school_type = $_POST['school_type']; // New school type field
-    $email = $_POST['email'];
+    // Sanitize form data
+    $first_name = $conn->real_escape_string($_POST['first_name']);
+    $last_name = $conn->real_escape_string($_POST['last_name']);
+    $college = isset($_POST['college']) ? $conn->real_escape_string($_POST['college']) : NULL;
+    $course = isset($_POST['course']) ? $conn->real_escape_string($_POST['course']) : NULL;
+    $year = isset($_POST['year']) ? $conn->real_escape_string($_POST['year']) : NULL;
+    $section = isset($_POST['section']) ? $conn->real_escape_string($_POST['section']) : NULL;
+    $grade = isset($_POST['grade']) ? $conn->real_escape_string($_POST['grade']) : NULL; // New grade field
+    $school_type = $conn->real_escape_string($_POST['school_type']); // New school type field
+    $email = $conn->real_escape_string($_POST['email']);
   
     // Check if passwords match
     if ($_POST['password'] !== $_POST['confirm_password']) {
@@ -71,37 +72,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         // Prepare the SQL statement
         $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, grade, school_type, email, password, school_id_file, status, verification_token, token_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+        if (!$stmt) {
+            // If the statement preparation fails
+            die('Prepare failed: (' . $conn->errno . ') ' . $conn->error);
+        }
+
         $stmt->bind_param("sssssssssssss", $first_name, $last_name, $college, $course, $year, $section, $grade, $school_type, $email, $password, $school_id_file, $status, $verification_token, $token_expiration);
 
         // Execute the query
-        $stmt->execute();
+        if ($stmt->execute()) {
+            // Send email to the user with the verification link
+            $mail = new PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'your_email@gmail.com'; // Add your Gmail account
+                $mail->Password = 'your_password'; // Add your Gmail password
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = 587;
 
-        // Send email to the user with the verification link
-        $mail = new PHPMailer(true);
-        try {
-            $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = ''; // Add your Gmail account
-            $mail->Password = ''; // Add your Gmail password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+                $mail->setFrom('your_email@gmail.com', 'Your App Name');
+                $mail->addAddress($email);  // Add user email address
 
-            $mail->setFrom('your_email@gmail.com', 'Your App Name');
-            $mail->addAddress($email);  // Add user email address
+                $verification_link = "https://yourdomain.com/verify.php?token=$verification_token";
 
-            $verification_link = "https://yourdomain.com/verify.php?token=$verification_token";
+                $mail->isHTML(true);
+                $mail->Subject = 'Verify Your Email';
+                $mail->Body    = "Hello $first_name, <br>Click <a href='$verification_link'>here</a> to verify your email and activate your account.";
 
-            $mail->isHTML(true);
-            $mail->Subject = 'Verify Your Email';
-            $mail->Body    = "Hello $first_name, <br>Click <a href='$verification_link'>here</a> to verify your email and activate your account.";
+                $mail->send();
+            } catch (Exception $e) {
+                error_log('Mail Error: ' . $mail->ErrorInfo);
+            }
 
-            $mail->send();
-        } catch (Exception $e) {
-            // Handle email sending error
+            $response = ['success' => true, 'message' => 'Your registration was successful! Please wait for the admin to review and approve your account. Once your account is approved, you will be able to log in.'];
+        } else {
+            $response = ['success' => false, 'message' => 'Failed to register user.'];
+            error_log('Execute failed: (' . $stmt->errno . ') ' . $stmt->error);
         }
-
-        $response = ['success' => true, 'message' => 'Your registration was successful! Please wait for the admin to review and approve your account. Once your account is approved, you will be able to log in.'];
     } catch (mysqli_sql_exception $e) {
         // Handle duplicate email error
         if ($e->getCode() == 1062) {  // Duplicate entry error code in MySQL
@@ -109,10 +119,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $response = ['success' => false, 'message' => 'Failed to register user. Please try again later.'];
         }
+        error_log('MySQL Error: ' . $e->getMessage());
     }
 
-    // Close statement without closing connection
+    // Close statement and connection
     $stmt->close();
+    $conn->close();
 
     // Return a JSON response
     echo json_encode($response);
