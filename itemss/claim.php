@@ -342,8 +342,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Assuming form is valid
         Swal.fire({
-            title: 'Claim Submitted!',
-            text: 'Submission successful. Please proceed to the SSG office (located on the 3rd floor of the OSA Building) for verification to claim the item.',
+            title: 'Claim Request Submitted!',
+            text: 'Submission successful. Please proceed to the SSG office (located on the 3rd floor of the OSA Building) for actual verification.',
             icon: 'success',
             confirmButtonText: 'OK'
         }).then(function() {

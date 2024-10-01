@@ -277,7 +277,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <h5 class="card-title text-center pb-0 fs-4">Student User Registration</h5>
                             <p class="text-center small">Fill in the form to create an account</p>
                         </div>
-                        
+                        <div class="col-12">
+                      <label class="form-label">Student Type</label><br>
+                      <input type="radio" id="college" name="student_type" value="college" required>
+                      <label for="college">College</label>
+                      <input type="radio" id="high_school" name="student_type" value="high_school" required>
+                      <label for="high_school">High School</label>
+                      <div class="invalid-feedback">Please select your student type.</div>
+                    </div>
                         <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php" enctype="multipart/form-data">
                             <div class="col-12">
                                 <label for="firstName" class="form-label">First Name</label>
@@ -336,6 +343,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </select>
                                 <div class="invalid-feedback">Please select your section.</div>
                             </div>
+                            <div class="col-12" id="grade-level-field" style="display:none;">
+                      <label for="grade_level" class="form-label">Grade Level</label>
+                      <select name="grade_level" class="form-control" id="grade_level">
+                        <option value="" disabled selected>Select your grade level</option>
+                        <option value="Grade 7">Grade 7</option>
+                        <option value="Grade 8">Grade 8</option>
+                        <option value="Grade 9">Grade 9</option>
+                        <option value="Grade 10">Grade 10</option>
+                        <option value="Grade 11">Grade 11</option>
+                        <option value="Grade 12">Grade 12</option>
+                      </select>
+                      <div class="invalid-feedback">Please select your grade level.</div>
+                    </div>
                             <div class="col-12">
                             <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
                             <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
@@ -585,6 +605,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             imagePreview.style.display = 'none'; // Hide the image
         }
     });
+    $('input[name="student_type"]').on('change', function() {
+        if ($(this).val() === 'college') {
+          $('#college-fields').show();
+          $('#grade-level-field').hide();
+        } else if ($(this).val() === 'high_school') {
+          $('#college-fields').hide();
+          $('#grade-level-field').show();
+        }
+      });
   </script>
 </body>
 </html>
