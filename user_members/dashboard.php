@@ -375,6 +375,10 @@ if (!$is_guest) {
                     <span><?= htmlspecialchars($school_type == 1 ? 'College' : 'High School') ?></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
+                    <strong>Grade:</strong>
+                    <span><?= htmlspecialchars($grade ?? '') ?></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
                     <strong>Course:</strong>
                     <span><?= htmlspecialchars($course ?? '') ?></span>
                 </li>
