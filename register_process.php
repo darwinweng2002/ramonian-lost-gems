@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $college = $_POST['college'];
     $course = $_POST['course'];
     $year = $_POST['year'];
-    $section = $_POST['section'];
     $email = $_POST['email'];
     $school_type = $_POST['school_type'];
     $grade = $_POST['grade'];
@@ -69,8 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         // Prepare the SQL statement
-        $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, school_type, grade, email, password, school_id_file, status, verification_token, token_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssssssssssss", $first_name, $last_name, $college, $course, $year, $section, $school_type, $grade,  $email, $password, $school_id_file, $status, $verification_token, $token_expiration);
+        $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, school_type, grade, email, password, school_id_file, status, verification_token, token_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssssssssss", $first_name, $last_name, $college, $course, $year, $school_type, $grade,  $email, $password, $school_id_file, $status, $verification_token, $token_expiration);
 
         // Execute the query
         $stmt->execute();

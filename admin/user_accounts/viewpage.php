@@ -18,7 +18,7 @@ if ($user_id <= 0) {
 }
 
 // Fetch user details from the database
-$sql = "SELECT first_name, last_name, email, school_id_file, registration_date, college, course, year, section, status 
+$sql = "SELECT first_name, last_name, email, school_id_file, registration_date, college, course, year, status 
         FROM user_member 
         WHERE id = ?";
 
@@ -150,7 +150,6 @@ $conn->close();
         <p><strong>College:</strong> <?= htmlspecialchars($user['college']) ?></p>
         <p><strong>Course:</strong> <?= htmlspecialchars($user['course']) ?></p>
         <p><strong>Year:</strong> <?= htmlspecialchars($user['year']) ?></p>
-        <p><strong>Section:</strong> <?= htmlspecialchars($user['section']) ?></p>
         <p><strong>Status:</strong> <?= htmlspecialchars($user['status']) ?></p>
         <p><strong>Registration Date:</strong> <?= htmlspecialchars($user['registration_date']) ?></p>
 

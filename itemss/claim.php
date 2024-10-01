@@ -31,7 +31,7 @@ if (isset($_SESSION['user_id'])) {
     }
 
     $userType = 'user_member';
-    $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, section, user_type FROM user_member WHERE id = ?";
+    $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, user_type FROM user_member WHERE id = ?";
 } elseif (isset($_SESSION['staff_id'])) {
     // Staff user
     $claimantId = $_SESSION['staff_id'];
@@ -284,7 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php if ($userType == 'user_member'): ?>
                 <p>College: <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
                 <p>Course: <?= htmlspecialchars($claimantData['course'] ?? 'N/A'); ?></p>
-                <p>Year & Section: <?= htmlspecialchars($claimantData['year'] . ' - ' . $claimantData['section'] ?? 'N/A'); ?></p>
+                <p>Year Level: <?= htmlspecialchars($claimantData['year'] ?? 'N/A'); ?></p>
             <?php elseif ($userType == 'user_staff'): ?>
                 <?php if (!empty($claimantData['position'])): ?>
                     <p>Position: <?= htmlspecialchars($claimantData['position']); ?></p>

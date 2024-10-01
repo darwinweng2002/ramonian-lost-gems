@@ -24,7 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $college = $_POST['college'];
     $course = $_POST['course'];
     $year = $_POST['year'];
-    $section = $_POST['section'];
     $email = $_POST['email'];
     $school_type = $_POST['school_type'];
     $grade = $_POST['grade']; // Email for username
@@ -63,8 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $status = 'pending';
 
     // Prepare the SQL statement
-    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, section, school_type, grade, email, password, avatar, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssssssss", $first_name, $last_name, $college, $course, $year, $section, $school_type, $grade, $email, $password, $school_id_file, $status);
+    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, school_type, grade, email, password, avatar, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssssssss", $first_name, $last_name, $college, $course, $year, $school_type, $grade, $email, $password, $school_id_file, $status);
 
     // Execute the query and check for success
     if ($stmt->execute()) {
@@ -303,7 +302,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <option value="11">Grade 11</option>
                                     <option value="12">Grade 12</option>
                                 </select>
-                                <div class="invalid-feedback">Please select your section.</div>
+                                <div class="invalid-feedback">Please select your grade level.</div>
                                 <small class="text-muted">Please select N/A if you are not a high school student.</small>
                             </div>
                             <div class="col-12">
@@ -332,6 +331,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <option value="CTHM">College of Tourism and Hospitality Management</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your college.</div>
+                                <small class="text-muted">Please select N/A if you are not a college student.</small>
                             </div>
                             <div class="col-12">
                                 <label for="course" class="form-label">Course</label>
@@ -339,6 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <option value="" disabled selected>Select your course</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your course.</div>
+                                <small class="text-muted">Please select N/A if you are not a college student.</small>
                             </div>
                             <div class="col-12">
                                 <label for="year" class="form-label">Year</label>
@@ -351,20 +352,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <option value="4th - year">4th - year</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your year.</div>
-                            </div>
-                            <div class="col-12">
-                                <label for="section" class="form-label">Section</label>
-                                <select name="section" class="form-control" id="section" required>
-                                    <option value="" disabled selected>Select your section</option>
-                                    <option value="N/A">N/A</option>
-                                    <option value="Section A">Section A</option>
-                                    <option value="Section B">Section B</option>
-                                    <option value="Section C">Section C</option>
-                                    <option value="Section D">Section D</option>
-                                    <option value="Section E">Section E</option>
-                                    <option value="Section F">Section F</option>
-                                </select>
-                                <div class="invalid-feedback">Please select your section.</div>
+                                <small class="text-muted">Please select N/A if you are not a college student.</small>
                             </div>
                             <div class="col-12">
                             <label for="school_id" class="form-label">School ID (JPG, PNG)</label>

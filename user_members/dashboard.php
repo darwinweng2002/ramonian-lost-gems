@@ -20,10 +20,10 @@ $is_guest = (strpos($user_id, 'guest_') === 0);
 
 // Prepare and execute query to fetch user information for regular users
 if (!$is_guest) {
-    $stmt = $conn->prepare("SELECT first_name, last_name, course, year, section, email, school_type, grade, college, avatar, user_type FROM user_member WHERE id = ?");
+    $stmt = $conn->prepare("SELECT first_name, last_name, course, year, email, school_type, grade, college, avatar, user_type FROM user_member WHERE id = ?");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
-    $stmt->bind_result($first_name, $last_name, $course, $year, $section, $email, $school_type, $grade, $college, $avatar, $user_type);
+    $stmt->bind_result($first_name, $last_name, $course, $year, $email, $school_type, $grade, $college, $avatar, $user_type);
     $stmt->fetch();
     $stmt->close();
 }
@@ -393,10 +393,6 @@ if (!$is_guest) {
                 <li class="list-group-item d-flex justify-content-between">
                     <strong>Year:</strong>
                     <span><?= htmlspecialchars($year ?? '') ?></span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <strong>Section:</strong>
-                    <span><?= htmlspecialchars($section ?? '') ?></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
                     <strong>College:</strong>
