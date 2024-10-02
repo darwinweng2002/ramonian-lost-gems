@@ -1,7 +1,5 @@
 <!-- ======= Header ======= -->
 <style type="text/css">
-<!-- ======= Header ======= -->
-<style type="text/css">
     /* Styling for the logo and header */
     .logo img {
         width: 55px; /* Logo size */
@@ -13,7 +11,7 @@
     /* Aligning content inside the header */
     .container-lg {
         display: flex;
-        justify-content: space-between; /* Push logo to the left, and links to the center */
+        justify-content: space-between; /* Push logo to the left, and sidebar toggle to the right */
         align-items: center;
         width: 100%;
     }
@@ -25,48 +23,95 @@
         padding: 0;
     }
 
-    /* Centering the navigation links */
-    .nav-links {
+    /* Sidebar styling */
+    /* Sidebar styling */
+#side-nav-bar {
+    position: fixed;
+    right: 250px; /* Initially hide the sidebar */
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    transition: right 0.3s ease;
+    z-index: 9999;
+    overflow-y: auto;
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Sidebar links */
+#side-nav-bar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#side-nav-bar ul li {
+    padding: 10px;
+    border-bottom: 1px solid #34495e;
+}
+
+#side-nav-bar ul li a {
+    text-decoration: none;
+    color: #ecf0f1;
+    display: block;
+    font-size: 14px;
+    padding: 5px 10px; /* Ensures padding applies only to the left and right within the sidebar */
+    transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
+
+#side-nav-bar ul li a:hover {
+    background-color: #34495e;
+    padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
+}
+
+/* Sidebar toggle button styling */
+#sidebar-toggle-button {
+    position: fixed;
+    right: 40px; /* Keep the button on the right */
+    top: 0; /* Adjust to align with your design */
+    background-color: #3498db; /* Professional color */
+    color: white;
+    padding: 21.5px 30px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    z-index: 10000; /* Make sure it's above other elements */
+}
+
+#sidebar-toggle-button:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    #sidebar-toggle-button {
+        display: block;
+    }
+
+    #side-nav-bar {
+        width: 50%;
+        right: -100%;
+    }
+}
+
+
+    /* Centering and aligning logo and button */
+    .logo {
         display: flex;
-        justify-content: center; /* Center the navigation links */
         align-items: center;
-        gap: 30px; /* Add space between links */
-        flex-grow: 1; /* Ensure nav occupies space between logo and logout */
+        justify-content: flex-start; /* Align logo to the left */
+        padding-left: 15px; /* Add some padding for spacing from the left */
+        height: 100%; /* Ensure the logo container fills the height of the header */
     }
 
-    .nav-links a {
-        text-decoration: none;
-        color: #2c3e50;
-        font-size: 16px;
-        font-weight: 500;
-        transition: color 0.3s ease;
-    }
-
-    .nav-links a:hover {
-        color: #3498db; /* Change color on hover */
-    }
-
-    /* Aligning logout button to the right */
-    .logout-btn {
-        padding: 10px 20px;
-        background-color: #3498db;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .logout-btn:hover {
-        background-color: #2980b9;
-    }
-
-    /* Responsive adjustments for smaller screens */
-    @media (max-width: 768px) {
-        .nav-links {
-            flex-direction: column; /* Stack the navigation links */
-            gap: 10px; /* Less gap on smaller screens */
-        }
+    /* Push sidebar toggle button to the right */
+    .navbar-toggler {
+        margin-left: auto;
+        display: flex;
+        justify-content: flex-end;
     }
 </style>
 
