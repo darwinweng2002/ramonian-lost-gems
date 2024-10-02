@@ -95,15 +95,16 @@ if ($message_id > 0) {
             background-color: #c82333;
         }
         .publish-btn {
-    width: 120px; /* Set a fixed width */
-    height: 40px; /* Set a fixed height */
-    padding: 10px 15px; /* Consistent padding */
-    border-radius: 5px;
-    box-sizing: border-box; /* Ensures padding and border don't change button size */
-    text-align: center; /* Ensure text is centered */
-    transition: background-color 0.3s ease; /* Smooth background transition */
-}
-
+            background-color: #28a745; /* Green background color */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            right: 80px; /* Position it to the left of the delete button */
+        }
         .publish-btn:hover {
             background-color: #218838; /* Darker green on hover */
         }
@@ -115,57 +116,6 @@ if ($message_id > 0) {
             display: block; /* Ensures the image is displayed as a block element */
             margin-bottom: 10px; /* Adds space below the image if needed */
         }
-        /* Disabled publish button styling */
-        .publish-btn:disabled {
-    background-color: #b0b0b0; /* Grey background to indicate disabled state */
-    cursor: not-allowed; /* Change cursor to indicate non-clickable */
-    color: #fff; /* White text to contrast the grey background */
-    opacity: 0.7; /* Slightly transparent to emphasize it's disabled */
-}
-
-/* Tooltip styling */
-.publish-btn[title] {
-    position: relative;
-}
-
-.publish-btn[title]::before,
-.publish-btn[title]::after {
-    position: absolute;
-    display: none;
-    opacity: 0;
-}
-
-.publish-btn[title]:hover::before,
-.publish-btn[title]:hover::after {
-    display: block;
-    opacity: 1;
-}
-
-.publish-btn[title]::before {
-    content: attr(title);
-    background-color: #333;
-    color: #fff;
-    padding: 4px 8px;
-    border-radius: 5px;
-    font-size: 12px;
-    bottom: 125%; /* Position tooltip above the button */
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    z-index: 1000; /* Ensure the tooltip appears above other elements */
-}
-
-.publish-btn[title]::after {
-    content: '';
-    border-style: solid;
-    border-color: #333 transparent;
-    border-width: 6px 6px 0 6px;
-    bottom: 115%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000; /* Ensure the tooltip appears above other elements */
-}
-
     </style>
 </head>
 <body>
