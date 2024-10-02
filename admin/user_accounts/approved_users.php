@@ -60,15 +60,15 @@ $result = $conn->query($sql);
                             <td><?= htmlspecialchars($row['email']) ?></td>
                             <td>
     <?php if (!empty($row['school_id_file'])): ?>
-        <!-- Display the school ID image if it exists -->
+        <!-- Corrected path: only one occurrence of uploads/school_ids/ -->
         <img src="../../uploads/school_ids/<?= htmlspecialchars($row['school_id_file']) ?>" alt="School ID Image" style="width: 100px; height: auto;">
-        <!-- Debugging: Display the full path -->
-        <small><?= "../../uploads/school_ids/" . htmlspecialchars($row['school_id_file']) ?></small>
+        <!-- Optionally, remove the debug path display once you've verified -->
+        <!--<small><?= "../../uploads/school_ids/" . htmlspecialchars($row['school_id_file']) ?></small>-->
     <?php else: ?>
-        <!-- Fallback if no school ID is provided -->
         <span>No ID Uploaded</span>
     <?php endif; ?>
 </td>
+
 
                         </tr>
                     <?php endwhile; ?>
