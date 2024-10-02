@@ -57,14 +57,17 @@ $result = $conn->query($sql);
                             <td><?= htmlspecialchars($row['year']) ?></td>
                             <td><?= htmlspecialchars($row['email']) ?></td>
                             <td>
-    <?php if (!empty($row['school_id_file'])): ?>
-        <!-- Correct image path and logic to display school ID -->
-        <a href="../../uploads/school_ids/<?= htmlspecialchars($row['school_id_file']) ?>" target="_blank">
-            <img src="../../uploads/school_ids/<?= htmlspecialchars($row['school_id_file']) ?>" alt="School ID Image" style="max-width: 100px; height: auto;">
-        </a>
-    <?php else: ?>
-        <span>No ID Uploaded</span>
-    <?php endif; ?>
+                            <?php
+        // Check if school_id_file is not NULL
+        if (!empty($user['school_id_file'])) {
+            $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);
+            echo '<a href="' . $schoolIdPath . '" data-lightbox="school-id" data-title="School ID">
+                    <img src="' . $schoolIdPath . '" alt="School ID" class="proof-image" />
+                  </a>';
+        } else {
+            echo '<p>No School ID uploaded.</p>';
+        }
+        ?>
 </td>
 
 
