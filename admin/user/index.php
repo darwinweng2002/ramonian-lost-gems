@@ -33,15 +33,15 @@ foreach($user->fetch_array() as $k =>$v){
 					</div>
 					<div class="form-group">
 					<label for="name">College</label>
-					<input type="text" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
+					<input type="text" name="college" id="college" class="form-control" value="<?php echo isset($meta['college']) ? $meta['college']: '' ?>" required>
 				</div>
 				<div class="form-group">
 					<label for="name">Course</label>
-					<input type="text" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
+					<input type="text" name="course" id="course" class="form-control" value="<?php echo isset($meta['course']) ? $meta['course']: '' ?>" required>
 				</div>
 				<div class="form-group">
 					<label for="name">Position</label>
-					<input type="text" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
+					<input type="text" name="position" id="position" class="form-control" value="<?php echo isset($meta['position']) ? $meta['position']: '' ?>" required>
 				</div>
 					<div class="form-group">
 						<label for="username">Username</label>
