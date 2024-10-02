@@ -170,7 +170,7 @@
 }
 @media (min-width: 1201px) {
     #side-nav-bar {
-        right: -250px; /* Ensure sidebar is visible on larger screens */
+        right: 0; /* Ensure sidebar is visible on larger screens */
     }
 
     #sidebar-toggle-button {
@@ -187,7 +187,7 @@
     }
 
     #side-nav-bar {
-        right: -250px; /* Ensure the sidebar starts hidden */
+        right: 0; /* Ensure the sidebar starts hidden */
     }
 
     .main-content {
