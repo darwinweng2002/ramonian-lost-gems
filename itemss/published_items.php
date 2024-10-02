@@ -233,7 +233,7 @@ $result = $stmt->get_result();
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
             
                 // Display user information only if available
-                if ($firstName || $email || $college) {
+                if ($firstName || $email || $college || $school_type) {
                     echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
                     echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
                     echo "<p><strong>Level:</strong> " . ($school_type ? $school_type : 'N/A') . "</p>";
