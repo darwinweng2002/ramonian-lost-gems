@@ -169,9 +169,6 @@
     }
 }
 @media (max-width: 1201px) {
-    #side-nav-bar {
-        right: 0; /* Ensure sidebar is visible on larger screens */
-    }
 
     #sidebar-toggle-button {
         display: block; /* Hide the toggle button on larger screens */
