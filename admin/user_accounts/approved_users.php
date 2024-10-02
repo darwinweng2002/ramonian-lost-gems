@@ -55,7 +55,9 @@ $result = $conn->query($sql);
                             <td><?= htmlspecialchars($row['email']) ?></td>
                             <td>
                                 <!-- Add View Button for actions -->
-                                <a href="viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">View</a>
+                                <a href="viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+                            <i class="fa fa-eye"></i> View Details
+                        </a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
