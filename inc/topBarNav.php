@@ -1,5 +1,7 @@
 <!-- ======= Header ======= -->
 <style type="text/css">
+<!-- ======= Header ======= -->
+<style type="text/css">
     /* Styling for the logo and header */
     .logo img {
         width: 55px; /* Logo size */
@@ -11,7 +13,7 @@
     /* Aligning content inside the header */
     .container-lg {
         display: flex;
-        justify-content: space-between; /* Push logo to the left, and sidebar toggle to the right */
+        justify-content: space-between; /* Push logo to the left, and links to the center */
         align-items: center;
         width: 100%;
     }
@@ -23,92 +25,48 @@
         padding: 0;
     }
 
-    /* Sidebar styling */
-    #side-nav-bar {
-        position: fixed;
-        right: -250px; /* Initially hide the sidebar off-screen */
-        top: 0;
-        width: 250px;
-        height: 100%;
-        background-color: #2c3e50;
-        color: #ecf0f1;
-        transition: right 0.3s ease; /* Smooth transition */
-        z-index: 9999; /* Ensure it's on top of other elements */
-        overflow-y: auto;
-        padding-top: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    /* Centering the navigation links */
+    .nav-links {
+        display: flex;
+        justify-content: center; /* Center the navigation links */
+        align-items: center;
+        gap: 30px; /* Add space between links */
+        flex-grow: 1; /* Ensure nav occupies space between logo and logout */
     }
 
-    /* Sidebar links */
-    #side-nav-bar ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    #side-nav-bar ul li {
-        padding: 10px;
-        border-bottom: 1px solid #34495e;
-    }
-
-    #side-nav-bar ul li a {
+    .nav-links a {
         text-decoration: none;
-        color: #ecf0f1;
-        display: block;
-        font-size: 14px;
-        padding: 5px 10px;
-        transition: background-color 0.3s ease, padding-left 0.3s ease;
+        color: #2c3e50;
+        font-size: 16px;
+        font-weight: 500;
+        transition: color 0.3s ease;
     }
 
-    #side-nav-bar ul li a:hover {
-        background-color: #34495e;
-        padding-left: 30px;
+    .nav-links a:hover {
+        color: #3498db; /* Change color on hover */
     }
 
-    /* Sidebar toggle button */
-    #sidebar-toggle-button {
-        position: fixed;
-        right: 20px;
-        top: 15px; /* Align with the top of the header */
-        background-color: #3498db; /* Button color */
-        color: white;
+    /* Aligning logout button to the right */
+    .logout-btn {
         padding: 10px 20px;
+        background-color: #3498db;
+        color: #fff;
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        z-index: 10000; /* Ensure it's above other elements */
+        transition: background-color 0.3s ease;
     }
 
-    #sidebar-toggle-button:hover {
+    .logout-btn:hover {
         background-color: #2980b9;
     }
 
-    /* Responsive adjustments */
+    /* Responsive adjustments for smaller screens */
     @media (max-width: 768px) {
-        #sidebar-toggle-button {
-            display: block;
+        .nav-links {
+            flex-direction: column; /* Stack the navigation links */
+            gap: 10px; /* Less gap on smaller screens */
         }
-
-        #side-nav-bar {
-            width: 70%; /* Sidebar takes up 70% width on smaller screens */
-            right: -100%; /* Hidden off-screen initially */
-        }
-    }
-
-    /* Aligning logo and toggle button */
-    .logo {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start; /* Align logo to the left */
-        padding-left: 15px; /* Add some padding for spacing from the left */
-        height: 100%; /* Ensure the logo container fills the height of the header */
-    }
-
-    .navbar-toggler {
-        margin-left: auto;
-        display: flex;
-        justify-content: flex-end;
     }
 </style>
 
@@ -165,17 +123,16 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script type="text/javascript">
-   document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
-    const sideNavBar = document.getElementById('side-nav-bar');
+    document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
+        const sideNavBar = document.getElementById('side-nav-bar');
 
-    // Toggle the sidebar visibility
-    if (sideNavBar.style.right === '0px') {
-        sideNavBar.style.right = '-250px'; // Hide sidebar
-    } else {
-        sideNavBar.style.right = '0'; // Show sidebar
-    }
-});
-
+        // Show or hide the sidebar
+        if (sideNavBar.style.right === '0px') {
+            sideNavBar.style.right = '-250px'; // Hide sidebar
+        } else {
+            sideNavBar.style.right = '0'; // Show sidebar
+        }
+    });
 
     // Add event listener for the logout button
     document.getElementById('logout-button').addEventListener('click', function(event) {
