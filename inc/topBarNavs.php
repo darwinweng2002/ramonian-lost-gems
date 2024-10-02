@@ -154,7 +154,7 @@
 }
 }
 
-@media (max-width: 1200px) {
+@media (min-width: 1200px) {
     #sidebar-toggle-button {
         display: block;
     }
