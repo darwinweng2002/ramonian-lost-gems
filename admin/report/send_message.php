@@ -12,16 +12,16 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $message = $_POST['message'];
-    $landmark = $_POST['landmark'];
-    $title = $_POST['title'];
-    $timeFound = $_POST['time_found'];
+    $landmark = $_POST['landmark']; // Existing field
+    $title = $_POST['title']; // New field
+    $timeFound = $_POST['time_found']; // New field
     $contact = $_POST['contact'];
     $category_id = $_POST['category_id'];
     $new_category = $_POST['new_category'];
-    $founder = 'Admin';  // Automatically set founder as Admin since this is an admin submission
-    $status = 1; // Automatically set status to Published
+    $founder = $_POST['founder']; 
 
     // Handle category addition
     if ($category_id == 'add_new' && !empty($new_category)) {
@@ -39,13 +39,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $uploadedFiles = [];
-    
-    // Insert the message into the database with status 'Published'
+
+    // Default status
+    $status = 0; // Default to 'Pending'
+
+    // Insert the message into the database
     $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, time_found, contact, founder, category_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $userId = null; // Admin isn't associated with a user ID, so this can be null or 0
     $stmt->bind_param("issssssis", $userId, $message, $landmark, $title, $timeFound, $contact, $founder, $category_id, $status);
     $stmt->execute();
-    $messageId = $stmt->insert_id;
+    $messageId = $stmt->insert_id; // Get the ID of the newly inserted message
     $stmt->close();
 
     // Handle file uploads
@@ -77,8 +79,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Success or error message for SweetAlert
-    $alertMessage = isset($error) ? $error : "The item has been reported and published successfully!";
+    $alertMessage = isset($error) ? $error : "Found item report has been successfully created.";
 }
+
+// Retrieve user information based on user type
+// Retrieve user information based on user type
+if (isset($userId)) {
+    if ($userType === 'user_member') {
+        $stmt = $conn->prepare("SELECT first_name, last_name, college, school_type, email FROM user_member WHERE id = ?");
+    } else {
+        $stmt = $conn->prepare("SELECT first_name, last_name, department AS college, email FROM user_staff WHERE id = ?");
+    }
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $stmt->bind_result($first_name, $last_name, $college, $school_type, $email);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Map the numeric school_type to a string value
+    $schoolTypeString = '';
+    if ($school_type == 0) {
+        $schoolTypeString = 'High School';
+    } elseif ($school_type == 1) {
+        $schoolTypeString = 'College';
+    } else {
+        $schoolTypeString = 'N/A';
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -257,7 +285,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <?php endif; ?>
          
-        <form action="../publish_message.php" method="post" enctype="multipart/form-data" class="message-form">
+        <form action="send_message.php" method="post" enctype="multipart/form-data" class="message-form">
         <label for="founder">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user">
         <path d="M12 14c-4.28 0-8 3.58-8 8h16c0-4.42-3.72-8-8-8z"/>
@@ -351,7 +379,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
         <line x1="22" x2="11" y1="2" y2="13"/>
         <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-    </svg> Send Report
+    </svg> Create report found item.
 </button>
         </form>
         <div class="back-btn-container">
