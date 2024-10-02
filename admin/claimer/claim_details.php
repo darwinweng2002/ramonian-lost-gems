@@ -106,7 +106,7 @@ $result = $stmt->get_result();
             border-radius: 8px;
         }
 
-        h1 {
+        h3 {
             text-align: center;
             margin-bottom: 20px;
         }
@@ -197,7 +197,9 @@ $result = $stmt->get_result();
     <?php require_once('../inc/topBarNav.php'); ?>
 
     <div class="container">
-        <h1>Claim Details</h1>
+        <br>
+        <br>
+        <h3>Claim Details</h3>
         
         <?php if ($result->num_rows > 0): ?>
             <div class="details">
