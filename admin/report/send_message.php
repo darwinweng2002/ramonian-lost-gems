@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <label for="images">Upload Images:</label>
             <input type="file" name="images[]" id="images" multiple>
 
-            <button type="submit">Submit and Publish</button>
+            <button type="submit">Publish</button>
         </form>
     </div>
 
