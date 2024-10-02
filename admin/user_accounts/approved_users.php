@@ -58,14 +58,15 @@ $result = $conn->query($sql);
                             <td><?= htmlspecialchars($row['section']) ?></td>
                             <td><?= htmlspecialchars($row['email']) ?></td>
                             <td>
-                                <?php if (!empty($row['school_id_file'])): ?>
-                                    <!-- Display the school ID image if it exists -->
-                                    <img src="../../uploads/school_ids/<?= htmlspecialchars($user['school_id_file']) ?>" alt="School ID Image">
-                                <?php else: ?>
-                                    <!-- Fallback if no school ID is provided -->
-                                    <span>No ID Uploaded</span>
-                                <?php endif; ?>
-                            </td>
+                            <?php if (!empty($row['school_id_file'])): ?>
+                                <!-- Display the school ID image if it exists -->
+                                <img src="../../uploads/school_ids/<?= htmlspecialchars($row['school_id_file']) ?>" alt="School ID Image" style="width: 100px; height: auto;">
+                            <?php else: ?>
+                                <!-- Fallback if no school ID is provided -->
+                                <span>No ID Uploaded</span>
+                            <?php endif; ?>
+                        </td>
+
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
