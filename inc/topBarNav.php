@@ -1,128 +1,169 @@
 <!-- ======= Header ======= -->
 <style type="text/css">
-    /* Styling for the logo and header */
-    .logo img {
-        width: 55px; /* Logo size */
-        height: 55px;
-        object-fit: contain; /* Ensure the logo fits within its container */
-        margin-top: 3px;
-    }
+/* Styling for the logo and header */
+.logo img {
+    width: 55px; /* Logo size */
+    height: 55px;
+    object-fit: contain;
+    margin-top: 3px;
+}
 
-    /* Aligning content inside the header */
-    .container-lg {
-        display: flex;
-        justify-content: space-between; /* Push logo to the left, and sidebar toggle to the right */
-        align-items: center;
-        width: 100%;
-    }
+.container-lg {
+    display: flex;
+    justify-content: space-between; /* Push logo to the left, and sidebar toggle to the right */
+    align-items: center;
+    width: 100%;
+}
 
-    .header {
-        height: 60px; /* Adjust this as needed based on your logo size */
-        background-color: #fff; /* Optional: set background color */
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: add shadow for better visibility */
-        padding: 0;
-    }
+.header {
+    height: 60px;
+    background-color: #fff;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 0;
+}
 
-    /* Sidebar styling */
-    #side-nav-bar {
-        position: fixed;
-        right: -250px; /* Initially hide the sidebar */
-        top: 0;
-        width: 250px;
-        height: 100%;
-        background-color: #2c3e50;
-        color: #ecf0f1;
-        transition: right 0.3s ease;
-        z-index: 9999;
-        overflow-y: auto;
-        padding-top: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-    }
+/* Sidebar styling */
+#side-nav-bar {
+    position: fixed;
+    right: -250px; /* Initially hide the sidebar */
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    transition: right 0.3s ease;
+    z-index: 9999;
+    overflow-y: auto;
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+}
 
-    /* Sidebar links */
-    #side-nav-bar ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-    }
+/* Sidebar links */
+#side-nav-bar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
 
-    #side-nav-bar ul li {
-        padding: 10px;
-        border-bottom: 1px solid #34495e;
-    }
+#side-nav-bar ul li {
+    padding: 10px;
+    border-bottom: 1px solid #34495e;
+}
 
-    #side-nav-bar ul li a {
-        text-decoration: none;
-        color: #ecf0f1;
-        display: block;
-        font-size: 14px;
-        padding: 5px 10px; /* Ensures padding applies only to the left and right within the sidebar */
-        transition: background-color 0.3s ease, padding-left 0.3s ease;
-    }
+#side-nav-bar ul li a {
+    text-decoration: none;
+    color: #ecf0f1;
+    display: block;
+    font-size: 14px;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
 
-    #side-nav-bar ul li a:hover {
-        background-color: #34495e;
-        padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
-    }
+#side-nav-bar ul li a:hover {
+    background-color: #34495e;
+    padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
+}
 
-    /* Sidebar toggle button styling */
+/* Sidebar toggle button styling */
+#sidebar-toggle-button {
+    position: fixed;
+    right: 20px;
+    top: 10px;
+    background-color: #3498db;
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+}
+
+#sidebar-toggle-button:hover {
+    background-color: #2980b9;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
     #sidebar-toggle-button {
-        position: fixed;
-        right: 40px; /* Keep the button on the right */
-        top: 0; /* Adjust to align with your design */
-        background-color: #3498db; /* Professional color */
-        color: white;
-        padding: 21.5px 30px;
-        border: none;
-        border-radius: 2px;
-        cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        z-index: 10000; /* Make sure it's above other elements */
+        display: block;
     }
 
-    #sidebar-toggle-button:hover {
-        background-color: #2980b9;
+    #side-nav-bar {
+        width: 250px;
+        right: -250px; /* Hide the sidebar by default */
+    }
+    #side-nav-bar {
+    position: fixed;
+    right: -250px; /* Initially hide the sidebar */
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    transition: right 0.3s ease;
+    z-index: 9999;
+    overflow-y: auto;
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Sidebar links */
+#side-nav-bar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#side-nav-bar ul li {
+    padding: 10px;
+    border-bottom: 1px solid #34495e;
+}
+
+#side-nav-bar ul li a {
+    text-decoration: none;
+    color: #ecf0f1;
+    display: block;
+    font-size: 14px;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
+
+#side-nav-bar ul li a:hover {
+    background-color: #34495e;
+    padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
+}
+
+/* Sidebar toggle button styling */
+#sidebar-toggle-button {
+    position: fixed;
+    right: 20px;
+    top: 10px;
+    background-color: #3498db;
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+}
+
+#sidebar-toggle-button:hover {
+    background-color: #2980b9;
+}
+}
+
+@media (min-width: 1201px) {
+    #side-nav-bar {
+        right: 0; /* Ensure sidebar is visible on larger screens */
     }
 
-    /* Responsive adjustments for smaller screens */
-    @media (max-width: 768px) {
-        #sidebar-toggle-button {
-            display: block;
-        }
-
-        #side-nav-bar {
-            width: 50%;
-            right: -100%;
-        }
+    #sidebar-toggle-button {
+        display: none; /* Hide the toggle button on larger screens */
     }
+}
 
-    /* For desktop screens, ensure the sidebar is positioned on the right and functions properly */
-    @media (min-width: 1024px) {
-        #side-nav-bar {
-            right: -250px; /* Keep it hidden until triggered */
-        }
-
-        /* On larger screens, when the sidebar is toggled, it moves into view */
-        #side-nav-bar.show {
-            right: 0; /* Make the sidebar appear */
-        }
-    }
-
-    /* Centering and aligning logo and button */
-    .logo {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start; /* Align logo to the left */
-        padding-left: 15px; /* Add some padding for spacing from the left */
-        height: 100%; /* Ensure the logo container fills the height of the header */
-    }
-
-    /* Push sidebar toggle button to the right */
-    .navbar-toggler {
-        margin-left: auto;
-        display: flex;
-        justify-content: flex-end;
-    }
 </style>
 
 <header id="header" class="header fixed-top d-flex align-items-center">
