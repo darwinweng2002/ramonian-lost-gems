@@ -93,6 +93,65 @@
         width: 250px;
         right: -250px; /* Hide the sidebar by default */
     }
+    #side-nav-bar {
+    position: fixed;
+    right: -250px; /* Initially hide the sidebar */
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    transition: right 0.3s ease;
+    z-index: 9999;
+    overflow-y: auto;
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Sidebar links */
+#side-nav-bar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#side-nav-bar ul li {
+    padding: 10px;
+    border-bottom: 1px solid #34495e;
+}
+
+#side-nav-bar ul li a {
+    text-decoration: none;
+    color: #ecf0f1;
+    display: block;
+    font-size: 14px;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
+
+#side-nav-bar ul li a:hover {
+    background-color: #34495e;
+    padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
+}
+
+/* Sidebar toggle button styling */
+#sidebar-toggle-button {
+    position: fixed;
+    right: 20px;
+    top: 10px;
+    background-color: #3498db;
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+}
+
+#sidebar-toggle-button:hover {
+    background-color: #2980b9;
+}
 }
 
 @media (min-width: 1201px) {
