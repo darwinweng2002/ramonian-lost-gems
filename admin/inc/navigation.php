@@ -132,18 +132,6 @@
       <?php endif; ?>
     </a>
 </li>
-  <li class="nav-item">
-    <a class="nav-link <?= $page != 'inquiries' ? 'collapsed' : '' ?> nav-users" href="<?= base_url."admin?page=inquiries" ?>">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mails"><rect width="16" height="13" x="6" y="4" rx="2"/><path d="m22 7-7.1 3.78c-.57.3-1.23.3-1.8 0L6 7"/><path d="M2 8v11c0 1.1.9 2 2 2h14"/></svg>
-      <span>Messages</span>
-      <?php 
-      $message = $conn->query("SELECT * FROM `inquiry_list` where `status` = 0")->num_rows;
-      ?>
-      <?php if($message > 0): ?>
-        <span class="badge rounded-pill bg-danger text-light ms-4"><?= format_num($message) ?></span>
-      <?php endif; ?>
-    </a>
-  </li>
    <!-- 
 <li class="nav-item">
     <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="https://ramonianlostgems.com/admin/report/send_message.php/">
