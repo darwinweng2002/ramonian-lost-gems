@@ -24,83 +24,79 @@
     }
 
     /* Sidebar styling */
-    /* Sidebar styling */
-/* Sidebar styling */
-#side-nav-bar {
-    position: fixed;
-    right: -250px; /* Initially hide the sidebar off-screen */
-    top: 0;
-    width: 250px;
-    height: 100%; /* Full height */
-    background-color: #2c3e50;
-    color: #ecf0f1;
-    transition: right 0.3s ease; /* Smooth transition when showing/hiding */
-    z-index: 9999; /* Make sure the sidebar stays on top */
-    overflow-y: auto; /* Enable scrolling if content overflows */
-    padding-top: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-}
-
-/* Sidebar links */
-#side-nav-bar ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-#side-nav-bar ul li {
-    padding: 10px;
-    border-bottom: 1px solid #34495e;
-}
-
-#side-nav-bar ul li a {
-    text-decoration: none;
-    color: #ecf0f1;
-    display: block;
-    font-size: 14px;
-    padding: 5px 10px;
-    transition: background-color 0.3s ease, padding-left 0.3s ease;
-}
-
-#side-nav-bar ul li a:hover {
-    background-color: #34495e;
-    padding-left: 30px; /* Adds a sliding effect when hovering */
-}
-
-/* Sidebar toggle button styling */
-#sidebar-toggle-button {
-    position: fixed;
-    right: 20px; /* Keep the button near the right */
-    top: 10px; /* Align with the top of the page */
-    background-color: #3498db;
-    color: white;
-    padding: 21.5px 30px;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    z-index: 10000; /* Ensure it's above other elements */
-}
-
-#sidebar-toggle-button:hover {
-    background-color: #2980b9;
-}
-
-/* Responsive adjustments for smaller screens */
-@media (max-width: 768px) {
-    #sidebar-toggle-button {
-        display: block;
-    }
-
     #side-nav-bar {
-        width: 70%; /* Sidebar takes up 70% width on smaller screens */
-        right: -100%; /* Hidden off-screen initially */
+        position: fixed;
+        right: -250px; /* Initially hide the sidebar off-screen */
+        top: 0;
+        width: 250px;
+        height: 100%;
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        transition: right 0.3s ease; /* Smooth transition */
+        z-index: 9999; /* Ensure it's on top of other elements */
+        overflow-y: auto;
+        padding-top: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
     }
-}
 
+    /* Sidebar links */
+    #side-nav-bar ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
 
+    #side-nav-bar ul li {
+        padding: 10px;
+        border-bottom: 1px solid #34495e;
+    }
 
-    /* Centering and aligning logo and button */
+    #side-nav-bar ul li a {
+        text-decoration: none;
+        color: #ecf0f1;
+        display: block;
+        font-size: 14px;
+        padding: 5px 10px;
+        transition: background-color 0.3s ease, padding-left 0.3s ease;
+    }
+
+    #side-nav-bar ul li a:hover {
+        background-color: #34495e;
+        padding-left: 30px;
+    }
+
+    /* Sidebar toggle button */
+    #sidebar-toggle-button {
+        position: fixed;
+        right: 20px;
+        top: 15px; /* Align with the top of the header */
+        background-color: #3498db; /* Button color */
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        z-index: 10000; /* Ensure it's above other elements */
+    }
+
+    #sidebar-toggle-button:hover {
+        background-color: #2980b9;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #sidebar-toggle-button {
+            display: block;
+        }
+
+        #side-nav-bar {
+            width: 70%; /* Sidebar takes up 70% width on smaller screens */
+            right: -100%; /* Hidden off-screen initially */
+        }
+    }
+
+    /* Aligning logo and toggle button */
     .logo {
         display: flex;
         align-items: center;
@@ -109,7 +105,6 @@
         height: 100%; /* Ensure the logo container fills the height of the header */
     }
 
-    /* Push sidebar toggle button to the right */
     .navbar-toggler {
         margin-left: auto;
         display: flex;
