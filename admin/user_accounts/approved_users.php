@@ -148,7 +148,7 @@ $result = $conn->query($sql);
         <h3>Approved Student Account - PRMSU Iba</h3>
 
         <!-- Search Form -->
-        <form class="search-form" method="GET" action="../approved_users.php">
+        <form class="search-form" method="GET" action="approved_users.php">
             <div class="input-group mb-3">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
                 <input type="text" name="search" class="search-input form-control" placeholder="Search users..." value="<?= htmlspecialchars($searchTerm) ?>">
@@ -181,7 +181,7 @@ $result = $conn->query($sql);
                                 <td><?= htmlspecialchars($row['email']) ?></td>
                                 <td>
                                     <!-- Add View Button for actions -->
-                                    <a href="viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+                                    <a href="https://ramonianlostgems.com/admin/user_accounts/viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
                                         <i class="fa fa-eye"></i> View Details
                                     </a>
                                 </td>
