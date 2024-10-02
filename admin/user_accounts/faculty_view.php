@@ -31,7 +31,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-    <title>Views</title>
+    <title>View Users</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -170,7 +170,7 @@ $result = $conn->query($sql);
 
 <section class="section">
     <div class="container">
-        <h2>Registered Users</h2>
+        <h2>HAHAHA</h2>
 
         <!-- Search Form -->
         <form class="search-form" method="GET" action="view_users.php">
@@ -208,9 +208,11 @@ $result = $conn->query($sql);
                 <td><?= htmlspecialchars($row['registration_date'] ?? 'N/A') ?></td>
                 <td>
                     <div class="d-flex justify-content-center">
-                        <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-                            <i class="fas fa-eye"></i> View Details
-                        </a>
+                    <a href="https://ramonianlostgems.com/admin/user_accounts/viewfaculty.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+    <i class="fas fa-eye"></i> View Details
+</a>
+
+
                         <?php if ($row['status'] !== 'active'): ?>  <!-- Check if the user is not yet active -->
                             <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
                                 <i class="fas fa-check"></i> Approve
@@ -218,9 +220,11 @@ $result = $conn->query($sql);
                         <?php else: ?>
                             <button class="btn btn-secondary btn-sm ms-2" disabled>Approved</button> <!-- Button will show disabled once status is active -->
                         <?php endif; ?>
-                        <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
-                            <i class="fas fa-trash-alt"></i> Delete
-                        </button>
+                        <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)" style="display: inline-block;">
+    <i class="fas fa-trash-alt"></i> Delete
+</button>
+
+
                     </div>
                 </td>
             </tr>
@@ -238,6 +242,68 @@ $result = $conn->query($sql);
 </section>
 
 <script>
+function approveUser(event, id) {
+    event.preventDefault();
+    
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You are about to approve this user!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, approve it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('../approve_user.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ user_id: id }) // Send user_id as a POST parameter
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not OK');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    const approveBtn = document.getElementById('approve-btn-' + id);
+                    approveBtn.classList.replace('btn-success', 'btn-secondary');
+                    approveBtn.innerHTML = 'Approved';
+                    approveBtn.disabled = true;
+
+                    Swal.fire({
+                        title: 'Approved!',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        location.reload(); // Reload the page after successful approval
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: data.message || 'An error occurred while approving the user.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error('Approval error:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An unexpected error occurred while approving the user.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+        }
+    });
+}
+
+// Delete user function
 function deleteUser(id) {
     Swal.fire({
         title: 'Are you sure?',
@@ -254,60 +320,28 @@ function deleteUser(id) {
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({ id }) // Use URLSearchParams for POST parameters
             })
-            .then(response => response.text())
-            .then(result => {
-                console.log('Delete result:', result); // For debugging
-                if (result.trim() === '1') {  // Ensure the backend returns '1' on successful deletion
-                    Swal.fire('Deleted!', 'The user has been deleted.', 'success')
-                    .then(() => location.reload());
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not OK');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('Deleted!', data.message, 'success')
+                    .then(() => location.reload()); // Reload the page after successful deletion
                 } else {
-                    Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
+                    Swal.fire('Error!', data.message || 'An error occurred while deleting the user.', 'error');
                 }
             })
             .catch((error) => {
                 console.error('Delete error:', error);
-                Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
+                Swal.fire('Error!', 'An unexpected error occurred while deleting the user.', 'error');
             });
         }
     });
 }
 
-function approveUser(event, id) {
-    event.preventDefault();
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You are about to approve this user!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, approve it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch('../approve_user.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ user_id: id }) // Use URLSearchParams for POST parameters
-            })
-            .then(response => response.text())
-            .then(result => {
-                if (result.trim() === '1') {  // Success
-                    const approveBtn = document.getElementById('approve-btn-' + id);
-                    approveBtn.classList.replace('btn-success', 'btn-secondary');
-                    approveBtn.innerHTML = 'Approved';
-                    approveBtn.disabled = true;
-                    Swal.fire('Approved!', 'The user has been approved.', 'success');
-                } else {
-                    Swal.fire('Error!', 'An error occurred while approving the user.', 'error');
-                }
-            })
-            .catch((error) => {
-                console.error('Approval error:', error);
-                Swal.fire('Error!', 'An unexpected error occurred.', 'error');
-            });
-        }
-    });
-}
 </script>
 
 <?php
