@@ -1,32 +1,23 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 include '../../config.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['user_id'])) {
-        $userId = $conn->real_escape_string($_POST['user_id']);
+// Fetch the user ID from POST
+$user_id = $_POST['id'] ?? null;
 
-        // Update user's status to 'active'
-        $sql = "UPDATE user_staff SET status = 'active' WHERE id = '$userId'";
+if ($user_id) {
+    // Prepare the DELETE statement
+    $stmt = $conn->prepare("DELETE FROM user_staff WHERE id = ?");
+    $stmt->bind_param("i", $user_id);
 
-        if ($conn->query($sql) === TRUE) {
-            // Return success response as JSON
-            echo json_encode(['success' => true, 'message' => 'User approved successfully!']);
-        } else {
-            // Return failure response as JSON
-            echo json_encode(['success' => false, 'message' => 'Failed to approve user.']);
-        }
+    // Execute and check success
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true, 'message' => 'User deleted successfully.']);
     } else {
-        // Return error response as JSON
-        echo json_encode(['success' => false, 'message' => 'Invalid request. Missing user ID.']);
+        echo json_encode(['success' => false, 'message' => 'An error occurred while deleting the user.']);
     }
+    $stmt->close();
 } else {
-    // Return error response as JSON
-    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
+    echo json_encode(['success' => false, 'message' => 'No user ID provided.']);
 }
-
 $conn->close();
 ?>

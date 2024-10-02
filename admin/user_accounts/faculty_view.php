@@ -244,7 +244,7 @@ $result = $conn->query($sql);
 <script>
 function approveUser(event, id) {
     event.preventDefault();
-    
+
     Swal.fire({
         title: 'Are you sure?',
         text: "You are about to approve this user!",
@@ -302,7 +302,6 @@ function approveUser(event, id) {
         }
     });
 }
-
 // Delete user function
 function deleteUser(id) {
     Swal.fire({
@@ -343,7 +342,6 @@ function deleteUser(id) {
 }
 
 </script>
-
 <?php
 $conn->close();
 require_once('../inc/footer.php');
