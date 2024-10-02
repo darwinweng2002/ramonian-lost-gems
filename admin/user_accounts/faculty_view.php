@@ -225,7 +225,7 @@ $result = $conn->query($sql);
                 <tbody>
                     <?php if ($result->num_rows > 0): ?>
                         <?php while ($row = $result->fetch_assoc()): ?>
-                            <tr>
+                           <tr>
     <td><?= !empty($row['user_type']) ? htmlspecialchars($row['user_type']) : 'teaching' ?></td>
     <td><?= htmlspecialchars($row['first_name'] ?? 'N/A') ?></td>
     <td><?= htmlspecialchars($row['last_name'] ?? 'N/A') ?></td>
@@ -253,6 +253,7 @@ $result = $conn->query($sql);
         </div>
     </td>
 </tr>
+
                     <?php endif; ?>
                 </tbody>
             </table>
