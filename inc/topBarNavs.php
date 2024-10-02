@@ -168,7 +168,7 @@
         padding-right: 0; /* No margin when sidebar is hidden */
     }
 }
-@media (max-width: 1201px) {
+@media (min-width: 1201px) {
 
     #sidebar-toggle-button {
         display: block; /* Hide the toggle button on larger screens */
