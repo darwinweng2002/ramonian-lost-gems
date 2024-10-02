@@ -25,17 +25,18 @@
 
     /* Sidebar styling */
     /* Sidebar styling */
+/* Sidebar styling */
 #side-nav-bar {
     position: fixed;
-    right: 250px; /* Initially hide the sidebar */
+    right: -250px; /* Initially hide the sidebar off-screen */
     top: 0;
     width: 250px;
-    height: 100%;
+    height: 100%; /* Full height */
     background-color: #2c3e50;
     color: #ecf0f1;
-    transition: right 0.3s ease;
-    z-index: 9999;
-    overflow-y: auto;
+    transition: right 0.3s ease; /* Smooth transition when showing/hiding */
+    z-index: 9999; /* Make sure the sidebar stays on top */
+    overflow-y: auto; /* Enable scrolling if content overflows */
     padding-top: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
 }
@@ -57,28 +58,28 @@
     color: #ecf0f1;
     display: block;
     font-size: 14px;
-    padding: 5px 10px; /* Ensures padding applies only to the left and right within the sidebar */
+    padding: 5px 10px;
     transition: background-color 0.3s ease, padding-left 0.3s ease;
 }
 
 #side-nav-bar ul li a:hover {
     background-color: #34495e;
-    padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
+    padding-left: 30px; /* Adds a sliding effect when hovering */
 }
 
 /* Sidebar toggle button styling */
 #sidebar-toggle-button {
     position: fixed;
-    right: 40px; /* Keep the button on the right */
-    top: 0; /* Adjust to align with your design */
-    background-color: #3498db; /* Professional color */
+    right: 20px; /* Keep the button near the right */
+    top: 10px; /* Align with the top of the page */
+    background-color: #3498db;
     color: white;
     padding: 21.5px 30px;
     border: none;
     border-radius: 2px;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    z-index: 10000; /* Make sure it's above other elements */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 10000; /* Ensure it's above other elements */
 }
 
 #sidebar-toggle-button:hover {
@@ -92,10 +93,11 @@
     }
 
     #side-nav-bar {
-        width: 50%;
-        right: -100%;
+        width: 70%; /* Sidebar takes up 70% width on smaller screens */
+        right: -100%; /* Hidden off-screen initially */
     }
 }
+
 
 
     /* Centering and aligning logo and button */
@@ -168,16 +170,17 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script type="text/javascript">
-    document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
-        const sideNavBar = document.getElementById('side-nav-bar');
+   document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
+    const sideNavBar = document.getElementById('side-nav-bar');
 
-        // Show or hide the sidebar
-        if (sideNavBar.style.right === '0px') {
-            sideNavBar.style.right = '-250px'; // Hide sidebar
-        } else {
-            sideNavBar.style.right = '0'; // Show sidebar
-        }
-    });
+    // Toggle the sidebar visibility
+    if (sideNavBar.style.right === '0px') {
+        sideNavBar.style.right = '-250px'; // Hide sidebar
+    } else {
+        sideNavBar.style.right = '0'; // Show sidebar
+    }
+});
+
 
     // Add event listener for the logout button
     document.getElementById('logout-button').addEventListener('click', function(event) {
