@@ -121,13 +121,14 @@ if (isset($_GET['id'])) {
         <h2>Employee Details</h2>
 
         <ul class="user-details">
-            <li><span>First Name:</span> <?= htmlspecialchars($user['first_name']) ?></li>
-            <li><span>Last Name:</span> <?= htmlspecialchars($user['last_name']) ?></li>
-            <li><span>Email:</span> <?= htmlspecialchars($user['email']) ?></li>
-            <li><span>User Type:</span> <?= htmlspecialchars($user['user_type']) ?></li>
-            <li><span>Department:</span> <?= htmlspecialchars($user['department'] ?? 'N/A') ?></li>
-            <li><span>Position:</span> <?= htmlspecialchars($user['position'] ?? 'N/A') ?></li>
-        </ul>
+    <li><span>First Name:</span> <?= htmlspecialchars($user['first_name']) ?></li>
+    <li><span>Last Name:</span> <?= htmlspecialchars($user['last_name']) ?></li>
+    <li><span>Email:</span> <?= htmlspecialchars($user['email']) ?></li>
+    <li><span>User Type:</span> <?= !empty($user['user_type']) ? htmlspecialchars($user['user_type']) : 'teaching' ?></li>
+    <li><span>Department:</span> <?= htmlspecialchars($user['department'] ?? 'N/A') ?></li>
+    <li><span>Position:</span> <?= htmlspecialchars($user['position'] ?? 'N/A') ?></li>
+</ul>
+
 
         <!-- Add the Uploaded ID label and move the profile image here -->
         <span class="uploaded-id-label">Uploaded ID</span>
