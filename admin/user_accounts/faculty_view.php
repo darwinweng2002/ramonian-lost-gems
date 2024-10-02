@@ -90,23 +90,6 @@ $result = $conn->query($sql);
             background-color: #f1f1f1;
         }
 
-        .btn {
-            border-radius: 5px;
-            padding: 8px 12px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            color: #fff;
-        }
-
-        .btn-delete {
-            background-color: #dc3545;
-            border: none;
-        }
-
-        .btn-delete:hover {
-            background-color: #c82333;
-        }
 
         .btn-secondary {
             background-color: #6c757d;
@@ -159,6 +142,47 @@ $result = $conn->query($sql);
             color: #333;
             padding: 30px 0;
         }
+        .d-flex {
+    display: flex;
+    justify-content: center; /* Align items in the center */
+    gap: 10px; /* Adds consistent space between buttons */
+    flex-wrap: nowrap; /* Ensures buttons stay in one line */
+}
+
+.btn {
+    min-width: 120px; /* Ensure buttons have a consistent width */
+    text-align: center;
+    padding: 8px 12px; /* Padding for balanced sizing */
+}
+
+.btn-sm {
+    font-size: 14px; /* Adjust font size for smaller buttons */
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+/* Hover effects for better UI feedback */
+.btn:hover {
+    opacity: 0.9;
+}
 
     </style>
 </head>
@@ -206,25 +230,25 @@ $result = $conn->query($sql);
                                 <td><?= htmlspecialchars($row['department'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($row['registration_date'] ?? 'N/A') ?></td>
                                 <td>
-                                <div class="d-flex justify-content-center flex-wrap"> <!-- Added flex-wrap -->
-                                    <a href="https://ramonianlostgems.com/admin/user_accounts/viewfaculty.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm mx-1"> <!-- Added margin for spacing -->
+                                <div class="d-flex justify-content-center gap-2"> <!-- Added gap for spacing -->
+                                    <a href="https://ramonianlostgems.com/admin/user_accounts/viewfaculty.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
                                         <i class="fas fa-eye"></i> View Details
                                     </a>
 
                                     <?php if ($row['status'] !== 'active'): ?>  
-                                        <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm mx-1 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                                        <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
                                             <i class="fas fa-check"></i> Approve
                                         </button>
                                     <?php else: ?>
-                                        <button class="btn btn-secondary btn-sm mx-1" disabled>Approved</button>
+                                        <button class="btn btn-secondary btn-sm" disabled>Approved</button>
                                     <?php endif; ?>
 
-                                    <button class="btn btn-danger btn-sm mx-1" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
+                                    <button class="btn btn-danger btn-sm" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
                                         <i class="fas fa-trash-alt"></i> Delete
                                     </button>
-
                                 </div>
                             </td>
+
 
                             </tr>
                         <?php endwhile; ?>
