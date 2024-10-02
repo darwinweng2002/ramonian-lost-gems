@@ -37,6 +37,8 @@ $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder,  mh.statu
         WHERE mh.is_published = 1 AND mh.id = ?
         ORDER BY mh.id DESC";
 
+
+
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
 $stmt->execute();
@@ -202,6 +204,18 @@ $result = $stmt->get_result();
                 $email = htmlspecialchars($msgData['email'] ?? '');
                 $college = htmlspecialchars($msgData['college'] ?? '');
                 $school_type = htmlspecialchars($msgData['school_type'] ?? '');
+                $school_type = htmlspecialchars($msgData['school_type'] ?? '');
+
+// Map numeric school_type to string
+$schoolTypeString = '';
+if ($school_type === '0') {
+    $schoolTypeString = 'College';
+} elseif ($school_type === '1') {
+    $schoolTypeString = 'High School';
+} else {
+    $schoolTypeString = 'N/A';
+}
+
                 $title = htmlspecialchars($msgData['title'] ?? '');
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                 $founder = htmlspecialchars($msgData['founder'] ?? '');
@@ -235,8 +249,8 @@ $result = $stmt->get_result();
                 // Display user information only if available
                 if ($firstName || $email || $college || $school_type) {
                     echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
-                    echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
-                    echo "<p><strong>Level:</strong> " . ($school_type ? $school_type : 'N/A') . "</p>";
+                    echo "<p><strong>College:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
+                    echo "<p><strong>Level:</strong> " . $schoolTypeString . "</p>";
                 } else {
                     // No additional user info for guest posts
                     
