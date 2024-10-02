@@ -181,7 +181,7 @@ $result = $conn->query($sql);
                                 <td><?= htmlspecialchars($row['email']) ?></td>
                                 <td>
                                     <!-- Add View Button for actions -->
-                                    <a href="https://ramonianlostgems.com/admin/user_accounts/viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+                                    <a href="viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
                                         <i class="fa fa-eye"></i> View Details
                                     </a>
                                 </td>
