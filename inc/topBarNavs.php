@@ -161,16 +161,15 @@
 
 <script type="text/javascript">
     document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
-    const sideNavBar = document.getElementById('side-nav-bar');
+        const sideNavBar = document.getElementById('side-nav-bar');
 
-    // Show or hide the sidebar
-    if (sideNavBar.style.right === '0px') {
-        sideNavBar.style.right = '-250px'; // Hide sidebar
-    } else {
-        sideNavBar.style.right = '0'; // Show sidebar
-    }
-});
-
+        // Show or hide the sidebar
+        if (sideNavBar.style.right === '0px') {
+            sideNavBar.style.right = '-250px'; // Hide sidebar
+        } else {
+            sideNavBar.style.right = '0'; // Show sidebar
+        }
+    });
 
     // Add event listener for the logout button
     document.getElementById('logout-button').addEventListener('click', function(event) {
