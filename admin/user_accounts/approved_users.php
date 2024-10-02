@@ -71,7 +71,6 @@ $result = $conn->query($sql);
 </td>
 
 
-
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
