@@ -174,7 +174,7 @@
     }
 
     #sidebar-toggle-button {
-        display: inline-block; /* Hide the toggle button on larger screens */
+        display: block; /* Hide the toggle button on larger screens */
     }
 
     .main-content {
