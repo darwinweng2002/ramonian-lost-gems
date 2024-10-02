@@ -91,13 +91,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Retrieve user information based on user type
 if (isset($userId)) {
     if ($userType === 'user_member') {
-        $stmt = $conn->prepare("SELECT first_name, last_name, college, email FROM user_member WHERE id = ?");
+        $stmt = $conn->prepare("SELECT first_name, last_name, college, school_type, email FROM user_member WHERE id = ?");
     } else {
         $stmt = $conn->prepare("SELECT first_name, last_name, department AS college, email FROM user_staff WHERE id = ?");
     }
     $stmt->bind_param("i", $userId);
     $stmt->execute();
-    $stmt->bind_result($first_name, $last_name, $college, $email);
+    $stmt->bind_result($first_name, $last_name, $college, $school_type, $email);
     $stmt->fetch();
     $stmt->close();
 }
@@ -250,8 +250,9 @@ if (isset($userId)) {
     <div class="container">
         <!-- Display user information -->
         <h2 class="user-info">Report Found Item</h2>
-        <?php if (isset($first_name) && isset($last_name) && isset($email) && isset($college)): ?>
+        <?php if (isset($first_name) && isset($last_name) && isset($email) && isset($school_type) && isset($college)): ?>
     <div class="user-info">
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg> Level: <?php echo htmlspecialchars($school_type); ?></p>
         <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg> College: <?php echo htmlspecialchars($college); ?></p>
         <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paperclip"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg> Username: <?php echo htmlspecialchars($first_name . ' ' . $last_name); ?> (<?php echo htmlspecialchars($email); ?>)</p>
     </div>
