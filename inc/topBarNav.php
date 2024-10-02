@@ -24,79 +24,89 @@
     }
 
     /* Sidebar styling */
-    /* Sidebar styling */
-#side-nav-bar {
-    position: fixed;
-    right: 250px; /* Initially hide the sidebar */
-    top: 0;
-    width: 250px;
-    height: 100%;
-    background-color: #2c3e50;
-    color: #ecf0f1;
-    transition: right 0.3s ease;
-    z-index: 9999;
-    overflow-y: auto;
-    padding-top: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-}
-
-/* Sidebar links */
-#side-nav-bar ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-#side-nav-bar ul li {
-    padding: 10px;
-    border-bottom: 1px solid #34495e;
-}
-
-#side-nav-bar ul li a {
-    text-decoration: none;
-    color: #ecf0f1;
-    display: block;
-    font-size: 14px;
-    padding: 5px 10px; /* Ensures padding applies only to the left and right within the sidebar */
-    transition: background-color 0.3s ease, padding-left 0.3s ease;
-}
-
-#side-nav-bar ul li a:hover {
-    background-color: #34495e;
-    padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
-}
-
-/* Sidebar toggle button styling */
-#sidebar-toggle-button {
-    position: fixed;
-    right: 40px; /* Keep the button on the right */
-    top: 0; /* Adjust to align with your design */
-    background-color: #3498db; /* Professional color */
-    color: white;
-    padding: 21.5px 30px;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    z-index: 10000; /* Make sure it's above other elements */
-}
-
-#sidebar-toggle-button:hover {
-    background-color: #2980b9;
-}
-
-/* Responsive adjustments for smaller screens */
-@media (max-width: 768px) {
-    #sidebar-toggle-button {
-        display: block;
-    }
-
     #side-nav-bar {
-        width: 50%;
-        right: -100%;
+        position: fixed;
+        right: -250px; /* Initially hide the sidebar */
+        top: 0;
+        width: 250px;
+        height: 100%;
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        transition: right 0.3s ease;
+        z-index: 9999;
+        overflow-y: auto;
+        padding-top: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
     }
-}
 
+    /* Sidebar links */
+    #side-nav-bar ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #side-nav-bar ul li {
+        padding: 10px;
+        border-bottom: 1px solid #34495e;
+    }
+
+    #side-nav-bar ul li a {
+        text-decoration: none;
+        color: #ecf0f1;
+        display: block;
+        font-size: 14px;
+        padding: 5px 10px; /* Ensures padding applies only to the left and right within the sidebar */
+        transition: background-color 0.3s ease, padding-left 0.3s ease;
+    }
+
+    #side-nav-bar ul li a:hover {
+        background-color: #34495e;
+        padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
+    }
+
+    /* Sidebar toggle button styling */
+    #sidebar-toggle-button {
+        position: fixed;
+        right: 40px; /* Keep the button on the right */
+        top: 0; /* Adjust to align with your design */
+        background-color: #3498db; /* Professional color */
+        color: white;
+        padding: 21.5px 30px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        z-index: 10000; /* Make sure it's above other elements */
+    }
+
+    #sidebar-toggle-button:hover {
+        background-color: #2980b9;
+    }
+
+    /* Responsive adjustments for smaller screens */
+    @media (max-width: 768px) {
+        #sidebar-toggle-button {
+            display: block;
+        }
+
+        #side-nav-bar {
+            width: 50%;
+            right: -100%;
+        }
+    }
+
+    /* For desktop screens, ensure the sidebar is positioned on the right and functions properly */
+    @media (min-width: 1024px) {
+        #side-nav-bar {
+            right: -250px; /* Keep it hidden until triggered */
+        }
+
+        /* On larger screens, when the sidebar is toggled, it moves into view */
+        #side-nav-bar.show {
+            right: 0; /* Make the sidebar appear */
+        }
+    }
 
     /* Centering and aligning logo and button */
     .logo {
