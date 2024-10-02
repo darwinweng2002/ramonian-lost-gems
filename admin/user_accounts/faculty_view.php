@@ -20,7 +20,6 @@ $sql = "SELECT id, user_type, first_name, last_name, email, avatar, position, de
         FROM user_staff 
         WHERE CONCAT_WS(' ', first_name, last_name, email, user_type, position, department) LIKE '%$searchTerm%'";
 
-
 $result = $conn->query($sql);
 ?>
 
@@ -196,112 +195,47 @@ $result = $conn->query($sql);
                     </tr>
                 </thead>
                 <tbody>
-    <?php if ($result->num_rows > 0): ?>
-        <?php while ($row = $result->fetch_assoc()): ?>
-            <tr>
-            <td><?= htmlspecialchars($row['user_type'] ?? 'N/A') ?></td>            <!-- Make sure 'user_type' exists -->
-                <td><?= htmlspecialchars($row['first_name'] ?? 'N/A') ?></td>
-                <td><?= htmlspecialchars($row['last_name'] ?? 'N/A') ?></td>
-                <td><?= htmlspecialchars($row['email'] ?? 'N/A') ?></td>
-                <td><?= htmlspecialchars($row['position'] ?? 'N/A') ?></td>
-                <td><?= htmlspecialchars($row['department'] ?? 'N/A') ?></td>
-                <td><?= htmlspecialchars($row['registration_date'] ?? 'N/A') ?></td>
-                <td>
-                    <div class="d-flex justify-content-center">
-                    <a href="https://ramonianlostgems.com/admin/user_accounts/viewfaculty.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-    <i class="fas fa-eye"></i> View Details
-</a>
-
-
-                        <?php if ($row['status'] !== 'active'): ?>  <!-- Check if the user is not yet active -->
-                            <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
-                                <i class="fas fa-check"></i> Approve
-                            </button>
-                        <?php else: ?>
-                            <button class="btn btn-secondary btn-sm ms-2" disabled>Approved</button> <!-- Button will show disabled once status is active -->
-                        <?php endif; ?>
-                        <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
-                            <i class="fas fa-trash-alt"></i> Delete
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        <?php endwhile; ?>
-    <?php else: ?>
-        <tr>
-            <td colspan="8" class="no-data">No registered users found.</td>
-        </tr>
-    <?php endif; ?>
-</tbody>
-
+                    <?php if ($result->num_rows > 0): ?>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($row['user_type'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['first_name'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['last_name'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['email'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['position'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['department'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($row['registration_date'] ?? 'N/A') ?></td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </a>
+                                        <?php if ($row['status'] !== 'approved'): ?>
+                                            <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                                                <i class="fas fa-check"></i> Approve
+                                            </button>
+                                        <?php else: ?>
+                                            <button class="btn btn-secondary btn-sm ms-2" disabled>Approved</button>
+                                        <?php endif; ?>
+                                        <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="8" class="no-data">No registered users found.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
             </table>
         </div>
     </div>
 </section>
 
 <script>
-function approveUser(event, id) {
-    event.preventDefault();
-    
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You are about to approve this user!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, approve it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch('../approve_user.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ user_id: id }) // Send user_id as a POST parameter
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not OK');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    const approveBtn = document.getElementById('approve-btn-' + id);
-                    approveBtn.classList.replace('btn-success', 'btn-secondary');
-                    approveBtn.innerHTML = 'Approved';
-                    approveBtn.disabled = true;
-
-                    Swal.fire({
-                        title: 'Approved!',
-                        text: data.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        location.reload(); // Reload the page after successful approval
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: data.message || 'An error occurred while approving the user.',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            })
-            .catch((error) => {
-                console.error('Approval error:', error);
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'An unexpected error occurred while approving the user.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            });
-        }
-    });
-}
-
-// Delete user function
 function deleteUser(id) {
     Swal.fire({
         title: 'Are you sure?',
@@ -313,28 +247,62 @@ function deleteUser(id) {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch('../delete_users.php', {
+            fetch('delete_users.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: new URLSearchParams({ id }) // Use URLSearchParams for POST parameters
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not OK');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    Swal.fire('Deleted!', data.message, 'success')
-                    .then(() => location.reload()); // Reload the page after successful deletion
+            .then(response => response.text())
+            .then(result => {
+                console.log('Delete result:', result); // For debugging
+                if (result.trim() === '1') {  // Ensure the backend returns '1' on successful deletion
+                    Swal.fire('Deleted!', 'The user has been deleted.', 'success')
+                    .then(() => location.reload());
                 } else {
-                    Swal.fire('Error!', data.message || 'An error occurred while deleting the user.', 'error');
+                    Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
                 }
             })
             .catch((error) => {
                 console.error('Delete error:', error);
-                Swal.fire('Error!', 'An unexpected error occurred while deleting the user.', 'error');
+                Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
+            });
+        }
+    });
+}
+
+function approveUser(event, id) {
+    event.preventDefault();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You are about to approve this user!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, approve it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch('approve_user.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ user_id: id }) // Use URLSearchParams for POST parameters
+            })
+            .then(response => response.text())
+            .then(result => {
+                console.log('Approval result:', result); // For debugging
+                if (result.trim() === '1') {
+                    const approveBtn = document.getElementById('approve-btn-' + id);
+                    approveBtn.classList.replace('btn-success', 'btn-secondary');
+                    approveBtn.innerHTML = 'Approved';
+                    approveBtn.disabled = true;
+                    Swal.fire('Approved!', 'The user has been approved.', 'success');
+                } else {
+                    Swal.fire('Error!', 'An error occurred while approving the user.', 'error');
+                }
+            })
+            .catch((error) => {
+                console.error('Approval error:', error);
+                Swal.fire('Error!', 'An unexpected error occurred.', 'error');
             });
         }
     });
