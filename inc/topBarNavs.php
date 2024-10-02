@@ -85,9 +85,6 @@
 
 /* Responsive adjustments */
 @media (max-width: 1200px) {
-    #sidebar-toggle-button {
-        display: block;
-    }
 
     #side-nav-bar {
         width: 250px;
