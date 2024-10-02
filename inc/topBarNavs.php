@@ -2,11 +2,11 @@
 <style type="text/css">
 /* Styling for the logo and header */
 .logo img {
-    width: 55px; /* Logo size */
-    height: 55px;
-    object-fit: contain; /* Ensure the logo fits within its container */
-    margin-top: 10px;
-}
+        width: 55px; /* Logo size */
+        height: 55px;
+        object-fit: contain; /* Ensure the logo fits within its container */
+        margin-top: 10px;
+    }
 
 .container-lg {
     display: flex;
@@ -67,47 +67,133 @@
 /* Sidebar toggle button styling */
 #sidebar-toggle-button {
     position: fixed;
-    right: 40px; /* Keep the button on the right */
-    top: 0; /* Adjust to align with your design */
-    background-color: #3498db; /* Professional color */
+    right: 20px;
+    top: 10px;
+    background-color: #3498db;
     color: white;
-    padding: 21.5px 30px;
+    padding: 15px 20px;
     border: none;
     border-radius: 2px;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    z-index: 10000; /* Make sure it's above other elements */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
 }
 
 #sidebar-toggle-button:hover {
     background-color: #2980b9;
 }
 
-/* Ensure sidebar visibility and toggle functionality on both smaller and larger screens */
-@media (min-width: 1024px) {
+/* Responsive adjustments */
+@media (max-width: 1200px) {
     #sidebar-toggle-button {
-        display: block; /* Ensure the toggle button is always visible */
+        display: block;
     }
 
     #side-nav-bar {
-        right: -250px; /* Sidebar starts hidden */
+        width: 250px;
+        right: -250px; /* Hide the sidebar by default */
     }
-
-    .main-content {
-        padding-right: 0; /* No padding adjustment on larger screens initially */
-    }
+    #side-nav-bar {
+    position: fixed;
+    right: -250px; /* Initially hide the sidebar */
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    transition: right 0.3s ease;
+    z-index: 9999;
+    overflow-y: auto;
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
 }
 
-@media (max-width: 1024px) {
+/* Sidebar links */
+#side-nav-bar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#side-nav-bar ul li {
+    padding: 10px;
+    border-bottom: 1px solid #34495e;
+}
+
+#side-nav-bar ul li a {
+    text-decoration: none;
+    color: #ecf0f1;
+    display: block;
+    font-size: 14px;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
+
+#side-nav-bar ul li a:hover {
+    background-color: #34495e;
+    padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
+}
+
+/* Sidebar toggle button styling */
+#sidebar-toggle-button {
+    position: fixed;
+    right: 20px;
+    top: 10px;
+    background-color: #3498db;
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+}
+
+#sidebar-toggle-button:hover {
+    background-color: #2980b9;
+}
+}
+
+@media (max-width: 1200px) {
+    #sidebar-toggle-button {
+        display: block;
+    }
+
     #side-nav-bar {
-        right: -250px; /* Sidebar starts hidden on smaller screens */
+        width: 250px;
+        right: -250px; /* Hide the sidebar by default */
     }
 
     .main-content {
         padding-right: 0; /* No margin when sidebar is hidden */
     }
 }
+@media (min-width: 1201px) {
+    #side-nav-bar {
+        right: 0; /* Ensure sidebar is visible on larger screens */
+    }
 
+    #sidebar-toggle-button {
+        display: block; /* Hide the toggle button on larger screens */
+    }
+
+    .main-content {
+        padding-right: 270px; /* Ensure content isn't hidden behind sidebar */
+    }
+}
+@media (max-width: 1024px) {
+    #sidebar-toggle-button {
+        display: block;
+    }
+
+    #side-nav-bar {
+        right: -250px; /* Ensure the sidebar starts hidden */
+    }
+
+    .main-content {
+        padding-right: 0; /* No margin when sidebar is hidden */
+    }
+}
 </style>
 
 <header id="header" class="header fixed-top d-flex align-items-center">
