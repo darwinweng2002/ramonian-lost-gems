@@ -171,7 +171,7 @@ if (isset($_POST['guest_login'])) {
                   <form method="POST" action="">
                     <div class="col-12">
                       <br>
-                      <p style="text-align: center;">Not a student or faculty member? Proceed as guest.
+                      <p style="text-align: center;">Not a student or employee member? Proceed as guest.
                       <button class="btn btn-secondary w-100" type="submit" name="guest_login" value="1">Login as Guest</button>
                       </p>
                     </div>
