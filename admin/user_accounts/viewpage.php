@@ -168,8 +168,9 @@ $conn->close();
         ?>
     </div>
     <div class="back-link">
-        <a href="view_users.php" class="btn btn-primary">Back to Users List</a>
-    </div>
+    <a href="javascript:void(0);" onclick="history.back();" class="btn btn-primary">Back to Users List</a>
+</div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
