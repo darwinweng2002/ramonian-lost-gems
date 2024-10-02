@@ -206,22 +206,26 @@ $result = $conn->query($sql);
                                 <td><?= htmlspecialchars($row['department'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($row['registration_date'] ?? 'N/A') ?></td>
                                 <td>
-                                    <div class="d-flex justify-content-center">
-                                        <a href="view_user.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-                                            <i class="fas fa-eye"></i> View Details
-                                        </a>
-                                        <?php if ($row['status'] !== 'approved'): ?>
-                                            <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
-                                                <i class="fas fa-check"></i> Approve
-                                            </button>
-                                        <?php else: ?>
-                                            <button class="btn btn-secondary btn-sm ms-2" disabled>Approved</button>
-                                        <?php endif; ?>
-                                        <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
-                                            <i class="fas fa-trash-alt"></i> Delete
+                                <div class="d-flex justify-content-center flex-wrap"> <!-- Added flex-wrap -->
+                                    <a href="https://ramonianlostgems.com/admin/user_accounts/viewfaculty.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm mx-1"> <!-- Added margin for spacing -->
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
+
+                                    <?php if ($row['status'] !== 'active'): ?>  
+                                        <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm mx-1 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                                            <i class="fas fa-check"></i> Approve
                                         </button>
-                                    </div>
-                                </td>
+                                    <?php else: ?>
+                                        <button class="btn btn-secondary btn-sm mx-1" disabled>Approved</button>
+                                    <?php endif; ?>
+
+                                    <button class="btn btn-danger btn-sm mx-1" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+
+                                </div>
+                            </td>
+
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
