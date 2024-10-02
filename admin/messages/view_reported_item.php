@@ -95,16 +95,15 @@ if ($message_id > 0) {
             background-color: #c82333;
         }
         .publish-btn {
-            background-color: #28a745; /* Green background color */
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            position: absolute;
-            bottom: 20px;
-            right: 80px; /* Position it to the left of the delete button */
-        }
+    width: 120px; /* Set a fixed width */
+    height: 40px; /* Set a fixed height */
+    padding: 10px 15px; /* Consistent padding */
+    border-radius: 5px;
+    box-sizing: border-box; /* Ensures padding and border don't change button size */
+    text-align: center; /* Ensure text is centered */
+    transition: background-color 0.3s ease; /* Smooth background transition */
+}
+
         .publish-btn:hover {
             background-color: #218838; /* Darker green on hover */
         }
@@ -117,10 +116,9 @@ if ($message_id > 0) {
             margin-bottom: 10px; /* Adds space below the image if needed */
         }
         /* Disabled publish button styling */
-.publish-btn:disabled {
+        .publish-btn:disabled {
     background-color: #b0b0b0; /* Grey background to indicate disabled state */
     cursor: not-allowed; /* Change cursor to indicate non-clickable */
-    border: none;
     color: #fff; /* White text to contrast the grey background */
     opacity: 0.7; /* Slightly transparent to emphasize it's disabled */
 }
@@ -154,6 +152,7 @@ if ($message_id > 0) {
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap;
+    z-index: 1000; /* Ensure the tooltip appears above other elements */
 }
 
 .publish-btn[title]::after {
@@ -164,6 +163,7 @@ if ($message_id > 0) {
     bottom: 115%;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 1000; /* Ensure the tooltip appears above other elements */
 }
 
     </style>
