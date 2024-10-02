@@ -74,7 +74,7 @@ $result = $conn->query($sql);
         }
 
         th {
-            white-space: nowrap; /* Prevents wrapping */
+            white-space: nowrap;
         }
 
         thead th {
@@ -90,11 +90,35 @@ $result = $conn->query($sql);
             background-color: #f1f1f1;
         }
 
+        .btn {
+            min-width: 100px; /* Ensure buttons have a consistent width */
+            text-align: center;
+            padding: 8px 12px; /* Padding for balanced sizing */
+            display: inline-block;
+        }
+
+        .btn-sm {
+            font-size: 14px; /* Adjust font size for smaller buttons */
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
 
         .btn-secondary {
             background-color: #6c757d;
-            color: #fff;
-            cursor: not-allowed;
+            border-color: #6c757d;
         }
 
         .input-group {
@@ -102,13 +126,14 @@ $result = $conn->query($sql);
             align-items: center;
             border-radius: 8px;
             overflow: hidden;
+            margin-bottom: 20px;
         }
 
         .search-input {
             border: 1px solid #ddd;
             padding: 10px;
             outline: none;
-            width: 200px;
+            width: 300px;
             flex-grow: 1;
         }
 
@@ -142,48 +167,27 @@ $result = $conn->query($sql);
             color: #333;
             padding: 30px 0;
         }
-        .d-flex {
-    display: flex;
-    justify-content: center; /* Align items in the center */
-    gap: 10px; /* Adds consistent space between buttons */
-    flex-wrap: nowrap; /* Ensures buttons stay in one line */
-}
 
-.btn {
-    min-width: 120px; /* Ensure buttons have a consistent width */
-    text-align: center;
-    padding: 8px 12px; /* Padding for balanced sizing */
-}
+        .btn-group-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-.btn-sm {
-    font-size: 14px; /* Adjust font size for smaller buttons */
-}
+        /* Adjustments for responsiveness */
+        @media (max-width: 768px) {
+            .btn {
+                width: 100%;
+                margin-bottom: 10px; /* Add spacing between buttons on smaller screens */
+            }
+        }
 
-.btn-info {
-    background-color: #17a2b8;
-    border-color: #17a2b8;
-}
-
-.btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-}
-
-/* Hover effects for better UI feedback */
-.btn:hover {
-    opacity: 0.9;
-}
-
+        @media (min-width: 768px) {
+            .btn-group-container {
+                justify-content: center; /* Center buttons for larger screens */
+            }
+        }
     </style>
 </head>
 <body>
@@ -230,26 +234,24 @@ $result = $conn->query($sql);
                                 <td><?= htmlspecialchars($row['department'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($row['registration_date'] ?? 'N/A') ?></td>
                                 <td>
-                                <div class="d-flex justify-content-center gap-2"> <!-- Added gap for spacing -->
-                                    <a href="https://ramonianlostgems.com/admin/user_accounts/viewfaculty.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-                                        <i class="fas fa-eye"></i> View Details
-                                    </a>
+                                    <div class="btn-group-container">
+                                        <a href="https://ramonianlostgems.com/admin/user_accounts/viewfaculty.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </a>
 
-                                    <?php if ($row['status'] !== 'active'): ?>  
-                                        <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
-                                            <i class="fas fa-check"></i> Approve
+                                        <?php if ($row['status'] !== 'active'): ?>  
+                                            <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                                                <i class="fas fa-check"></i> Approve
+                                            </button>
+                                        <?php else: ?>
+                                            <button class="btn btn-secondary btn-sm" disabled>Approved</button>
+                                        <?php endif; ?>
+
+                                        <button class="btn btn-danger btn-sm" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
+                                            <i class="fas fa-trash-alt"></i> Delete
                                         </button>
-                                    <?php else: ?>
-                                        <button class="btn btn-secondary btn-sm" disabled>Approved</button>
-                                    <?php endif; ?>
-
-                                    <button class="btn btn-danger btn-sm" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
-                                        <i class="fas fa-trash-alt"></i> Delete
-                                    </button>
-                                </div>
-                            </td>
-
-
+                                    </div>
+                                </td>
                             </tr>
                         <?php endwhile; ?>
                     <?php else: ?>
@@ -278,12 +280,12 @@ function deleteUser(id) {
             fetch('delete_users.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ id }) // Use URLSearchParams for POST parameters
+                body: new URLSearchParams({ id }) 
             })
             .then(response => response.text())
             .then(result => {
-                console.log('Delete result:', result); // For debugging
-                if (result.trim() === '1') {  // Ensure the backend returns '1' on successful deletion
+                console.log('Delete result:', result);
+                if (result.trim() === '1') {  
                     Swal.fire('Deleted!', 'The user has been deleted.', 'success')
                     .then(() => location.reload());
                 } else {
@@ -313,11 +315,11 @@ function approveUser(event, id) {
             fetch('approve_user.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ user_id: id }) // Use URLSearchParams for POST parameters
+                body: new URLSearchParams({ user_id: id })
             })
             .then(response => response.text())
             .then(result => {
-                console.log('Approval result:', result); // For debugging
+                console.log('Approval result:', result);
                 if (result.trim() === '1') {
                     const approveBtn = document.getElementById('approve-btn-' + id);
                     approveBtn.classList.replace('btn-success', 'btn-secondary');
@@ -335,7 +337,6 @@ function approveUser(event, id) {
         }
     });
 }
-
 </script>
 
 <?php
