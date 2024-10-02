@@ -159,9 +159,7 @@
         right: 0; /* Ensure sidebar is visible on larger screens */
     }
 
-    #sidebar-toggle-button {
-        display: none; /* Hide the toggle button on larger screens */
-    }
+   
 }
 
 </style>
