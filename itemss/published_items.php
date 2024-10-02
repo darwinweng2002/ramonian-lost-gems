@@ -209,9 +209,9 @@ $result = $stmt->get_result();
 // Map numeric school_type to string
 $schoolTypeString = '';
 if ($school_type === '0') {
-    $schoolTypeString = 'College';
-} elseif ($school_type === '1') {
     $schoolTypeString = 'High School';
+} elseif ($school_type === '1') {
+    $schoolTypeString = 'College';
 } else {
     $schoolTypeString = 'N/A';
 }
