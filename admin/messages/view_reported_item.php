@@ -205,7 +205,7 @@ if ($message_id > 0) {
                 echo "</select>";
                 echo "<button class='btn btn-primary save-status-btn' data-id='" . $msgId . "'>Save Status</button>";
                 echo "</div>";
-
+                
                 echo "<dt class='text-muted'>Status</dt>";
                 if ($msgData['status'] == 1) {
                     echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
@@ -216,7 +216,7 @@ if ($message_id > 0) {
                 } else {
                     echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
                 }
-
+                
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
@@ -225,8 +225,11 @@ if ($message_id > 0) {
                     }
                     echo "</div>";
                 }
-                echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "'>Publish</button>";
+                
+                // Disable the publish button if status is not "Published"
+                echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "' " . ($msgData['status'] != 1 ? 'disabled' : '') . ">Publish</button>";
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($msgId) . "'>Delete</button>";
+                
                 echo "</div>";
             }
         }
@@ -349,6 +352,17 @@ if ($message_id > 0) {
         });
 
       });
+      $(document).on('change', '.form-select', function() {
+    var messageId = $(this).attr('id').split('-')[1];
+    var selectedStatus = $(this).val();
+    
+    if (selectedStatus == 1) { // Published
+        $('.publish-btn[data-id="' + messageId + '"]').prop('disabled', false);
+    } else {
+        $('.publish-btn[data-id="' + messageId + '"]').prop('disabled', true);
+    }
+});
+
     </script>
 </body>
 <?php require_once('../inc/footer.php') ?>
