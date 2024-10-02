@@ -2,11 +2,11 @@
 <style type="text/css">
 /* Styling for the logo and header */
 .logo img {
-    width: 55px; /* Logo size */
-    height: 55px;
-    object-fit: contain;
-    margin-top: 3px;
-}
+        width: 55px; /* Logo size */
+        height: 55px;
+        object-fit: contain; /* Ensure the logo fits within its container */
+        margin-top: 10px;
+    }
 
 .container-lg {
     display: flex;
@@ -91,7 +91,7 @@
 
     #side-nav-bar {
         width: 250px;
-        right: -250px; /* Hide the sidebar by default */
+        right: 250px; /* Hide the sidebar by default */
     }
     #side-nav-bar {
     position: fixed;
