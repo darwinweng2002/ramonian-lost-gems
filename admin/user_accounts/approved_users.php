@@ -143,10 +143,12 @@ $result = $conn->query($sql);
 <?php require_once('../inc/topBarNav.php') ?>
 <?php require_once('../inc/navigation.php') ?>
     <div class="container">
-        <h3>Pending Student Account Approvals - PRMSU Iba</h3>
+        <br>
+        <br>
+        <h3>Approved Student Account - PRMSU Iba</h3>
 
         <!-- Search Form -->
-        <form class="search-form" method="GET" action="view_users.php">
+        <form class="search-form" method="GET" action="approved_users.php">
             <div class="input-group mb-3">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
                 <input type="text" name="search" class="search-input form-control" placeholder="Search users..." value="<?= htmlspecialchars($searchTerm) ?>">
