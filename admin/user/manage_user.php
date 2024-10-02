@@ -40,6 +40,18 @@ if(isset($_GET['id'])){
 					<input type="text" name="username" id="username" class="form-control" value="<?php echo isset($meta['username']) ? $meta['username']: '' ?>" required  autocomplete="off">
 				</div>
 				<div class="form-group">
+					<label for="name">College</label>
+					<input type="text" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
+				</div>
+				<div class="form-group">
+					<label for="name">Course</label>
+					<input type="text" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
+				</div>
+				<div class="form-group">
+					<label for="name">Position</label>
+					<input type="text" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
+				</div>
+				<div class="form-group">
 					<label for="password"><?= isset($meta['id']) ? "New" : "" ?> Password</label>
 					<input type="password" name="password" id="password" class="form-control" value="" autocomplete="off">
                     <?php if(isset($meta['id'])): ?>

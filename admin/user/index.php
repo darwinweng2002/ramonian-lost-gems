@@ -32,6 +32,18 @@ foreach($user->fetch_array() as $k =>$v){
 						<input type="text" name="lastname" id="lastname" class="form-control" value="<?php echo isset($meta['lastname']) ? $meta['lastname']: '' ?>" required>
 					</div>
 					<div class="form-group">
+					<label for="name">College</label>
+					<input type="text" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
+				</div>
+				<div class="form-group">
+					<label for="name">Course</label>
+					<input type="text" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
+				</div>
+				<div class="form-group">
+					<label for="name">Position</label>
+					<input type="text" name="firstname" id="firstname" class="form-control" value="<?php echo isset($meta['firstname']) ? $meta['firstname']: '' ?>" required>
+				</div>
+					<div class="form-group">
 						<label for="username">Username</label>
 						<input type="text" name="username" id="username" class="form-control" value="<?php echo isset($meta['username']) ? $meta['username']: '' ?>" required  autocomplete="off">
 					</div>
