@@ -97,7 +97,7 @@
     }
 
     /* For desktop screens, ensure the sidebar is positioned on the right and functions properly */
-    @media (max-width: 1200px) {
+    @media (min-width: 1200px) {
         #side-nav-bar {
             right: -250px; /* Keep it hidden until triggered */
         }
