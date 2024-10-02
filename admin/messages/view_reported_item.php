@@ -116,6 +116,56 @@ if ($message_id > 0) {
             display: block; /* Ensures the image is displayed as a block element */
             margin-bottom: 10px; /* Adds space below the image if needed */
         }
+        /* Disabled publish button styling */
+.publish-btn:disabled {
+    background-color: #b0b0b0; /* Grey background to indicate disabled state */
+    cursor: not-allowed; /* Change cursor to indicate non-clickable */
+    border: none;
+    color: #fff; /* White text to contrast the grey background */
+    opacity: 0.7; /* Slightly transparent to emphasize it's disabled */
+}
+
+/* Tooltip styling */
+.publish-btn[title] {
+    position: relative;
+}
+
+.publish-btn[title]::before,
+.publish-btn[title]::after {
+    position: absolute;
+    display: none;
+    opacity: 0;
+}
+
+.publish-btn[title]:hover::before,
+.publish-btn[title]:hover::after {
+    display: block;
+    opacity: 1;
+}
+
+.publish-btn[title]::before {
+    content: attr(title);
+    background-color: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    bottom: 125%; /* Position tooltip above the button */
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.publish-btn[title]::after {
+    content: '';
+    border-style: solid;
+    border-color: #333 transparent;
+    border-width: 6px 6px 0 6px;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
     </style>
 </head>
 <body>
@@ -227,7 +277,7 @@ if ($message_id > 0) {
                 }
                 
                 // Disable the publish button if status is not "Published"
-                echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "' " . ($msgData['status'] != 1 ? 'disabled' : '') . ">Publish</button>";
+                echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "' " . ($msgData['status'] != 1 ? 'disabled title=\"Status is not set to Published\"' : '') . ">Publish</button>";
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($msgId) . "'>Delete</button>";
                 
                 echo "</div>";
