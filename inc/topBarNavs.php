@@ -168,7 +168,7 @@
         padding-right: 0; /* No margin when sidebar is hidden */
     }
 }
-@media (min-width: 1201px) {
+@media (max-width: 1201px) {
     #side-nav-bar {
         right: 0; /* Ensure sidebar is visible on larger screens */
     }
