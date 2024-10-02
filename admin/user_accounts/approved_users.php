@@ -42,7 +42,6 @@ $result = $conn->query($sql);
                     <th>College</th>
                     <th>Course</th>
                     <th>Year</th>
-                    <th>Section</th>
                     <th>Email</th>
                     <th>School ID</th> <!-- New column for school ID image -->
                 </tr>
@@ -56,18 +55,18 @@ $result = $conn->query($sql);
                             <td><?= htmlspecialchars($row['college']) ?></td>
                             <td><?= htmlspecialchars($row['course']) ?></td>
                             <td><?= htmlspecialchars($row['year']) ?></td>
-                            <td><?= htmlspecialchars($row['section']) ?></td>
                             <td><?= htmlspecialchars($row['email']) ?></td>
                             <td>
     <?php if (!empty($row['school_id_file'])): ?>
-        <!-- Corrected path: only one occurrence of uploads/school_ids/ -->
-        <img src="../../uploads/school_ids/<?= htmlspecialchars($row['school_id_file']) ?>" alt="School ID Image" style="width: 100px; height: auto;">
-        <!-- Optionally, remove the debug path display once you've verified -->
-        <!--<small><?= "../../uploads/school_ids/" . htmlspecialchars($row['school_id_file']) ?></small>-->
+        <!-- Correct image path and logic to display school ID -->
+        <a href="../../uploads/school_ids/<?= htmlspecialchars($row['school_id_file']) ?>" target="_blank">
+            <img src="../../uploads/school_ids/<?= htmlspecialchars($row['school_id_file']) ?>" alt="School ID Image" style="max-width: 100px; height: auto;">
+        </a>
     <?php else: ?>
         <span>No ID Uploaded</span>
     <?php endif; ?>
 </td>
+
 
 
                         </tr>
