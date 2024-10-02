@@ -280,14 +280,13 @@ function deleteUser(id) {
             fetch('delete_users.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ id }) 
+                body: new URLSearchParams({ id }) // Pass the user ID
             })
             .then(response => response.text())
             .then(result => {
-                console.log('Delete result:', result);
-                if (result.trim() === '1') {  
+                if (result.trim() === '1') {  // Expecting '1' from backend
                     Swal.fire('Deleted!', 'The user has been deleted.', 'success')
-                    .then(() => location.reload());
+                    .then(() => location.reload()); // Reload the page to reflect changes
                 } else {
                     Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
                 }
@@ -315,12 +314,11 @@ function approveUser(event, id) {
             fetch('approve_user.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ user_id: id })
+                body: new URLSearchParams({ user_id: id }) // Pass the user ID
             })
             .then(response => response.text())
             .then(result => {
-                console.log('Approval result:', result);
-                if (result.trim() === '1') {
+                if (result.trim() === '1') {  // Expecting '1' from backend
                     const approveBtn = document.getElementById('approve-btn-' + id);
                     approveBtn.classList.replace('btn-success', 'btn-secondary');
                     approveBtn.innerHTML = 'Approved';
@@ -332,7 +330,7 @@ function approveUser(event, id) {
             })
             .catch((error) => {
                 console.error('Approval error:', error);
-                Swal.fire('Error!', 'An unexpected error occurred.', 'error');
+                Swal.fire('Error!', 'An unexpected error occurred while approving the user.', 'error');
             });
         }
     });

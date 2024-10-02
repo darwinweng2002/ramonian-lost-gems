@@ -1,32 +1,30 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
+// Include database connection
 include '../../config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['id'])) {
-        $userId = $conn->real_escape_string($_POST['id']);
+    // Retrieve the user ID
+    $id = $_POST['id'];
 
-        // Delete the user from the database
-        $sql = "DELETE FROM user_staff WHERE id = '$userId'";
+    // Ensure you have a valid user ID
+    if (!empty($id)) {
+        // Prepare and execute delete query
+        $stmt = $conn->prepare("DELETE FROM user_staff WHERE id = ?");
+        $stmt->bind_param("i", $id);
 
-        if ($conn->query($sql) === TRUE) {
-            // Return success response as JSON
-            echo json_encode(['success' => true, 'message' => 'User deleted successfully!']);
+        if ($stmt->execute()) {
+            // Return success response (1)
+            echo "1";
         } else {
-            // Return failure response as JSON
-            echo json_encode(['success' => false, 'message' => 'Failed to delete user.']);
+            // If something went wrong with the query, return error response
+            echo "0";
         }
-    } else {
-        // Return error response as JSON
-        echo json_encode(['success' => false, 'message' => 'Invalid request. Missing user ID.']);
-    }
-} else {
-    // Return error response as JSON
-    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
-}
 
-$conn->close();
-?>
+        $stmt->close();
+    } else {
+        // Missing id
+        echo "0";
+    }
+
+    $conn->close();
+}

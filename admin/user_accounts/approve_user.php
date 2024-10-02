@@ -1,32 +1,30 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
+// Include database connection
 include '../../config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['user_id'])) {
-        $userId = $conn->real_escape_string($_POST['user_id']);
+    // Retrieve the user ID
+    $user_id = $_POST['user_id'];
 
-        // Update user's status to 'active'
-        $sql = "UPDATE user_staff SET status = 'active' WHERE id = '$userId'";
+    // Ensure you have a valid user ID
+    if (!empty($user_id)) {
+        // Prepare and execute update query to approve the user
+        $stmt = $conn->prepare("UPDATE user_staff SET status = 'active' WHERE id = ?");
+        $stmt->bind_param("i", $user_id);
 
-        if ($conn->query($sql) === TRUE) {
-            // Return success response as JSON
-            echo json_encode(['success' => true, 'message' => 'User approved successfully!']);
+        if ($stmt->execute()) {
+            // Return success response (1)
+            echo "1";
         } else {
-            // Return failure response as JSON
-            echo json_encode(['success' => false, 'message' => 'Failed to approve user.']);
+            // If something went wrong with the query, return error response
+            echo "0";
         }
-    } else {
-        // Return error response as JSON
-        echo json_encode(['success' => false, 'message' => 'Invalid request. Missing user ID.']);
-    }
-} else {
-    // Return error response as JSON
-    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
-}
 
-$conn->close();
-?>
+        $stmt->close();
+    } else {
+        // Missing user_id
+        echo "0";
+    }
+
+    $conn->close();
+}
