@@ -105,9 +105,9 @@ if (isset($userId)) {
     // Map the numeric school_type to a string value
     $schoolTypeString = '';
     if ($school_type == 0) {
-        $schoolTypeString = 'College';
-    } elseif ($school_type == 1) {
         $schoolTypeString = 'High School';
+    } elseif ($school_type == 1) {
+        $schoolTypeString = 'College';
     } else {
         $schoolTypeString = 'N/A';
     }
