@@ -154,7 +154,7 @@
 }
 }
 
-@media (min-width: 1200px) {
+@media (max-width: 1200px) {
     #sidebar-toggle-button {
         display: block;
     }
@@ -168,7 +168,7 @@
         padding-right: 0; /* No margin when sidebar is hidden */
     }
 }
-@media (max-width: 1201px) {
+@media (min-width: 1201px) {
     #side-nav-bar {
         right: 0; /* Ensure sidebar is visible on larger screens */
     }
@@ -187,7 +187,7 @@
     }
 
     #side-nav-bar {
-        right: 0; /* Ensure the sidebar starts hidden */
+        right: -250px; /* Ensure the sidebar starts hidden */
     }
 
     .main-content {
