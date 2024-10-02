@@ -135,30 +135,32 @@
 }
 
 /* Sidebar toggle button styling */
+/* Sidebar toggle button styling */
 #sidebar-toggle-button {
     position: fixed;
     right: 20px;
-    top: 10px;
+    top: 15px;
     background-color: #3498db;
     color: white;
-    padding: 15px 20px;
+    padding: 10px 15px;
     border: none;
     border-radius: 2px;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    z-index: 10000;
+    z-index: 10000; /* Ensure the button is always on top */
+}
+
+/* Show the toggle button on all screen sizes */
+#sidebar-toggle-button {
+    display: block; /* Always display the toggle button */
 }
 
 #sidebar-toggle-button:hover {
     background-color: #2980b9;
 }
-}
 
+/* Responsive adjustments */
 @media (max-width: 1200px) {
-    #sidebar-toggle-button {
-        display: block;
-    }
-
     #side-nav-bar {
         width: 250px;
         right: -250px; /* Hide the sidebar by default */
@@ -168,24 +170,20 @@
         padding-right: 0; /* No margin when sidebar is hidden */
     }
 }
+
+/* No need to hide the toggle button on larger screens anymore */
 @media (min-width: 1201px) {
     #side-nav-bar {
         right: 0; /* Ensure sidebar is visible on larger screens */
-    }
-
-    #sidebar-toggle-button {
-        display: none; /* Hide the toggle button on larger screens */
     }
 
     .main-content {
         padding-right: 270px; /* Ensure content isn't hidden behind sidebar */
     }
 }
-@media (max-width: 1024px) {
-    #sidebar-toggle-button {
-        display: block;
-    }
 
+/* Ensure the sidebar is hidden and toggle button is shown for smaller screens */
+@media (max-width: 1024px) {
     #side-nav-bar {
         right: -250px; /* Ensure the sidebar starts hidden */
     }
@@ -193,6 +191,7 @@
     .main-content {
         padding-right: 0; /* No margin when sidebar is hidden */
     }
+}
 }
 </style>
 
