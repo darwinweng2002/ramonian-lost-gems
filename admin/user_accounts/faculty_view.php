@@ -213,19 +213,16 @@ $result = $conn->query($sql);
 </a>
 
 
-<?php if ($row['status'] !== 'active'): ?>  <!-- Check if the user is not yet active -->
-    <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
-        <i class="fas fa-check"></i> Approve
-    </button>
-<?php else: ?>
-    <button class="btn btn-secondary btn-sm ms-2" disabled>Approved</button> <!-- Button will show disabled once status is active -->
-<?php endif; ?>
-
-<button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
-    <i class="fas fa-trash-alt"></i> Delete
-</button>
-
-
+                        <?php if ($row['status'] !== 'active'): ?>  <!-- Check if the user is not yet active -->
+                            <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm ms-2 approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                        <?php else: ?>
+                            <button class="btn btn-secondary btn-sm ms-2" disabled>Approved</button> <!-- Button will show disabled once status is active -->
+                        <?php endif; ?>
+                        <button class="btn btn-danger btn-sm ms-2" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
                     </div>
                 </td>
             </tr>
@@ -245,7 +242,7 @@ $result = $conn->query($sql);
 <script>
 function approveUser(event, id) {
     event.preventDefault();
-
+    
     Swal.fire({
         title: 'Are you sure?',
         text: "You are about to approve this user!",
@@ -303,6 +300,7 @@ function approveUser(event, id) {
         }
     });
 }
+
 // Delete user function
 function deleteUser(id) {
     Swal.fire({
@@ -343,6 +341,7 @@ function deleteUser(id) {
 }
 
 </script>
+
 <?php
 $conn->close();
 require_once('../inc/footer.php');
