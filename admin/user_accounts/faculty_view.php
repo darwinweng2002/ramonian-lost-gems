@@ -226,38 +226,33 @@ $result = $conn->query($sql);
                     <?php if ($result->num_rows > 0): ?>
                         <?php while ($row = $result->fetch_assoc()): ?>
                             <tr>
-                                <td><?= htmlspecialchars($row['user_type'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['first_name'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['last_name'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['email'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['position'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['department'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($row['registration_date'] ?? 'N/A') ?></td>
-                                <td>
-                                    <div class="btn-group-container">
-                                        <a href="https://ramonianlostgems.com/admin/user_accounts/viewfaculty.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-                                            <i class="fas fa-eye"></i> View Details
-                                        </a>
+    <td><?= !empty($row['user_type']) ? htmlspecialchars($row['user_type']) : 'teaching' ?></td>
+    <td><?= htmlspecialchars($row['first_name'] ?? 'N/A') ?></td>
+    <td><?= htmlspecialchars($row['last_name'] ?? 'N/A') ?></td>
+    <td><?= htmlspecialchars($row['email'] ?? 'N/A') ?></td>
+    <td><?= htmlspecialchars($row['position'] ?? 'N/A') ?></td>
+    <td><?= htmlspecialchars($row['department'] ?? 'N/A') ?></td>
+    <td><?= htmlspecialchars($row['registration_date'] ?? 'N/A') ?></td>
+    <td>
+        <div class="btn-group-container">
+            <a href="https://ramonianlostgems.com/admin/user_accounts/viewfaculty.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+                <i class="fas fa-eye"></i> View Details
+            </a>
 
-                                        <?php if ($row['status'] !== 'active'): ?>  
-                                            <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
-                                                <i class="fas fa-check"></i> Approve
-                                            </button>
-                                        <?php else: ?>
-                                            <button class="btn btn-secondary btn-sm" disabled>Approved</button>
-                                        <?php endif; ?>
+            <?php if ($row['status'] !== 'active'): ?>  
+                <button id="approve-btn-<?= htmlspecialchars($row['id']) ?>" class="btn btn-success btn-sm approve-btn" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                    <i class="fas fa-check"></i> Approve
+                </button>
+            <?php else: ?>
+                <button class="btn btn-secondary btn-sm" disabled>Approved</button>
+            <?php endif; ?>
 
-                                        <button class="btn btn-danger btn-sm" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
-                                            <i class="fas fa-trash-alt"></i> Delete
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="8" class="no-data">No registered users found.</td>
-                        </tr>
+            <button class="btn btn-danger btn-sm" onclick="deleteUser(<?= htmlspecialchars($row['id']) ?>)">
+                <i class="fas fa-trash-alt"></i> Delete
+            </button>
+        </div>
+    </td>
+</tr>
                     <?php endif; ?>
                 </tbody>
             </table>
