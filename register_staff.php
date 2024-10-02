@@ -193,7 +193,7 @@ body {
                                 <form class="row g-3 needs-validation" id="registrationForm" novalidate method="POST" enctype="multipart/form-data">
                                     <!-- User Type Field (Teaching or Non-teaching) -->
                                     <div class="col-12">
-                                        <label for="user_type" class="form-label">User Type</label>
+                                        <label for="user_type" class="form-label">User Role</label>
                                         <select id="user_type" name="user_type" class="form-control" required>
                                             <option value="teaching">Teaching</option>
                                             <option value="non-teaching">Non-teaching</option>
