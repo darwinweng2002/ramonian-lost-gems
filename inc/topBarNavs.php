@@ -1,32 +1,30 @@
-<!-- ======= Header ======= -->
 <style type="text/css">
     /* Styling for the logo and header */
     .logo img {
-        width: 55px; /* Logo size */
+        width: 55px;
         height: 55px;
-        object-fit: contain; /* Ensure the logo fits within its container */
+        object-fit: contain;
         margin-top: 3px;
     }
 
-    /* Aligning content inside the header */
     .container-lg {
         display: flex;
-        justify-content: space-between; /* Push logo to the left, and sidebar toggle to the right */
+        justify-content: space-between;
         align-items: center;
         width: 100%;
     }
 
     .header {
-        height: 60px; /* Adjust this as needed based on your logo size */
-        background-color: #fff; /* Optional: set background color */
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: add shadow for better visibility */
+        height: 60px;
+        background-color: #fff;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
         padding: 0;
     }
 
     /* Sidebar styling */
     #side-nav-bar {
         position: fixed;
-        right: -250px; /* Initially hide the sidebar */
+        right: -250px; /* Hide sidebar initially */
         top: 0;
         width: 250px;
         height: 100%;
@@ -37,6 +35,11 @@
         overflow-y: auto;
         padding-top: 20px;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Show sidebar when toggle is active */
+    #side-nav-bar.show {
+        right: 0; /* Slide the sidebar into view */
     }
 
     /* Sidebar links */
@@ -56,28 +59,28 @@
         color: #ecf0f1;
         display: block;
         font-size: 14px;
-        padding: 5px 10px; /* Ensures padding applies only to the left and right within the sidebar */
+        padding: 5px 10px;
         transition: background-color 0.3s ease, padding-left 0.3s ease;
     }
 
     #side-nav-bar ul li a:hover {
         background-color: #34495e;
-        padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
+        padding-left: 30px;
     }
 
-    /* Sidebar toggle button styling */
+    /* Sidebar toggle button */
     #sidebar-toggle-button {
         position: fixed;
-        right: 40px; /* Keep the button on the right */
-        top: 0; /* Adjust to align with your design */
-        background-color: #3498db; /* Professional color */
+        right: 40px;
+        top: 10px;
+        background-color: #3498db;
         color: white;
-        padding: 21.5px 30px;
+        padding: 15px 20px;
         border: none;
         border-radius: 2px;
         cursor: pointer;
         box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        z-index: 10000; /* Make sure it's above other elements */
+        z-index: 10000;
     }
 
     #sidebar-toggle-button:hover {
@@ -86,35 +89,23 @@
 
     /* Responsive adjustments for smaller screens */
     @media (max-width: 768px) {
-        #sidebar-toggle-button {
-            display: block;
-        }
-
         #side-nav-bar {
             width: 50%;
             right: -100%;
         }
-    }
 
-    /* For desktop screens, ensure the sidebar is positioned on the right and functions properly */
-    @media (min-width: 1024px) {
-        #side-nav-bar {
-            right: -250px; /* Keep it hidden until triggered */
-        }
-
-        /* On larger screens, when the sidebar is toggled, it moves into view */
         #side-nav-bar.show {
-            right: 0; /* Make the sidebar appear */
+            right: 0;
         }
     }
 
-    /* Centering and aligning logo and button */
+    /* Centering and aligning logo */
     .logo {
         display: flex;
         align-items: center;
-        justify-content: flex-start; /* Align logo to the left */
-        padding-left: 15px; /* Add some padding for spacing from the left */
-        height: 100%; /* Ensure the logo container fills the height of the header */
+        justify-content: flex-start;
+        padding-left: 15px;
+        height: 100%;
     }
 
     /* Push sidebar toggle button to the right */
