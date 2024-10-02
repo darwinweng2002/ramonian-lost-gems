@@ -9,7 +9,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch only approved users along with their school ID file
+// Fetch only approved users along with their details
 $sql = "SELECT * FROM user_member WHERE status = 'approved'";
 $result = $conn->query($sql);
 ?>
@@ -28,10 +28,7 @@ $result = $conn->query($sql);
 <?php require_once('../inc/topBarNav.php') ?>
 <?php require_once('../inc/navigation.php') ?>
     <div class="container">
-        <br>
-        <br>
-        <br>
-        <br>
+        <br><br><br><br>
         <h3>Approved Users - PRMSU Iba</h3>
 
         <table class="table table-striped table-bordered">
@@ -43,7 +40,7 @@ $result = $conn->query($sql);
                     <th>Course</th>
                     <th>Year</th>
                     <th>Email</th>
-                    <th>School ID</th> <!-- New column for school ID image -->
+                    <th>Actions</th> <!-- Updated to Actions -->
                 </tr>
             </thead>
             <tbody>
@@ -57,25 +54,14 @@ $result = $conn->query($sql);
                             <td><?= htmlspecialchars($row['year']) ?></td>
                             <td><?= htmlspecialchars($row['email']) ?></td>
                             <td>
-                            <?php
-        // Check if school_id_file is not NULL
-        if (!empty($user['school_id_file'])) {
-            $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);
-            echo '<a href="' . $schoolIdPath . '" data-lightbox="school-id" data-title="School ID">
-                    <img src="' . $schoolIdPath . '" alt="School ID" class="proof-image" />
-                  </a>';
-        } else {
-            echo '<p>No School ID uploaded.</p>';
-        }
-        ?>
-</td>
-
-
+                                <!-- Add View Button for actions -->
+                                <a href="view_user_info.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">View</a>
+                            </td>
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="8">No approved users found.</td>
+                        <td colspan="7">No approved users found.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
