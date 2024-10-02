@@ -144,6 +144,26 @@
       <?php endif; ?>
     </a>
   </li>
+   <!-- 
+<li class="nav-item">
+    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="https://ramonianlostgems.com/admin/report/send_message.php/">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gem">
+    <path d="M6 3h12l4 6-10 13L2 9Z"/>
+    <path d="M11 3 8 9l4 13 4-13-3-6"/>
+    <path d="M2 9h20"/>
+    </svg>
+      <span>Reported Found Items</span>
+      <?php 
+      // PHP block for querying the number of missing items from the database
+      $message = $conn->query("SELECT * FROM `missing_items` where `status` = 0")->num_rows;
+      ?>
+      <?php if($message > 0): ?>
+         If there are missing items (status = 0), display a badge with the count 
+        <span class="badge rounded-pill bg-danger text-light ms-4"><?= format_num($message) ?></span>
+      <?php endif; ?>
+    </a>
+  </li>
+-->
   <?php if($_settings->userdata('type') == 1): ?>
   <li class="nav-heading">SSG Admin Maintenance</li>
 
