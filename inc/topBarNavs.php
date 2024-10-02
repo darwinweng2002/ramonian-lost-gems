@@ -154,6 +154,20 @@
 }
 }
 
+@media (max-width: 1200px) {
+    #sidebar-toggle-button {
+        display: block;
+    }
+
+    #side-nav-bar {
+        width: 250px;
+        right: -250px; /* Hide the sidebar by default */
+    }
+
+    .main-content {
+        padding-right: 0; /* No margin when sidebar is hidden */
+    }
+}
 @media (min-width: 1201px) {
     #side-nav-bar {
         right: 0; /* Ensure sidebar is visible on larger screens */
@@ -162,8 +176,24 @@
     #sidebar-toggle-button {
         display: none; /* Hide the toggle button on larger screens */
     }
-}
 
+    .main-content {
+        padding-right: 270px; /* Ensure content isn't hidden behind sidebar */
+    }
+}
+@media (max-width: 1024px) {
+    #sidebar-toggle-button {
+        display: block;
+    }
+
+    #side-nav-bar {
+        right: -250px; /* Ensure the sidebar starts hidden */
+    }
+
+    .main-content {
+        padding-right: 0; /* No margin when sidebar is hidden */
+    }
+}
 </style>
 
 <header id="header" class="header fixed-top d-flex align-items-center">
@@ -219,16 +249,19 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script type="text/javascript">
-    document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
-        const sideNavBar = document.getElementById('side-nav-bar');
+   document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
+    const sideNavBar = document.getElementById('side-nav-bar');
+    const mainContent = document.querySelector('.main-content');
 
-        // Show or hide the sidebar
-        if (sideNavBar.style.right === '0px') {
-            sideNavBar.style.right = '-250px'; // Hide sidebar
-        } else {
-            sideNavBar.style.right = '0'; // Show sidebar
-        }
-    });
+    // Show or hide the sidebar
+    if (sideNavBar.style.right === '0px') {
+        sideNavBar.style.right = '-250px'; // Hide sidebar
+        mainContent.style.paddingRight = '0'; // Adjust content margin when sidebar is hidden
+    } else {
+        sideNavBar.style.right = '0'; // Show sidebar
+        mainContent.style.paddingRight = '270px'; // Adjust content margin when sidebar is visible
+    }
+});
 
     // Add event listener for the logout button
     document.getElementById('logout-button').addEventListener('click', function(event) {
