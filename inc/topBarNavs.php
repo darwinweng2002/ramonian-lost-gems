@@ -170,7 +170,7 @@
 }
 @media (min-width: 1201px) {
     #side-nav-bar {
-        right: 0; /* Ensure sidebar is visible on larger screens */
+        right: -250px; /* Ensure sidebar is visible on larger screens */
     }
 
     #sidebar-toggle-button {
