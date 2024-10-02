@@ -197,7 +197,7 @@ $result = $conn->query($sql);
 
 <section class="section">
     <div class="container">
-        <h2>Registered Users</h2>
+        <h2>Registered</h2>
 
         <!-- Search Form -->
         <form class="search-form" method="GET" action="view_users.php">
