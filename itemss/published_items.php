@@ -28,7 +28,7 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get published item details
-$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder,  mh.status, mh.landmark, mh.time_found, um.first_name, um.college, um.email, um.avatar, 
+$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder,  mh.status, mh.landmark, mh.time_found, um.first_name, um.school_type, um.college, um.email, um.avatar, 
         mh.contact, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
@@ -181,6 +181,7 @@ $result = $stmt->get_result();
                         'title' => $row['title'],
                         'status' => $row['status'], // Fetch the status
                         'college' => $row['college'],
+                        'school_type' => $row['school_type'],
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
                         'time_found' => $row['time_found'],
@@ -200,6 +201,7 @@ $result = $stmt->get_result();
                 $firstName = htmlspecialchars($msgData['first_name'] ?? '');
                 $email = htmlspecialchars($msgData['email'] ?? '');
                 $college = htmlspecialchars($msgData['college'] ?? '');
+                $school_type = htmlspecialchars($msgData['school_type'] ?? '');
                 $title = htmlspecialchars($msgData['title'] ?? '');
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                 $founder = htmlspecialchars($msgData['founder'] ?? '');
@@ -234,6 +236,7 @@ $result = $stmt->get_result();
                 if ($firstName || $email || $college) {
                     echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
                     echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
+                    echo "<p><strong>Level:</strong> " . ($school_type ? $school_type : 'N/A') . "</p>";
                 } else {
                     // No additional user info for guest posts
                     
