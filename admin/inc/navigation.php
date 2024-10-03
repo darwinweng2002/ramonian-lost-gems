@@ -70,7 +70,7 @@
         <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
         <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
       </svg>
-      <span>Pending Accounts</span>
+      <span>Pending Student Accounts</span>
 
       <?php 
       // Fetch the count of pending accounts where status is set to 'pending' (status = 'pending')
@@ -94,7 +94,7 @@
         <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
         <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
       </svg>
-      <span>Approved Accounts</span>
+      <span>Approved Student Accounts</span>
 
       <?php 
       // Fetch the count of approved accounts where status is set to 'approved' (status = 1)
