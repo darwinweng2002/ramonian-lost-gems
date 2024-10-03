@@ -343,6 +343,16 @@ if (isset($_GET['id'])) {
             });
         });
     });
+    $(document).on('change', '.form-select', function() {
+    var messageId = $(this).attr('id').split('-')[1];
+    var selectedStatus = $(this).val();
+    
+    if (selectedStatus == 1) { // Published
+        $('.publish-btn[data-id="' + messageId + '"]').prop('disabled', false);
+    } else {
+        $('.publish-btn[data-id="' + messageId + '"]').prop('disabled', true);
+    }
+});
     </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>
