@@ -291,6 +291,31 @@ if (!$is_guest) {
             width: 100%;
             table-layout: auto;
         }
+        .tab-content {
+    width: 100%;
+    min-height: 300px; /* Ensures all tab content has a minimum height */
+}
+
+.tab-pane {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align tables to start */
+    align-items: center; /* Center align tables */
+    min-height: 300px; /* Set a minimum height to avoid content shifts */
+    width: 100%; /* Full width for all tables */
+}
+
+.table {
+    width: 100%;
+    max-width: 100%; /* Ensure the table takes up full width of container */
+    margin: 20px 0; /* Provide space between the table and other elements */
+}
+
+.history-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
     </style>
 </head>
 <body>
