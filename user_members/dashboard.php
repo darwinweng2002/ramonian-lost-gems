@@ -291,6 +291,25 @@ if (!$is_guest) {
             width: 100%;
             table-layout: auto;
         }
+        .tab-content {
+    width: 100%;
+    min-height: 500px; /* Set minimum height to keep tab content consistent */
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: flex-start; /* Align items to the top */
+    padding: 20px 0;
+}
+
+.tab-pane {
+    width: 100%;
+    padding: 20px 0;
+}
+
+.table {
+    width: 100%;
+    table-layout: auto;
+    margin-bottom: 20px;
+}
     </style>
 </head>
 <body>
@@ -434,7 +453,7 @@ if (!$is_guest) {
 
 
 
-        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
     <h5 class="history-title">Posted Found Items</h5>
     <table class="table table-striped post-history-table" style="width: 100%; table-layout: auto;">
         <thead>
