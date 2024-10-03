@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 include '../../config.php';
 
 // Database connection
@@ -102,6 +105,7 @@ $result = $conn->query($sql);
                 <th>Item Name</th>
                 <th>Description</th>
                 <th>Time Recorded</th>
+                <th>Owners Name</th>
                 <th>User Email</th>
                 <th>Category</th>
                 <th>Item Type</th> <!-- Show whether it’s Found or Missing -->
@@ -116,6 +120,7 @@ $result = $conn->query($sql);
                     echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['description']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['time_recorded']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['owner']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['email']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['item_type']) . "</td>"; // Show whether it's Found or Missing
