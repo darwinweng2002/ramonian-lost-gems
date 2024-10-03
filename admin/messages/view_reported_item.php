@@ -89,7 +89,7 @@ if ($message_id > 0) {
             cursor: pointer;
             position: absolute;
             bottom: 20px;
-            right: 100px;
+            right: 10px;
         }
         .delete-btn:hover {
             background-color: #c82333;
