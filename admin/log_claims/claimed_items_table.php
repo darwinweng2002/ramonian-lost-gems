@@ -12,7 +12,7 @@ if ($conn->connect_error) {
 // Fetch items that are set to claimed (status = 2)
 $sql = "
     -- Claimed missing items
-    SELECT mi.id, mi.title, mi.description, mi.time_missing AS time_recorded, um.email, c.name AS category_name, 'Missing' AS item_type
+    SELECT mi.id, mi.title, mi.owner, mi.description, mi.time_missing AS time_recorded, um.email, c.name AS category_name, 'Missing' AS item_type
     FROM missing_items mi
     LEFT JOIN user_member um ON mi.user_id = um.id
     LEFT JOIN categories c ON mi.category_id = c.id
@@ -102,6 +102,7 @@ $result = $conn->query($sql);
                 <th>Item Name</th>
                 <th>Description</th>
                 <th>Time Recorded</th>
+                <th>Owners Name</th>
                 <th>User Email</th>
                 <th>Category</th>
                 <th>Item Type</th> <!-- Show whether it’s Found or Missing -->
@@ -116,6 +117,7 @@ $result = $conn->query($sql);
                     echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['description']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['time_recorded']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['owner']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['email']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['item_type']) . "</td>"; // Show whether it's Found or Missing
