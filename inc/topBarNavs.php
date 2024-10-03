@@ -85,6 +85,9 @@
 
 /* Responsive adjustments */
 @media (max-width: 1200px) {
+    #sidebar-toggle-button {
+        display: block;
+    }
 
     #side-nav-bar {
         width: 250px;
@@ -230,7 +233,7 @@
     <div class="container-lg d-flex justify-content-between px-4">
         <!-- Logo aligned to the left -->
         <div class="logo d-flex align-items-center">
-           
+            
                 <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
             </a>
         </div>
@@ -246,19 +249,16 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script type="text/javascript">
-   document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
-    const sideNavBar = document.getElementById('side-nav-bar');
-    const mainContent = document.querySelector('.main-content');
+    document.getElementById('sidebar-toggle-button').addEventListener('click', function() {
+        const sideNavBar = document.getElementById('side-nav-bar');
 
-    // Show or hide the sidebar
-    if (sideNavBar.style.right === '0px') {
-        sideNavBar.style.right = '-250px'; // Hide sidebar
-        mainContent.style.paddingRight = '0'; // Adjust content margin when sidebar is hidden
-    } else {
-        sideNavBar.style.right = '0'; // Show sidebar
-        mainContent.style.paddingRight = '270px'; // Adjust content margin when sidebar is visible
-    }
-});
+        // Show or hide the sidebar
+        if (sideNavBar.style.right === '0px') {
+            sideNavBar.style.right = '-250px'; // Hide sidebar
+        } else {
+            sideNavBar.style.right = '0'; // Show sidebar
+        }
+    });
 
     // Add event listener for the logout button
     document.getElementById('logout-button').addEventListener('click', function(event) {
