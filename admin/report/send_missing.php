@@ -87,11 +87,12 @@ if (isset($userId)) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<?php require_once('../inc/header.php') ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Missing Item</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to your custom stylesheet -->
-    <?php require_once('inc/header.php'); ?>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         /* styles.css */
