@@ -37,7 +37,6 @@ if ($message_id > 0) {
     <title>Found Item Details - Admin View</title>
     <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Include SweetAlert2 -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -241,150 +240,117 @@ if ($message_id > 0) {
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/custom.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-  $(document).ready(function() {
-    // SweetAlert for delete confirmation
-    $('.delete-btn').on('click', function() {
-        var messageId = $(this).data('id');
-        Swal.fire({
-            title: 'Are you sure you want to delete this item entry?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
-            showClass: {
-                popup: 'animate__animated animate__fadeInDown',
-                backdrop: 'animate__animated animate__fadeIn'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__fadeOutUp',
-                backdrop: 'animate__animated animate__fadeOut'
-            },
-            // Customize the duration of the animation
-            showDuration: 1000,  // 1000ms = 1 second
-            hideDuration: 1000   // 1000ms = 1 second
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: 'delete_message.php',
-                    type: 'POST',
-                    data: { id: messageId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire('Deleted!', 'The item has been deleted.', 'success');
-                            location.reload();
-                        } else {
-                            Swal.fire('Error!', response.error, 'error');
+      $(document).ready(function() {
+        // SweetAlert for delete confirmation
+        $('.delete-btn').on('click', function() {
+            var messageId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure you want to delete this item entry?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'delete_message.php',
+                        type: 'POST',
+                        data: { id: messageId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Deleted!', 'The item has been deleted.', 'success');
+                                location.reload();
+                            } else {
+                                Swal.fire('Error!', response.error, 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error!', 'An error occurred: ' + error, 'error');
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire('Error!', 'An error occurred: ' + error, 'error');
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
-    });
 
-    // SweetAlert for publish confirmation
-    $('.publish-btn').on('click', function() {
-        var messageId = $(this).data('id');
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you want to publish this found item entry?",
-            icon: 'info',
-            showCancelButton: true,
-            confirmButtonColor: '#28a745',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, publish it!',
-            showClass: {
-                popup: 'animate__animated animate__fadeInDown',
-                backdrop: 'animate__animated animate__fadeIn'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__fadeOutUp',
-                backdrop: 'animate__animated animate__fadeOut'
-            },
-            // Customize the duration of the animation
-            showDuration: 1000,  // 1000ms = 1 second
-            hideDuration: 1000   // 1000ms = 1 second
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: 'publish_message.php',
-                    type: 'POST',
-                    data: { id: messageId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire('Published!', 'The found item has been published.', 'success');
-                            location.reload();
-                        } else {
-                            Swal.fire('Error!', response.error, 'error');
+        // SweetAlert for publish confirmation
+        $('.publish-btn').on('click', function() {
+            var messageId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to publish this found item entry?",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, publish it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'publish_message.php',
+                        type: 'POST',
+                        data: { id: messageId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Published!', 'The found item has been published.', 'success');
+                                location.reload();
+                            } else {
+                                Swal.fire('Error!', response.error, 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error!', 'An error occurred: ' + error, 'error');
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire('Error!', 'An error occurred: ' + error, 'error');
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
-    });
 
-    // SweetAlert for status update confirmation
-    $('.save-status-btn').on('click', function() {
-        var messageId = $(this).data('id');
-        var selectedStatus = $('#status-' + messageId).val(); // Get the selected status
+        // SweetAlert for status update confirmation
+        $('.save-status-btn').on('click', function() {
+            var messageId = $(this).data('id');
+            var selectedStatus = $('#status-' + messageId).val(); // Get the selected status
 
-        Swal.fire({
-            title: 'Update Status?',
-            text: "Are you sure you want to update the status?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, update it!',
-            showClass: {
-                popup: 'animate__animated animate__fadeInDown',
-                backdrop: 'animate__animated animate__fadeIn'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__fadeOutUp',
-                backdrop: 'animate__animated animate__fadeOut'
-            },
-            showDuration: 1000,  // 1000ms = 1 second
-            hideDuration: 1000   // 1000ms = 1 second
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: 'update_status.php',
-                    type: 'POST',
-                    data: {
-                        id: messageId,
-                        status: selectedStatus
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire('Updated!', 'Status has been updated successfully.', 'success');
-                            location.reload();
-                        } else {
-                            Swal.fire('Error!', response.error, 'error');
+            Swal.fire({
+                title: 'Update Status?',
+                text: "Are you sure you want to update the status?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, update it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'update_status.php',
+                        type: 'POST',
+                        data: {
+                            id: messageId,
+                            status: selectedStatus
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Updated!', 'Status has been updated successfully.', 'success');
+                                location.reload();
+                            } else {
+                                Swal.fire('Error!', response.error, 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error!', 'An error occurred: ' + error, 'error');
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire('Error!', 'An error occurred: ' + error, 'error');
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
-    });
 
-  });
-
+      });
       $(document).on('change', '.form-select', function() {
     var messageId = $(this).attr('id').split('-')[1];
     var selectedStatus = $(this).val();
