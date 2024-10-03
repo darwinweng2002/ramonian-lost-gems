@@ -40,10 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Prepare and execute the SQL statement
-    $sql = "INSERT INTO missing_items (user_id, title, description, last_seen_location, time_missing, contact, category_id, status, owner) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO missing_items (title, description, last_seen_location, time_missing, contact, category_id, status, owner) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isssssiss", $userId, $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
+    $stmt->bind_param("sssssiss", $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
     $stmt->execute();
     $missingItemId = $stmt->insert_id; // Get the last inserted missing item ID
     $stmt->close();
