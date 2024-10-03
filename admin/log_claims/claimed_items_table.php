@@ -23,13 +23,14 @@ $sql = "
     
     UNION
     
-    -- Claimed found items
-    SELECT mh.id, mh.title, NULL AS owner, mh.message AS description, mh.time_found AS time_recorded, um.email, c.name AS category_name, 'Found' AS item_type
+    -- Claimed found items (message_history)
+    SELECT mh.id, mh.title, CONCAT(um.first_name, ' ', um.last_name) AS owner, mh.message AS description, mh.time_found AS time_recorded, um.email, c.name AS category_name, 'Found' AS item_type
     FROM message_history mh
     LEFT JOIN user_member um ON mh.user_id = um.id
     LEFT JOIN categories c ON mh.category_id = c.id
     WHERE mh.status = 2  -- Only claimed items
 ";
+
 
 $result = $conn->query($sql);
 ?>
@@ -120,10 +121,10 @@ $result = $conn->query($sql);
             echo "<td>" . htmlspecialchars($row['title'] ?? '') . "</td>";
             echo "<td>" . htmlspecialchars($row['description'] ?? '') . "</td>";
             echo "<td>" . htmlspecialchars($row['time_recorded'] ?? '') . "</td>";
-            echo "<td>" . htmlspecialchars($row['owner'] ?? '') . "</td>";
+            echo "<td>" . htmlspecialchars($row['owner'] ?? '') . "</td>"; // Now dynamically handles both cases
             echo "<td>" . htmlspecialchars($row['email'] ?? '') . "</td>";
             echo "<td>" . htmlspecialchars($row['category_name'] ?? '') . "</td>";
-            echo "<td>" . htmlspecialchars($row['item_type'] ?? '') . "</td>";
+            echo "<td>" . htmlspecialchars($row['item_type'] ?? '') . "</td>"; // Show whether it's Found or Missing
             echo "<td>";
             echo "<button class='btn btn-delete' data-id='" . htmlspecialchars($row['id'] ?? '') . "'>Delete</button>";
             echo "</td>";
