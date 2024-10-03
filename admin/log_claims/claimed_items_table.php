@@ -113,27 +113,28 @@ $result = $conn->query($sql);
             </tr>
         </thead>
         <tbody>
-            <?php
-            if ($result && $result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td>" . htmlspecialchars($row['title']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['description']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['time_recorded']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['owner']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['email']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['item_type']) . "</td>"; // Show whether it's Found or Missing
-                    echo "<td>";
-                    echo "<button class='btn btn-delete' data-id='" . htmlspecialchars($row['id']) . "'>Delete</button>";
-                    echo "</td>";
-                    echo "</tr>";
-                }
-            } else {
-                echo "<tr><td colspan='7' class='text-center'>No claimed items found.</td></tr>";
-            }
-            ?>
-        </tbody>
+    <?php
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($row['title'] ?? '') . "</td>";
+            echo "<td>" . htmlspecialchars($row['description'] ?? '') . "</td>";
+            echo "<td>" . htmlspecialchars($row['time_recorded'] ?? '') . "</td>";
+            echo "<td>" . htmlspecialchars($row['owner'] ?? '') . "</td>";
+            echo "<td>" . htmlspecialchars($row['email'] ?? '') . "</td>";
+            echo "<td>" . htmlspecialchars($row['category_name'] ?? '') . "</td>";
+            echo "<td>" . htmlspecialchars($row['item_type'] ?? '') . "</td>";
+            echo "<td>";
+            echo "<button class='btn btn-delete' data-id='" . htmlspecialchars($row['id'] ?? '') . "'>Delete</button>";
+            echo "</td>";
+            echo "</tr>";
+        }
+    } else {
+        echo "<tr><td colspan='7' class='text-center'>No claimed items found.</td></tr>";
+    }
+    ?>
+</tbody>
+
     </table>
 </div>
 
