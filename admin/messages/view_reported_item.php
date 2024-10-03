@@ -80,34 +80,42 @@ if ($message_id > 0) {
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 10px;
         }
-        .delete-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            position: absolute;
-            bottom: 20px;
-            right: 10px;
-        }
-        .delete-btn:hover {
-            background-color: #c82333;
-        }
         .publish-btn {
-            background-color: #28a745; /* Green background color */
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            position: absolute;
-            bottom: 20px;
-            right: 80px; /* Position it to the left of the delete button */
-        }
-        .publish-btn:hover {
-            background-color: #218838; /* Darker green on hover */
-        }
+    background-color: #28a745; /* Green background color */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative; /* Remove absolute positioning */
+    margin-right: 10px; /* Add space between buttons */
+}
+
+.publish-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative; /* Remove absolute positioning */
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.button-container {
+    margin-top: 20px; /* Add space above the buttons */
+    display: flex;
+    justify-content: flex-start; /* Align buttons to the left */
+    gap: 10px; /* Ensure space between buttons */
+}
+
         .container .avatar {
             width: 100px; /* Set the width of the avatar */
             height: 100px; /* Set the height of the avatar to the same value as width for a circle */
@@ -227,12 +235,14 @@ if ($message_id > 0) {
                 }
                 
                 // Disable the publish button if status is not "Published"
+                echo "<div class='button-container'>";
                 echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "' " . ($msgData['status'] != 1 ? 'disabled title=\"Status is not set to Published\"' : '') . ">Publish</button>";
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($msgId) . "'>Delete</button>";
-                
                 echo "</div>";
+                
             }
         }
+        
         ?>
     </div>
 
