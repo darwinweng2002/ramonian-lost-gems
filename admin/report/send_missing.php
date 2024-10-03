@@ -227,7 +227,6 @@ if (isset($userId)) {
 <body>
 <?php require_once('../inc/topBarNav.php') ?>
 <?php require_once('../inc/navigation.php') ?> 
-    <?php require_once('inc/topBarNav.php') ?>
     <br>
     <br>
     <br>
@@ -360,6 +359,6 @@ document.addEventListener('DOMContentLoaded', function() {
         dateTimeInput.max = maxDateTime;
     });
     </script>
-    <?php require_once('../inc/footer.php') ?>
+   <?php require_once('../inc/footer.php') ?>
 </body>
 </html>
