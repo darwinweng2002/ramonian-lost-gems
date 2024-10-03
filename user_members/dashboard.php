@@ -144,16 +144,14 @@ if (!$is_guest) {
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            table-layout: auto;
         }
-        .claim-history-table thead th,
-        .post-history-table thead th {
+        .claim-history-table thead,
+        .post-history-table thead {
             background-color: #0D6EFD;
             color: #fff;
-            text-align: center;
-            padding: 10px;
         }
+        .claim-history-table th,
+        .post-history-table th,
         .claim-history-table td,
         .post-history-table td {
             padding: 12px;
@@ -173,97 +171,146 @@ if (!$is_guest) {
             color: green;
         }
         .swal2-popup {
-            position: fixed !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            z-index: 9999 !important;
-            overflow: auto;
+            position: fixed !important; /* Fix position relative to viewport */
+            top: 50% !important;        /* Center vertically */
+            left: 50% !important;       /* Center horizontally */
+            transform: translate(-50%, -50%) !important; /* Adjust for exact center */
+            z-index: 9999 !important;   /* Ensure it appears above other elements */
+            overflow: auto;              /* Allow scrolling within the popup if needed */
         }
+
+        /* Optional: To ensure that the page content can be scrolled while the popup is visible */
         .swal2-overlay {
-            overflow: auto;
+            overflow: auto;             /* Allow scrolling of the page if necessary */
         }
-
-        /* Adjustments for smaller screens */
         @media (max-width: 512px) {
-            .logo img {
-                max-height: 40px;
-                margin-right: 15px;
-            }
-            .claim-history-table,
-            .post-history-table {
-                font-size: 0.9rem;
-            }
-            .claim-history-table th,
-            .post-history-table th,
-            .claim-history-table td,
-            .post-history-table td {
-                padding: 8px;
-            }
+        /* Adjust logo size */
+        .logo img {
+            max-height: 40px; /* Smaller logo for smaller screens */
+            margin-right: 15px; /* Adjust margin */
+        }
+        
+        /* Adjust user avatar size */
+        .card-body img {
+            width: 80px;
+            height: 80px;
+        }
+        
+        /* Adjust font size for card title */
+        .card-title {
+            font-size: 1.2rem; /* Smaller font size for smaller screens */
+        }
+        
+        /* Adjust tab content */
+        .nav-tabs .nav-link {
+            font-size: 0.9rem; /* Smaller font size for tab links */
+        }
+        
+        .tab-content .history-title {
+            font-size: 1.2rem; /* Smaller font size for section titles */
+        }
+        
+        /* Stack tables and adjust padding */
+        .claim-history-table, 
+        .post-history-table {
+            margin-top: 10px;
+            font-size: 0.9rem; /* Smaller font size for table content */
+        }
+        
+        .claim-history-table th,
+        .post-history-table th,
+        .claim-history-table td,
+        .post-history-table td {
+            padding: 8px; /* Reduce padding for smaller screens */
+        }
+        
+        /* Adjust button sizes */
+        .btn {
+            font-size: 0.9rem; /* Smaller font size for buttons */
+            padding: 8px 12px; /* Adjust padding for buttons */
         }
 
-        .badge-status {
-            padding: 4px 12px;
-            font-size: 12px;
-            border-radius: 20px;
-            color: #fff;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.5;
-            white-space: nowrap;
+        /* Adjust form input file size */
+        input[type="file"] {
+            font-size: 0.8rem; /* Smaller font size for file input */
+        }
+        
+        /* Adjust container padding */
+        .container {
+            padding: 10px; /* Reduced padding for smaller screens */
         }
 
-        .badge-pending {
-            background-color: #6c757d;
+        /* Adjust tab-pane content margins */
+        .tab-content .tab-pane {
+            padding: 10px; /* Reduced padding for tab content */
         }
-
-        .badge-published {
-            background-color: #007bff;
+        
+        /* Adjust back-to-top button */
+        .back-to-top {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
         }
+        .table {
+    width: 100%;
+    table-layout: auto; /* Ensure the table takes full width and adjusts to content */
+}
 
-        .badge-claimed {
-            background-color: #28a745;
-        }
+.badge-pending {
+    background-color: #6c757d; /* Color for Pending */
+}
 
-        .badge-surrendered {
-            background-color: #6c757d;
-            position: relative;
-        }
+.badge-published {
+    background-color: #007bff; /* Color for Published */
+}
 
-        .notification-icon {
-            margin-left: 8px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: flex-end;
-        }
+.badge-claimed {
+    background-color: #28a745; /* Color for Claimed */
+}
 
-        /* Align notification icon to the right */
-        .status-cell {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.badge-surrendered {
+    background-color: #6c757d; /* Color for Surrendered */
+}
 
-        .nav-tabs {
-            display: flex;
-            justify-content: space-around;
-        }
+.badge-status {
+    padding: 4px 12px;
+    font-size: 12px;
+    border-radius: 20px;
+    color: #fff;
+    display: inline-block; /* Make sure it behaves as an inline element */
+    line-height: 1.5;
+    white-space: nowrap;
+}
 
-        .nav-item {
-            margin-bottom: 0;
-        }
+.notification-icon {
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center; /* Vertically align the bell icon */
+    justify-content: center;
+    font-size: 16px; /* Adjust icon size if needed */
+    color: #ffc107;
+}
+    }
+    .nav-tabs {
+        display: flex;
+        flex-wrap: wrap; /* Allows the tabs to wrap to the next line if needed */
+        justify-content: space-around; /* Centers tabs and ensures even spacing */
+    }
+    
+    .nav-tabs .nav-item {
+        display: inline-block; /* Change from block to inline-block */
+        margin-bottom: 0; /* Remove bottom margin if any */
+    }
 
-        .nav-link {
-            padding: 10px;
-            font-size: 0.9rem;
-        }
-
-        .tab-content {
-            width: 100%;
-        }
-
-        .back-btn-container {
+    .nav-tabs .nav-link {
+        padding: 10px; /* Adjust padding as needed for better spacing */
+        font-size: 0.9rem; /* Adjust font size for better fit */
+    }
+    
+    .tab-content {
+        width: 100%; /* Ensure the tab content takes full width */
+    }
+    .back-btn-container {
             margin: 20px 0;
             display: flex;
             justify-content: center;
@@ -280,35 +327,25 @@ if (!$is_guest) {
             cursor: pointer;
             font-size: 16px;
             font-weight: 500;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             transition: background-color 0.3s ease;
+        }
+
+        .back-btn svg {
+            margin-right: 8px;
         }
 
         .back-btn:hover {
             background-color: #0056b3;
         }
 
-        .table {
-            width: 100%;
-            table-layout: auto;
+        .back-btn:focus {
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
         }
-        .tab-content {
+        .table {
     width: 100%;
-    min-height: 500px; /* Set minimum height to keep tab content consistent */
-    display: flex;
-    justify-content: center; /* Center content horizontally */
-    align-items: flex-start; /* Align items to the top */
-    padding: 20px 0;
-}
-
-.tab-pane {
-    width: 100%;
-    padding: 20px 0;
-}
-
-.table {
-    width: 100%;
-    table-layout: auto;
-    margin-bottom: 20px;
+    table-layout: auto; /* Ensure the table takes full width and adjusts to content */
 }
     </style>
 </head>
