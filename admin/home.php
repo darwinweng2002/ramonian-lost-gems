@@ -76,7 +76,7 @@
           <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
             <div class="card info-card">
               <div class="card-body">
-                <h5 class="card-title">User Accounts <span>| Pending</span></h5>
+                <h5 class="card-title"> Student User Accounts <span>| Active</span></h5>
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-dark bg-opacity-25 text-dark">
                     <i class="bi bi-question-octagon"></i>
