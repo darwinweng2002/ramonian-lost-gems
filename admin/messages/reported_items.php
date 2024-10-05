@@ -13,13 +13,11 @@ if ($conn->connect_error) {
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
 // SQL query to fetch reported items with category and ID, with search functionality
-$sql = "
-    SELECT mh.id, mh.title, um.first_name, um.college, mh.founder, mh.time_found, c.name AS category_name
-    FROM message_history mh
-    LEFT JOIN user_member um ON mh.user_id = um.id
-    LEFT JOIN categories c ON mh.category_id = c.id
-    WHERE CONCAT_WS(' ', mh.title, um.first_name, um.college, c.name, mh.founder) LIKE '%$searchTerm%'
-    ORDER BY mh.id DESC";
+$sql = "SELECT mh.id, mh.title, um.first_name as user_name, um.college, c.name as category_name, mh.founder, mh.time_found, mh.status
+        FROM message_history mh
+        LEFT JOIN user_member um ON mh.user_id = um.id
+        LEFT JOIN categories c ON mh.category_id = c.id
+        ORDER BY mh.time_found DESC";
 $result = $conn->query($sql);
 ?>
 
@@ -139,7 +137,10 @@ $result = $conn->query($sql);
         }
         .input-group-text i {
             font-size: 14px;
-        }
+        }.badge-pending { background-color: #6c757d; }
+        .badge-published { background-color: #007bff; }
+        .badge-claimed { background-color: #28a745; }
+        .badge-surrendered { background-color: #6c757d; }
     </style>
 </head>
 <body>
@@ -171,40 +172,49 @@ $result = $conn->query($sql);
                         <th>Category</th>
                         <th>Finder's Name</th>
                         <th>Time Found</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($result->num_rows > 0): ?>
-                        <?php while($row = $result->fetch_assoc()): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($row['id']) ?></td>
-                                <td><?= htmlspecialchars($row['title']) ?></td>
-                                <td><?= htmlspecialchars($row['first_name']) ?></td>
-                                <td><?= htmlspecialchars($row['college']) ?></td>
-                                <td><?= htmlspecialchars($row['category_name']) ?></td>
-                                <td><?= htmlspecialchars($row['founder']) ?></td>
-                                <td><?= htmlspecialchars($row['time_found']) ?></td>
-                                <td>
-                                    <div class="d-flex justify-content-center">
-                                        <a href="https://ramonianlostgems.com/admin/messages/view_reported_item.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-view">
-                                            <i class="fa fa-eye"></i> View
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="8" class="no-data">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-x">
-                                    <path d="M2 21a8 8 0 0 1 11.873-7"/><circle cx="10" cy="8" r="5"/><path d="m17 17 5 5"/><path d="m22 17-5 5"/>
-                                </svg> 
-                                No reported items found.
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
+                <?php
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($row['id']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['title']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['user_name']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['college']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['founder']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['time_found']) . "</td>";
+
+                        // Display status as badge
+                        echo "<td>";
+                        switch ($row['status']) {
+                            case 1:
+                                echo "<span class='badge badge-published'>Published</span>";
+                                break;
+                            case 2:
+                                echo "<span class='badge badge-claimed'>Claimed</span>";
+                                break;
+                            case 3:
+                                echo "<span class='badge badge-surrendered'>Surrendered</span>";
+                                break;
+                            default:
+                                echo "<span class='badge badge-pending'>Pending</span>";
+                                break;
+                        }
+                        echo "</td>";
+
+                        echo "<td><a href='view_item.php?id=" . htmlspecialchars($row['id']) . "' class='btn btn-primary btn-sm'>View</a></td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='9'>No items found.</td></tr>";
+                }
+                ?>
+            </tbody>
             </table>
         </div>
     </div>
