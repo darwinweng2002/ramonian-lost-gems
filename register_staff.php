@@ -168,6 +168,41 @@ body {
             outline: none;
             box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
         }
+        .role-selector {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .role-selector label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .role-selector select {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #0d6efd;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #fff;
+        color: #333;
+        outline: none;
+        box-shadow: none;
+        transition: border-color 0.3s ease-in-out;
+    }
+
+    .role-selector select:focus {
+        border-color: #0d6efd;
+        outline: none;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .role-selector select option {
+        padding: 10px;
+        font-size: 16px;
+    }
   </style>
   <main>
     <div class="container">
@@ -181,7 +216,13 @@ body {
                                 <span><?= $_settings->info('name') ?></span>
                             </a>
                         </div><!-- End Logo -->
-
+                        <div class="role-selector">
+                        <select id="role-select" class="form-select">
+                            <option value="" disabled selected>Register as</option>
+                            <option value="student">Register as Student</option>
+                            <option value="faculty">Register as Employee</option>
+                        </select>
+                    </div>
                         <div class="card mb-3">
                             <div class="card-body">
                                 <div class="pt-4 pb-2">
@@ -419,6 +460,21 @@ $(document).ready(function () {
         }
     });
 });
+document.addEventListener('DOMContentLoaded', function () {
+            // Handle role selection change
+            const roleSelect = document.getElementById('role-select');
+
+            roleSelect.addEventListener('change', function () {
+                const selectedRole = this.value;
+
+                // Redirect based on the selected role
+                if (selectedRole === 'student') {
+                    window.location.href = 'https://ramonianlostgems.com/register.php/'; // Redirect to student registration page
+                } else if (selectedRole === 'faculty') {
+                    window.location.href = 'https://ramonianlostgems.com/register_staff.php'; // Redirect to faculty registration page
+                }
+            });
+        });
 </script>
 
 <?php require_once('inc/footer.php'); ?>
