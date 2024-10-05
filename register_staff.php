@@ -258,10 +258,11 @@ body {
                                         <small class="text-muted">Please upload a clear image of your valid ID (front side only). Ensure that the ID is visible and in JPG or PNG format. This will be used for verification purposes.</small>
                                     </div>
 
-                                    <!-- Submit Button -->
+                                    <!-- Submit Button (Disabled by default) -->
                                     <div class="col-12">
-                                        <button class="btn btn-primary w-100" type="submit">Register</button>
+                                        <button class="btn btn-primary w-100" type="submit" id="registerBtn" disabled>Register</button>
                                     </div>
+
                                 </form>
                                 <!-- End form -->
 
@@ -297,6 +298,43 @@ body {
 <script src="<?= base_url ?>assets/js/main.js"></script>
 <script>
 $(document).ready(function () {
+    // Disable register button initially
+    $('#registerBtn').prop('disabled', true);
+
+    // Function to check if all required fields are filled
+    function checkFormCompletion() {
+        const firstName = $('#firstName').val().trim();
+        const lastName = $('#lastName').val().trim();
+        const email = $('#email').val().trim();
+        const password = $('#yourPassword').val().trim();
+        const confirmPassword = $('#confirm_password').val().trim();
+        const userType = $('#user_type').val();
+        const profileImage = $('#profile_image').val();
+        
+        let departmentFilled = true;
+        let positionFilled = true;
+
+        // Check for department/position based on user type
+        if (userType === 'teaching') {
+            departmentFilled = $('#department').val().trim() !== "";
+        } else {
+            positionFilled = $('#position').val().trim() !== "";
+        }
+
+        // Check if all fields are filled
+        const allFieldsFilled = firstName && lastName && email && password && confirmPassword &&
+                                profileImage && departmentFilled && positionFilled &&
+                                password === confirmPassword; // Ensure passwords match
+
+        // Enable or disable the register button
+        $('#registerBtn').prop('disabled', !allFieldsFilled);
+    }
+
+    // Monitor changes in input fields
+    $('input, select').on('input change', function() {
+        checkFormCompletion();
+    });
+
     // Handle form submission via AJAX
     $('#registrationForm').on('submit', function (e) {
         e.preventDefault(); // Prevent default form submission
@@ -352,7 +390,9 @@ $(document).ready(function () {
             });
             return;
         }
+
         var formData = new FormData(this);
+
         // Ajax request to handle the registration form submission
         $.ajax({
             url: 'staff_process.php', // Backend PHP file to process the form
@@ -416,6 +456,7 @@ $(document).ready(function () {
             $('#department').prop('disabled', true);
             $('#position_field').show();
         }
+        checkFormCompletion(); // Re-check form completion after changing user type
     });
 });
 </script>
