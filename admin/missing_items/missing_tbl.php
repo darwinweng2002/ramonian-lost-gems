@@ -123,7 +123,6 @@ $result = $conn->query($sql);
     <div class="container">
         <h2>Reported Missing Items</h2>
 
-        <!-- Search Form -->
         <form class="search-form" method="GET" action="missing_tbl.php">
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
