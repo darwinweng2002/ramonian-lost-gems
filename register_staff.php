@@ -268,7 +268,7 @@ body {
 
                                     <!-- Submit Button (Disabled by default) -->
                                     <div class="col-12">
-                                        <button class="btn btn-primary w-100" type="submit" id="registerBtn" disabled>Register</button>
+                                        <button class="btn btn-primary w-100" type="submit">Register</button>
                                     </div>
 
                                 </form>
