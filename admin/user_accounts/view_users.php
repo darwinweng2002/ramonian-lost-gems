@@ -19,7 +19,6 @@ $sql = "SELECT * FROM user_member WHERE
 
 $result = $conn->query($sql);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <?php require_once('../inc/header.php') ?>
@@ -53,11 +52,12 @@ $result = $conn->query($sql);
             margin-bottom: 20px;
         }
 
+        /* Make the table horizontally scrollable */
         .table-responsive {
             background: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            overflow: hidden;
+            overflow-x: auto; /* Enable horizontal scrolling */
         }
 
         table {
@@ -69,9 +69,10 @@ $result = $conn->query($sql);
             padding: 12px;
             text-align: center;
         }
+
         th {
-    white-space: nowrap; /* Prevents wrapping */
-}
+            white-space: nowrap; /* Prevents wrapping */
+        }
 
         thead th {
             background-color: #f2f2f2;
@@ -105,55 +106,54 @@ $result = $conn->query($sql);
         }
 
         /* Style for the input group */
-.input-group {
-    display: flex;
-    align-items: center;
-    border-radius: 8px; /* Adds the border-radius to the entire group */
-    overflow: hidden;   /* Ensures the border-radius applies to all child elements */
-}
+        .input-group {
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            overflow: hidden;   /* Ensures the border-radius applies to all child elements */
+        }
 
-/* Search input field */
-.search-input {
-    border: 1px solid #ddd;
-    border-right: none;
-    border-radius: 0; /* Reset any default border radius */
-    padding: 10px;
-    outline: none;
-    box-shadow: none;
-    width: 200px;
-    flex-grow: 1;
-}
+        /* Search input field */
+        .search-input {
+            border: 1px solid #ddd;
+            border-right: none;
+            border-radius: 0;
+            padding: 10px;
+            outline: none;
+            box-shadow: none;
+            width: 200px;
+            flex-grow: 1;
+        }
 
-/* Button */
-.search-button {
-    border-radius: 0;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    padding: 10px 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-left: -5px;
-}
+        /* Button */
+        .search-button {
+            border-radius: 0;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left: -5px;
+        }
 
-/* Button hover */
-.search-button:hover {
-    background-color: #218838;
-}
+        /* Button hover */
+        .search-button:hover {
+            background-color: #218838;
+        }
 
-/* Icon styling */
-.input-group-text {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-right: none;
-    color: #333;
-}
+        /* Icon styling */
+        .input-group-text {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-right: none;
+            color: #333;
+        }
 
-.input-group-text i {
-    font-size: 14px;
-}
-
+        .input-group-text i {
+            font-size: 14px;
+        }
 
         .no-data {
             text-align: center;
@@ -161,8 +161,9 @@ $result = $conn->query($sql);
             color: #333;
             padding: 30px 0;
         }
-     /* Media Queries for Responsive Design */
-     @media (max-width: 512px) {
+
+        /* Media Queries for Responsive Design */
+        @media (max-width: 512px) {
             .container {
                 padding: 15px;
                 margin: 20px auto;
@@ -174,7 +175,7 @@ $result = $conn->query($sql);
             }
 
             table {
-                width: 100%; /* Ensure table stretches to full width */
+                width: 100%;
                 min-width: 600px; /* Set a minimum width to ensure scrolling */
             }
 
@@ -219,98 +220,93 @@ $result = $conn->query($sql);
         <h3>Pending Student Account Approvals - PRMSU Iba</h3>
 
         <!-- Search Form -->
-        
-<form class="search-form" method="GET" action="view_users.php">
-    <div class="input-group">
-        <span class="input-group-text"><i class="fas fa-search"></i></span>
-        <input type="text" name="search" class="search-input form-control" placeholder="Search users..." value="<?= htmlspecialchars($searchTerm) ?>">
-        <button type="submit" class="search-button">Search</button>
-    </div>
-</form>
+        <form class="search-form" method="GET" action="view_users.php">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" name="search" class="search-input form-control" placeholder="Search users..." value="<?= htmlspecialchars($searchTerm) ?>">
+                <button type="submit" class="search-button">Search</button>
+            </div>
+        </form>
 
+        <!-- Table Wrapper with Horizontal Scroll -->
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
-            <thead>
-    <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Level</th>
-        <th>College</th>
-        <th>Course</th>
-        <th>Year</th>
-        <th>Username</th> <!-- Adjusted Email Header -->
-        <th>Actions</th> <!-- Adjusted Actions Header -->
-    </tr>
-</thead>
-<tbody>
-    <?php if ($result->num_rows > 0): ?>
-        <?php while($row = $result->fetch_assoc()): ?>
-            <tr data-id="<?= htmlspecialchars($row['id']) ?>">
-                <td><?= htmlspecialchars($row['first_name']) ?></td>
-                <td><?= htmlspecialchars($row['last_name']) ?></td>
-                
-                <!-- Logic to display "High School" or "College" based on the value -->
-                <td>
-                <?php
-                    // Determine the Level
-                    $level = htmlspecialchars($row['school_type']) == '1' ? 'College' : 'High School';
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Level</th>
+                        <th>College</th>
+                        <th>Course</th>
+                        <th>Year</th>
+                        <th>Username</th> <!-- Adjusted Email Header -->
+                        <th>Actions</th> <!-- Adjusted Actions Header -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if ($result->num_rows > 0): ?>
+                        <?php while($row = $result->fetch_assoc()): ?>
+                            <tr data-id="<?= htmlspecialchars($row['id']) ?>">
+                                <td><?= htmlspecialchars($row['first_name']) ?></td>
+                                <td><?= htmlspecialchars($row['last_name']) ?></td>
 
-                    // Fetch the grade information, assuming it is stored in 'grade' column
-                    $grade = htmlspecialchars($row['grade']);
+                                <!-- Logic to display "High School" or "College" based on the value -->
+                                <td>
+                                <?php
+                                    // Determine the Level
+                                    $level = htmlspecialchars($row['school_type']) == '1' ? 'College' : 'High School';
 
-                    // Logic to display the level with grade or without it
-                    if ($level === 'College') {
-                        // Show only "College"
-                        echo $level;
-                    } else {
-                        // If it's High School, check if the grade is not "N/A"
-                        echo $level . ($grade !== 'N/A' ? ' (Grade ' . $grade . ')' : '');
-                    }
-                ?>
-            </td>
+                                    // Fetch the grade information, assuming it is stored in 'grade' column
+                                    $grade = htmlspecialchars($row['grade']);
 
+                                    // Logic to display the level with grade or without it
+                                    if ($level === 'College') {
+                                        echo $level;
+                                    } else {
+                                        echo $level . ($grade !== 'N/A' ? ' (Grade ' . $grade . ')' : '');
+                                    }
+                                ?>
+                                </td>
 
-                
-                <td><?= htmlspecialchars($row['college']) ?></td>
-                <td><?= htmlspecialchars($row['course']) ?></td>
-                <td><?= htmlspecialchars($row['year']) ?></td>
-                <td><?= htmlspecialchars($row['email']) ?></td>
-                <td>
-                    <div class="d-flex justify-content-center">
-                        <a href="viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-                            <i class="fa fa-eye"></i> View Details
-                        </a>
-                        <button class="btn btn-delete btn-sm ms-2" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
-                            <i class="fa fa-trash"></i> Delete
-                        </button>
-                        <?php if ($row['status'] !== 'approved'): ?> 
-                        <button class="btn btn-success btn-sm ms-2" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
-                            <i class="fa fa-check"></i> Approve
-                        </button>
-                        <?php else: ?>
-                        <span class="badge bg-success ms-2">Approved</span>
-                        <?php endif; ?>
-                    </div>
-                </td>
-            </tr>
-        <?php endwhile; ?>
-    <?php else: ?>
-        <tr>
-            <td colspan="8" class="no-data">
-                No registered users found.
-            </td>
-        </tr>
-    <?php endif; ?>
-</tbody>
-
-
-
+                                <td><?= htmlspecialchars($row['college']) ?></td>
+                                <td><?= htmlspecialchars($row['course']) ?></td>
+                                <td><?= htmlspecialchars($row['year']) ?></td>
+                                <td><?= htmlspecialchars($row['email']) ?></td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <a href="viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+                                            <i class="fa fa-eye"></i> View Details
+                                        </a>
+                                        <button class="btn btn-delete btn-sm ms-2" onclick="deleteUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                                            <i class="fa fa-trash"></i> Delete
+                                        </button>
+                                        <?php if ($row['status'] !== 'approved'): ?> 
+                                        <button class="btn btn-success btn-sm ms-2" onclick="approveUser(event, <?= htmlspecialchars($row['id']) ?>)">
+                                            <i class="fa fa-check"></i> Approve
+                                        </button>
+                                        <?php else: ?>
+                                        <span class="badge bg-success ms-2">Approved</span>
+                                        <?php endif; ?>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="8" class="no-data">
+                                No registered users found.
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
             </table>
         </div>
     </div>
 </section>
+
 <script>
-  function deleteUser(event, id) {
+// Function to delete user with confirmation
+function deleteUser(event, id) {
     event.preventDefault(); // Prevent default form submission
 
     Swal.fire({
@@ -359,6 +355,8 @@ $result = $conn->query($sql);
         }
     });
 }
+
+// Function to approve user with confirmation
 function approveUser(event, id) {
     event.preventDefault(); // Prevent default form submission
 
@@ -416,7 +414,6 @@ function approveUser(event, id) {
     });
 }
 </script>
-
 
 <?php
 $conn->close();
