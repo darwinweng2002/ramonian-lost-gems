@@ -251,12 +251,24 @@ $result = $conn->query($sql);
                 
                 <!-- Logic to display "High School" or "College" based on the value -->
                 <td>
-    <?php
-        $level = htmlspecialchars($row['school_type']) == '1' ? 'College' : 'High School';
-        $additionalInfo = htmlspecialchars($row['grade']); // Example of an additional value from your database row
-    ?>
-    <?= $grade . ' (' . $additionalInfo . ')'; ?>
-</td>
+                <?php
+                    // Determine the Level
+                    $level = htmlspecialchars($row['school_type']) == '1' ? 'College' : 'High School';
+
+                    // Fetch the grade information, assuming it is stored in 'grade' column
+                    $grade = htmlspecialchars($row['grade']);
+
+                    // Logic to display the level with grade or without it
+                    if ($level === 'College') {
+                        // Show only "College"
+                        echo $level;
+                    } else {
+                        // If it's High School, check if the grade is not "N/A"
+                        echo $level . ($grade !== 'N/A' ? ' (Grade ' . $grade . ')' : '');
+                    }
+                ?>
+            </td>
+
 
                 
                 <td><?= htmlspecialchars($row['college']) ?></td>
