@@ -14,7 +14,7 @@ $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']
 
 // Update SQL query to include search functionality
 $sql = "SELECT * FROM user_member WHERE 
-        CONCAT_WS(' ', first_name, last_name, course, year, email) LIKE '%$searchTerm%'
+        CONCAT_WS(' ', first_name, last_name, school_type, course, year, email) LIKE '%$searchTerm%'
         AND status != 'approved'";
 
 $result = $conn->query($sql);
@@ -234,6 +234,7 @@ $result = $conn->query($sql);
     <tr>
         <th>First Name</th>
         <th>Last Name</th>
+        <th>Level</th>
         <th>College</th>
         <th>Course</th>
         <th>Year</th>
@@ -247,6 +248,7 @@ $result = $conn->query($sql);
             <tr data-id="<?= htmlspecialchars($row['id']) ?>">
                 <td><?= htmlspecialchars($row['first_name']) ?></td>
                 <td><?= htmlspecialchars($row['last_name']) ?></td>
+                <td><?= htmlspecialchars($row['school_type']) ?></td>
                 <td><?= htmlspecialchars($row['college']) ?></td>
                 <td><?= htmlspecialchars($row['course']) ?></td>
                 <td><?= htmlspecialchars($row['year']) ?></td>
