@@ -75,7 +75,7 @@ $result = $conn->query($sql);
             text-align: center;
         }
         th {
-            white-space: nowrap;
+            white-space: nowrap; /* Prevents wrapping */
         }
         thead th {
             background-color: #f2f2f2;
@@ -107,6 +107,45 @@ $result = $conn->query($sql);
             font-size: 1.2rem;
             color: #333;
             padding: 30px 0;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            border-radius: 8px; /* Adds the border-radius to the entire group */
+            overflow: hidden;   /* Ensures the border-radius applies to all child elements */
+        }
+        .search-input {
+            border: 1px solid #ddd;
+            border-right: none;
+            border-radius: 0; /* Reset any default border radius */
+            padding: 10px;
+            outline: none;
+            box-shadow: none;
+            width: 200px;
+            flex-grow: 1;
+        }
+        .search-button {
+            border-radius: 0;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left: -5px;
+        }
+        .search-button:hover {
+            background-color: #218838;
+        }
+        .input-group-text {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-right: none;
+            color: #333;
+        }
+        .input-group-text i {
+            font-size: 14px;
         }
         .badge-pending { background-color: #6c757d; }
         .badge-published { background-color: #007bff; }
