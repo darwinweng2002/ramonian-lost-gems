@@ -12,9 +12,9 @@ if ($conn->connect_error) {
 // Initialize search term
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
-// SQL query to fetch reported items, including user_member and user_staff
+// SQL query to fetch reported items, including status, user_member, and user_staff
 $sql = "
-SELECT mi.id, mi.title, mi.owner, user_info.first_name, user_info.college, mi.time_missing, c.name AS category
+SELECT mi.id, mi.title, mi.owner, user_info.first_name, user_info.college, mi.time_missing, mi.status, c.name AS category
 FROM missing_items mi
 LEFT JOIN (
     -- Fetch data from user_member
@@ -37,7 +37,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-    <title>Reported Items List</title>
+    <title>Reported Missing Items</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -75,7 +75,7 @@ $result = $conn->query($sql);
             text-align: center;
         }
         th {
-            white-space: nowrap; /* Prevents wrapping */
+            white-space: nowrap;
         }
         thead th {
             background-color: #f2f2f2;
@@ -108,45 +108,10 @@ $result = $conn->query($sql);
             color: #333;
             padding: 30px 0;
         }
-        .input-group {
-            display: flex;
-            align-items: center;
-            border-radius: 8px; /* Adds the border-radius to the entire group */
-            overflow: hidden;   /* Ensures the border-radius applies to all child elements */
-        }
-        .search-input {
-            border: 1px solid #ddd;
-            border-right: none;
-            border-radius: 0; /* Reset any default border radius */
-            padding: 10px;
-            outline: none;
-            box-shadow: none;
-            width: 200px;
-            flex-grow: 1;
-        }
-        .search-button {
-            border-radius: 0;
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            padding: 10px 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-left: -5px;
-        }
-        .search-button:hover {
-            background-color: #218838;
-        }
-        .input-group-text {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-right: none;
-            color: #333;
-        }
-        .input-group-text i {
-            font-size: 14px;
-        }
+        .badge-pending { background-color: #6c757d; }
+        .badge-published { background-color: #007bff; }
+        .badge-claimed { background-color: #28a745; }
+        .badge-surrendered { background-color: #6c757d; }
     </style>
 </head>
 <body>
@@ -176,8 +141,9 @@ $result = $conn->query($sql);
                         <th>Item Name</th>
                         <th>User</th>
                         <th>College</th>
-                        <th>Category</th> <!-- Added Category Column -->
+                        <th>Category</th>
                         <th>Last Seen</th>
+                        <th>Status</th> <!-- New Status Column -->
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -190,8 +156,29 @@ $result = $conn->query($sql);
                                 <td><?= htmlspecialchars($row['title']) ?></td>
                                 <td><?= htmlspecialchars($row['first_name']) ?></td>
                                 <td><?= htmlspecialchars($row['college']) ?></td>
-                                <td><?= htmlspecialchars($row['category']) ?></td> <!-- Displaying Category -->
+                                <td><?= htmlspecialchars($row['category']) ?></td>
                                 <td><?= htmlspecialchars($row['time_missing']) ?></td>
+                                
+                                <!-- Display status as a badge -->
+                                <td>
+                                    <?php
+                                    switch ($row['status']) {
+                                        case 1:
+                                            echo "<span class='badge badge-published'>Published</span>";
+                                            break;
+                                        case 2:
+                                            echo "<span class='badge badge-claimed'>Claimed</span>";
+                                            break;
+                                        case 3:
+                                            echo "<span class='badge badge-surrendered'>Surrendered</span>";
+                                            break;
+                                        default:
+                                            echo "<span class='badge badge-pending'>Pending</span>";
+                                            break;
+                                    }
+                                    ?>
+                                </td>
+
                                 <td>
                                     <div class="d-flex justify-content-center">
                                         <a href="https://ramonianlostgems.com/admin/missing_items/view_missing.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-view">
@@ -203,7 +190,7 @@ $result = $conn->query($sql);
                         <?php endwhile; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="8" class="no-data">
+                            <td colspan="9" class="no-data">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 25 25" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-x">
                                     <path d="M2 21a8 8 0 0 1 11.873-7"/><circle cx="10" cy="8" r="5"/><path d="m17 17 5 5"/><path d="m22 17-5 5"/>
                                 </svg> 
