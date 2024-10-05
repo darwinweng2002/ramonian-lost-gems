@@ -14,7 +14,7 @@ $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']
 
 // Update SQL query to include search functionality
 $sql = "SELECT * FROM user_member WHERE 
-        CONCAT_WS(' ', first_name, last_name, school_type, course, year, email) LIKE '%$searchTerm%'
+        CONCAT_WS(' ', first_name, last_name, school_type, grade, course, year, email) LIKE '%$searchTerm%'
         AND status != 'approved'";
 
 $result = $conn->query($sql);
@@ -251,8 +251,13 @@ $result = $conn->query($sql);
                 
                 <!-- Logic to display "High School" or "College" based on the value -->
                 <td>
-                    <?= htmlspecialchars($row['school_type']) == '1' ? 'College' : 'High School'; ?>
-                </td>
+    <?php
+        $level = htmlspecialchars($row['school_type']) == '1' ? 'College' : 'High School';
+        $additionalInfo = htmlspecialchars($row['grade']); // Example of an additional value from your database row
+    ?>
+    <?= $grade . ' (' . $additionalInfo . ')'; ?>
+</td>
+
                 
                 <td><?= htmlspecialchars($row['college']) ?></td>
                 <td><?= htmlspecialchars($row['course']) ?></td>
