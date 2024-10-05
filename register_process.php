@@ -14,6 +14,7 @@ require 'PHPMailer-master/src/Exception.php';
 require 'PHPMailer-master/src/PHPMailer.php';
 require 'PHPMailer-master/src/SMTP.php';
 
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data
     $first_name = $_POST['first_name'];
@@ -80,15 +81,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = ''; // Add your Gmail account
-            $mail->Password = ''; // Add your Gmail password
+            $mail->Username = 'vdarwin860@gmail.com'; // Add your Gmail account
+            $mail->Password = 'justfocusonjavascript800px'; // Add your Gmail password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
             $mail->setFrom('vdarwin860@gmail.com', 'Your App Name');
             $mail->addAddress($email);  // Add user email address
 
-            $verification_link = "https://yourdomain.com/verify.php?token=$verification_token";
+            $verification_link = "https://ramonianlostgems.com/verify.php?token=$verification_token";
 
             $mail->isHTML(true);
             $mail->Subject = 'Verify Your Email';
