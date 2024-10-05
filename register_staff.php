@@ -261,10 +261,11 @@ body {
                                     <!-- Image Upload (Profile Picture) -->
                                     <div class="col-12">
                                         <label for="profile_image" class="form-label">Upload ID</label>
-                                        <input type="file" name="profile_image" class="form-control" id="profile_image" accept="image/*">
-                                        <div class="invalid-feedback">Please upload picture of your ID.</div>
+                                        <input type="file" name="profile_image" class="form-control" id="profile_image" accept="image/*" required>
+                                        <div class="invalid-feedback">Please upload a picture of your ID.</div>
                                         <small class="text-muted">Please upload a clear image of your valid ID (front side only). Ensure that the ID is visible and in JPG or PNG format. This will be used for verification purposes.</small>
                                     </div>
+
 
                                     <!-- Submit Button (Disabled by default) -->
                                     <div class="col-12">
@@ -300,42 +301,41 @@ $(document).ready(function () {
     $('#registrationForm').on('submit', function (e) {
         e.preventDefault(); // Prevent default form submission
 
+        let formIsValid = true; // Track form validity
+
         // Validate email format
         const email = $('#email').val().trim();
         const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/; // Email regex pattern
 
         if (!emailPattern.test(email)) {
+            formIsValid = false;
             Swal.fire({
                 title: 'Error!',
                 text: 'Please enter a valid email address!',
                 icon: 'error',
                 confirmButtonText: 'OK'
             });
-            return;
         }
 
         // Validate that an image is uploaded
         const profileImage = $('#profile_image').val();
         if (!profileImage) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Please upload picture of your ID!',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-            return;
+            formIsValid = false;
+            $('#profile_image').addClass('is-invalid');
+        } else {
+            $('#profile_image').removeClass('is-invalid').addClass('is-valid');
         }
 
         // Validate image file type (optional, but recommended)
         const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
         if (!allowedExtensions.exec(profileImage)) {
+            formIsValid = false;
             Swal.fire({
                 title: 'Error!',
                 text: 'Please upload a valid image file (jpg, jpeg, png, gif).',
                 icon: 'error',
                 confirmButtonText: 'OK'
             });
-            return;
         }
 
         // Simple password validation
@@ -343,15 +343,19 @@ $(document).ready(function () {
         const confirmPassword = $('#confirm_password').val().trim();
         
         if (password !== confirmPassword) {
+            formIsValid = false;
             Swal.fire({
                 title: 'Error!',
                 text: 'Passwords do not match!',
                 icon: 'error',
                 confirmButtonText: 'OK'
             });
-            return;
         }
+
+        if (!formIsValid) return; // If the form is invalid, prevent submission
+
         var formData = new FormData(this);
+
         // Ajax request to handle the registration form submission
         $.ajax({
             url: 'staff_process.php', // Backend PHP file to process the form
@@ -417,21 +421,7 @@ $(document).ready(function () {
         }
     });
 });
-document.addEventListener('DOMContentLoaded', function () {
-            // Handle role selection change
-            const roleSelect = document.getElementById('role-select');
 
-            roleSelect.addEventListener('change', function () {
-                const selectedRole = this.value;
-
-                // Redirect based on the selected role
-                if (selectedRole === 'student') {
-                    window.location.href = 'https://ramonianlostgems.com/register.php/'; // Redirect to student registration page
-                } else if (selectedRole === 'faculty') {
-                    window.location.href = 'https://ramonianlostgems.com/register_staff.php'; // Redirect to faculty registration page
-                }
-            });
-        });
 </script>
 
 <?php require_once('inc/footer.php'); ?>
