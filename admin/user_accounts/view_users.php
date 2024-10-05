@@ -248,7 +248,12 @@ $result = $conn->query($sql);
             <tr data-id="<?= htmlspecialchars($row['id']) ?>">
                 <td><?= htmlspecialchars($row['first_name']) ?></td>
                 <td><?= htmlspecialchars($row['last_name']) ?></td>
-                <td><?= htmlspecialchars($row['school_type']) ?></td>
+                
+                <!-- Logic to display "High School" or "College" based on the value -->
+                <td>
+                    <?= htmlspecialchars($row['school_type']) == '1' ? 'College' : 'High School'; ?>
+                </td>
+                
                 <td><?= htmlspecialchars($row['college']) ?></td>
                 <td><?= htmlspecialchars($row['course']) ?></td>
                 <td><?= htmlspecialchars($row['year']) ?></td>
@@ -280,6 +285,7 @@ $result = $conn->query($sql);
         </tr>
     <?php endif; ?>
 </tbody>
+
 
 
             </table>
