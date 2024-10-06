@@ -189,37 +189,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     .back-btn-container {
-        margin: 20px 0;
-        display: flex;
-        justify-content: flex-start;
-    }
+    display: flex;
+    justify-content: center; /* Centers the button horizontally */
+    margin: 20px 0; /* Adds some space above and below the button */
+}
 
-    .back-btn {
-        display: flex;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: #007BFF;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: 500;
-        transition: background-color 0.3s ease;
-    }
+.back-btn {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
 
-    .back-btn svg {
-        margin-right: 8px;
-    }
+.back-btn svg {
+    margin-right: 8px;
+}
 
-    .back-btn:hover {
-        background-color: #0056b3;
-    }
+.back-btn:hover {
+    background-color: #0056b3;
+}
 
-    .back-btn:focus {
-        outline: none;
-        box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-    }
+.back-btn:focus {
+    outline: none;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
     .loader-overlay {
     display: none; /* Initially hidden */
     position: fixed;
