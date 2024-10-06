@@ -122,6 +122,9 @@ if (isset($_POST['guest_login'])) {
     z-index: 9999 !important;   
     overflow: auto;             
 }
+.hyper-link {
+  text-align: center; 
+}
   </style>
   <main>
     <div class="container">
@@ -175,6 +178,7 @@ if (isset($_POST['guest_login'])) {
                   <a href="https://ramonianlostgems.com/register.php" class="btn btn-primary w-100" style="color: #fff;">Sign up</a>
                   </p>
               </div>
+            <div class="hyper-link">
             <a href="https://ramonianlostgems.com/admin/login.php">
             Login as Admin
           </a>
@@ -182,6 +186,7 @@ if (isset($_POST['guest_login'])) {
           <a href="https://ramonianlostgems.com/staff_login.php">
             Login as Employee
           </a>
+          </div>
                   <br>
                   <br>
                 </div>
