@@ -182,6 +182,7 @@ if (isset($_POST['guest_login'])) {
             <a href="https://ramonianlostgems.com/admin/login.php">
             Login as Admin
           </a>
+          <br>
           <a href="https://ramonianlostgems.com/staff_login.php">
             Login as Employee
           </a>
