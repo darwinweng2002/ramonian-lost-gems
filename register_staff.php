@@ -170,6 +170,11 @@ body {
         padding: 10px;
         font-size: 16px;
     }
+    .back-btn-container {
+    display: flex;
+    justify-content: center; /* Centers the button horizontally */
+    margin: 20px 0; /* Adds some space above and below the button */
+}
     .back-btn {
     display: flex;
     align-items: center;
