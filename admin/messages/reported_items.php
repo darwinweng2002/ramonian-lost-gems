@@ -207,7 +207,7 @@ $result = $conn->query($sql);
                         }
                         echo "</td>";
 
-                        echo "<td><a href='https://ramonianlostgems.com/admin/messages/reported_items.php?id=" . htmlspecialchars($row['id']) . "' class='btn btn-primary btn-sm'>View</a></td>";
+                        echo "<td><a href='https://ramonianlostgems.com/admin/messages/view_reported_item.php?id=" . htmlspecialchars($row['id']) . "' class='btn btn-primary btn-sm'>View</a></td>";
                         echo "</tr>";
                     }
                 } else {
