@@ -175,11 +175,11 @@ if (isset($_POST['guest_login'])) {
                   <a href="https://ramonianlostgems.com/register.php" class="btn btn-primary w-100" style="color: #fff;">Register account here.</a>
                   </p>
               </div>
-            <a href="https://ramonianlostgems.com/admin/login.php"  style="color: #fff; text-decoration: none;">
+            <a href="https://ramonianlostgems.com/admin/login.php">
             Login as Admin
           </a>
           <br><br>
-          <a href="https://ramonianlostgems.com/staff_login.php"  style="color: #fff; text-decoration: none;">
+          <a href="https://ramonianlostgems.com/staff_login.php">
             Login as Employee
           </a>
                   <br>
