@@ -140,7 +140,8 @@ if ($message_id > 0) {
                         'contact' => $row['contact'],
                         'founder' => $row['founder'],
                         'time_found' => $row['time_found'],
-                        'category_name' => $row['category_name'],  
+                        'category_name' => $row['category_name'],
+                        'is_staff' => $row['is_staff'],
                         'status' => $row['status']
                     ];
                 }
@@ -162,8 +163,25 @@ if ($message_id > 0) {
                 $contact = htmlspecialchars($msgData['contact'] ?? '');
                 $founder = htmlspecialchars($msgData['founder'] ?? '');
                 $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
-                $categoryName = htmlspecialchars($msgData['category_name'] ?? ''); 
-                
+                $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
+                $isStaff = htmlspecialchars($msgData['is_staff'] ?? '');
+
+                // If user info is empty, fetch employee details
+                if (empty($firstName) && empty($email)) {
+                    if ($isStaff) {
+                        // Fetch employee details if the user is an employee
+                        $employeeSql = "SELECT name, email, department FROM employee_member WHERE id = $msgId";
+                        $employeeResult = $conn->query($employeeSql);
+                        
+                        if ($employeeResult->num_rows > 0) {
+                            $employeeData = $employeeResult->fetch_assoc();
+                            $firstName = htmlspecialchars($employeeData['name']);
+                            $email = htmlspecialchars($employeeData['email']);
+                            $college = htmlspecialchars($employeeData['department']);
+                        }
+                    }
+                }
+
                 // Only display avatar if the post is not from a guest user
                 if ($firstName || $email || $college) {
                     if ($avatar) {
@@ -190,7 +208,6 @@ if ($message_id > 0) {
                     echo "<p><strong>Department:</strong> " . ($college ? $college : 'N/A') . "</p>";
                 } else {
                     // No additional user info for guest posts
-                    
                 }
 
                 // Status dropdown and status badge display
