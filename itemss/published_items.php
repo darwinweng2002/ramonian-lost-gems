@@ -259,7 +259,7 @@ if ($firstName || $email || $college) {
         // Display department and position for staff users
         echo "<p><strong>Department:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
         // If you have a "position" column, add it here
-        // echo "<p><strong>Position:</strong> " . ($position ? htmlspecialchars($position) : 'N/A') . "</p>";
+         echo "<p><strong>Position:</strong> " . ($position ? htmlspecialchars($position) : 'N/A') . "</p>";
     } elseif ($userType === 'member') {
         // Display college and level for member users
         echo "<p><strong>College:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
