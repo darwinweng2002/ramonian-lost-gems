@@ -28,14 +28,19 @@ if ($conn->connect_error) {
 $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get published item details
-$sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder,  mh.status, mh.landmark, mh.time_found, um.first_name, um.school_type, um.college, um.email, um.avatar, 
-        mh.contact, c.name as category_name
+$sql = "
+        SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, user_info.first_name, user_info.college, user_info.email, user_info.avatar, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
-        LEFT JOIN user_member um ON mh.user_id = um.id
+        LEFT JOIN (
+            -- Fetch data from user_member
+            SELECT id AS user_id, first_name, college, email, avatar, 'member' AS user_type FROM user_member
+            UNION
+            -- Fetch data from user_staff
+            SELECT id AS user_id, first_name, department AS college, email, avatar, 'staff' AS user_type FROM user_staff
+        ) AS user_info ON mh.user_id = user_info.user_id
         LEFT JOIN categories c ON mh.category_id = c.id
-        WHERE mh.is_published = 1 AND mh.id = ?
-        ORDER BY mh.id DESC";
+        WHERE mh.id = $message_id";
 
 
 
