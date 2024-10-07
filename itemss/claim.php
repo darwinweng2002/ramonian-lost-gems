@@ -268,7 +268,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <!-- Display Claimant's Information -->
-    <h3>Your Information</h3>
     <div class="info-section">
         <?php if ($isGuest): ?>
             <!-- Guest restriction message -->
