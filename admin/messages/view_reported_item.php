@@ -45,7 +45,7 @@ if ($message_id > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Found Item Details - Admin View</title>
+    <title>Found Item Details - Admin hahaView</title>
     <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
