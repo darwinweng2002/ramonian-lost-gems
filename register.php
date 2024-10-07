@@ -372,8 +372,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
                         </div>
                             <div class="col-12">
-                                <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
-                                <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
+                                <label for="confirm_password" class="form-label">Password (8-16 characters)</label>
+                                <input type="password" name="password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
                                 <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
                             </div>
                             <div class="col-12">
