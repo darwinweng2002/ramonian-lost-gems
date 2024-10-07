@@ -270,37 +270,39 @@ if ($message_id > 0) {
       $(document).ready(function() {
         // SweetAlert for delete confirmation
         $('.delete-btn').on('click', function() {
-            var messageId = $(this).data('id');
-            Swal.fire({
-                title: 'Are you sure you want to delete this item entry?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: 'delete_message.php',
-                        type: 'POST',
-                        data: { id: messageId },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire('Deleted!', 'The item has been deleted.', 'success');
-                                location.reload();
-                            } else {
-                                Swal.fire('Error!', response.error, 'error');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire('Error!', 'An error occurred: ' + error, 'error');
-                        }
-                    });
+    var messageId = $(this).data('id'); // Get the message ID from button
+    
+    Swal.fire({
+        title: 'Are you sure you want to delete this item entry?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: 'delete_message.php',
+                type: 'POST',
+                data: { id: messageId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire('Deleted!', 'The item has been deleted.', 'success');
+                        location.reload(); // Reload the page to reflect deletion
+                    } else {
+                        Swal.fire('Error!', response.error || 'Unknown error occurred.', 'error'); // Show server error
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire('Error!', 'AJAX request failed: ' + error + '. Full response: ' + xhr.responseText, 'error'); // Full AJAX error
                 }
             });
-        });
+        }
+    });
+});
+
         // SweetAlert for publish confirmation
         $('.publish-btn').on('click', function() {
             var messageId = $(this).data('id');
