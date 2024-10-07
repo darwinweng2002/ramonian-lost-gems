@@ -30,19 +30,20 @@ $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get published item details with user info from both user_member and user_staff
 $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder, mh.status, mh.landmark, mh.time_found, 
-        user_info.first_name, user_info.college, user_info.email, user_info.avatar, mh.contact, c.name as category_name
+        user_info.first_name, user_info.college, user_info.email, user_info.avatar, user_info.user_type, user_info.position, mh.contact, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN (
-            -- Fetch data from user_member
-            SELECT id AS user_id, first_name, college, email, avatar FROM user_member
+            -- Fetch data from user_member with a flag
+            SELECT id AS user_id, first_name, college, email, avatar, 'member' AS user_type, NULL AS position FROM user_member
             UNION
-            -- Fetch data from user_staff
-            SELECT id AS user_id, first_name, position AS college, email, avatar FROM user_staff
+            -- Fetch data from user_staff with a flag
+            SELECT id AS user_id, first_name, department AS college, email, avatar, 'staff' AS user_type, position FROM user_staff
         ) AS user_info ON mh.user_id = user_info.user_id
         LEFT JOIN categories c ON mh.category_id = c.id
         WHERE mh.is_published = 1 AND mh.id = ?
         ORDER BY mh.id DESC";
+
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
@@ -252,14 +253,14 @@ if ($school_type === '0') {
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
             
               // Display user information only if available
+// Display user information only if available
 if ($firstName || $email || $college) {
     echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
 
     if ($userType === 'staff') {
         // Display department and position for staff users
         echo "<p><strong>Department:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
-        // If you have a "position" column, add it here
-         echo "<p><strong>Position:</strong> " . ($position ? htmlspecialchars($position) : 'N/A') . "</p>";
+        echo "<p><strong>Position:</strong> " . ($msgData['position'] ? htmlspecialchars($msgData['position']) : 'N/A') . "</p>";  // Add this line to display position
     } elseif ($userType === 'member') {
         // Display college and level for member users
         echo "<p><strong>College:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
@@ -268,6 +269,7 @@ if ($firstName || $email || $college) {
 } else {
     echo "<p><strong>User Info:</strong> Guest User</p>";  // Indicate that the post is from a guest
 }
+
 
             
                 echo "<dt class='text-muted'>Status</dt>";
