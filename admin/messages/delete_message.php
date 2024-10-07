@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
             // If delete was successful, return a JSON response
             echo json_encode(['success' => true]);
         } else {
-            // If delete failed, return a JSON error message
-            echo json_encode(['success' => false, 'error' => 'Failed to delete the message.']);
+            // Log the specific MySQL error message for debugging
+            echo json_encode(['success' => false, 'error' => 'Failed to delete the message. Error: ' . $conn->error]);
         }
 
         $stmt_delete->close();
@@ -44,5 +44,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
 }
 
 $conn->close();
-?>
-

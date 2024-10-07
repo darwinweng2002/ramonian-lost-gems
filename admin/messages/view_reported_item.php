@@ -282,7 +282,7 @@ if ($message_id > 0) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: '../delete_message.php',  // Correct URL to the deletion endpoint
+                url: 'delete_message.php',
                 type: 'POST',
                 data: { id: messageId },
                 dataType: 'json',
@@ -291,16 +291,19 @@ if ($message_id > 0) {
                         Swal.fire('Deleted!', 'The item has been deleted.', 'success');
                         location.reload();
                     } else {
-                        Swal.fire('Error!', response.error, 'error');
+                        // Show the exact error message from the server response
+                        Swal.fire('Error!', response.error || 'Unknown error occurred.', 'error');
                     }
                 },
                 error: function(xhr, status, error) {
-                    Swal.fire('Error!', 'An error occurred: ' + error, 'error');
+                    // Improved error handling to display full response details
+                    Swal.fire('Error!', 'An error occurred: ' + error + '<br>Response: ' + xhr.responseText, 'error');
                 }
             });
         }
     });
 });
+
         // SweetAlert for publish confirmation
         $('.publish-btn').on('click', function() {
             var messageId = $(this).data('id');
