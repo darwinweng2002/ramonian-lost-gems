@@ -325,10 +325,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <option value="CAS">College of Arts and Sciences</option>
                                     <option value="CCIT">College of Communication and Information Technology</option>
                                     <option value="CTE">College of Teacher Education</option>
-                                    <option value="COE">College of Engineering</option>
+                                    <option value="CE">College of Engineering</option>
                                     <option value="CIT">College of Industrial Technology</option>
                                     <option value="CAF">College of Agriculture and Forestry</option>
-                                    <option value="CON">College of Nursing</option>
+                                    <option value="NUR">College of Nursing</option>
                                     <option value="CTHM">College of Tourism and Hospitality Management</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your college.</div>
@@ -413,82 +413,99 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <script src="<?= base_url ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="<?= base_url ?>assets/js/main.js"></script>
   <script>
-    function validateForm() {
-        let formIsValid = true;
+    $(document).ready(function() {
+        // Populate courses dynamically based on selected college
+        const coursesByCollege = {
+            "CABA": [
+                "Bachelor of Science in Accountancy",
+                "Bachelor of Science in Accounting and Information System",
+                "Bachelor of Science in Business Administration - Marketing",
+                "Bachelor of Science in Business Administration - Financial Management",
+                "Bachelor of Science in Business Administration - Human Resource Development Management",
+                "Bachelor of Public Administration"
 
-        // Validate email
-        const email = $('#email').val().trim();
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailPattern.test(email)) {
-            formIsValid = false;
-            $('#email').addClass('is-invalid');
-            $('#email-error').text('Please enter a valid email address').show();
-        } else {
-            $('#email').removeClass('is-invalid').addClass('is-valid');
-            $('#email-error').hide();
-        }
+            ],
+            "CAS": [
+                "Bachelor of Science in Biology",
+                "Bachelor of Science in Psychology"
+            ],
+            "N/A": [
+                "N/A"
+            ],
+            "CCIT": [
+                "Bachelor of Science in Computer Science",
+                "Bachelor of Science in Information Technology"
+            ],
+            "CTE": [
+                "Bachelor of Secondary Education - English Education",
+                "Bachelor of Secondary Education - Filipino Education",
+                "Bachelor of Secondary Education - Mathematics Education",
+                "Bachelor of Secondary Education - Science Education",
+                "Bachelor of Secondary Education - Social Studies Education",
+                "Bachelor of Elementary Education",
+                "Bachelor of Physical Education",
+                "Bachelor of Professional Education"
+            ],
+            "COE": [
+                "Bachelor of Science in Civil Engineering",
+                "Bachelor of Science in Electrical Engineering",
+                "Bachelor of Science in Mechanical Engineering",
+                "Bachelor of Science in Computer Engineering",
+                "Bachelor of Science in Mining Engineering"
+            ],
+            "CIT": [
+                "Bachelor of Technology and Livelihood Education - Industrial Arts",
+                "Bachelor of Technical Vocational Teacher Education - Computer Programming",
+                "Bachelor of Technical Vocational Teacher Education - Drafting Technology",
+                "Bachelor of Technical Vocational Teacher Education - Mechanical Technology (Machine)",
+                "Bachelor of Technical Vocational Teacher Education - Electrical Technology",
+                "Bachelor of Technical Vocational Teacher Education - Food and Service Management Technology",
+                "Bachelor of Technical Vocational Teacher Education - Automotive Technology",
+                "Bachelor of Technical Vocational Teacher Education - Electronics Technology",
+                "Bachelor of Technical Vocational Teacher Education - Welding and Fabrication Technology",
+                "Bachelor of Science in Industrial Technology - Automotive Technology",
+                "Bachelor of Science in Industrial Technology - Computer Technology",
+                "Bachelor of Science in Industrial Technology - Drafting Technology",
+                "Bachelor of Science in Industrial Technology - Electrical Technology",
+                "Bachelor of Science in Industrial Technology - Electronics Technology",
+                "Bachelor of Science in Industrial Technology - Food Technology",
+                "Bachelor of Science in Industrial Technology - Furniture and Cabinet Marketing Technology",
+                "Bachelor of Science in Industrial Technology - Mechanical Technology"
+            ],
+            "CAF": [
+                "Bachelor of Science in Environmental Science"
+            ],
+            "CON": [
+                "Bachelor of Science in Nursing"
+            ],
+            "CTHM": [
+                "Bachelor of Science in Hospitality Management",
+                "Bachelor of Science in Tourism Management"
+            ]
+        };
 
-        // Validate password and confirm password
-        const password = $('#yourPassword').val().trim();
-        const confirmPassword = $('#confirm_password').val().trim();
-        if (password.length < 8 || password.length > 16) {
-            formIsValid = false;
-            $('#yourPassword').addClass('is-invalid');
-        } else {
-            $('#yourPassword').removeClass('is-invalid').addClass('is-valid');
-        }
-        if (password !== confirmPassword) {
-            formIsValid = false;
-            $('#confirm_password').addClass('is-invalid');
-        } else {
-            $('#confirm_password').removeClass('is-invalid').addClass('is-valid');
-        }
+        $('#college').on('change', function() {
+            const selectedCollege = $(this).val();
+            const courses = coursesByCollege[selectedCollege] || [];
 
-        // Validate school ID file upload
-        const schoolId = $('#school_id').val();
-        const allowedFileTypes = /(\.jpg|\.jpeg|\.png)$/i;
-        if (!schoolId || !allowedFileTypes.test(schoolId)) {
-            formIsValid = false;
-            $('#school_id').addClass('is-invalid');
-        } else {
-            $('#school_id').removeClass('is-invalid').addClass('is-valid');
-        }
+            $('#course').html('<option value="" disabled selected>Select your course</option>');
+            courses.forEach(course => {
+                $('#course').append(`<option value="${course}">${course}</option>`);
+            });
+        });
 
-        // Enable/disable the register button based on form validity
-        $('#register-btn').prop('disabled', !formIsValid);
-    }
-
-    // Real-time validation on form input fields
-    $('#email, #yourPassword, #confirm_password, #school_id').on('input change', function() {
-        validateForm();
-    });
-
-    // School ID image preview
-    $('#school_id').on('change', function(event) {
-        const file = event.target.files[0];
-        const imagePreview = $('#imagePreview');
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imagePreview.attr('src', e.target.result).show();
-            };
-            reader.readAsDataURL(file);
-        } else {
-            imagePreview.attr('src', '').hide();
-        }
-        validateForm(); // Revalidate form on file change
-    });
-
-    // Form submission logic
+        // Form validation and submission
+         // Form validation and submission
+         $(document).ready(function() {
+    // Form validation and submission
     $('form').on('submit', function(e) {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();  // Prevent default form submission
 
         // Show the loader when the form is submitted
-        $('#loaderOverlay').css('display', 'flex');
+        document.getElementById('loaderOverlay').style.display = 'flex';  // Show loader
 
         // If validation passes, submit the form via AJAX
-        const formData = new FormData(this); // For handling file upload
+        const formData = new FormData(this);  // For handling file upload
 
         $.ajax({
             url: 'register_process.php',
@@ -499,7 +516,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             dataType: 'json',
             success: function(response) {
                 // Hide the loader when the request completes
-                $('#loaderOverlay').hide();
+                document.getElementById('loaderOverlay').style.display = 'none';
 
                 // Show SweetAlert based on success or failure
                 if (response.success) {
@@ -520,107 +537,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     });
                 }
             },
-            error: function() {
-                $('#loaderOverlay').hide(); // Hide the loader on error
+            error: function(xhr, status, error) {
+                // Hide the loader in case of an error as well
+                document.getElementById('loaderOverlay').style.display = 'none';
 
                 Swal.fire({
                     title: 'Registration Successful!',
                     text: 'Thank you for registering. Your account is currently pending approval by the admin. The admins will review your submission, including the school ID you provided, before approving your account. Once approved, you will be able to log in and access your account.',
                     icon: 'success',
                     confirmButtonText: 'OK'
-                }).then(() => {
-                    window.location.href = 'https://ramonianlostgems.com/';
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'https://ramonianlostgems.com/'; // Redirect or do something else
+                    }
                 });
             }
         });
     });
-$(document).ready(function() {
-    // Populate courses dynamically based on selected college
-    const coursesByCollege = {
-        "CABA": [
-            "Bachelor of Science in Accountancy",
-            "Bachelor of Science in Accounting and Information System",
-            "Bachelor of Science in Business Administration - Marketing",
-            "Bachelor of Science in Business Administration - Financial Management",
-            "Bachelor of Science in Business Administration - Human Resource Development Management",
-            "Bachelor of Public Administration"
-        ],
-        "CAS": [
-            "Bachelor of Science in Biology",
-            "Bachelor of Science in Psychology"
-        ],
-        "N/A": ["N/A"],
-        "CCIT": [
-            "Bachelor of Science in Computer Science",
-            "Bachelor of Science in Information Technology"
-        ],
-        "CTE": [
-            "Bachelor of Secondary Education - English Education",
-            "Bachelor of Secondary Education - Filipino Education",
-            "Bachelor of Secondary Education - Mathematics Education",
-            "Bachelor of Secondary Education - Science Education",
-            "Bachelor of Secondary Education - Social Studies Education",
-            "Bachelor of Elementary Education",
-            "Bachelor of Physical Education",
-            "Bachelor of Professional Education"
-        ],
-        "COE": [
-            "Bachelor of Science in Civil Engineering",
-            "Bachelor of Science in Electrical Engineering",
-            "Bachelor of Science in Mechanical Engineering",
-            "Bachelor of Science in Computer Engineering",
-            "Bachelor of Science in Mining Engineering"
-        ],
-        "CIT": [
-            "Bachelor of Technology and Livelihood Education - Industrial Arts",
-            "Bachelor of Technical Vocational Teacher Education - Computer Programming",
-            "Bachelor of Technical Vocational Teacher Education - Drafting Technology",
-            "Bachelor of Technical Vocational Teacher Education - Mechanical Technology (Machine)",
-            "Bachelor of Technical Vocational Teacher Education - Electrical Technology",
-            "Bachelor of Technical Vocational Teacher Education - Food and Service Management Technology",
-            "Bachelor of Technical Vocational Teacher Education - Automotive Technology",
-            "Bachelor of Technical Vocational Teacher Education - Electronics Technology",
-            "Bachelor of Technical Vocational Teacher Education - Welding and Fabrication Technology",
-            "Bachelor of Science in Industrial Technology - Automotive Technology",
-            "Bachelor of Science in Industrial Technology - Computer Technology",
-            "Bachelor of Science in Industrial Technology - Drafting Technology",
-            "Bachelor of Science in Industrial Technology - Electrical Technology",
-            "Bachelor of Science in Industrial Technology - Electronics Technology",
-            "Bachelor of Science in Industrial Technology - Food Technology",
-            "Bachelor of Science in Industrial Technology - Furniture and Cabinet Marketing Technology",
-            "Bachelor of Science in Industrial Technology - Mechanical Technology"
-        ],
-        "CAF": ["Bachelor of Science in Environmental Science"],
-        "CON": ["Bachelor of Science in Nursing"],
-        "CTHM": [
-            "Bachelor of Science in Hospitality Management",
-            "Bachelor of Science in Tourism Management"
-        ]
-    };
-
-    // Handle dynamic population of courses based on college selection
-    $('#college').on('change', function() {
-        const selectedCollege = $(this).val();
-        const courses = coursesByCollege[selectedCollege] || [];
-
-        $('#course').html('<option value="" disabled selected>Select your course</option>');
-        courses.forEach(course => {
-            $('#course').append(`<option value="${course}">${course}</option>`);
-        });
-        validateForm(); // Revalidate the form after selecting a course
-    });
-
-    // Handle role selection change
-    $('#role-select').on('change', function() {
-        const selectedRole = $(this).val();
-
-        // Redirect based on the selected role
-        if (selectedRole === 'student') {
-            window.location.href = 'https://ramonianlostgems.com/register.php/';
-        } else if (selectedRole === 'faculty') {
-            window.location.href = 'https://ramonianlostgems.com/register_staff.php';
-        }
-    });
+});
 });
     document.addEventListener('DOMContentLoaded', function () {
             // Handle role selection change
@@ -637,6 +571,23 @@ $(document).ready(function() {
                 }
             });
         });
+        document.getElementById('email').addEventListener('input', function () {
+        const email = this.value;
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const emailErrorDiv = document.getElementById('email-error');
+        const registerBtn = document.getElementById('register-btn');
+
+        if (emailPattern.test(email)) {
+            this.classList.remove('is-invalid');
+            emailErrorDiv.style.display = 'none';
+            registerBtn.disabled = false; // Enable the button when the email is valid
+        } else {
+            this.classList.add('is-invalid');
+            emailErrorDiv.style.display = 'block';
+            emailErrorDiv.textContent = 'Please enter a valid email address.';
+            registerBtn.disabled = true; // Disable the button when the email is invalid
+        }
+    });
     document.getElementById('school_id').addEventListener('change', function(event) {
         const file = event.target.files[0]; // Get the selected file
         const imagePreview = document.getElementById('imagePreview'); // Get the preview element
