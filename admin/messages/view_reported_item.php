@@ -1,8 +1,4 @@
 <?php
-// Enable error reporting for debugging
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 include '../../config.php';
 
 // Database connection
@@ -135,83 +131,113 @@ if ($message_id > 0) {
         <h1>Found Item Details</h1>
         <?php
         if ($result->num_rows > 0) {
+            $messages = [];
             while ($row = $result->fetch_assoc()) {
+                if (!isset($messages[$row['id']])) {
+                    $messages[$row['id']] = [
+                        'message' => $row['message'], 
+                        'images' => [],
+                        'first_name' => $row['first_name'],
+                        'landmark' => $row['landmark'],
+                        'title' => $row['title'],
+                        'college' => $row['college'],
+                        'email' => $row['email'],
+                        'avatar' => $row['avatar'],
+                        'contact' => $row['contact'],
+                        'founder' => $row['founder'],
+                        'time_found' => $row['time_found'],
+                        'category_name' => $row['category_name'],
+                        'is_staff' => $row['is_staff'],
+                        'status' => $row['status']
+                    ];
+                }
+                if ($row['image_path']) {
+                    $fullImagePath = base_url . 'uploads/items/' . $row['image_path'];
+                    $messages[$row['id']]['images'][] = $fullImagePath;
+                }
+            }
+            
+            foreach ($messages as $msgId => $msgData) {
                 echo "<div class='message-box'>";
-                
-                // Variables for user info (either from user_member or user_staff)
-                $firstName = '';
-                $lastName = '';
-                $email = '';
-                $departmentOrCollege = '';
-                
-                // If user is a student (user_member)
-                if (!empty($row['student_first_name'])) {
-                    $firstName = htmlspecialchars($row['student_first_name']);
-                    $lastName = htmlspecialchars($row['student_last_name']);
-                    $email = htmlspecialchars($row['student_email']);
-                    $departmentOrCollege = htmlspecialchars($row['college']);
-                } 
-                // If user is a staff (user_staff)
-                elseif (!empty($row['staff_first_name'])) {
-                    $firstName = htmlspecialchars($row['staff_first_name']);
-                    $lastName = htmlspecialchars($row['staff_last_name']);
-                    $email = htmlspecialchars($row['staff_email']);
-                    $departmentOrCollege = htmlspecialchars($row['staff_department']);
+                $firstName = htmlspecialchars($msgData['first_name'] ?? '');
+                $email = htmlspecialchars($msgData['email'] ?? '');
+                $college = htmlspecialchars($msgData['college'] ?? '');
+                $title = htmlspecialchars($msgData['title'] ?? '');
+                $landmark = htmlspecialchars($msgData['landmark'] ?? '');
+                $message = htmlspecialchars($msgData['message'] ?? '');
+                $avatar = htmlspecialchars($msgData['avatar'] ?? '');
+                $contact = htmlspecialchars($msgData['contact'] ?? '');
+                $founder = htmlspecialchars($msgData['founder'] ?? '');
+                $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
+                $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
+                $isStaff = htmlspecialchars($msgData['is_staff'] ?? '');
+
+                // If user info is empty, fetch employee details
+                if (empty($firstName) && empty($email)) {
+                    if ($isStaff) {
+                        // Fetch employee details if the user is an employee
+                        $employeeSql = "SELECT name, email, department FROM employee_member WHERE id = $msgId";
+                        $employeeResult = $conn->query($employeeSql);
+                        
+                        if ($employeeResult->num_rows > 0) {
+                            $employeeData = $employeeResult->fetch_assoc();
+                            $firstName = htmlspecialchars($employeeData['name']);
+                            $email = htmlspecialchars($employeeData['email']);
+                            $college = htmlspecialchars($employeeData['department']);
+                        }
+                    }
                 }
 
-                // Check if we have user info (either student or staff)
-                if ($firstName || $email || $departmentOrCollege) {
-                    echo "<p><strong>User Info:</strong> $firstName $lastName ($email)</p>";
-                    echo "<p><strong>Department/College:</strong> $departmentOrCollege</p>";
+                // Only display avatar if the post is not from a guest user
+                if ($firstName || $email || $college) {
+                    if ($avatar) {
+                        $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
+                        echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
+                    } else {
+                        echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                    }
                 } else {
-                    echo "<p><strong>User Info:</strong> Guest User</p>";
+                    echo "<p><strong>User Info:</strong> Guest User</p>"; // Indicate that the post is from a guest
                 }
-
-                // Continue with item details display
-                $title = htmlspecialchars($row['title']);
-                $landmark = htmlspecialchars($row['landmark']);
-                $timeFound = htmlspecialchars($row['time_found']);
-                $message = htmlspecialchars($row['message']);
-                $categoryName = htmlspecialchars($row['category_name']);
-                $contact = htmlspecialchars($row['contact']);
-                $founder = htmlspecialchars($row['founder']);
-                
-                echo "<p><strong>Item Name:</strong> $title</p>";
-                echo "<p><strong>Category:</strong> $categoryName</p>";
-                echo "<p><strong>Finder's Name:</strong> $founder</p>";
-                echo "<p><strong>Location where the item was found:</strong> $landmark</p>";
-                echo "<p><strong>Date and Time Found:</strong> $timeFound</p>";
-                echo "<p><strong>Description:</strong> $message</p>";
-                echo "<p><strong>Contact:</strong> $contact</p>";
+            
+                echo "<p><strong>Item Name:</strong> " . $title . "</p>";
+                echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
+                echo "<p><strong>Finder's Name:</strong> " . $founder . "</p>";
+                echo "<p><strong>Location where the item was found:</strong> " . $landmark . "</p>";
+                echo "<p><strong>Date and Time Found:</strong> " . $timeFound . "</p>";
+                echo "<p><strong>Description:</strong> " . $message . "</p>";
+                echo "<p><strong>Contact:</strong> " . $contact . "</p>";
+            
+                // Display user information only if available
+                if ($firstName || $email || $college) {
+                    echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
+                    echo "<p><strong>Department:</strong> " . ($college ? $college : 'N/A') . "</p>";
+                } else {
+                    // No additional user info for guest posts
+                }
 
                 // Status dropdown and status badge display
                 echo "<div class='form-group'>";
                 echo "<label for='status' class='control-label'>Status</label>";
-                echo "<select name='status' id='status-".$row['id']."' class='form-select form-select-sm rounded-0' required='required'>";
-                echo "<option value='0' " . ($row['status'] == 0 ? 'selected' : '') . ">Pending</option>";
-                echo "<option value='1' " . ($row['status'] == 1 ? 'selected' : '') . ">Published</option>";
-                echo "<option value='2' " . ($row['status'] == 2 ? 'selected' : '') . ">Claimed</option>";
-                echo "<option value='3' " . ($row['status'] == 3 ? 'selected' : '') . ">Surrendered</option>";
+                echo "<select name='status' id='status-".$msgId."' class='form-select form-select-sm rounded-0' required='required'>";
+                echo "<option value='0' " . ($msgData['status'] == 0 ? 'selected' : '') . ">Pending</option>";
+                echo "<option value='1' " . ($msgData['status'] == 1 ? 'selected' : '') . ">Published</option>";
+                echo "<option value='2' " . ($msgData['status'] == 2 ? 'selected' : '') . ">Claimed</option>";
+                echo "<option value='3' " . ($msgData['status'] == 3 ? 'selected' : '') . ">Surrendered</option>";
                 echo "</select>";
-                echo "<button class='btn btn-primary save-status-btn' data-id='" . $row['id'] . "'>Save Status</button>";
+                echo "<button class='btn btn-primary save-status-btn' data-id='" . $msgId . "'>Save Status</button>";
                 echo "</div>";
                 
                 echo "<dt class='text-muted'>Status</dt>";
-                if ($row['status'] == 1) {
+                if ($msgData['status'] == 1) {
                     echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
-                } elseif ($row['status'] == 2) {
+                } elseif ($msgData['status'] == 2) {
                     echo "<span class='badge bg-success px-3 rounded-pill'>Claimed</span>";
-                } elseif ($row['status'] == 3) {
+                } elseif ($msgData['status'] == 3) {
                     echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
                 } else {
                     echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
                 }
-                
-                echo "</div>";
-            }
-        } else {
-            echo "No details found for this item.";
-        }
                 
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
