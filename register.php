@@ -325,7 +325,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <option value="CAS">College of Arts and Sciences</option>
                                     <option value="CCIT">College of Communication and Information Technology</option>
                                     <option value="CTE">College of Teacher Education</option>
-                                    <option value="CE">College of Engineering</option>
+                                    <option value="COE">College of Engineering</option>
                                     <option value="CIT">College of Industrial Technology</option>
                                     <option value="CAF">College of Agriculture and Forestry</option>
                                     <option value="NUR">College of Nursing</option>
@@ -475,7 +475,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "CAF": [
                 "Bachelor of Science in Environmental Science"
             ],
-            "NUR": [
+            "CON": [
                 "Bachelor of Science in Nursing"
             ],
             "CTHM": [
