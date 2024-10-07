@@ -14,7 +14,7 @@ $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($message_id > 0) {
     // SQL query to fetch the details of the selected message by its ID
-    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name
+    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name, um.is_staff
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN user_member um ON mh.user_id = um.id
