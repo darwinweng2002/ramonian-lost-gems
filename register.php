@@ -446,7 +446,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 "Bachelor of Physical Education",
                 "Bachelor of Professional Education"
             ],
-            "CE": [
+            "COE": [
                 "Bachelor of Science in Civil Engineering",
                 "Bachelor of Science in Electrical Engineering",
                 "Bachelor of Science in Mechanical Engineering",
