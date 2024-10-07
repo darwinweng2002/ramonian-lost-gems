@@ -413,148 +413,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <script src="<?= base_url ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="<?= base_url ?>assets/js/main.js"></script>
   <script>
-   $(document).ready(function() {
+    $(document).ready(function() {
     // Populate courses dynamically based on selected college
-
-    $('#college').on('change', function() {
-        const selectedCollege = $(this).val();
-        const courses = coursesByCollege[selectedCollege] || [];
-
-        $('#course').html('<option value="" disabled selected>Select your course</option>');
-        courses.forEach(course => {
-            $('#course').append(`<option value="${course}">${course}</option>`);
-        });
-        validateForm(); // Revalidate the form after selecting a course
-    });
-
-    // Form validation logic
-    function validateForm() {
-        let formIsValid = true;
-
-        // Validate email
-        const email = $('#email').val().trim();
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailPattern.test(email)) {
-            formIsValid = false;
-            $('#email').addClass('is-invalid');
-            $('#email-error').text('Please enter a valid email address').show();
-        } else {
-            $('#email').removeClass('is-invalid').addClass('is-valid');
-            $('#email-error').hide();
-        }
-
-        // Validate password and confirm password
-        const password = $('#yourPassword').val().trim();
-        const confirmPassword = $('#confirm_password').val().trim();
-
-        if (password.length < 8 || password.length > 16) {
-            formIsValid = false;
-            $('#yourPassword').addClass('is-invalid');
-            $('#yourPassword').siblings('.invalid-feedback').show().text('Password is too short or not match');
-        } else {
-            $('#yourPassword').removeClass('is-invalid').addClass('is-valid');
-            $('#yourPassword').siblings('.invalid-feedback').hide();
-        }
-
-        if (password !== confirmPassword) {
-            formIsValid = false;
-            $('#confirm_password').addClass('is-invalid');
-            $('#confirm_password').siblings('.invalid-feedback').show().text('Password is too short or not match');
-        } else if (confirmPassword.length >= 8 && confirmPassword.length <= 16) {
-            $('#confirm_password').removeClass('is-invalid').addClass('is-valid');
-            $('#confirm_password').siblings('.invalid-feedback').hide();
-        }
-
-        // Validate school ID file upload
-        const schoolId = $('#school_id').val();
-        const allowedFileTypes = /(\.jpg|\.jpeg|\.png)$/i;
-        if (!schoolId || !allowedFileTypes.test(schoolId)) {
-            formIsValid = false;
-            $('#school_id').addClass('is-invalid');
-        } else {
-            $('#school_id').removeClass('is-invalid').addClass('is-valid');
-        }
-
-        // Enable/disable the register button based on form validity
-        $('#register-btn').prop('disabled', !formIsValid);
-    }
-
-    // Real-time validation on form input fields
-    $('#email, #yourPassword, #confirm_password, #school_id').on('input change', function() {
-        validateForm();
-    });
-
-    // School ID image preview
-    $('#school_id').on('change', function(event) {
-        const file = event.target.files[0];
-        const imagePreview = $('#imagePreview');
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imagePreview.attr('src', e.target.result).show();
-            };
-            reader.readAsDataURL(file);
-        } else {
-            imagePreview.attr('src', '').hide();
-        }
-        validateForm(); // Revalidate form on file change
-    });
-
-    // Form submission logic
-    $('form').on('submit', function(e) {
-        e.preventDefault(); // Prevent default form submission
-
-        // Show the loader when the form is submitted
-        $('#loaderOverlay').css('display', 'flex');
-
-        // If validation passes, submit the form via AJAX
-        const formData = new FormData(this); // For handling file upload
-
-        $.ajax({
-            url: 'register_process.php',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            success: function(response) {
-                // Hide the loader when the request completes
-                $('#loaderOverlay').hide();
-
-                // Show SweetAlert based on success or failure
-                if (response.success) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.href = 'login.php';
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: response.message,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            },
-            error: function() {
-                $('#loaderOverlay').hide(); // Hide the loader on error
-
-                Swal.fire({
-                    title: 'Registration Successful!',
-                    text: 'Thank you for registering. Your account is currently pending approval by the admin. The admins will review your submission, including the school ID you provided, before approving your account. Once approved, you will be able to log in and access your account.',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    window.location.href = 'https://ramonianlostgems.com/';
-                });
-            }
-        });
-    });
     const coursesByCollege = {
         "CABA": [
             "Bachelor of Science in Accountancy",
@@ -613,6 +473,165 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "Bachelor of Science in Tourism Management"
         ]
     };
+
+    $('#college').on('change', function() {
+        const selectedCollege = $(this).val();
+        const courses = coursesByCollege[selectedCollege] || [];
+
+        $('#course').html('<option value="" disabled selected>Select your course</option>');
+        courses.forEach(course => {
+            $('#course').append(`<option value="${course}">${course}</option>`);
+        });
+    });
+
+    // Form validation logic triggered only when a field loses focus (blur)
+    function validateField(field) {
+        const fieldName = field.attr('id');
+        let isValid = true;
+
+        // Validate email
+        if (fieldName === 'email') {
+            const email = field.val().trim();
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(email)) {
+                isValid = false;
+                field.addClass('is-invalid');
+                $('#email-error').text('Please enter a valid email address').show();
+            } else {
+                field.removeClass('is-invalid').addClass('is-valid');
+                $('#email-error').hide();
+            }
+        }
+
+        // Validate password and confirm password
+        if (fieldName === 'yourPassword' || fieldName === 'confirm_password') {
+            const password = $('#yourPassword').val().trim();
+            const confirmPassword = $('#confirm_password').val().trim();
+
+            if (password.length < 8 || password.length > 16) {
+                isValid = false;
+                $('#yourPassword').addClass('is-invalid');
+                $('#yourPassword').siblings('.invalid-feedback').show().text('Password must be between 8 and 16 characters long.');
+            } else {
+                $('#yourPassword').removeClass('is-invalid').addClass('is-valid');
+                $('#yourPassword').siblings('.invalid-feedback').hide();
+            }
+
+            if (password !== confirmPassword) {
+                isValid = false;
+                $('#confirm_password').addClass('is-invalid');
+                $('#confirm_password').siblings('.invalid-feedback').show().text('Passwords do not match.');
+            } else if (confirmPassword.length >= 8 && confirmPassword.length <= 16) {
+                $('#confirm_password').removeClass('is-invalid').addClass('is-valid');
+                $('#confirm_password').siblings('.invalid-feedback').hide();
+            }
+        }
+
+        // Validate school ID file upload
+        if (fieldName === 'school_id') {
+            const schoolId = field.val();
+            const allowedFileTypes = /(\.jpg|\.jpeg|\.png)$/i;
+            if (!schoolId || !allowedFileTypes.test(schoolId)) {
+                isValid = false;
+                field.addClass('is-invalid');
+            } else {
+                field.removeClass('is-invalid').addClass('is-valid');
+            }
+        }
+
+        // Enable/disable the register button based on the overall validity
+        $('#register-btn').prop('disabled', !isValid);
+        return isValid;
+    }
+
+    // Attach validation to blur events
+    $('#email, #yourPassword, #confirm_password, #school_id').on('blur', function() {
+        validateField($(this)); // Validate individual field on blur
+    });
+
+    // School ID image preview
+    $('#school_id').on('change', function(event) {
+        const file = event.target.files[0];
+        const imagePreview = $('#imagePreview');
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.attr('src', e.target.result).show();
+            };
+            reader.readAsDataURL(file);
+        } else {
+            imagePreview.attr('src', '').hide();
+        }
+        validateField($(this)); // Validate file input on file selection
+    });
+
+    // Form submission logic
+    $('form').on('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Show the loader when the form is submitted
+        $('#loaderOverlay').css('display', 'flex');
+
+        // Check all fields before submission
+        const isValid = validateField($('#email')) &&
+                        validateField($('#yourPassword')) &&
+                        validateField($('#confirm_password')) &&
+                        validateField($('#school_id'));
+
+        if (!isValid) {
+            $('#loaderOverlay').hide();
+            return; // Stop form submission if any field is invalid
+        }
+
+        // If validation passes, submit the form via AJAX
+        const formData = new FormData(this); // For handling file upload
+
+        $.ajax({
+            url: 'register_process.php',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function(response) {
+                // Hide the loader when the request completes
+                $('#loaderOverlay').hide();
+
+                // Show SweetAlert based on success or failure
+                if (response.success) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = 'login.php';
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+            error: function() {
+                $('#loaderOverlay').hide(); // Hide the loader on error
+
+                Swal.fire({
+                    title: 'Registration Successful!',
+                    text: 'Thank you for registering. Your account is currently pending approval by the admin. The admins will review your submission, including the school ID you provided, before approving your account. Once approved, you will be able to log in and access your account.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = 'https://ramonianlostgems.com/';
+                });
+            }
+        });
+    });
+});
     // Handle role selection change
     $('#role-select').on('change', function() {
         const selectedRole = $(this).val();
