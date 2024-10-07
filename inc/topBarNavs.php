@@ -194,41 +194,10 @@
         padding-right: 0; /* No margin when sidebar is hidden */
     }
 }
-.loader-overlay {
-    display: none; /* Initially hidden */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8); /* Transparent white background */
-    z-index: 9999; /* High z-index to ensure it's on top */
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-}
-
-/* The loader itself */
-.loader {
-    border: 8px solid #f3f3f3; /* Light grey */
-    border-top: 8px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1s linear infinite;
-}
-
-/* Loader animation */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
 </style>
 
 <header id="header" class="header fixed-top d-flex align-items-center">
     <!-- Sidebar -->
-    <div id="loader" class="loader-wrapper" style="display:none;">
-    <div class="loader"></div>
     <div id="side-nav-bar">
         <br><br>
         <ul>
@@ -324,28 +293,4 @@
             }
         });
     });
-    $('#loader').show();
-         
-        
-        // Send the Google ID token to your server for verification and user registration/login
-        $.post("google-signin.php", {
-            id_token: response.credential,
-            first_name: data.given_name,
-            last_name: data.family_name,
-            email: data.email
-        }, function(result) {
-            $('#loader').hide();  // Hide the loader after response
-            if (result.success) {
-                // Redirect or notify the user
-                window.location.href = "dashboard.php";
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: result.message,
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
-    }
 </script>
