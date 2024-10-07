@@ -13,11 +13,18 @@ if ($conn->connect_error) {
 $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($message_id > 0) {
-    // SQL query to fetch the details of the selected message by its ID
-    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name
+    // SQL query to fetch the details of the selected message by its ID from both user_member and user_staff
+    $sql = "
+        SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, user_info.first_name, user_info.college, user_info.email, user_info.avatar, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
-        LEFT JOIN user_member um ON mh.user_id = um.id
+        LEFT JOIN (
+            -- Fetch data from user_member
+            SELECT id AS user_id, first_name, college, email, avatar, 'member' AS user_type FROM user_member
+            UNION
+            -- Fetch data from user_staff
+            SELECT id AS user_id, first_name, department AS college, email, avatar, 'staff' AS user_type FROM user_staff
+        ) AS user_info ON mh.user_id = user_info.user_id
         LEFT JOIN categories c ON mh.category_id = c.id
         WHERE mh.id = $message_id";
 
@@ -28,6 +35,7 @@ if ($message_id > 0) {
     exit;
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
