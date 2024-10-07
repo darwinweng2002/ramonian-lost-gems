@@ -238,6 +238,7 @@ $result = $stmt->get_result();
                         <option value="pending" <?= ($row['status'] === 'pending') ? 'selected' : '' ?>>Pending</option>
                         <option value="approved" <?= ($row['status'] === 'approved') ? 'selected' : '' ?>>Approved</option>
                         <option value="rejected" <?= ($row['status'] === 'rejected') ? 'selected' : '' ?>>Rejected</option>
+                        <option value="rejected" <?= ($row['status'] === 'claimed') ? 'selected' : '' ?>>Claimed</option>
                     </select>
                     <button type="submit">Update Status</button>
                 </form>

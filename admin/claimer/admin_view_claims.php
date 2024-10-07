@@ -120,7 +120,10 @@ $result = $conn->query($sql);
             background-color: #dc3545;
             color: white;
         }
-
+        .btn-claimed {
+            background-color: #dc3545;
+            color: white;
+        }
         .btn-info {
             background-color: #007bff;
             color: white;

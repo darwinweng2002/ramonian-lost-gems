@@ -475,15 +475,16 @@ if (!$is_guest) {
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($claimer as $claim): ?>
-                <tr>
-                <td><a href="https://ramonianlostgems.com/itemss/published_items.php?id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
-                    <td><?= htmlspecialchars($claim['claim_date']) ?></td>
-                    <td class="<?= $claim['status'] === 'approved' ? 'status-approved' : ($claim['status'] === 'rejected' ? 'status-declined' : 'status-pending') ?>">
-                        <?= htmlspecialchars(ucfirst($claim['status'])) ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
+        <?php foreach ($claimer as $claim): ?>
+    <tr>
+        <td><a href="https://ramonianlostgems.com/itemss/published_items.php?id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
+        <td><?= htmlspecialchars($claim['claim_date']) ?></td>
+        <td class="<?= $claim['status'] === 'approved' ? 'status-approved' : ($claim['status'] === 'rejected' ? 'status-declined' : ($claim['status'] === 'claimed' ? 'status-claimed' : 'status-pending')) ?>">
+            <?= htmlspecialchars(ucfirst($claim['status'])) ?>
+        </td>
+    </tr>
+<?php endforeach; ?>
+
         </tbody>
     </table>
 </div>
