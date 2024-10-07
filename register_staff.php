@@ -279,14 +279,14 @@ body {
                                     <div class="col-12">
                                         <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
                                         <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
-                                        <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
+                                        <div class="invalid-feedback">Password is too short or didn't match</div>
                                     </div>
 
                                     <!-- Confirm Password -->
                                     <div class="col-12">
                                         <label for="confirm_password" class="form-label">Confirm Password</label>
                                         <input type="password" name="confirm_password" class="form-control" id="confirm_password" minlength="8" maxlength="16" required>
-                                        <div class="invalid-feedback">Password must be between 8 and 16 characters long.</div>
+                                        <div class="invalid-feedback">Password is too short or didn't match</div>
                                     </div>
 
                                     <!-- Image Upload (Profile Picture) -->
