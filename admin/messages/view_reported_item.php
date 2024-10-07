@@ -13,18 +13,11 @@ if ($conn->connect_error) {
 $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($message_id > 0) {
-    // SQL query to fetch the details of the selected message by its ID from both user_member and user_staff
-    $sql = "
-        SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, user_info.first_name, user_info.college, user_info.email, user_info.avatar, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name
+    // SQL query to fetch the details of the selected message by its ID
+    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
-        LEFT JOIN (
-            -- Fetch data from user_member
-            SELECT id AS user_id, first_name, college, email, avatar, 'member' AS user_type FROM user_member
-            UNION
-            -- Fetch data from user_staff
-            SELECT id AS user_id, first_name, department AS college, email, avatar, 'staff' AS user_type FROM user_staff
-        ) AS user_info ON mh.user_id = user_info.user_id
+        LEFT JOIN user_member um ON mh.user_id = um.id
         LEFT JOIN categories c ON mh.category_id = c.id
         WHERE mh.id = $message_id";
 
@@ -35,7 +28,6 @@ if ($message_id > 0) {
     exit;
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -148,8 +140,7 @@ if ($message_id > 0) {
                         'contact' => $row['contact'],
                         'founder' => $row['founder'],
                         'time_found' => $row['time_found'],
-                        'category_name' => $row['category_name'],
-                        'is_staff' => $row['is_staff'],
+                        'category_name' => $row['category_name'],  
                         'status' => $row['status']
                     ];
                 }
@@ -171,25 +162,8 @@ if ($message_id > 0) {
                 $contact = htmlspecialchars($msgData['contact'] ?? '');
                 $founder = htmlspecialchars($msgData['founder'] ?? '');
                 $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
-                $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
-                $isStaff = htmlspecialchars($msgData['is_staff'] ?? '');
-
-                // If user info is empty, fetch employee details
-                if (empty($firstName) && empty($email)) {
-                    if ($isStaff) {
-                        // Fetch employee details if the user is an employee
-                        $employeeSql = "SELECT name, email, department FROM employee_member WHERE id = $msgId";
-                        $employeeResult = $conn->query($employeeSql);
-                        
-                        if ($employeeResult->num_rows > 0) {
-                            $employeeData = $employeeResult->fetch_assoc();
-                            $firstName = htmlspecialchars($employeeData['name']);
-                            $email = htmlspecialchars($employeeData['email']);
-                            $college = htmlspecialchars($employeeData['department']);
-                        }
-                    }
-                }
-
+                $categoryName = htmlspecialchars($msgData['category_name'] ?? ''); 
+                
                 // Only display avatar if the post is not from a guest user
                 if ($firstName || $email || $college) {
                     if ($avatar) {
@@ -213,9 +187,10 @@ if ($message_id > 0) {
                 // Display user information only if available
                 if ($firstName || $email || $college) {
                     echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
-                    echo "<p><strong>Department:</strong> " . ($college ? $college : 'N/A') . "</p>";
+                    echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
                 } else {
                     // No additional user info for guest posts
+                    
                 }
 
                 // Status dropdown and status badge display
@@ -301,6 +276,7 @@ if ($message_id > 0) {
                 }
             });
         });
+
         // SweetAlert for publish confirmation
         $('.publish-btn').on('click', function() {
             var messageId = $(this).data('id');
