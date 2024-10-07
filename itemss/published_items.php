@@ -38,7 +38,7 @@ $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder, mh.status
             SELECT id AS user_id, first_name, college, email, avatar FROM user_member
             UNION
             -- Fetch data from user_staff
-            SELECT id AS user_id, first_name, department AS college, email, avatar FROM user_staff
+            SELECT id AS user_id, first_name, position AS college, email, avatar FROM user_staff
         ) AS user_info ON mh.user_id = user_info.user_id
         LEFT JOIN categories c ON mh.category_id = c.id
         WHERE mh.is_published = 1 AND mh.id = ?
