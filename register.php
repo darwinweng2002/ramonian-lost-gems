@@ -639,23 +639,6 @@ $(document).ready(function() {
                 }
             });
         });
-        document.getElementById('email').addEventListener('input', function () {
-        const email = this.value;
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        const emailErrorDiv = document.getElementById('email-error');
-        const registerBtn = document.getElementById('register-btn');
-
-        if (emailPattern.test(email)) {
-            this.classList.remove('is-invalid');
-            emailErrorDiv.style.display = 'none';
-            registerBtn.disabled = false; // Enable the button when the email is valid
-        } else {
-            this.classList.add('is-invalid');
-            emailErrorDiv.style.display = 'block';
-            emailErrorDiv.textContent = 'Please enter a valid email address.';
-            registerBtn.disabled = true; // Disable the button when the email is invalid
-        }
-    });
     document.getElementById('school_id').addEventListener('change', function(event) {
         const file = event.target.files[0]; // Get the selected file
         const imagePreview = document.getElementById('imagePreview'); // Get the preview element
