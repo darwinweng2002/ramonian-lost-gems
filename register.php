@@ -328,7 +328,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <option value="COE">College of Engineering</option>
                                     <option value="CIT">College of Industrial Technology</option>
                                     <option value="CAF">College of Agriculture and Forestry</option>
-                                    <option value="NUR">College of Nursing</option>
+                                    <option value="CON">College of Nursing</option>
                                     <option value="CTHM">College of Tourism and Hospitality Management</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your college.</div>
