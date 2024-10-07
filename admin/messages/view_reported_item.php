@@ -282,7 +282,7 @@ if ($message_id > 0) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: '../delete_message.php',  // Correct URL to the deletion endpoint
+                url: 'delete_message.php',  // Correct URL to the deletion endpoint
                 type: 'POST',
                 data: { id: messageId },
                 dataType: 'json',
