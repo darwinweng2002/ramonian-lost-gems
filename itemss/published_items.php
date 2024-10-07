@@ -251,15 +251,24 @@ if ($school_type === '0') {
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
             
-                // Display user information only if available
-                if ($firstName || $email || $college || $school_type) {
-                    echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
-                    echo "<p><strong>Department:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
-                    echo "<p><strong>Level:</strong> " . $schoolTypeString . "</p>";
-                } else {
-                    // No additional user info for guest posts
-                    
-                }
+              // Display user information only if available
+if ($firstName || $email || $college) {
+    echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
+
+    if ($userType === 'staff') {
+        // Display department and position for staff users
+        echo "<p><strong>Department:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
+        // If you have a "position" column, add it here
+        // echo "<p><strong>Position:</strong> " . ($position ? htmlspecialchars($position) : 'N/A') . "</p>";
+    } elseif ($userType === 'member') {
+        // Display college and level for member users
+        echo "<p><strong>College:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
+        echo "<p><strong>Level:</strong> " . $schoolTypeString . "</p>";  // Assuming $schoolTypeString is calculated elsewhere
+    }
+} else {
+    echo "<p><strong>User Info:</strong> Guest User</p>";  // Indicate that the post is from a guest
+}
+
             
                 echo "<dt class='text-muted'>Status</dt>";
                 echo "<dd class='ps-4'>";
