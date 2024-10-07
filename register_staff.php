@@ -331,95 +331,94 @@ body {
   <script src="<?= base_url ?>assets/js/main.js"></script>
 <script>
 $(document).ready(function () {
-    // Handle form submission via AJAX
-    $('#registrationForm').on('submit', function (e) {
-        e.preventDefault(); // Prevent default form submission
+    // Initially disable the register button
+    $('button[type="submit"]').prop('disabled', true);
 
-        let formIsValid = true; // Track form validity
+    // Function to check if all fields are valid
+    function validateForm() {
+        let formIsValid = true; // Assume the form is valid
 
         // Validate email format
         const email = $('#email').val().trim();
-        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/; // Email regex pattern
-
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
         if (!emailPattern.test(email)) {
             formIsValid = false;
-            Swal.fire({
-                title: 'Error!',
-                text: 'Please enter a valid email address!',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
+            $('#email').addClass('is-invalid');
+        } else {
+            $('#email').removeClass('is-invalid').addClass('is-valid');
         }
 
-        // Validate that an image is uploaded
+        // Validate profile image is uploaded
         const profileImage = $('#profile_image').val();
         if (!profileImage) {
             formIsValid = false;
             $('#profile_image').addClass('is-invalid');
         } else {
-            $('#profile_image').removeClass('is-invalid').addClass('is-valid');
+            const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+            if (!allowedExtensions.exec(profileImage)) {
+                formIsValid = false;
+                $('#profile_image').addClass('is-invalid');
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please upload a valid image file (jpg, jpeg, png, gif).',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                $('#profile_image').removeClass('is-invalid').addClass('is-valid');
+            }
         }
 
-        // Validate image file type (optional, but recommended)
-        const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-        if (!allowedExtensions.exec(profileImage)) {
-            formIsValid = false;
-            Swal.fire({
-                title: 'Error!',
-                text: 'Please upload a valid image file (jpg, jpeg, png, gif).',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        }
-
-        // Simple password validation
+        // Validate passwords
         const password = $('#yourPassword').val().trim();
         const confirmPassword = $('#confirm_password').val().trim();
-        
-        if (password !== confirmPassword) {
+        if (password !== confirmPassword || password.length < 8 || password.length > 16) {
             formIsValid = false;
-            Swal.fire({
-                title: 'Error!',
-                text: 'Passwords do not match!',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
+            $('#yourPassword, #confirm_password').addClass('is-invalid');
+        } else {
+            $('#yourPassword, #confirm_password').removeClass('is-invalid').addClass('is-valid');
         }
 
-        if (!formIsValid) return; // If the form is invalid, prevent submission
+        // Enable/disable submit button based on validation status
+        $('button[type="submit"]').prop('disabled', !formIsValid);
+    }
+
+    // Listen for input events on each field
+    $('#email, #profile_image, #yourPassword, #confirm_password').on('input change', function () {
+        validateForm();
+    });
+
+    // Handle form submission via AJAX
+    $('#registrationForm').on('submit', function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        if ($('button[type="submit"]').prop('disabled')) {
+            return; // If form is not valid, do not submit
+        }
 
         var formData = new FormData(this);
 
         // Ajax request to handle the registration form submission
         $.ajax({
-            url: 'staff_process.php', // Backend PHP file to process the form
+            url: 'staff_process.php',
             type: 'POST',
             data: formData,
-            processData: false,  // Prevent jQuery from converting the FormData to a query string
-            contentType: false,  // Prevent jQuery from setting the content type
-            dataType: 'json',  // Expecting a JSON response from the backend
+            processData: false,
+            contentType: false,
+            dataType: 'json',
             success: function (response) {
                 if (response.success) {
-                    // Show success message and redirect after confirmation
                     Swal.fire({
                         title: 'Success!',
                         text: response.message || 'Registration successful!',
-                        icon: 'success', // Change the icon to success
+                        icon: 'success',
                         confirmButtonText: 'OK'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = 'https://ramonianlostgems.com'; // Redirect to your desired page
+                            window.location.href = 'https://ramonianlostgems.com';
                         }
                     });
-                } else if (response.message.includes("already taken")) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: response.message || 'This email address is already taken, please use another.',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
                 } else {
-                    // Show error message in case of failure
                     Swal.fire({
                         title: 'Error!',
                         text: response.message || 'An error occurred.',
@@ -429,15 +428,14 @@ $(document).ready(function () {
                 }
             },
             error: function () {
-                // Convert the error message to success message for this scenario
                 Swal.fire({
-                    title: 'Success!',  // Change title to Success
-                    text: 'Thank you for registering. Your account is currently pending approval by the admin. The admins will review your submission, including the picture of ID you provided, before approving your account. Once approved, you will be able to log in and access your account.', // Message for success
-                    icon: 'success',  // Change the icon to success
+                    title: 'Success!',
+                    text: 'Thank you for registering. Your account is currently pending approval by the admin.',
+                    icon: 'success',
                     confirmButtonText: 'OK'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = 'https://ramonianlostgems.com/'; // Redirect to your desired page
+                        window.location.href = 'https://ramonianlostgems.com/';
                     }
                 });
             }
