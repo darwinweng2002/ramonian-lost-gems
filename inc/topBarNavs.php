@@ -1,31 +1,33 @@
 <!-- ======= Header ======= -->
 <style type="text/css">
-/* Styling for the logo and header */
-.logo img {
+    /* Styling for the logo and header */
+    .logo img {
         width: 55px; /* Logo size */
         height: 55px;
         object-fit: contain; /* Ensure the logo fits within its container */
         margin-top: 10px;
     }
 
-.container-lg {
-    display: flex;
-    justify-content: space-between; /* Push logo to the left, and sidebar toggle to the right */
-    align-items: center;
-    width: 100%;
-}
+    /* Aligning content inside the header */
+    .container-lg {
+        display: flex;
+        justify-content: space-between; /* Push logo to the left, and sidebar toggle to the right */
+        align-items: center;
+        width: 100%;
+    }
 
-.header {
-    height: 60px;
-    background-color: #fff;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 0;
-}
+    .header {
+        height: 60px; /* Adjust this as needed based on your logo size */
+        background-color: #fff; /* Optional: set background color */
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: add shadow for better visibility */
+        padding: 0;
+    }
 
-/* Sidebar styling */
+    /* Sidebar styling */
+    /* Sidebar styling */
 #side-nav-bar {
     position: fixed;
-    right: -250px; /* Initially hide the sidebar */
+    right: 250px; /* Initially hide the sidebar */
     top: 0;
     width: 250px;
     height: 100%;
@@ -55,7 +57,7 @@
     color: #ecf0f1;
     display: block;
     font-size: 14px;
-    padding: 5px 10px;
+    padding: 5px 10px; /* Ensures padding applies only to the left and right within the sidebar */
     transition: background-color 0.3s ease, padding-left 0.3s ease;
 }
 
@@ -83,117 +85,34 @@
     background-color: #2980b9;
 }
 
-/* Responsive adjustments */
-@media (max-width: 1200px) {
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
     #sidebar-toggle-button {
         display: block;
     }
 
     #side-nav-bar {
-        width: 250px;
-        right: -250px; /* Hide the sidebar by default */
-    }
-    #side-nav-bar {
-    position: fixed;
-    right: -250px; /* Initially hide the sidebar */
-    top: 0;
-    width: 250px;
-    height: 100%;
-    background-color: #2c3e50;
-    color: #ecf0f1;
-    transition: right 0.3s ease;
-    z-index: 9999;
-    overflow-y: auto;
-    padding-top: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-}
-
-/* Sidebar links */
-#side-nav-bar ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-#side-nav-bar ul li {
-    padding: 10px;
-    border-bottom: 1px solid #34495e;
-}
-
-#side-nav-bar ul li a {
-    text-decoration: none;
-    color: #ecf0f1;
-    display: block;
-    font-size: 14px;
-    padding: 5px 10px;
-    transition: background-color 0.3s ease, padding-left 0.3s ease;
-}
-
-#side-nav-bar ul li a:hover {
-    background-color: #34495e;
-    padding-left: 30px; /* Increase padding slightly on hover for a sliding effect */
-}
-
-/* Sidebar toggle button styling */
-#sidebar-toggle-button {
-    position: fixed;
-    right: 40px; /* Keep the button on the right */
-    top: 0; /* Adjust to align with your design */
-    background-color: #3498db; /* Professional color */
-    color: white;
-    padding: 21.5px 30px;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    z-index: 10000; /* Make sure it's above other elements */
-}
-
-#sidebar-toggle-button:hover {
-    background-color: #2980b9;
-}
-}
-
-@media (max-width: 1200px) {
-    #sidebar-toggle-button {
-        display: block;
-    }
-
-    #side-nav-bar {
-        width: 250px;
-        right: -250px; /* Hide the sidebar by default */
-    }
-
-    .main-content {
-        padding-right: 0; /* No margin when sidebar is hidden */
+        width: 50%;
+        right: -100%;
     }
 }
-@media (min-width: 1201px) {
-    #side-nav-bar {
-        right: 0; /* Ensure sidebar is visible on larger screens */
+
+
+    /* Centering and aligning logo and button */
+    .logo {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* Align logo to the left */
+        padding-left: 15px; /* Add some padding for spacing from the left */
+        height: 100%; /* Ensure the logo container fills the height of the header */
     }
 
-    #sidebar-toggle-button {
-        display: block; /* Hide the toggle button on larger screens */
+    /* Push sidebar toggle button to the right */
+    .navbar-toggler {
+        margin-left: auto;
+        display: flex;
+        justify-content: flex-end;
     }
-
-    .main-content {
-        padding-right: 270px; /* Ensure content isn't hidden behind sidebar */
-    }
-}
-@media (max-width: 1024px) {
-    #sidebar-toggle-button {
-        display: block;
-    }
-
-    #side-nav-bar {
-        right: -250px; /* Ensure the sidebar starts hidden */
-    }
-
-    .main-content {
-        padding-right: 0; /* No margin when sidebar is hidden */
-    }
-}
 </style>
 
 <header id="header" class="header fixed-top d-flex align-items-center">
@@ -211,7 +130,7 @@
                             <circle cx="12" cy="12" r="10" />
                             <circle cx="12" cy="10" r="3" />
                             <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
-                        </svg> Profile </a></li>';
+                        </svg> Profile Staff</a></li>';
             } elseif (isset($_SESSION['user_id'])) {
                 // If logged in as a regular user, show the user profile link
                 echo '<li><a href="https://ramonianlostgems.com/user_members/dashboard.php">
@@ -233,7 +152,7 @@
     <div class="container-lg d-flex justify-content-between px-4">
         <!-- Logo aligned to the left -->
         <div class="logo d-flex align-items-center">
-            
+            <a href="<?= base_url ?>">
                 <img src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
             </a>
         </div>
