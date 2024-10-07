@@ -162,7 +162,7 @@ $result = $conn->query($sql);
                 }
                 
                 echo "<p><strong>User:</strong> " . $firstName . " (" . $email . ")</p>";
-                echo "<p><strong>College:</strong> " . $college . "</p>";
+                echo "<p><strong>Department:</strong> " . $college . "</p>";
                 echo "<p><strong>Landmark:</strong> " . $landmark . "</p>";
                 echo "<p><strong>Title:</strong> " . $title . "</p>";
                 echo "<p><strong>Description:</strong> " . $message . "</p>";

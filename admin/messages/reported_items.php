@@ -168,7 +168,7 @@ $result = $conn->query($sql);
                         <th>ID</th>
                         <th>Item Name</th>
                         <th>User</th>
-                        <th>College</th>
+                        <th>Department</th>
                         <th>Category</th>
                         <th>Finder's Name</th>
                         <th>Time Found</th>

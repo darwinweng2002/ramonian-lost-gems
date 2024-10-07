@@ -249,7 +249,7 @@ if ($school_type === '0') {
                 // Display user information only if available
                 if ($firstName || $email || $college || $school_type) {
                     echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
-                    echo "<p><strong>College:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
+                    echo "<p><strong>Department:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
                     echo "<p><strong>Level:</strong> " . $schoolTypeString . "</p>";
                 } else {
                     // No additional user info for guest posts

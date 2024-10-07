@@ -187,7 +187,7 @@ if ($message_id > 0) {
                 // Display user information only if available
                 if ($firstName || $email || $college) {
                     echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
-                    echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
+                    echo "<p><strong>Department:</strong> " . ($college ? $college : 'N/A') . "</p>";
                 } else {
                     // No additional user info for guest posts
                     

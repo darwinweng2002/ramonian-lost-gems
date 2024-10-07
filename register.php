@@ -317,9 +317,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="invalid-feedback">Please enter your last name.</div>
                             </div>
                             <div class="col-12">
-                                <label for="college" class="form-label">College</label>
+                                <label for="college" class="form-label">Department</label>
                                 <select name="college" class="form-control" id="college" required>
-                                    <option value="" disabled selected>Select your college</option>
+                                    <option value="" disabled selected>Select your Department</option>
                                     <option value="N/A">N/A</option>
                                     <option value="CABA">College of Accountancy and Business Administration</option>
                                     <option value="CAS">College of Arts and Sciences</option>

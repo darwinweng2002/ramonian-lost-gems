@@ -451,7 +451,7 @@ if (!$is_guest) {
                     <span><?= htmlspecialchars($year ?? '') ?></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                    <strong>College:</strong>
+                    <strong>Department:</strong>
                     <span><?= htmlspecialchars($college ?? '') ?></span>
                 </li>
             <?php endif; ?>
