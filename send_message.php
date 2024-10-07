@@ -3,8 +3,12 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-include('config.php');
- // Start session if not already started
+include('config.php'); // Include your DB connection
+
+// Start session if not already started
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Check if the user is logged in as either regular user or staff
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
@@ -30,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $contact = $_POST['contact'];
     $category_id = $_POST['category_id'];
     $new_category = $_POST['new_category'];
-    $founder = $_POST['founder']; 
+    $founder = $_POST['founder'];
 
     // Handle category addition
     if ($category_id == 'add_new' && !empty($new_category)) {
@@ -92,32 +96,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Retrieve user information based on user type
-// Retrieve user information based on user type
 if (isset($userId)) {
     if ($userType === 'user_member') {
         $stmt = $conn->prepare("SELECT first_name, last_name, college, school_type, email FROM user_member WHERE id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $stmt->bind_result($first_name, $last_name, $college, $school_type, $email);
     } else {
         $stmt = $conn->prepare("SELECT first_name, last_name, department AS college, email FROM user_staff WHERE id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $stmt->bind_result($first_name, $last_name, $college, $email);
     }
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $stmt->bind_result($first_name, $last_name, $college, $school_type, $email);
+
+    // Fetch the result and close the statement
     $stmt->fetch();
     $stmt->close();
 
-    // Map the numeric school_type to a string value
+    // Map the numeric school_type to a string value, only if $userType is 'user_member'
     $schoolTypeString = '';
-    if ($school_type == 0) {
-        $schoolTypeString = 'High School';
-    } elseif ($school_type == 1) {
-        $schoolTypeString = 'College';
-    } else {
-        $schoolTypeString = 'N/A';
+    if ($userType === 'user_member') {
+        if ($school_type == 0) {
+            $schoolTypeString = 'High School';
+        } elseif ($school_type == 1) {
+            $schoolTypeString = 'College';
+        } else {
+            $schoolTypeString = 'N/A';
+        }
     }
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
