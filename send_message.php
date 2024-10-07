@@ -1,7 +1,7 @@
 <?php
 include('config.php');
 
-session_start(); // Make sure the session is started
+session_start(); // Start session if not already started
 
 // Check if the user is logged in as either regular user or staff
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
