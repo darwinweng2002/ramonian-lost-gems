@@ -30,20 +30,19 @@ $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get published item details with user info from both user_member and user_staff
 $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder, mh.status, mh.landmark, mh.time_found, 
-        user_info.first_name, user_info.college, user_info.email, user_info.avatar, user_info.user_type, mh.contact, c.name as category_name
+        user_info.first_name, user_info.college, user_info.email, user_info.avatar, mh.contact, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN (
-            -- Fetch data from user_member with a flag
-            SELECT id AS user_id, first_name, college, email, avatar, 'member' AS user_type FROM user_member
+            -- Fetch data from user_member
+            SELECT id AS user_id, first_name, college, email, avatar FROM user_member
             UNION
-            -- Fetch data from user_staff with a flag
-            SELECT id AS user_id, first_name, department AS college, email, avatar, 'staff' AS user_type FROM user_staff
+            -- Fetch data from user_staff
+            SELECT id AS user_id, first_name, department AS college, email, avatar FROM user_staff
         ) AS user_info ON mh.user_id = user_info.user_id
         LEFT JOIN categories c ON mh.category_id = c.id
         WHERE mh.is_published = 1 AND mh.id = ?
         ORDER BY mh.id DESC";
-
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
@@ -206,10 +205,22 @@ $result = $stmt->get_result();
 
             foreach ($messages as $msgId => $msgData) {
                 echo "<div class='message-box'>";
-                
                 $firstName = htmlspecialchars($msgData['first_name'] ?? '');
                 $email = htmlspecialchars($msgData['email'] ?? '');
-                $college = htmlspecialchars($msgData['college'] ?? ''); // Could be college or department depending on user_type
+                $college = htmlspecialchars($msgData['college'] ?? '');
+                $school_type = htmlspecialchars($msgData['school_type'] ?? '');
+                $school_type = htmlspecialchars($msgData['school_type'] ?? '');
+
+// Map numeric school_type to string
+$schoolTypeString = '';
+if ($school_type === '0') {
+    $schoolTypeString = 'High School';
+} elseif ($school_type === '1') {
+    $schoolTypeString = 'College';
+} else {
+    $schoolTypeString = 'N/A';
+}
+
                 $title = htmlspecialchars($msgData['title'] ?? '');
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                 $founder = htmlspecialchars($msgData['founder'] ?? '');
@@ -218,8 +229,8 @@ $result = $stmt->get_result();
                 $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
                 $contact = htmlspecialchars($msgData['contact'] ?? '');
                 $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
-                $userType = htmlspecialchars($msgData['user_type'] ?? ''); // Either 'member' or 'staff'
-                
+                $status = intval($msgData['status']); // Get the correct status
+            
                 // Only display avatar if the post is not from a guest user
                 if ($firstName || $email || $college) {
                     if ($avatar) {
@@ -231,7 +242,7 @@ $result = $stmt->get_result();
                 } else {
                     echo "<p><strong>User Info:</strong> Guest User</p>"; // Indicate that the post is from a guest
                 }
-                
+            
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Finder's Name:</strong> " . $founder . "</p>";
@@ -240,22 +251,16 @@ $result = $stmt->get_result();
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
             
-                // Conditional rendering based on user type
-                if ($userType === 'member') {
-                    // Show college and level for members
-                    echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
-                    echo "<p><strong>College:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
-                    // Add the level display (e.g., "High School", "College")
-                    $schoolTypeString = '';  // Assume you've logic to map level here
-                    echo "<p><strong>Level:</strong> " . $schoolTypeString . "</p>";
-                } elseif ($userType === 'staff') {
-                    // Show department and position for staff
+                // Display user information only if available
+                if ($firstName || $email || $college || $school_type) {
                     echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
                     echo "<p><strong>Department:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
-                    // Add position display if necessary
+                    echo "<p><strong>Level:</strong> " . $schoolTypeString . "</p>";
+                } else {
+                    // No additional user info for guest posts
+                    
                 }
             
-                // Status display logic (as per your original code)
                 echo "<dt class='text-muted'>Status</dt>";
                 echo "<dd class='ps-4'>";
                 if ($status == 1) {
@@ -265,11 +270,11 @@ $result = $stmt->get_result();
                 } elseif ($status == 3) {
                     echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
                 } else {
-                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";   
                 }
                 echo "</dd>";
-            
-                // Image display logic (as per your original code)
+
+
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
@@ -278,12 +283,13 @@ $result = $stmt->get_result();
                     }
                     echo "</div>";
                 }
-            
+
                 // Add Claim Request Button
                 echo '<div class="claim-button-container">';
                 echo '<a href="https://ramonianlostgems.com/itemss/claim.php?id=' . htmlspecialchars($msgId) . '" class="claim-button">Send claim request.</a>';
                 echo '</div>';
-            
+
+
                 echo "</div>";
             }
         } else {
