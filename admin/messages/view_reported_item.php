@@ -13,18 +13,13 @@ if ($conn->connect_error) {
 $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($message_id > 0) {
-    // Adjusted SQL query to fetch both user_member (students) and user_staff (staff)
-    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, 
-                   um.first_name AS student_first_name, um.last_name AS student_last_name, um.college, um.email AS student_email, 
-                   us.first_name AS staff_first_name, us.last_name AS staff_last_name, us.department AS staff_department, us.email AS staff_email, 
-                   mh.contact, mh.founder, mh.time_found, mh.status, 
-                   c.name as category_name, mh.user_id, mh.staff_id
-            FROM message_history mh
-            LEFT JOIN message_images mi ON mh.id = mi.message_id
-            LEFT JOIN user_member um ON mh.user_id = um.id
-            LEFT JOIN user_staff us ON mh.staff_id = us.id
-            LEFT JOIN categories c ON mh.category_id = c.id
-            WHERE mh.id = $message_id";
+    // SQL query to fetch the details of the selected message by its ID
+    $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, um.first_name, um.college, um.email, um.avatar, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name
+        FROM message_history mh
+        LEFT JOIN message_images mi ON mh.id = mi.message_id
+        LEFT JOIN user_member um ON mh.user_id = um.id
+        LEFT JOIN categories c ON mh.category_id = c.id
+        WHERE mh.id = $message_id";
 
     // Fetch only the selected message
     $result = $conn->query($sql);
@@ -32,7 +27,6 @@ if ($message_id > 0) {
     echo "Invalid message ID.";
     exit;
 }
-
 ?>
 
 <!DOCTYPE html>
