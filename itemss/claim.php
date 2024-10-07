@@ -108,7 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $date_lost = $_POST['date_lost'];
         $location_lost = $_POST['location_lost'];
         $proof_of_ownership = $_FILES['proof_of_ownership']['name'];
-        $security_question = $_POST['security_question'];
         $personal_id = $_FILES['personal_id']['name'];
         
         // File Uploads (Move uploaded files to the appropriate folder)
@@ -128,12 +127,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Insert the claim into the `claimer` table
         $sql = "
-            INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, security_question, personal_id, status, claim_date) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+            INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, personal_id, status, claim_date) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
         ";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param('iissssss', $itemId, $claimantId, $item_description, $date_lost, $location_lost, $proof_of_ownership, $security_question, $personal_id);
+        $stmt->bind_param('iisssss', $itemId, $claimantId, $item_description, $date_lost, $location_lost, $proof_of_ownership, $personal_id);
 
         if ($stmt->execute()) {
             echo "<script>
@@ -318,12 +317,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="proof_of_ownership">Upload proof of ownership (e.g., receipt, serial number, photo):</label>
             <input type="file" id="proof_of_ownership" name="proof_of_ownership" accept="image/*,application/pdf">
         </div>
-
-        <div class="form-group">
-            <label for="security_question">Security Question (e.g., contents in the pocket):</label>
-            <input type="text" id="security_question" name="security_question" required>
-        </div>
-
         <div class="form-group">
             <label for="personal_id">Upload your ID (student card, national ID, etc.):</label>
             <input type="file" id="personal_id" name="personal_id" accept="image/*,application/pdf" required>

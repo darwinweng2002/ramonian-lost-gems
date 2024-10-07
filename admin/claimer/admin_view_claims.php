@@ -21,7 +21,7 @@ $sql = "
            COALESCE(um.first_name, us.first_name) AS first_name, 
            COALESCE(um.last_name, us.last_name) AS last_name,
            c.item_description, c.date_lost, c.location_lost, 
-           c.proof_of_ownership, c.security_question, c.personal_id, 
+           c.proof_of_ownership, c.personal_id, 
            c.status, c.claim_date
     FROM claimer c
     LEFT JOIN message_history mh ON c.item_id = mh.id
@@ -156,7 +156,6 @@ $result = $conn->query($sql);
                     <th>Date Lost</th>
                     <th>Location Lost</th>
                     <th>Proof of Ownership</th>
-                    <th>Security Question</th>
                     <th>School ID</th>
                     <th>Claim Date</th>
                     <th>Status</th>
@@ -185,7 +184,6 @@ $result = $conn->query($sql);
                         echo "<td>" . htmlspecialchars($row['date_lost']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['location_lost']) . "</td>";
                         echo "<td>$proofOutput</td>";
-                        echo "<td>" . htmlspecialchars($row['security_question']) . "</td>";
                         echo "<td>$idOutput</td>";
                         echo "<td>" . htmlspecialchars($row['claim_date']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['status']) . "</td>";

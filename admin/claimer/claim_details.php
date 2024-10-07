@@ -60,7 +60,6 @@ $sql = "
         c.date_lost, 
         c.location_lost, 
         c.proof_of_ownership, 
-        c.security_question, 
         c.personal_id, 
         c.status, 
         c.claim_date,
@@ -227,7 +226,6 @@ $result = $stmt->get_result();
                 <p><strong>Description:</strong> <?= htmlspecialchars($row['item_description']); ?></p>
                 <p><strong>Date Lost:</strong> <?= htmlspecialchars($row['date_lost']); ?></p>
                 <p><strong>Location Lost:</strong> <?= htmlspecialchars($row['location_lost']); ?></p>
-                <p><strong>Security Question:</strong> <?= htmlspecialchars($row['security_question']); ?></p>
                 <p><strong>Status:</strong> <?= htmlspecialchars($row['status']); ?></p>
                 <p><strong>Claim Date:</strong> <?= htmlspecialchars($row['claim_date']); ?></p>
 
