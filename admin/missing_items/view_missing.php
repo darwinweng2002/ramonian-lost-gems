@@ -126,6 +126,20 @@ if (isset($_GET['id'])) {
             display: block;
             margin-bottom: 10px;
         }
+        /* Added styles for table responsiveness */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
+        }
+        .table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            background-color: transparent;
+        }
+        .table th, .table td {
+            white-space: nowrap; /* Prevent text wrapping */
+        }
     </style>
 </head>
 <body>
