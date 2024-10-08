@@ -31,7 +31,9 @@ if ($conn->connect_error) {
 $user_id = $_POST['user_id'];
 
 // Update user status to 'approved'
-$sql = "UPDATE users SET status='approved' WHERE id=$user_id";
+$sql = "SELECT * FROM user_member WHERE 
+        CONCAT_WS(' ', first_name, last_name, school_type, grade, course, year, email) LIKE '%$searchTerm%'
+        AND status != 'approved'";
 
 if ($conn->query($sql) === TRUE) {
     // Send approval email
