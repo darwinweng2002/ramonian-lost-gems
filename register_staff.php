@@ -340,7 +340,11 @@ $(document).ready(function () {
 
         // Validate email/username format
         const email = $('#email').val().trim();
+
+        // Regex for either an email OR a username (8-16 characters)
         const pattern = /^([a-zA-Z0-9._-]{8,16}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+
+        // Validate the email/username format using the combined regex
         if (!pattern.test(email)) {
             formIsValid = false;
             $('#email').addClass('is-invalid');
@@ -381,52 +385,6 @@ $(document).ready(function () {
             $('#yourPassword, #confirm_password').removeClass('is-invalid').addClass('is-valid');
         }
 
-        // Validate first name
-        const firstName = $('#firstName').val().trim();
-        if (!firstName) {
-            formIsValid = false;
-            $('#firstName').addClass('is-invalid');
-        } else {
-            $('#firstName').removeClass('is-invalid').addClass('is-valid');
-        }
-
-        // Validate last name
-        const lastName = $('#lastName').val().trim();
-        if (!lastName) {
-            formIsValid = false;
-            $('#lastName').addClass('is-invalid');
-        } else {
-            $('#lastName').removeClass('is-invalid').addClass('is-valid');
-        }
-
-        // Validate user type
-        const userType = $('#user_type').val().trim();
-        if (!userType) {
-            formIsValid = false;
-            $('#user_type').addClass('is-invalid');
-        } else {
-            $('#user_type').removeClass('is-invalid').addClass('is-valid');
-        }
-
-        // Validate department/position based on user type
-        if (userType === 'teaching') {
-            const department = $('#department').val().trim();
-            if (!department) {
-                formIsValid = false;
-                $('#department').addClass('is-invalid');
-            } else {
-                $('#department').removeClass('is-invalid').addClass('is-valid');
-            }
-        } else {
-            const position = $('#position').val().trim();
-            if (!position) {
-                formIsValid = false;
-                $('#position').addClass('is-invalid');
-            } else {
-                $('#position').removeClass('is-invalid').addClass('is-valid');
-            }
-        }
-
         // Enable/disable submit button based on validation status
         $('button[type="submit"]').prop('disabled', !formIsValid);
     }
@@ -436,7 +394,6 @@ $(document).ready(function () {
         validateForm();
     });
 });
-
 
     // Handle form submission via AJAX
     $('#registrationForm').on('submit', function (e) {
