@@ -1,13 +1,6 @@
 <?php
 include '../../config.php';
 
-// Database connection
-$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 // Initialize search term
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
@@ -18,6 +11,86 @@ $sql = "SELECT * FROM user_member WHERE
         AND status != 'approved'";
 
 $result = $conn->query($sql);
+
+
+// This code for gmail smtp.
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require 'vendor/autoload.php';
+
+// Database connection
+$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Get user ID from POST request
+$user_id = $_POST['user_id'];
+
+// Update user status to 'approved'
+$sql = "UPDATE users SET status='approved' WHERE id=$user_id";
+
+if ($conn->query($sql) === TRUE) {
+    // Send approval email
+    if (sendApprovalEmail($user_id, $conn)) {
+        echo '1'; // Success
+    } else {
+        echo '0'; // Error sending email
+    }
+} else {
+    echo '0'; // Error updating record
+}
+
+$conn->close();
+
+// Function to send approval email
+function sendApprovalEmail($user_id, $conn) {
+    $sql = "SELECT email FROM users WHERE id=$user_id";
+    $result = $conn->query($sql);
+    
+    if ($result->num_rows > 0) {
+        // Fetch user email
+        $row = $result->fetch_assoc();
+        $to = $row['email'];
+        $subject = "Account Approved";
+        $message = "Congratulations! Your account has been approved.";
+        
+        $mail = new PHPMailer(true);
+        
+        try {
+            //Server settings
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'randolfh.wizworxx@gmail.com';
+            $mail->Password   = '@Thelastkidds05!!@2024';
+            $mail->SMTPSecure = 'tls';
+            $mail->Port       = 587;
+
+            //Recipients
+            $mail->setFrom('randolfh.wizworxx@gmail.com', 'Admin');
+            $mail->addAddress($to);
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body    = $message;
+
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    return false; // User not found
+}
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
