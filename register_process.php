@@ -17,45 +17,54 @@ require 'PHPMailer-master/src/SMTP.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data
-   // Retrieve form data
-$username = $_POST['email'];  // Now used for username (can be traditional or email)
-$first_name = $_POST['first_name'];
-$last_name = $_POST['last_name'];
-$college = $_POST['college'];
-$course = $_POST['course'];
-$year = $_POST['year'];
-$school_type = $_POST['school_type'];
-$grade = $_POST['grade'];
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+    $college = $_POST['college'];
+    $course = $_POST['course'];
+    $year = $_POST['year'];
+    $email = $_POST['email'];
+    $school_type = $_POST['school_type'];
+    $grade = $_POST['grade'];
 
-// Validate username (either email or traditional username)
-$emailPattern = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
-$usernamePattern = '/^[a-zA-Z0-9]{8,16}$/';  // Traditional username: 8-16 characters
-
-if (!preg_match($emailPattern, $username) && !preg_match($usernamePattern, $username)) {
-    $response = ['success' => false, 'message' => 'Invalid username. Must be a valid email or a traditional username (8-16 alphanumeric characters).'];
-    echo json_encode($response);
-    exit;
-}
-
-// Hash the password
-$password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-
-// Check if the username is already registered
-$stmt = $conn->prepare("SELECT * FROM user_member WHERE username = ?");
-$stmt->bind_param("s", $username);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
-    if ($user['status'] === 'approved') {
-        $response = ['success' => false, 'message' => 'This account is already registered.'];
+    // Check if passwords match
+    if ($_POST['password'] !== $_POST['confirm_password']) {
+        $response = ['success' => false, 'message' => 'Passwords do not match.'];
         echo json_encode($response);
         exit;
     }
-}
-$stmt->close();
 
+    // Hash the password
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
+
+    // Check if the email is already registered and approved
+    $stmt = $conn->prepare("SELECT * FROM user_member WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        if ($user['status'] === 'approved') {
+            // If email already registered and account is approved
+            $response = ['success' => false, 'message' => 'This account is already registered.'];
+            echo json_encode($response);
+            exit;
+        }
+    }
+    $stmt->close(); // Close the previous statement
+
+    // Handle file upload (School ID)
+    $target_dir = "uploads/school_ids/";
+    $school_id_file = $target_dir . basename($_FILES["school_id"]["name"]);
+    $imageFileType = strtolower(pathinfo($school_id_file, PATHINFO_EXTENSION));
+
+    // Check if file is a valid image type
+    $valid_file_types = ['jpg', 'jpeg', 'png'];
+    if (!in_array($imageFileType, $valid_file_types)) {
+        $response = ['success' => false, 'message' => 'Invalid file format for school ID. Only JPG, JPEG, and PNG are allowed.'];
+        echo json_encode($response);
+        exit;
+    }
 
     // Attempt to move the uploaded file
     if (!is_dir($target_dir)) {
