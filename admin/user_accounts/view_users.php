@@ -430,6 +430,9 @@ function deleteUser(event, id) {
 function approveUser(event, id) {
     event.preventDefault(); // Prevent default form submission
 
+    // Debugging step: log the id
+    console.log('User ID being sent:', id);
+
     Swal.fire({
         title: 'Are you sure?',
         text: "You are about to approve this user!",
@@ -483,6 +486,7 @@ function approveUser(event, id) {
         }
     });
 }
+
 </script>
 
 <?php
