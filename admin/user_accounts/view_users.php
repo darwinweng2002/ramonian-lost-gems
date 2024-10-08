@@ -4,28 +4,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 include '../../config.php';
 
-// Database connection
-$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-// Initialize search term
-$searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
-
-// Update SQL query to include search functionality
-$sql = "SELECT * FROM user_member WHERE 
-        CONCAT_WS(' ', first_name, last_name, school_type, grade, course, year, email) LIKE '%$searchTerm%'
-        AND status != 'approved'";
-
-$result = $conn->query($sql);
-
-
-// This code for gmail smtp.
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+require 'vendor/autoload.php';
 
 // Database connection
 $conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
@@ -35,13 +16,18 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get user ID from POST request
-$user_id = $_POST['user_id'];
+// Check if the user_id is set in the POST request
+if (isset($_POST['user_id']) && !empty($_POST['user_id'])) {
+    $user_id = intval($_POST['user_id']); // Sanitize input
+} else {
+    die("User ID is not set.");
+}
 
-// Update user status to 'approved'
-$sql = "UPDATE users SET status='approved' WHERE id=$user_id";
+// Prepared statement to update the user's status to 'approved'
+$stmt = $conn->prepare("UPDATE users SET status='approved' WHERE id=?");
+$stmt->bind_param("i", $user_id); // "i" indicates the parameter is an integer
 
-if ($conn->query($sql) === TRUE) {
+if ($stmt->execute()) {
     // Send approval email
     if (sendApprovalEmail($user_id, $conn)) {
         echo '1'; // Success
@@ -52,12 +38,16 @@ if ($conn->query($sql) === TRUE) {
     echo '0'; // Error updating record
 }
 
+$stmt->close();
 $conn->close();
 
 // Function to send approval email
 function sendApprovalEmail($user_id, $conn) {
-    $sql = "SELECT email FROM users WHERE id=$user_id";
-    $result = $conn->query($sql);
+    $sql = "SELECT email FROM users WHERE id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
     
     if ($result->num_rows > 0) {
         // Fetch user email
@@ -95,11 +85,8 @@ function sendApprovalEmail($user_id, $conn) {
     }
     return false; // User not found
 }
-
-
-
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <?php require_once('../inc/header.php') ?>
