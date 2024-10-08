@@ -27,9 +27,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $school_type = $_POST['school_type'];
     $grade = $_POST['grade'];
 
-    // Validate username: 8-16 characters, allow email or traditional username format
+    // Validate username: 8-16 characters, no full numeric usernames
     if (strlen($username) < 8 || strlen($username) > 16) {
         $response = ['success' => false, 'message' => 'Username must be between 8 and 16 characters.'];
+        echo json_encode($response);
+        exit;
+    }
+
+    // Disallow fully numeric usernames
+    if (preg_match('/^\d+$/', $username)) {
+        $response = ['success' => false, 'message' => 'Username cannot consist entirely of numbers. Please include letters.'];
         echo json_encode($response);
         exit;
     }
