@@ -366,12 +366,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <small class="text-muted">We assure you that the school ID you submit will be used solely for verification purposes, specifically to confirm that you are a legitimate student of PRMSU Iba Campus. All personal information will remain confidential and will not be shared with any third parties. Your data will be handled in strict compliance with applicable privacy laws and ethical guidelines to ensure the protection of your information.</small>
                         </div>
 
-                       <!-- Update the form to allow email or non-email usernames -->
-                    <div class="col-12">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" name="email" class="form-control" id="username" required>
-                        <div class="invalid-feedback" id="username-error">Username must be 8-16 characters long.</div>
-                    </div>
+                        <div class="col-12">
+    <label for="username" class="form-label">Username</label>
+    <input type="text" name="email" class="form-control" id="username" required>
+    <div class="invalid-feedback" id="username-error">Please enter a valid username (3-16 characters, no email format).</div>
+</div>
 
                             <div class="col-12">
                                 <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
@@ -419,7 +418,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Populate courses dynamically based on selected college
 
     // Form validation logic
-    function validateForm() {
+   function validateForm() {
     let formIsValid = true;
 
     // Validate username (no email format allowed)
