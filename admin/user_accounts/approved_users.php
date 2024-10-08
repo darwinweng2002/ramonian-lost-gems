@@ -221,7 +221,7 @@ $result = $conn->query($sql);
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Send AJAX request to delete user
-                    fetch('delete_approved.php', {
+                    fetch('../delete_approved.php', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded'
