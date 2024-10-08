@@ -283,7 +283,7 @@ if ($message_id > 0) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: 'https://ramonianlostgems.com/admin/messages/delete_message.php',
+                url: 'delete_message.php',
                 type: 'POST',
                 data: { id: messageId },
                 dataType: 'json',
