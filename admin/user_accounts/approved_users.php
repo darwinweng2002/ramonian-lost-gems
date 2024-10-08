@@ -9,16 +9,21 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Initialize search term
-$searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
+// Initialize search term and ensure it's sanitized
+$searchTerm = isset($_GET['search']) ? $conn->real_escape_string(trim($_GET['search'])) : '';
 
 // Update SQL query to include search functionality based on relevant columns
-$sql = "SELECT * FROM user_member 
-        WHERE status = 'approved'
-        AND (first_name LIKE '%$searchTerm%' 
-        OR last_name LIKE '%$searchTerm%' 
-        OR college LIKE '%$searchTerm%' 
-        OR course LIKE '%$searchTerm%')";
+// Note: Use a flexible approach: If the search term is empty, it should still return 'approved' users.
+$sql = "SELECT * FROM user_member WHERE status = 'approved'";
+
+// Add search conditions only if a search term is provided
+if (!empty($searchTerm)) {
+    $sql .= " AND (first_name LIKE '%$searchTerm%' 
+                OR last_name LIKE '%$searchTerm%' 
+                OR college LIKE '%$searchTerm%' 
+                OR course LIKE '%$searchTerm%' 
+                OR email LIKE '%$searchTerm%')";
+}
 
 $result = $conn->query($sql);
 ?>
