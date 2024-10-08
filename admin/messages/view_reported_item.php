@@ -270,7 +270,7 @@ if ($message_id > 0) {
       $(document).ready(function() {
         // SweetAlert for delete confirmation
         $('.delete-btn').on('click', function() {
-    var messageId = $(this).data('id');
+    var messageId = $(this).data('id'); // Get the message ID from button
     
     Swal.fire({
         title: 'Are you sure you want to delete this item entry?',
@@ -289,19 +289,22 @@ if ($message_id > 0) {
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        Swal.fire('Deleted!', 'The item has been deleted.', 'success');
-                        location.reload(); // Reload the page
+                        // Show success message instead of error
+                        Swal.fire('Deleted!', 'The found item has been deleted successfully.', 'success');
+                        location.reload(); // Reload the page to reflect the deletion
                     } else {
-                        Swal.fire('Error!', response.error || 'Unknown error occurred.', 'error');
+                        Swal.fire('Error!', response.error || 'Unknown error occurred.', 'error'); // Handle any server-side error
                     }
                 },
                 error: function(xhr, status, error) {
+                    // Handle AJAX request failure (e.g., if there's a network error or server issue)
                     Swal.fire('Error!', 'AJAX request failed: ' + error + '. Full response: ' + xhr.responseText, 'error');
                 }
             });
         }
     });
 });
+
 
         // SweetAlert for publish confirmation
         $('.publish-btn').on('click', function() {
