@@ -1,48 +1,34 @@
 <?php
+// Include your database connection
 include '../../config.php';
 
-// Database connection
-$conn = new mysqli('localhost','u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
+// Check if ID is received in POST request
+if (isset($_POST['id'])) {
+    $message_id = intval($_POST['id']); // Sanitize input
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Check if the request is a POST request and the ID is set
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
-    $message_id = intval($_POST['id']);
+    // Prepare SQL query to delete the message by ID
+    $sql = "DELETE FROM message_history WHERE id = ?";
     
-    // Ensure message exists before attempting to delete
-    $check_sql = "SELECT id FROM message_history WHERE id = ?";
-    $stmt_check = $conn->prepare($check_sql);
-    $stmt_check->bind_param("i", $message_id);
-    $stmt_check->execute();
-    $stmt_check->store_result();
-
-    if ($stmt_check->num_rows > 0) {
-        // If message exists, proceed with the delete query
-        $stmt_delete = $conn->prepare("DELETE FROM message_history WHERE id = ?");
-        $stmt_delete->bind_param("i", $message_id);
-
-        if ($stmt_delete->execute()) {
-            // If delete was successful, return a success response
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("i", $message_id);
+        
+        // Execute the query
+        if ($stmt->execute()) {
+            // Success, return JSON response
             echo json_encode(['success' => true]);
         } else {
-            // If delete failed, return a detailed error message
-            echo json_encode(['success' => false, 'error' => 'Failed to delete the message. SQL Error: ' . $conn->error]);
+            // Error during execution
+            echo json_encode(['success' => false, 'error' => 'Database error.']);
         }
-
-        $stmt_delete->close();
+        
+        $stmt->close();
     } else {
-        // If the message doesn't exist, return an error
-        echo json_encode(['success' => false, 'error' => 'Message not found.']);
+        // Error preparing the statement
+        echo json_encode(['success' => false, 'error' => 'Failed to prepare SQL.']);
     }
-
-    $stmt_check->close();
 } else {
-    // If the request method is not POST or ID is missing, return an error
-    echo json_encode(['success' => false, 'error' => 'Invalid request.']);
+    // No ID provided
+    echo json_encode(['success' => false, 'error' => 'No ID provided.']);
 }
 
 $conn->close();
