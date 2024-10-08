@@ -49,7 +49,7 @@ if ($message_id > 0) {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            padding-top: 70px; /* Adjust this according to the height of your navbar */
+            padding-top: 70px;
             background-color: #f4f4f4;
         }
         .container {
@@ -132,7 +132,7 @@ if ($message_id > 0) {
 
         table {
             width: 100%;
-            min-width: 600px; /* Adjust this depending on the table content */
+            min-width: 600px;
             border-collapse: collapse;
         }
 
@@ -142,7 +142,6 @@ if ($message_id > 0) {
             border: 1px solid #ddd;
         }
 
-        /* Custom scrollbar styles */
         .table-responsive::-webkit-scrollbar {
             height: 10px;
         }
@@ -169,8 +168,9 @@ if ($message_id > 0) {
     <?php require_once('../inc/navigation.php'); ?>
 
     <div class="container">
+        <h1>Found Item Details</h1>
+
         <div class="table-responsive">
-            <h1>Found Item Details</h1>
             <?php
             if ($result->num_rows > 0) {
                 $messages = [];
