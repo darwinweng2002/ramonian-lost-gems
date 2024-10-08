@@ -334,28 +334,25 @@ $(document).ready(function () {
     // Initially disable the register button
     $('button[type="submit"]').prop('disabled', true);
 
-    // Function to clear validation classes after successful submission
-    function clearValidationStates() {
-        $('.is-invalid').removeClass('is-invalid');
-        $('.is-valid').removeClass('is-valid');
-        $('.invalid-feedback').hide(); // Hide all error messages
-    }
-
     // Function to check if all fields are valid
     function validateForm() {
         let formIsValid = true; // Assume the form is valid
 
-        // Validate email/username format
+        // Validate email format
         const email = $('#email').val().trim();
-        const pattern = /^([a-zA-Z0-9._-]{8,16}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
-        if (!pattern.test(email)) {
-            formIsValid = false;
-            $('#email').addClass('is-invalid');
-            $('#email-error').text('Please enter a valid email or a username (8-16 characters)').show();
-        } else {
-            $('#email').removeClass('is-invalid').addClass('is-valid');
-            $('#email-error').hide();
-        }
+
+// Updated pattern to allow both email and non-email username (8-16 characters)
+const emailPattern = /^([a-zA-Z0-9._-]{8,16}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+
+if (!emailPattern.test(email)) {
+    formIsValid = false;
+    $('#email').addClass('is-invalid');
+    $('#email-error').text('Please enter a valid email or a username (8-16 characters)').show();
+} else {
+    $('#email').removeClass('is-invalid').addClass('is-valid');
+    $('#email-error').hide();
+}
+
 
         // Validate profile image is uploaded
         const profileImage = $('#profile_image').val();
@@ -388,58 +385,12 @@ $(document).ready(function () {
             $('#yourPassword, #confirm_password').removeClass('is-invalid').addClass('is-valid');
         }
 
-        // Validate first name
-        const firstName = $('#firstName').val().trim();
-        if (!firstName) {
-            formIsValid = false;
-            $('#firstName').addClass('is-invalid');
-        } else {
-            $('#firstName').removeClass('is-invalid').addClass('is-valid');
-        }
-
-        // Validate last name
-        const lastName = $('#lastName').val().trim();
-        if (!lastName) {
-            formIsValid = false;
-            $('#lastName').addClass('is-invalid');
-        } else {
-            $('#lastName').removeClass('is-invalid').addClass('is-valid');
-        }
-
-        // Validate user type
-        const userType = $('#user_type').val().trim();
-        if (!userType) {
-            formIsValid = false;
-            $('#user_type').addClass('is-invalid');
-        } else {
-            $('#user_type').removeClass('is-invalid').addClass('is-valid');
-        }
-
-        // Validate department/position based on user type
-        if (userType === 'teaching') {
-            const department = $('#department').val().trim();
-            if (!department) {
-                formIsValid = false;
-                $('#department').addClass('is-invalid');
-            } else {
-                $('#department').removeClass('is-invalid').addClass('is-valid');
-            }
-        } else {
-            const position = $('#position').val().trim();
-            if (!position) {
-                formIsValid = false;
-                $('#position').addClass('is-invalid');
-            } else {
-                $('#position').removeClass('is-invalid').addClass('is-valid');
-            }
-        }
-
         // Enable/disable submit button based on validation status
         $('button[type="submit"]').prop('disabled', !formIsValid);
     }
 
     // Listen for input events on each field
-    $('#email, #profile_image, #yourPassword, #confirm_password, #firstName, #lastName, #user_type, #department, #position').on('input change', function () {
+    $('#email, #profile_image, #yourPassword, #confirm_password').on('input change', function () {
         validateForm();
     });
 
@@ -463,7 +414,6 @@ $(document).ready(function () {
             dataType: 'json',
             success: function (response) {
                 if (response.success) {
-                    clearValidationStates(); // Clear validation on success
                     Swal.fire({
                         title: 'Success!',
                         text: response.message || 'Registration successful!',
@@ -491,15 +441,12 @@ $(document).ready(function () {
                     confirmButtonText: 'OK'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        clearValidationStates(); // Clear validation on success
                         window.location.href = 'https://ramonianlostgems.com/';
                     }
                 });
             }
         });
     });
-});
-
 
     // User type dropdown change listener
     $('#user_type').on('change', function () {
