@@ -367,10 +367,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
 
                         <div class="col-12">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" id="email" required>
-                        <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
+                        <label for="email" class="form-label">Username or Email</label>
+                        <input type="text" name="email" class="form-control" id="email" required>
+                        <div class="invalid-feedback" id="email-error">Please enter a valid email or username (8-16 characters).</div>
                     </div>
+
 
                             <div class="col-12">
                                 <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
@@ -419,19 +420,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Form validation logic
     function validateForm() {
-        let formIsValid = true;
+    let formIsValid = true;
 
-        // Validate email
-        const email = $('#email').val().trim();
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailPattern.test(email)) {
-            formIsValid = false;
-            $('#email').addClass('is-invalid');
-            $('#email-error').text('Please enter a valid email address').show();
-        } else {
-            $('#email').removeClass('is-invalid').addClass('is-valid');
-            $('#email-error').hide();
-        }
+    // Validate username or email
+    const email = $('#email').val().trim();
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const usernamePattern = /^[a-zA-Z0-9._-]{8,16}$/;
+
+    if (!emailPattern.test(email) && !usernamePattern.test(email)) {
+        formIsValid = false;
+        $('#email').addClass('is-invalid');
+        $('#email-error').text('Please enter a valid email or username (8-16 characters)').show();
+    } else {
+        $('#email').removeClass('is-invalid').addClass('is-valid');
+        $('#email-error').hide();
+    }
 
         // Validate password and confirm password
         const password = $('#yourPassword').val().trim();

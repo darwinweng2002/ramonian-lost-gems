@@ -14,7 +14,6 @@ require 'PHPMailer-master/src/Exception.php';
 require 'PHPMailer-master/src/PHPMailer.php';
 require 'PHPMailer-master/src/SMTP.php';
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data
     $first_name = $_POST['first_name'];
@@ -22,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $college = $_POST['college'];
     $course = $_POST['course'];
     $year = $_POST['year'];
-    $email = $_POST['email'];
+    $email = $_POST['email']; // This could be either an email or a username (8-16 chars)
     $school_type = $_POST['school_type'];
     $grade = $_POST['grade'];
 
@@ -36,7 +35,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Hash the password
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
 
-    // Check if the email is already registered and approved
+    // Check if the input is either an email or a valid username (8-16 characters)
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        // If it's not an email, check if it's a valid username
+        if (strlen($email) < 8 || strlen($email) > 16) {
+            $response = ['success' => false, 'message' => 'Username must be between 8 and 16 characters long.'];
+            echo json_encode($response);
+            exit;
+        }
+    }
+
+    // Check if the email/username is already registered
     $stmt = $conn->prepare("SELECT * FROM user_member WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -45,8 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         if ($user['status'] === 'approved') {
-            // If email already registered and account is approved
-            $response = ['success' => false, 'message' => 'This account is already registered.'];
+            $response = ['success' => false, 'message' => 'This email or username is already registered.'];
             echo json_encode($response);
             exit;
         }
