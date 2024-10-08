@@ -42,11 +42,12 @@ $result = $conn->query($sql);
 
         .container {
             margin: 30px auto;
-            max-width: 1200px;
+            max-width: 100%; /* Set to full width for larger tables */
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow-x: auto; /* Allow horizontal scrolling if necessary */
         }
 
         h2 {
@@ -55,21 +56,22 @@ $result = $conn->query($sql);
             margin-bottom: 20px;
         }
 
-        /* Add horizontal scrolling */
-        .table-wrapper {
-            overflow-x: auto; /* Enable horizontal scrolling */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+            border-radius: 8px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1000px; /* Ensures the table has enough width */
         }
 
         th, td {
             padding: 12px;
             text-align: center;
-            white-space: nowrap; /* Prevents text wrapping inside cells */
+            white-space: nowrap; /* Prevent wrapping of table cells */
         }
 
         thead th {
@@ -86,14 +88,14 @@ $result = $conn->query($sql);
         }
 
         .btn {
-            min-width: 100px; /* Ensure buttons have a consistent width */
+            min-width: 100px;
             text-align: center;
-            padding: 8px 12px; /* Padding for balanced sizing */
+            padding: 8px 12px;
             display: inline-block;
         }
 
         .btn-sm {
-            font-size: 14px; /* Adjust font size for smaller buttons */
+            font-size: 14px;
         }
 
         .btn-info {
@@ -174,10 +176,9 @@ $result = $conn->query($sql);
         @media (max-width: 768px) {
             .btn {
                 width: 100%;
-                margin-bottom: 10px; /* Add spacing between buttons on smaller screens */
+                margin-bottom: 10px;
             }
         }
-
         @media (min-width: 768px) {
             .btn-group-container {
                 justify-content: center; /* Center buttons for larger screens */
@@ -204,7 +205,7 @@ $result = $conn->query($sql);
         </form>
 
         <!-- Table wrapper for horizontal scrolling -->
-        <div class="table-wrapper">
+        <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
@@ -255,8 +256,7 @@ $result = $conn->query($sql);
             <td colspan="8" class="no-data">No registered users found.</td>
         </tr>
     <?php endif; ?>
-</tbody>
-
+                </tbody>
             </table>
         </div>
     </div>
