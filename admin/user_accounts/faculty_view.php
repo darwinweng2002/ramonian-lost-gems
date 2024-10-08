@@ -1,3 +1,27 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+include '../../config.php';
+
+// Database connection
+$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Initialize search term
+$searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
+
+// Update SQL query to include search functionality based on relevant columns
+$sql = "SELECT id, user_type, first_name, last_name, email, avatar, position, department, registration_date, status 
+        FROM user_staff 
+        WHERE CONCAT_WS(' ', first_name, last_name, email, user_type, position, department) LIKE '%$searchTerm%'";
+
+$result = $conn->query($sql);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <?php require_once('../inc/header.php') ?>
