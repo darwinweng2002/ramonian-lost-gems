@@ -62,12 +62,21 @@ $result = $conn->query($sql);
             color: #333;
             margin-bottom: 20px;
         }
+        .table-wrapper {
+            overflow-x: auto; /* Enable horizontal scrolling */
+        }
+        .table {
+            width: 100%;
+            min-width: 1000px; /* Set a minimum width to handle wider content */
+            table-layout: auto; /* Avoid fixed table layout to prevent content overlap */
+        }
         .table thead {
             background-color: #f2f2f2;
             color: #444444;
         }
         .table th, .table td {
             vertical-align: middle;
+            white-space: nowrap; /* Prevent text wrapping in table cells */
         }
         .btn-view {
             background-color: #007bff;
@@ -100,43 +109,45 @@ $result = $conn->query($sql);
 <div class="container">
     <h2>Claimed Items</h2>
     
-    <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>Item Name</th>
-                <th>Description</th>
-                <th>Time Recorded</th>
-                <th>Owners Name</th>
-                <th>User Email</th>
-                <th>Category</th>
-                <th>Item Type</th> <!-- Show whether it’s Found or Missing -->
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-    <?php
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>";
-            echo "<td>" . htmlspecialchars($row['title'] ?? '') . "</td>";
-            echo "<td>" . htmlspecialchars($row['description'] ?? '') . "</td>";
-            echo "<td>" . htmlspecialchars($row['time_recorded'] ?? '') . "</td>";
-            echo "<td>" . htmlspecialchars($row['owner'] ?? '') . "</td>"; // Now dynamically handles both cases
-            echo "<td>" . htmlspecialchars($row['email'] ?? '') . "</td>";
-            echo "<td>" . htmlspecialchars($row['category_name'] ?? '') . "</td>";
-            echo "<td>" . htmlspecialchars($row['item_type'] ?? '') . "</td>"; // Show whether it's Found or Missing
-            echo "<td>";
-            echo "<button class='btn btn-delete' data-id='" . htmlspecialchars($row['id'] ?? '') . "'>Delete</button>";
-            echo "</td>";
-            echo "</tr>";
+    <!-- Table wrapper for horizontal scrolling -->
+    <div class="table-wrapper">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Description</th>
+                    <th>Time Recorded</th>
+                    <th>Owners Name</th>
+                    <th>User Email</th>
+                    <th>Category</th>
+                    <th>Item Type</th> <!-- Show whether it’s Found or Missing -->
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+        <?php
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo "<tr>";
+                echo "<td>" . htmlspecialchars($row['title'] ?? '') . "</td>";
+                echo "<td>" . htmlspecialchars($row['description'] ?? '') . "</td>";
+                echo "<td>" . htmlspecialchars($row['time_recorded'] ?? '') . "</td>";
+                echo "<td>" . htmlspecialchars($row['owner'] ?? '') . "</td>"; // Now dynamically handles both cases
+                echo "<td>" . htmlspecialchars($row['email'] ?? '') . "</td>";
+                echo "<td>" . htmlspecialchars($row['category_name'] ?? '') . "</td>";
+                echo "<td>" . htmlspecialchars($row['item_type'] ?? '') . "</td>"; // Show whether it's Found or Missing
+                echo "<td>";
+                echo "<button class='btn btn-delete' data-id='" . htmlspecialchars($row['id'] ?? '') . "'>Delete</button>";
+                echo "</td>";
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr><td colspan='8' class='text-center'>No claimed items found.</td></tr>"; // Updated colspan to 8
         }
-    } else {
-        echo "<tr><td colspan='7' class='text-center'>No claimed items found.</td></tr>";
-    }
-    ?>
-</tbody>
-
-    </table>
+        ?>
+        </tbody>
+        </table>
+    </div>
 </div>
 
 <!-- JavaScript for Delete Functionality -->
