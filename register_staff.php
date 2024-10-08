@@ -395,7 +395,6 @@ $(document).ready(function () {
     });
 });
 
-
     // Handle form submission via AJAX
     $('#registrationForm').on('submit', function (e) {
         e.preventDefault(); // Prevent default form submission
