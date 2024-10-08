@@ -51,14 +51,16 @@ $result = $conn->query($sql);
             color: #333;
             margin-bottom: 20px;
         }
+        /* Make table scroll horizontally */
         .table-responsive {
             background: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            overflow: hidden;
+            overflow-x: auto; /* Enable horizontal scrolling */
         }
         table {
             width: 100%;
+            min-width: 900px; /* Force table to be wider than the container */
             border-collapse: collapse;
         }
         th, td {
@@ -137,10 +139,22 @@ $result = $conn->query($sql);
         }
         .input-group-text i {
             font-size: 14px;
-        }.badge-pending { background-color: #6c757d; }
+        }
+        .badge-pending { background-color: #6c757d; }
         .badge-published { background-color: #007bff; }
         .badge-claimed { background-color: #28a745; }
         .badge-surrendered { background-color: #6c757d; }
+        /* Custom scrollbar styling for horizontal scroll */
+        .table-responsive::-webkit-scrollbar {
+            height: 10px;
+        }
+        .table-responsive::-webkit-scrollbar-thumb {
+            background-color: #b0b0b0;
+            border-radius: 10px;
+        }
+        .table-responsive::-webkit-scrollbar-track {
+            background-color: #f4f4f4;
+        }
     </style>
 </head>
 <body>
