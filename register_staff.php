@@ -270,12 +270,10 @@ body {
 
                                     <!-- Email -->
                                     <div class="col-12">
-    <label for="email" class="form-label">Username</label>
-    <!-- Change input type from 'email' to 'text' to allow non-email usernames -->
-    <input type="text" name="email" class="form-control" id="email" required>
-    <div class="invalid-feedback">Please enter a username</div>
-</div>
-
+                                        <label for="email" class="form-label">Username</label>
+                                        <input type="email" name="email" class="form-control" id="email" required>
+                                        <div class="invalid-feedback">Please enter a username</div>
+                                    </div>
 
                                     <!-- Password -->
                                     <div class="col-12">
