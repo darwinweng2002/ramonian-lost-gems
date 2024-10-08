@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $school_type = $_POST['school_type'];
     $grade = $_POST['grade'];
+
     // Check if passwords match
     if ($_POST['password'] !== $_POST['confirm_password']) {
         $response = ['success' => false, 'message' => 'Passwords do not match.'];
@@ -34,6 +35,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Hash the password
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
+
+    // Check if the email is already registered and approved
+    $stmt = $conn->prepare("SELECT * FROM user_member WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        if ($user['status'] === 'approved') {
+            // If email already registered and account is approved
+            $response = ['success' => false, 'message' => 'This account is already registered.'];
+            echo json_encode($response);
+            exit;
+        }
+    }
+    $stmt->close(); // Close the previous statement
 
     // Handle file upload (School ID)
     $target_dir = "uploads/school_ids/";
@@ -70,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
         // Prepare the SQL statement
         $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, school_type, grade, email, password, school_id_file, status, verification_token, token_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssssssssss", $first_name, $last_name, $college, $course, $year, $school_type, $grade,  $email, $password, $school_id_file, $status, $verification_token, $token_expiration);
+        $stmt->bind_param("sssssssssssss", $first_name, $last_name, $college, $course, $year, $school_type, $grade, $email, $password, $school_id_file, $status, $verification_token, $token_expiration);
 
         // Execute the query
         $stmt->execute();
