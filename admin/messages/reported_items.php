@@ -16,8 +16,18 @@ $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']
 $sql = "SELECT mh.id, mh.title, um.first_name as user_name, um.college, c.name as category_name, mh.founder, mh.time_found, mh.status
         FROM message_history mh
         LEFT JOIN user_member um ON mh.user_id = um.id
-        LEFT JOIN categories c ON mh.category_id = c.id
-        ORDER BY mh.time_found DESC";
+        LEFT JOIN categories c ON mh.category_id = c.id";
+
+// Add search condition
+if (!empty($searchTerm)) {
+    $sql .= " WHERE mh.title LIKE '%$searchTerm%' 
+              OR um.first_name LIKE '%$searchTerm%'
+              OR um.college LIKE '%$searchTerm%' 
+              OR c.name LIKE '%$searchTerm%'
+              OR mh.founder LIKE '%$searchTerm%'";
+}
+
+$sql .= " ORDER BY mh.time_found DESC";
 $result = $conn->query($sql);
 ?>
 
