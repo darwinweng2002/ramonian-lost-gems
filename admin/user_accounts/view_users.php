@@ -1,14 +1,5 @@
 <?php
-require '../vendor/autoload.php';
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 include '../../config.php';
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-
 
 // Database connection
 $conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
@@ -18,79 +9,16 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-var_dump($_POST); // Debugging step to check if user_id is sent
-if (isset($_POST['user_id']) && !empty($_POST['user_id'])) {
-    $user_id = intval($_POST['user_id']);
-    echo "User ID received: $user_id"; // Debugging message
-} else {
-    die("User ID is not set.");
-}
+// Initialize search term
+$searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
+// Update SQL query to include search functionality
+$sql = "SELECT * FROM user_member WHERE 
+        CONCAT_WS(' ', first_name, last_name, school_type, grade, course, year, email) LIKE '%$searchTerm%'
+        AND status != 'approved'";
 
-// Prepared statement to update the user's status to 'approved'
-$stmt = $conn->prepare("UPDATE users SET status='approved' WHERE id=?");
-$stmt->bind_param("i", $user_id); // "i" indicates the parameter is an integer
-
-if ($stmt->execute()) {
-    // Send approval email
-    if (sendApprovalEmail($user_id, $conn)) {
-        echo '1'; // Success
-    } else {
-        echo '0'; // Error sending email
-    }
-} else {
-    echo '0'; // Error updating record
-}
-
-$stmt->close();
-$conn->close();
-
-// Function to send approval email
-function sendApprovalEmail($user_id, $conn) {
-    $sql = "SELECT email FROM users WHERE id=?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows > 0) {
-        // Fetch user email
-        $row = $result->fetch_assoc();
-        $to = $row['email'];
-        $subject = "Account Approved";
-        $message = "Congratulations! Your account has been approved.";
-        
-        $mail = new PHPMailer(true);
-        
-        try {
-            //Server settings
-            $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = 'randolfh.wizworxx@gmail.com';
-            $mail->Password   = '@Thelastkidds05!!@2024';
-            $mail->SMTPSecure = 'tls';
-            $mail->Port       = 587;
-
-            //Recipients
-            $mail->setFrom('randolfh.wizworxx@gmail.com', 'Admin');
-            $mail->addAddress($to);
-
-            // Content
-            $mail->isHTML(true);
-            $mail->Subject = $subject;
-            $mail->Body    = $message;
-
-            $mail->send();
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-    return false; // User not found
-}
+$result = $conn->query($sql);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <?php require_once('../inc/header.php') ?>
@@ -432,9 +360,6 @@ function deleteUser(event, id) {
 function approveUser(event, id) {
     event.preventDefault(); // Prevent default form submission
 
-    // Debugging step: log the id
-    console.log('User ID being sent:', id);
-
     Swal.fire({
         title: 'Are you sure?',
         text: "You are about to approve this user!",
@@ -488,7 +413,6 @@ function approveUser(event, id) {
         }
     });
 }
-
 </script>
 
 <?php
