@@ -1,35 +1,31 @@
 <?php
-// Include your database connection
 include '../../config.php';
+$conn = new mysqli('localhost','u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db'); // Replace with your actual DB connection details
 
-// Check if ID is received in POST request
-if (isset($_POST['id'])) {
-    $message_id = intval($_POST['id']); // Sanitize input
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+// Check if the request is a POST request and the ID is set
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
+    $message_id = intval($_POST['id']);
 
-    // Prepare SQL query to delete the message by ID
-    $sql = "DELETE FROM message_history WHERE id = ?";
-    
-    if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("i", $message_id);
-        
-        // Execute the query
-        if ($stmt->execute()) {
-            // Success, return JSON response
-            echo json_encode(['success' => true]);
-        } else {
-            // Error during execution
-            echo json_encode(['success' => false, 'error' => 'Database error.']);
-        }
-        
-        $stmt->close();
+    // Prepare and execute the delete query
+    $stmt = $conn->prepare("DELETE FROM message_history WHERE id = ?");
+    $stmt->bind_param("i", $message_id);
+
+    if ($stmt->execute()) {
+        // If delete was successful, return a JSON response
+        echo json_encode(['success' => true]);
     } else {
-        // Error preparing the statement
-        echo json_encode(['success' => false, 'error' => 'Failed to prepare SQL.']);
+        // If delete failed, return a JSON error message
+        echo json_encode(['success' => false, 'error' => 'Failed to delete the message']);
     }
+
+    $stmt->close();
 } else {
-    // No ID provided
-    echo json_encode(['success' => false, 'error' => 'No ID provided.']);
+    // If the request method is incorrect or ID is not set, return an error
+    echo json_encode(['success' => false, 'error' => 'Invalid request']);
 }
 
 $conn->close();
-?>
