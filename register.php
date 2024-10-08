@@ -367,11 +367,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
 
                        <!-- Update the form to allow email or non-email usernames -->
-                        <div class="col-12">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" name="email" class="form-control" id="username" required>
-                            <div class="invalid-feedback" id="username-error">Username must be 8-16 characters long.</div>
-                        </div>
+                    <div class="col-12">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" name="email" class="form-control" id="username" required>
+                        <div class="invalid-feedback" id="username-error">Username must be 8-16 characters long.</div>
+                    </div>
 
                             <div class="col-12">
                                 <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
