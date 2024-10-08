@@ -338,14 +338,20 @@ $(document).ready(function () {
     function validateForm() {
         let formIsValid = true; // Assume the form is valid
 
-        // Validate email format
+        // Validate email/username format
         const email = $('#email').val().trim();
-        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        if (!emailPattern.test(email)) {
+
+        // Regex for either an email OR a username (8-16 characters)
+        const pattern = /^([a-zA-Z0-9._-]{8,16}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+
+        // Validate the email/username format using the combined regex
+        if (!pattern.test(email)) {
             formIsValid = false;
             $('#email').addClass('is-invalid');
+            $('#email-error').text('Please enter a valid email or a username (8-16 characters)').show();
         } else {
             $('#email').removeClass('is-invalid').addClass('is-valid');
+            $('#email-error').hide();
         }
 
         // Validate profile image is uploaded
