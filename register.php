@@ -367,10 +367,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
 
                         <div class="col-12">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" id="email" required>
-                        <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
+                        <label for="username" class="form-label">Username (Email or Traditional Username)</label>
+                        <input type="text" name="email" class="form-control" id="username" required>
+                        <div class="invalid-feedback" id="email-error">Please enter a valid email address or username.</div>
                     </div>
+
 
                             <div class="col-12">
                                 <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
