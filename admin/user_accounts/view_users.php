@@ -6,7 +6,7 @@ include '../../config.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-require 'vendor/autoload_file.php';
+require 'vendor/composer/autoload_file.php';
 
 // Database connection
 $conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
