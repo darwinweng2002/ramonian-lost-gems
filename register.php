@@ -439,7 +439,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (password.length < 8 || password.length > 16) {
             formIsValid = false;
             $('#yourPassword').addClass('is-invalid');
-            $('#yourPassword').siblings('.invalid-feedback').show().text('Password is too short or not match');
+            $('#yourPassword').siblings('.invalid-feedback').show().text('Please make sure your password is not too short and matches.');
         } else {
             $('#yourPassword').removeClass('is-invalid').addClass('is-valid');
             $('#yourPassword').siblings('.invalid-feedback').hide();
@@ -448,7 +448,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (password !== confirmPassword) {
             formIsValid = false;
             $('#confirm_password').addClass('is-invalid');
-            $('#confirm_password').siblings('.invalid-feedback').show().text('Password is too short or not match');
+            $('#confirm_password').siblings('.invalid-feedback').show().text('Please make sure your password is not too short and matches.');
         } else if (confirmPassword.length >= 8 && confirmPassword.length <= 16) {
             $('#confirm_password').removeClass('is-invalid').addClass('is-valid');
             $('#confirm_password').siblings('.invalid-feedback').hide();
