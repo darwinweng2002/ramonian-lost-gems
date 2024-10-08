@@ -366,11 +366,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <small class="text-muted">We assure you that the school ID you submit will be used solely for verification purposes, specifically to confirm that you are a legitimate student of PRMSU Iba Campus. All personal information will remain confidential and will not be shared with any third parties. Your data will be handled in strict compliance with applicable privacy laws and ethical guidelines to ensure the protection of your information.</small>
                         </div>
 
-                            <div class="col-12">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" id="email" required>
-                            <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
-                        </div>
+                        <div class="col-12">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="text" name="email" class="form-control" id="email" required>
+                        <div class="invalid-feedback" id="email-error">Please enter your username.</div>
+                    </div>
+
                             <div class="col-12">
                                 <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
                                 <input type="password" name="password" class="form-control" id="yourPassword" minlength="8" maxlength="16" required>
@@ -420,17 +421,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     function validateForm() {
         let formIsValid = true;
 
-        // Validate email
+       // No need to validate email as it is now a general text field
         const email = $('#email').val().trim();
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!emailPattern.test(email)) {
+        if (email === "") {
             formIsValid = false;
             $('#email').addClass('is-invalid');
-            $('#email-error').text('Please enter a valid email address').show();
+            $('#email-error').text('Please enter your email or username').show();
         } else {
             $('#email').removeClass('is-invalid').addClass('is-valid');
             $('#email-error').hide();
         }
+
 
         // Validate password and confirm password
         const password = $('#yourPassword').val().trim();
