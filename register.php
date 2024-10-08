@@ -367,10 +367,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
 
                         <div class="col-12">
-    <label for="username" class="form-label">Username</label>
-    <input type="text" name="email" class="form-control" id="username" required>
-    <div class="invalid-feedback" id="username-error">Please enter a valid username (3-16 characters, no email format).</div>
-</div>
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" id="email" required>
+                        <div class="invalid-feedback" id="email-error">Please enter a valid email address.</div>
+                    </div>
 
                             <div class="col-12">
                                 <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
@@ -418,27 +418,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Populate courses dynamically based on selected college
 
     // Form validation logic
-   function validateForm() {
-    let formIsValid = true;
+    function validateForm() {
+        let formIsValid = true;
 
-    // Validate username (no email format allowed)
-    const username = $('#username').val().trim();
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const usernamePattern = /^[a-zA-Z0-9._-]{3,16}$/;  // Alphanumeric usernames, underscores, dots, and dashes allowed, 3-16 characters
-
-    if (emailPattern.test(username)) {
-        formIsValid = false;
-        $('#username').addClass('is-invalid');
-        $('#username-error').text('Email format is not allowed, use a traditional username.').show();
-    } else if (!usernamePattern.test(username)) {
-        formIsValid = false;
-        $('#username').addClass('is-invalid');
-        $('#username-error').text('Username must be 3-16 characters long and may contain alphanumeric characters, dots, underscores, or dashes.').show();
-    } else {
-        $('#username').removeClass('is-invalid').addClass('is-valid');
-        $('#username-error').hide();
-    }
-
+        // Validate email
+        const email = $('#email').val().trim();
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(email)) {
+            formIsValid = false;
+            $('#email').addClass('is-invalid');
+            $('#email-error').text('Please enter a valid email address').show();
+        } else {
+            $('#email').removeClass('is-invalid').addClass('is-valid');
+            $('#email-error').hide();
+        }
 
         // Validate password and confirm password
         const password = $('#yourPassword').val().trim();
