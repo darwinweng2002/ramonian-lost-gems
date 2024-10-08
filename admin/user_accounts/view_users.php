@@ -36,7 +36,6 @@ if ($conn->connect_error) {
 }
 
 // Get user ID from POST request
-$user_id = $_POST['user_id'];
 
 // Update user status to 'approved'
 $sql = "UPDATE users SET status='approved' WHERE id=$user_id";
