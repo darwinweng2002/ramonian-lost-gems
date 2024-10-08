@@ -1,28 +1,3 @@
-<?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-include '../../config.php';
-
-// Database connection
-$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Initialize search term
-$searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
-
-// Update SQL query to include search functionality based on relevant columns
-$sql = "SELECT id, user_type, first_name, last_name, email, avatar, position, department, registration_date, status 
-        FROM user_staff 
-        WHERE CONCAT_WS(' ', first_name, last_name, email, user_type, position, department) LIKE '%$searchTerm%'";
-
-$result = $conn->query($sql);
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <?php require_once('../inc/header.php') ?>
@@ -56,25 +31,21 @@ $result = $conn->query($sql);
             margin-bottom: 20px;
         }
 
-        .table-responsive {
-            background: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
+        /* Add horizontal scrolling */
+        .table-wrapper {
+            overflow-x: auto; /* Enable horizontal scrolling */
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 1000px; /* Ensures the table has enough width */
         }
 
         th, td {
             padding: 12px;
             text-align: center;
-        }
-
-        th {
-            white-space: nowrap;
+            white-space: nowrap; /* Prevents text wrapping inside cells */
         }
 
         thead th {
@@ -208,7 +179,8 @@ $result = $conn->query($sql);
             </div>
         </form>
 
-        <div class="table-responsive">
+        <!-- Table wrapper for horizontal scrolling -->
+        <div class="table-wrapper">
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
