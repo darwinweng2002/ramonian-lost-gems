@@ -366,11 +366,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <small class="text-muted">We assure you that the school ID you submit will be used solely for verification purposes, specifically to confirm that you are a legitimate student of PRMSU Iba Campus. All personal information will remain confidential and will not be shared with any third parties. Your data will be handled in strict compliance with applicable privacy laws and ethical guidelines to ensure the protection of your information.</small>
                         </div>
 
+                       <!-- Update the form to allow email or non-email usernames -->
                         <div class="col-12">
-    <label for="username" class="form-label">Username</label>
-    <input type="text" name="email" class="form-control" id="username" required>
-    <div class="invalid-feedback" id="username-error">Please enter a valid username (3-16 characters, no email format).</div>
-</div>
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" name="email" class="form-control" id="username" required>
+                            <div class="invalid-feedback" id="username-error">Username must be 8-16 characters long.</div>
+                        </div>
 
                             <div class="col-12">
                                 <label for="yourPassword" class="form-label">Password (8-16 characters)</label>
@@ -417,50 +418,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    $(document).ready(function() {
     // Populate courses dynamically based on selected college
 
-    // Form validation logic
     function validateForm() {
     let formIsValid = true;
 
-    // Validate username (no email format allowed)
+    // Validate username (allow email format or non-email format)
     const username = $('#username').val().trim();
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const usernamePattern = /^[a-zA-Z0-9._-]{3,16}$/;  // Alphanumeric usernames, underscores, dots, and dashes allowed, 3-16 characters
+    const usernamePattern = /^[a-zA-Z0-9._@-]{8,16}$/; // 8-16 characters, alphanumeric, dots, underscores, dashes, and '@' allowed
 
-    if (emailPattern.test(username)) {
+    if (username.length < 8 || username.length > 16) {
         formIsValid = false;
         $('#username').addClass('is-invalid');
-        $('#username-error').text('Email format is not allowed, use a traditional username.').show();
+        $('#username-error').text('Username must be between 8 and 16 characters.').show();
     } else if (!usernamePattern.test(username)) {
         formIsValid = false;
         $('#username').addClass('is-invalid');
-        $('#username-error').text('Username must be 3-16 characters long and may contain alphanumeric characters, dots, underscores, or dashes.').show();
+        $('#username-error').text('Invalid username format. Allowed characters: alphanumeric, ".", "_", "@", "-".').show();
     } else {
         $('#username').removeClass('is-invalid').addClass('is-valid');
         $('#username-error').hide();
     }
 
+    // Validate password (case-sensitive with at least one upper, lower, digit, and special character)
+    const password = $('#yourPassword').val().trim();
+    const confirmPassword = $('#confirm_password').val().trim();
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,16}$/;
 
-        // Validate password and confirm password
-        const password = $('#yourPassword').val().trim();
-        const confirmPassword = $('#confirm_password').val().trim();
+    if (!passwordPattern.test(password)) {
+        formIsValid = false;
+        $('#yourPassword').addClass('is-invalid');
+        $('#yourPassword').siblings('.invalid-feedback').text('Password must be 8-16 characters, include uppercase, lowercase, a number, and a special character.').show();
+    } else {
+        $('#yourPassword').removeClass('is-invalid').addClass('is-valid');
+        $('#yourPassword').siblings('.invalid-feedback').hide();
+    }
 
-        if (password.length < 8 || password.length > 16) {
-            formIsValid = false;
-            $('#yourPassword').addClass('is-invalid');
-            $('#yourPassword').siblings('.invalid-feedback').show().text('Please make sure your password is not too short and matches.');
-        } else {
-            $('#yourPassword').removeClass('is-invalid').addClass('is-valid');
-            $('#yourPassword').siblings('.invalid-feedback').hide();
-        }
-
-        if (password !== confirmPassword) {
-            formIsValid = false;
-            $('#confirm_password').addClass('is-invalid');
-            $('#confirm_password').siblings('.invalid-feedback').show().text('Please make sure your password is not too short and matches.');
-        } else if (confirmPassword.length >= 8 && confirmPassword.length <= 16) {
-            $('#confirm_password').removeClass('is-invalid').addClass('is-valid');
-            $('#confirm_password').siblings('.invalid-feedback').hide();
-        }
+    if (password !== confirmPassword) {
+        formIsValid = false;
+        $('#confirm_password').addClass('is-invalid');
+        $('#confirm_password').siblings('.invalid-feedback').show().text('Passwords do not match.');
+    } else if (confirmPassword.length >= 8 && confirmPassword.length <= 16) {
+        $('#confirm_password').removeClass('is-invalid').addClass('is-valid');
+        $('#confirm_password').siblings('.invalid-feedback').hide();
+    }
 
         // Validate school ID file upload
         const schoolId = $('#school_id').val();
