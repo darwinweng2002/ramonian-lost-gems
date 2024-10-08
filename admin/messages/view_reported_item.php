@@ -123,6 +123,29 @@ if ($message_id > 0) {
             display: block; /* Ensures the image is displayed as a block element */
             margin-bottom: 10px; /* Adds space below the image if needed */
         }
+        .table-responsive {
+    overflow-x: auto;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -130,6 +153,7 @@ if ($message_id > 0) {
     <?php require_once('../inc/navigation.php'); ?>
 
     <div class="container">
+    <div class="table-responsive">
         <h1>Found Item Details</h1>
         <?php
         if ($result->num_rows > 0) {
@@ -258,6 +282,7 @@ if ($message_id > 0) {
             }
         }
         ?>
+    </div>
     </div>
 
     <!-- Include JavaScript files -->
