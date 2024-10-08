@@ -64,12 +64,13 @@ $result = $conn->query($sql);
             background: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            overflow: hidden;
+            overflow-x: auto; /* Enables horizontal scrolling */
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 1000px; /* This ensures the table will scroll when content is wide */
         }
 
         th, td {
@@ -126,6 +127,20 @@ $result = $conn->query($sql);
             font-size: 1.2rem;
             color: #333;
             padding: 30px 0;
+        }
+
+        /* Custom scrollbar for table container */
+        .table-responsive::-webkit-scrollbar {
+            height: 8px; /* Adjust the height for horizontal scrollbar */
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb {
+            background-color: #b0b0b0;
+            border-radius: 5px;
+        }
+
+        .table-responsive::-webkit-scrollbar-track {
+            background-color: #f4f4f4;
         }
 
         /* Responsive Design */
