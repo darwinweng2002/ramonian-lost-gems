@@ -269,13 +269,11 @@ body {
                                     </div>
 
                                     <!-- Email -->
-                                    <!-- Email/Username field -->
                                     <div class="col-12">
-                                        <label for="email" class="form-label">Username or Email</label>
-                                        <input type="text" name="email" class="form-control" id="email" required>
-                                        <div class="invalid-feedback" id="email-error">Please enter a valid email or a username (8-16 characters).</div>
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" name="email" class="form-control" id="email" required>
+                                        <div class="invalid-feedback">Please use an active email account</div>
                                     </div>
-
 
                                     <!-- Password -->
                                     <div class="col-12">
@@ -340,18 +338,14 @@ $(document).ready(function () {
     function validateForm() {
         let formIsValid = true; // Assume the form is valid
 
-        // Validate email or username format
+        // Validate email format
         const email = $('#email').val().trim();
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Email regex
-        const usernamePattern = /^[a-zA-Z0-9._-]{8,16}$/; // Username regex (8-16 characters)
-
-        if (!emailPattern.test(email) && !usernamePattern.test(email)) {
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailPattern.test(email)) {
             formIsValid = false;
             $('#email').addClass('is-invalid');
-            $('#email-error').text('Please enter a valid email or a username (8-16 characters)').show();
         } else {
             $('#email').removeClass('is-invalid').addClass('is-valid');
-            $('#email-error').hide();
         }
 
         // Validate profile image is uploaded
@@ -393,7 +387,6 @@ $(document).ready(function () {
     $('#email, #profile_image, #yourPassword, #confirm_password').on('input change', function () {
         validateForm();
     });
-});
 
     // Handle form submission via AJAX
     $('#registrationForm').on('submit', function (e) {
