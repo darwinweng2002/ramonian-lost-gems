@@ -170,33 +170,87 @@ $result = $conn->query($sql);
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if ($result->num_rows > 0): ?>
-                        <?php while($row = $result->fetch_assoc()): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($row['first_name']) ?></td>
-                                <td><?= htmlspecialchars($row['last_name']) ?></td>
-                                <td><?= htmlspecialchars($row['college']) ?></td>
-                                <td><?= htmlspecialchars($row['course']) ?></td>
-                                <td><?= htmlspecialchars($row['year']) ?></td>
-                                <td><?= htmlspecialchars($row['email']) ?></td>
-                                <td>
-                                    <!-- Add View Button for actions -->
-                                    <a href="https://ramonianlostgems.com/admin/user_accounts/viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
-                                        <i class="fa fa-eye"></i> View Details
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="7" class="no-data">No registered users found.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
+    <?php if ($result->num_rows > 0): ?>
+        <?php while($row = $result->fetch_assoc()): ?>
+            <tr>
+                <td><?= htmlspecialchars($row['first_name']) ?></td>
+                <td><?= htmlspecialchars($row['last_name']) ?></td>
+                <td><?= htmlspecialchars($row['college']) ?></td>
+                <td><?= htmlspecialchars($row['course']) ?></td>
+                <td><?= htmlspecialchars($row['year']) ?></td>
+                <td><?= htmlspecialchars($row['email']) ?></td>
+                <td>
+                    <!-- Add View Button for actions -->
+                    <a href="https://ramonianlostgems.com/admin/user_accounts/viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
+                        <i class="fa fa-eye"></i> View Details
+                    </a>
+
+                    <!-- Add Delete Button -->
+                    <button class="btn btn-danger btn-sm delete-user-btn" data-id="<?= htmlspecialchars($row['id']) ?>">
+                        <i class="fa fa-trash"></i> Delete
+                    </button>
+                </td>
+            </tr>
+        <?php endwhile; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="7" class="no-data">No registered users found.</td>
+        </tr>
+    <?php endif; ?>
+</tbody>
+
             </table>
         </div>
     </div>
     <?php require_once('../inc/footer.php') ?>
+    <script>
+    // Handle the delete user button click event
+    document.querySelectorAll('.delete-user-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const userId = this.getAttribute('data-id');
+
+            // Show confirmation dialog using SweetAlert
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Send AJAX request to delete user
+                    fetch('delete_approved.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'id=' + userId
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success message
+                            Swal.fire('Deleted!', 'The user account has been deleted.', 'success').then(() => {
+                                // Reload the page to update the user list
+                                location.reload();
+                            });
+                        } else {
+                            // Show error message
+                            Swal.fire('Error!', data.message || 'Failed to delete user.', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        // Handle errors during the AJAX request
+                        console.error('Error:', error);
+                        Swal.fire('Error!', 'An error occurred while deleting the user.', 'error');
+                    });
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
 
