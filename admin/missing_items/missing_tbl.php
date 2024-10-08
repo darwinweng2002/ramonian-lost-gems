@@ -60,14 +60,16 @@ $result = $conn->query($sql);
             color: #333;
             margin-bottom: 20px;
         }
+        /* Ensure horizontal scrolling for tables */
         .table-responsive {
             background: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            overflow: hidden;
+            overflow-x: auto; /* Enables horizontal scrolling */
         }
         table {
             width: 100%;
+            min-width: 1000px; /* Force table to stretch for scrolling if needed */
             border-collapse: collapse;
         }
         th, td {
@@ -75,7 +77,7 @@ $result = $conn->query($sql);
             text-align: center;
         }
         th {
-            white-space: nowrap; /* Prevents wrapping */
+            white-space: nowrap; /* Prevents text from wrapping */
         }
         thead th {
             background-color: #f2f2f2;
@@ -111,13 +113,13 @@ $result = $conn->query($sql);
         .input-group {
             display: flex;
             align-items: center;
-            border-radius: 8px; /* Adds the border-radius to the entire group */
+            border-radius: 8px;
             overflow: hidden;   /* Ensures the border-radius applies to all child elements */
         }
         .search-input {
             border: 1px solid #ddd;
             border-right: none;
-            border-radius: 0; /* Reset any default border radius */
+            border-radius: 0;
             padding: 10px;
             outline: none;
             box-shadow: none;
@@ -151,6 +153,17 @@ $result = $conn->query($sql);
         .badge-published { background-color: #007bff; }
         .badge-claimed { background-color: #28a745; }
         .badge-surrendered { background-color: #6c757d; }
+        /* Custom scrollbar styling */
+        .table-responsive::-webkit-scrollbar {
+            height: 10px;
+        }
+        .table-responsive::-webkit-scrollbar-thumb {
+            background-color: #b0b0b0;
+            border-radius: 10px;
+        }
+        .table-responsive::-webkit-scrollbar-track {
+            background-color: #f4f4f4;
+        }
     </style>
 </head>
 <body>
@@ -241,7 +254,6 @@ $result = $conn->query($sql);
         </div>
     </div>
 </section>
-
 <?php
 $conn->close();
 ?>
