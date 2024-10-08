@@ -6,28 +6,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $first_name = trim($_POST['first_name']);
     $last_name = trim($_POST['last_name']);
     $user_type = trim($_POST['user_type']);
-    $username = trim($_POST['email']);  // Username can be an email or username (8-16 chars)
+    $username = trim($_POST['email']);
     $password = trim($_POST['password']);
     $confirm_password = trim($_POST['confirm_password']);
 
-    // Check if the username is an email or a valid username (8-16 characters)
-    if (!filter_var($username, FILTER_VALIDATE_EMAIL)) {
-        // Not an email, check if it's a valid username
-        if (strlen($username) < 8 || strlen($username) > 16) {
-            $response = ['success' => false, 'message' => 'Username must be between 8 and 16 characters.'];
-            echo json_encode($response);
-            exit;
-        }
-    }
-
-    // Check if the email/username already exists
+    // Check if email already exists
     $stmt = $conn->prepare("SELECT id FROM user_staff WHERE email = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        $response = ['success' => false, 'message' => 'This email or username is already taken, please use another.'];
+        $response = ['success' => false, 'message' => 'This email address is already taken, please use another.'];
         echo json_encode($response);
         exit;
     }
@@ -97,4 +87,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Return JSON response
     echo json_encode($response);
 }
-?>
