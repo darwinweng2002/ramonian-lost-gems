@@ -270,39 +270,29 @@ if ($message_id > 0) {
       $(document).ready(function() {
         // SweetAlert for delete confirmation
         $('.delete-btn').on('click', function() {
-    var messageId = $(this).data('id'); // Get the message ID from button
-    
-    Swal.fire({
-        title: 'Are you sure you want to delete this item entry?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: 'delete_message.php',
-                type: 'POST',
-                data: { id: messageId },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        // Show success message instead of error
-                        Swal.fire('Deleted!', 'The found item has been deleted successfully.', 'success');
-                        location.reload(); // Reload the page to reflect the deletion
-                    } else {
-                        Swal.fire('Error!', response.error || 'Unknown error occurred.', 'error'); // Handle any server-side error
-                    }
-                },
-                error: function(xhr, status, error) {
-                    // Handle AJAX request failure (e.g., if there's a network error or server issue)
-                    Swal.fire('Error!', 'AJAX request failed: ' + error + '. Full response: ' + xhr.responseText, 'error');
+    var messageId = $(this).data('id');
+    if (confirm('Are you sure you want to delete this message?')) {
+        $.ajax({
+            url: 'delete_message.php',
+            type: 'POST',
+            data: { id: messageId },
+            dataType: 'json', // Expect a JSON response from the server
+            success: function(response) {
+                if (response.success) {
+                    alert('Message deleted successfully.');
+                    location.reload(); // Reload the page to reflect the deletion
+                } else {
+                    alert('Failed to delete the message: ' + response.error);
                 }
-            });
-        }
-    });
+            },
+            error: function(xhr, status, error) {
+                // Handle cases where the server returns an error
+                console.error("AJAX error:", status, error);
+                alert('An error occurred: ' + error);
+            }
+        });
+    }
+});
 });
 
 
