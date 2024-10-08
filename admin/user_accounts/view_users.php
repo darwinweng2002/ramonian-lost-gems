@@ -18,12 +18,14 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if the user_id is set in the POST request
+var_dump($_POST); // Debugging step to check if user_id is sent
 if (isset($_POST['user_id']) && !empty($_POST['user_id'])) {
-    $user_id = intval($_POST['user_id']); // Sanitize input
+    $user_id = intval($_POST['user_id']);
+    echo "User ID received: $user_id"; // Debugging message
 } else {
     die("User ID is not set.");
 }
+
 
 // Prepared statement to update the user's status to 'approved'
 $stmt = $conn->prepare("UPDATE users SET status='approved' WHERE id=?");
