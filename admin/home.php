@@ -15,7 +15,6 @@
                 <h5 class="card-title">Missing Items <span>| Published</span></h5>
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-dark bg-opacity-25 text-dark">
-                    <i class="bi bi-question-octagon"></i>
                   </div>
                   <div class="ps-3">
                     <?php 
@@ -36,7 +35,6 @@
                 <h5 class="card-title">Claim Request <span>| Pending</span></h5>
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-dark bg-opacity-25 text-dark">
-                    <i class="bi bi-question-octagon"></i>
                   </div>
                   <div class="ps-3">
                     <?php 
@@ -57,7 +55,6 @@
                 <h5 class="card-title"> Student User Accounts <span>| Active</span></h5>
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-dark bg-opacity-25 text-dark">
-                    <i class="bi bi-question-octagon"></i>
                   </div>
                   <div class="ps-3">
                     <?php 
@@ -78,7 +75,6 @@
                 <h5 class="card-title"> Student User Accounts <span>| Pending</span></h5>
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-dark bg-opacity-25 text-dark">
-                    <i class="bi bi-question-octagon"></i>
                   </div>
                   <div class="ps-3">
                     <?php 
@@ -99,7 +95,6 @@
                 <h5 class="card-title">Reported Item <span>| Published</span></h5>
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-primary bg-opacity-25 text-primary">
-                    <i class="bi bi-question-octagon"></i>
                   </div>
                   <div class="ps-3">
                     <?php 
