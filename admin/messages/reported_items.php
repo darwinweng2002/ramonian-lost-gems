@@ -176,17 +176,20 @@ $result = $conn->query($sql);
     <div class="container">
         <h2>Reported Found Items</h2>
 
-        <div class="mb-3">
-            <a href="https://ramonianlostgems.com/admin/messages/report_found_item.php" class="btn btn-success">Report Found Item</a>
+        <!-- Aligning the Report button and Search form in a column layout -->
+        <div class="d-flex flex-column mb-3">
+            <!-- Report Found Item Button -->
+            <a href="https://ramonianlostgems.com/admin/messages/report_found_item.php" class="btn btn-success mb-2">Report Found Item</a>
+            
+            <!-- Search Form (Original UI preserved) -->
+            <form class="search-form" method="GET" action="">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
+                    <button type="submit" class="search-button btn btn-success">Search</button>
+                </div>
+            </form>
         </div>
-    <!-- Search Form -->
-    <form class="search-form d-flex" method="GET" action="">
-        <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-search"></i></span>
-            <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
-            <button type="submit" class="search-button">Search</button>
-        </div>
-    </form>
 
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
