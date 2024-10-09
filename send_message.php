@@ -36,20 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $new_category = $_POST['new_category'];
     $founder = $_POST['founder'];
 
-    if ($category_id == 'add_new' && !empty($new_category)) {
-        // Prepare the SQL query to insert the new category
-        $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
-        $stmt->bind_param("s", $new_category);
-    
-        if ($stmt->execute()) {
-            // Get the inserted category's ID
-            $category_id = $stmt->insert_id;
-        } else {
-            // Handle insertion error
-            $error = "Failed to add new category: " . $stmt->error;
-        }
-        $stmt->close();
-    }
+   // Check if category_id is set to add a new category
+   if ($category_id == 'add_new' && !empty($new_category)) {
+    $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
+    $stmt->bind_param("s", $new_category);
+    $stmt->execute();
+    $category_id = $stmt->insert_id;
+    $stmt->close();
+}
     
 
     // Proceed to save the rest of the information
@@ -365,9 +359,10 @@ if (isset($userId)) {
     <option value="add_new">Add New Category</option>
 </select>
 
-<!-- Input field for new category, hidden by default -->
 <div id="newCategoryDiv" style="display: none;">
-    <label for="new_category">New Category:</label>
+    <label for="new_category">
+        New Category:
+    </label>
     <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
 </div>
 
@@ -469,7 +464,7 @@ function previewImages() {
             });
         <?php endif; ?>
        // Show the new category input field when 'Add New Category' is selected
-document.getElementById('category_id').addEventListener('change', function() {
+       document.getElementById('category_id').addEventListener('change', function() {
     document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
 });
 
