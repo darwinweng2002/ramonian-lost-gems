@@ -347,7 +347,7 @@ const emailPattern = /^([a-zA-Z0-9._-]{8,16}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[
 if (!emailPattern.test(email)) {
     formIsValid = false;
     $('#email').addClass('is-invalid');
-    $('#email-error').text('Please enter a valid email or a username (8-16 characters)').show();
+    $('#email-error').text('Please enter a username (8-16 characters)').show();
 } else {
     $('#email').removeClass('is-invalid').addClass('is-valid');
     $('#email-error').hide();
