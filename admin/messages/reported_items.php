@@ -166,22 +166,21 @@ $result = $conn->query($sql);
             background-color: #f4f4f4;
         }
         /* Set consistent padding and width for both buttons */
-/* Make sure the Report button aligns to the right */
+/* Align the Report button on the right above the search bar */
 .report-btn {
+    padding: 8px 16px;
     float: right;
-    padding: 10px 16px; /* Set padding to match the search button */
+    margin-bottom: 10px;
     width: auto;
-    text-align: center;
-    margin-bottom: 5px; /* Ensure spacing between the button and search bar */
 }
 
+/* Ensure search button and search bar remain aligned */
 .search-button {
     padding: 10px 16px;
 }
 
-/* Ensure the search bar retains its full width */
 .input-group {
-    clear: both; /* Ensures search bar doesn't overlap the button */
+    clear: both; /* Clears float from the button */
 }
 
     </style>
@@ -196,19 +195,20 @@ $result = $conn->query($sql);
         <h2>Reported Found Items</h2>
 
         <!-- Button aligned right above the search -->
-        <div class="d-flex flex-column mb-3">
+        <div class="d-flex justify-content-end mb-3">
             <!-- Report Found Item Button (aligned to the right) -->
             <a href="https://ramonianlostgems.com/admin/messages/report_found_item.php" class="btn btn-success report-btn">Report Found Item</a>
-
-            <!-- Search Form (Original UI preserved) -->
-            <form class="search-form mt-2" method="GET" action="">
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
-                    <button type="submit" class="search-button btn btn-success">Search</button>
-                </div>
-            </form>
         </div>
+
+        <!-- Search Form (Original UI preserved) -->
+        <form class="search-form" method="GET" action="">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
+                <button type="submit" class="search-button btn btn-success">Search</button>
+            </div>
+        </form>
+
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>
