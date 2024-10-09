@@ -54,9 +54,9 @@
 							<td><?php echo $row['username'] ?></td>
 							<td class="text-center">
                                 <?php if($row['type'] == 1): ?>
-                                    Administrator
+                                    Super Admin
                                 <?php elseif($row['type'] == 2): ?>
-                                    Staff Admins
+                                    Admin
                                 <?php else: ?>
 									N/A
                                 <?php endif; ?>
