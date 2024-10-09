@@ -1,5 +1,8 @@
 <?php
 include '../config.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
@@ -34,8 +37,10 @@ $sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi
         COALESCE(um.last_name, us.last_name) AS last_name, 
         COALESCE(um.college, us.department) AS college, 
         COALESCE(um.email, us.email) AS email, 
+        COALESCE(um.school_type, us.school_type) AS school_type, 
         COALESCE(um.avatar, us.avatar) AS avatar,
         us.position, -- Fetch position for staff members
+        um.school_type, -- Fetch level for regular users
         mi.contact, c.name as category_name, imi.image_path
         FROM missing_items mi
         LEFT JOIN user_member um ON mi.user_id = um.id
@@ -182,6 +187,7 @@ $result = $stmt->get_result();
                         'first_name' => $row['first_name'],
                         'last_name' => $row['last_name'],
                         'college' => $row['college'],
+                        'school_type' => $row['school_type'], // Fetch level for regular users
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
                         'position' => $row['position'], // Store position for staff
@@ -202,6 +208,7 @@ $result = $stmt->get_result();
                 $lastName = htmlspecialchars($itemData['last_name'] ?? '');
                 $email = htmlspecialchars($itemData['email'] ?? '');
                 $college = htmlspecialchars($itemData['college'] ?? '');
+                $school_type = htmlspecialchars($itemData['school_type'] ?? ''); // Handle level for user_member
                 $title = htmlspecialchars($itemData['title'] ?? '');
                 $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
                 $description = htmlspecialchars($itemData['description'] ?? '');
@@ -216,22 +223,24 @@ $result = $stmt->get_result();
                 echo "<div class='message-box'>";
 
                 // Check if there is any user information (staff or member)
-                if ($firstName || $lastName || $email || $college) {
+                if ($firstName || $lastName || $email) {
                     if ($avatar) {
                         $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                         echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                     } else {
                         echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                     }
-                    
+
                     echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName . " " . $lastName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
 
-                    // Only show department and position if available
+                    // Only show position for staff and college/level for members
                     if (!empty($position)) {
                         echo "<p><strong>Position:</strong> " . $position . "</p>";
                     }
-                    if (!empty($college)) {
-                        echo "<p><strong>Department:</strong> " . $college . "</p>";
+                    if ($college === 'N/A' && !empty($college)) {
+                        echo "<p><strong>Level:</strong> " . $college . "</p>";
+                    } elseif (!empty($school_type)) {
+                        echo "<p><strong>Level:</strong> " . $school_type . "</p>";
                     }
                 } else {
                     echo "<p><strong>User Info:</strong> Guest User</p>";
