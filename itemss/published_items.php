@@ -30,20 +30,19 @@ $itemId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 // SQL query to get published item details with user info from both user_member and user_staff
 $sql = "SELECT mh.id, mh.message, mi.image_path, mh.title, mh.founder, mh.status, mh.landmark, mh.time_found, 
-        user_info.first_name, user_info.college, user_info.email, user_info.avatar, user_info.user_type, user_info.position, mh.contact, c.name as category_name
+        user_info.first_name, user_info.last_name, user_info.college, user_info.school_type, user_info.email, user_info.avatar, user_info.user_type, user_info.position, mh.contact, c.name as category_name
         FROM message_history mh
         LEFT JOIN message_images mi ON mh.id = mi.message_id
         LEFT JOIN (
             -- Fetch data from user_member with a flag
-            SELECT id AS user_id, first_name, college, email, avatar, 'member' AS user_type, NULL AS position FROM user_member
+            SELECT id AS user_id, first_name, last_name, college, school_type, email, avatar, 'member' AS user_type, NULL AS position FROM user_member
             UNION
             -- Fetch data from user_staff with a flag
-            SELECT id AS user_id, first_name, department AS college, email, avatar, 'staff' AS user_type, position FROM user_staff
+            SELECT id AS user_id, first_name, last_name, department AS college, email, avatar, 'staff' AS user_type, position FROM user_staff
         ) AS user_info ON mh.user_id = user_info.user_id
         LEFT JOIN categories c ON mh.category_id = c.id
         WHERE mh.is_published = 1 AND mh.id = ?
         ORDER BY mh.id DESC";
-
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
@@ -102,19 +101,19 @@ $result = $stmt->get_result();
             gap: 10px;
         }
         .container .avatar {
-            width: 100px; /* Set the width of the avatar */
-            height: 100px; /* Set the height of the avatar to the same value as width for a circle */
-            border-radius: 100%; /* Makes the image circular */
-            object-fit: cover; /* Ensures the image covers the circle without distortion */
-            display: block; /* Ensures the image is displayed as a block element */
-            margin-bottom: 10px; /* Adds space below the image if needed */
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+            object-fit: cover;
+            display: block;
+            margin-bottom: 10px;
         }
         .claim-button {
             display: inline-block;
             padding: 10px 20px;
             font-size: 16px;
             color: #fff;
-            background-color: #28a745; /* Green color */
+            background-color: #28a745;
             border: none;
             border-radius: 5px;
             text-align: center;
@@ -125,13 +124,13 @@ $result = $stmt->get_result();
         }
 
         .claim-button:hover {
-            background-color: #218838; /* Darker green */
+            background-color: #218838;
             color: #fff;
         }
 
         .claim-button-container {
             display: flex;
-            justify-content: center; /* Center the button */
+            justify-content: center;
             margin-top: 20px;
         }
 
@@ -184,12 +183,13 @@ $result = $stmt->get_result();
                         'message' => $row['message'], 
                         'images' => [],
                         'first_name' => $row['first_name'],
+                        'last_name' => $row['last_name'],  // Fetch last name
                         'landmark' => $row['landmark'],
                         'founder' => $row['founder'],
                         'title' => $row['title'],
-                        'status' => $row['status'], // Fetch the status
+                        'status' => $row['status'],
                         'college' => $row['college'],
-                        'school_type' => $row['school_type'],
+                        'school_type' => $row['school_type'], // Fetch school_type
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
                         'time_found' => $row['time_found'],
@@ -206,22 +206,12 @@ $result = $stmt->get_result();
 
             foreach ($messages as $msgId => $msgData) {
                 echo "<div class='message-box'>";
+
                 $firstName = htmlspecialchars($msgData['first_name'] ?? '');
+                $lastName = htmlspecialchars($msgData['last_name'] ?? ''); // Last name inclusion
                 $email = htmlspecialchars($msgData['email'] ?? '');
                 $college = htmlspecialchars($msgData['college'] ?? '');
                 $school_type = htmlspecialchars($msgData['school_type'] ?? '');
-                $school_type = htmlspecialchars($msgData['school_type'] ?? '');
-
-// Map numeric school_type to string
-$schoolTypeString = '';
-if ($school_type === '0') {
-    $schoolTypeString = 'High School';
-} elseif ($school_type === '1') {
-    $schoolTypeString = 'College';
-} else {
-    $schoolTypeString = 'N/A';
-}
-
                 $title = htmlspecialchars($msgData['title'] ?? '');
                 $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                 $founder = htmlspecialchars($msgData['founder'] ?? '');
@@ -230,9 +220,19 @@ if ($school_type === '0') {
                 $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
                 $contact = htmlspecialchars($msgData['contact'] ?? '');
                 $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
-                $status = intval($msgData['status']); // Get the correct status
-            
-                // Only display avatar if the post is not from a guest user
+                $status = intval($msgData['status']);
+
+                // Map numeric school_type to string
+                $schoolTypeString = '';
+                if ($school_type === '0') {
+                    $schoolTypeString = 'High School';
+                } elseif ($school_type === '1') {
+                    $schoolTypeString = 'College';
+                } else {
+                    $schoolTypeString = 'N/A';
+                }
+
+                // Display avatar only if available
                 if ($firstName || $email || $college) {
                     if ($avatar) {
                         $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
@@ -241,9 +241,9 @@ if ($school_type === '0') {
                         echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                     }
                 } else {
-                    echo "<p><strong>User Info:</strong> Guest User</p>"; // Indicate that the post is from a guest
+                    echo "<p><strong>User Info:</strong> Guest User</p>";
                 }
-            
+
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Finder's Name:</strong> " . $founder . "</p>";
@@ -251,27 +251,28 @@ if ($school_type === '0') {
                 echo "<p><strong>Date and Time Found:</strong> " . $timeFound . "</p>";
                 echo "<p><strong>Description:</strong> " . $message . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
-            
-              // Display user information only if available
-// Display user information only if available
-if ($firstName || $email || $college) {
-    echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
 
-    if ($userType === 'staff') {
-        // Display department and position for staff users
-        echo "<p><strong>Department:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
-        echo "<p><strong>Position:</strong> " . ($msgData['position'] ? htmlspecialchars($msgData['position']) : 'N/A') . "</p>";  // Add this line to display position
-    } elseif ($userType === 'member') {
-        // Display college and level for member users
-        echo "<p><strong>College:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
-        echo "<p><strong>Level:</strong> " . $schoolTypeString . "</p>";  // Assuming $schoolTypeString is calculated elsewhere
-    }
-} else {
-    echo "<p><strong>User Info:</strong> Guest User</p>";  // Indicate that the post is from a guest
-}
+                // Display user information based on user type
+                if ($firstName || $email || $college) {
+                    echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " " . ($lastName ? $lastName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
+                    
+                    if ($userType === 'staff') {
+                        // Display department and position for staff users
+                        echo "<p><strong>Department:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
+                        echo "<p><strong>Position:</strong> " . ($msgData['position'] ? htmlspecialchars($msgData['position']) : 'N/A') . "</p>"; 
+                    } elseif ($userType === 'member') {
+                        // Display level for member users
+                        if ($schoolTypeString == 'College') {
+                            echo "<p><strong>College:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
+                        } else {
+                            echo "<p><strong>Level:</strong> " . $schoolTypeString . "</p>"; // Display Level
+                        }
+                    }
+                } else {
+                    echo "<p><strong>User Info:</strong> Guest User</p>";  // Indicate guest post
+                }
 
-
-            
+                // Display status badge
                 echo "<dt class='text-muted'>Status</dt>";
                 echo "<dd class='ps-4'>";
                 if ($status == 1) {
@@ -285,7 +286,7 @@ if ($firstName || $email || $college) {
                 }
                 echo "</dd>";
 
-
+                // Display images if available
                 if (!empty($msgData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
                     echo "<div class='image-grid'>";
@@ -295,11 +296,10 @@ if ($firstName || $email || $college) {
                     echo "</div>";
                 }
 
-                // Add Claim Request Button
+                // Claim request button
                 echo '<div class="claim-button-container">';
                 echo '<a href="https://ramonianlostgems.com/itemss/claim.php?id=' . htmlspecialchars($msgId) . '" class="claim-button">Send claim request.</a>';
                 echo '</div>';
-
 
                 echo "</div>";
             }
@@ -318,9 +318,9 @@ if ($firstName || $email || $college) {
 </div>
     </div>
     <?php require_once('../inc/footer.php') ?>
-    <script src="../js/jquery.min.js"></script> <!-- Ensure this path is correct -->
-    <script src="../js/bootstrap.min.js"></script> <!-- Ensure this path is correct -->
-    <script src="../js/custom.js"></script> <!-- Ensure this path is correct -->
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/custom.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
 </body>
 </html>

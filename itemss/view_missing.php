@@ -236,8 +236,8 @@ $result = $stmt->get_result();
                     if (!empty($position)) {
                         echo "<p><strong>Position:</strong> " . $position . "</p>";
                     }
-                    if ($school_type === 'N/A' && !empty($school_type)) {
-                        echo "<p><strong>Level:</strong> " . $school_type . "</p>";
+                    if ($college === 'N/A' && !empty($college)) {
+                        echo "<p><strong>Level:</strong> " . $college . "</p>";
                     } elseif (!empty($school_type)) {
                         echo "<p><strong>Level:</strong> " . $school_type . "</p>";
                     }
