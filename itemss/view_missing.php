@@ -37,7 +37,6 @@ $sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi
         COALESCE(um.last_name, us.last_name) AS last_name, 
         COALESCE(um.college, us.department) AS college, 
         COALESCE(um.email, us.email) AS email, 
-        COALESCE(um.school_type, us.school_type) AS school_type, 
         COALESCE(um.avatar, us.avatar) AS avatar,
         us.position, -- Fetch position for staff members
         um.school_type, -- Fetch level for regular users
