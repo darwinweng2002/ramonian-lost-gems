@@ -283,9 +283,17 @@ if (isset($userId)) {
             <label for="last_seen_location">Last Seen Location:</label>
             <input type="text" name="last_seen_location" id="last_seen_location" placeholder="Location where the item was last seen" required>
             <label for="contact">
-                </svg> Contact Information:
-            </label>
-            <input type="text" id="contact" name="contact" pattern="[0-9]{11}" placeholder="Enter contact information" required>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-contact">
+        <path d="M16 2v2"/>
+        <path d="M7 22v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/>
+        <path d="M8 2v2"/>
+        <circle cx="12" cy="11" r="3"/>
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+    </svg> 
+    Contact Information:
+</label>
+<input type="text" id="contact" name="contact" pattern="^09[0-9]{9}$" required>
+<span id="contactError"></span>
             <label for="time_missing">Time Missing:</label>
             <input type="datetime-local" name="time_missing" id="time_missing" required>
            
@@ -361,6 +369,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Set the max attribute to restrict future dates
         dateTimeInput.max = maxDateTime;
+    });
+    const contactInput = document.getElementById('contact');
+    const contactError = document.getElementById('contactError');
+
+    // Add input event listener for real-time validation
+    contactInput.addEventListener('input', function () {
+        if (this.validity.patternMismatch) {
+            contactError.textContent = "Contact number must start with 09 and be exactly 11 digits.";
+            contactError.style.color = 'red';
+        } else {
+            contactError.textContent = ""; // Clear the error message if valid
+        }
     });
     </script>
     <?php require_once('inc/footer.php') ?>
