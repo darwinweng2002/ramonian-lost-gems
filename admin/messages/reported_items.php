@@ -195,11 +195,11 @@ $result = $conn->query($sql);
     <div class="container">
         <h2>Reported Found Items</h2>
 
-        <!-- Aligning the Report button and Search form in a column layout -->
+        <!-- Button aligned right above the search -->
         <div class="d-flex flex-column mb-3">
-            <!-- Report Found Item Button -->
+            <!-- Report Found Item Button (aligned to the right) -->
             <a href="https://ramonianlostgems.com/admin/messages/report_found_item.php" class="btn btn-success report-btn">Report Found Item</a>
-            
+
             <!-- Search Form (Original UI preserved) -->
             <form class="search-form mt-2" method="GET" action="">
                 <div class="input-group">
