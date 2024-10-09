@@ -140,6 +140,8 @@
                     </div>
                     <?php endforeach; ?>
                 </div>
+                <?php else: ?>
+                <?php endif; ?>
 
 
               </div>
