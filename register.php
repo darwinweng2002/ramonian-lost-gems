@@ -347,10 +347,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <select name="year" class="form-control" id="year" required>
                                     <option value="" disabled selected>Select your year</option>
                                     <option value="N/A">N/A</option>
-                                    <option value="1st - year">1st - year</option>
-                                    <option value="2nd - year">2nd - year</option>
-                                    <option value="3rd - year">3rd - year</option>
-                                    <option value="4th - year">4th - year</option>
+                                    <option value="1st - year">1st</option>
+                                    <option value="2nd - year">2nd</option>
+                                    <option value="3rd - year">3rd</option>
+                                    <option value="4th - year">4th</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your year.</div>
                                 <small class="text-muted">Please select N/A if you are not a college student.</small>

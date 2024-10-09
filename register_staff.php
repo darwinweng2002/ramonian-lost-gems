@@ -294,7 +294,7 @@ body {
                                         <label for="profile_image" class="form-label">Upload ID</label>
                                         <input type="file" name="profile_image" class="form-control" id="profile_image" accept="image/*" required>
                                         <div class="invalid-feedback">Please upload a picture of your ID</div>
-                                        <small class="text-muted">Please upload a clear image of your valid ID (front side only). Ensure that the ID is visible and in JPG or PNG format. This will be used for verification purposes.</small>
+                                        <small class="text-muted">We assure you that the employee ID you submit will be used solely for verification purposes, specifically to confirm that you are a legitimate employee of PRMSU Iba Campus. All personal information will remain confidential and will not be shared with any third parties. Your data will be handled in strict compliance with applicable privacy laws and ethical guidelines to ensure the protection of your information.</small>
                                     </div>
 
 
