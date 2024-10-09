@@ -158,9 +158,9 @@ $conn->close();
         <?php
         // Check if school_id_file is not NULL
         if (!empty($user['school_id_file'])) {
-            $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);
+            $schoolIdPath = '/uploads/' . htmlspecialchars($user['school_id_file']); // Ensure correct path
             echo '<a href="' . $schoolIdPath . '" data-lightbox="school-id" data-title="School ID">
-                    <img src="' . $schoolIdPath . '" alt="School ID" class="proof-image" />
+                    <img src="' . $schoolIdPath . '?t=' . time() . '" alt="School ID" class="proof-image" onerror="this.src=\'/path/to/placeholder.png\';" />
                   </a>';
         } else {
             echo '<p>No School ID uploaded.</p>';
