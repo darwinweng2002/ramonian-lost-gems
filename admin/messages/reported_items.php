@@ -165,6 +165,24 @@ $result = $conn->query($sql);
         .table-responsive::-webkit-scrollbar-track {
             background-color: #f4f4f4;
         }
+        /* Set consistent padding and width for both buttons */
+.report-btn, .search-button {
+    padding: 10px 16px; /* Set padding to match the search button */
+    width: 150px;       /* Set width to ensure consistent sizing */
+    text-align: center;  /* Center text alignment */
+    display: block;
+    margin: 0 auto;      /* Center the report button horizontally */
+}
+
+.search-button {
+    width: auto; /* Allow search button to auto-size with the input */
+}
+
+/* Ensure the form has spacing between the buttons */
+.mt-2 {
+    margin-top: 10px;
+}
+
     </style>
 </head>
 <body>
@@ -179,10 +197,10 @@ $result = $conn->query($sql);
         <!-- Aligning the Report button and Search form in a column layout -->
         <div class="d-flex flex-column mb-3">
             <!-- Report Found Item Button -->
-            <a href="https://ramonianlostgems.com/admin/messages/report_found_item.php" class="btn btn-success mb-2">Report Found Item</a>
+            <a href="https://ramonianlostgems.com/admin/messages/report_found_item.php" class="btn btn-success report-btn">Report Found Item</a>
             
             <!-- Search Form (Original UI preserved) -->
-            <form class="search-form" method="GET" action="">
+            <form class="search-form mt-2" method="GET" action="">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
                     <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
@@ -190,7 +208,6 @@ $result = $conn->query($sql);
                 </div>
             </form>
         </div>
-
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>
