@@ -36,6 +36,7 @@ $sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi
         COALESCE(um.email, us.email) AS email, 
         COALESCE(um.avatar, us.avatar) AS avatar,
         us.position, -- Fetch position for staff members
+        um.level, -- Fetch level for regular users
         mi.contact, c.name as category_name, imi.image_path
         FROM missing_items mi
         LEFT JOIN user_member um ON mi.user_id = um.id
@@ -182,6 +183,7 @@ $result = $stmt->get_result();
                         'first_name' => $row['first_name'],
                         'last_name' => $row['last_name'],
                         'college' => $row['college'],
+                        'level' => $row['level'], // Fetch level for regular users
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
                         'position' => $row['position'], // Store position for staff
@@ -202,6 +204,7 @@ $result = $stmt->get_result();
                 $lastName = htmlspecialchars($itemData['last_name'] ?? '');
                 $email = htmlspecialchars($itemData['email'] ?? '');
                 $college = htmlspecialchars($itemData['college'] ?? '');
+                $level = htmlspecialchars($itemData['level'] ?? ''); // Handle level for user_member
                 $title = htmlspecialchars($itemData['title'] ?? '');
                 $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
                 $description = htmlspecialchars($itemData['description'] ?? '');
@@ -216,22 +219,24 @@ $result = $stmt->get_result();
                 echo "<div class='message-box'>";
 
                 // Check if there is any user information (staff or member)
-                if ($firstName || $lastName || $email || $college) {
+                if ($firstName || $lastName || $email) {
                     if ($avatar) {
                         $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                         echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                     } else {
                         echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                     }
-                    
+
                     echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName . " " . $lastName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
 
-                    // Only show department and position if available
+                    // Only show position for staff and college/level for members
                     if (!empty($position)) {
                         echo "<p><strong>Position:</strong> " . $position . "</p>";
                     }
-                    if (!empty($college)) {
-                        echo "<p><strong>Department:</strong> " . $college . "</p>";
+                    if ($college === 'N/A' && !empty($level)) {
+                        echo "<p><strong>Level:</strong> " . $level . "</p>";
+                    } elseif (!empty($college)) {
+                        echo "<p><strong>College:</strong> " . $college . "</p>";
                     }
                 } else {
                     echo "<p><strong>User Info:</strong> Guest User</p>";
