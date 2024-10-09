@@ -166,21 +166,22 @@ $result = $conn->query($sql);
             background-color: #f4f4f4;
         }
         /* Set consistent padding and width for both buttons */
-.report-btn, .search-button {
+/* Make sure the Report button aligns to the right */
+.report-btn {
+    float: right;
     padding: 10px 16px; /* Set padding to match the search button */
-    width: 150px;       /* Set width to ensure consistent sizing */
-    text-align: center;  /* Center text alignment */
-    display: block;
-    margin: 0 auto;      /* Center the report button horizontally */
+    width: auto;
+    text-align: center;
+    margin-bottom: 5px; /* Ensure spacing between the button and search bar */
 }
 
 .search-button {
-    width: auto; /* Allow search button to auto-size with the input */
+    padding: 10px 16px;
 }
 
-/* Ensure the form has spacing between the buttons */
-.mt-2 {
-    margin-top: 10px;
+/* Ensure the search bar retains its full width */
+.input-group {
+    clear: both; /* Ensures search bar doesn't overlap the button */
 }
 
     </style>
