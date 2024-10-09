@@ -59,7 +59,6 @@
 <footer id="footer" class="footer">
      <div class="credits" style="text-align: center;">
                 &copy; Copyright Ramonian Lost Gems. All rights reserved.
-                <a href="<?= base_url ?>">
             <img style="height: 25px; width: 25px;" src="<?= validate_image($_settings->info('logo')) ?>" alt="System Logo">
             </div>
             
