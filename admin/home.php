@@ -119,7 +119,6 @@
 
           <div class="col-12">
             <div class="card">
-              <div class="card-body">
               
                 <?php 
                   if(is_dir(base_app.'uploads/banner')){
@@ -145,8 +144,6 @@
 
 
               </div>
-
-            </div>
           </div>
 
         </div>
