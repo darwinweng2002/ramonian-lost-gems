@@ -30,12 +30,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $new_category = $_POST['new_category'];
     $owner = $_POST['owner'];
 
-    // Check if category_id is set to add a new category
+    // Check if category_id is set to 'add_new' and a new category name is provided
     if ($category_id == 'add_new' && !empty($new_category)) {
+        // Add the new category to the categories table
         $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
         $stmt->bind_param("s", $new_category);
-        $stmt->execute();
-        $category_id = $stmt->insert_id;
+        
+        if ($stmt->execute()) {
+            // Get the new category ID
+            $category_id = $stmt->insert_id;
+        } else {
+            // Error handling if category insertion fails
+            die("Error adding new category: " . $stmt->error);
+        }
         $stmt->close();
     }
 
@@ -45,13 +52,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
     }
 
-    // Prepare and execute the SQL statement
+    // Prepare and execute the SQL statement to insert the missing item
     $sql = "INSERT INTO missing_items (user_id, title, description, last_seen_location, time_missing, contact, category_id, status, owner) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("isssssiss", $userId, $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
-    $stmt->execute();
-    $missingItemId = $stmt->insert_id; // Get the last inserted missing item ID
+    
+    if ($stmt->execute()) {
+        $missingItemId = $stmt->insert_id; // Get the last inserted missing item ID
+    } else {
+        // Error handling if missing item insertion fails
+        die("Error adding missing item: " . $stmt->error);
+    }
     $stmt->close();
 
     // Handle file uploads
@@ -256,27 +268,25 @@ if (isset($userId)) {
             <label for="title">Item Name:</label>
             <input type="text" name="title" id="title" placeholder="Enter item name" required>
             <label for="category">Category:</label>
-<select name="category_id" id="category_id" required>
-    <option value="">Select a category</option>
-    <?php
-    // Fetch categories from the database
-    $stmt = $conn->prepare("SELECT id, name FROM categories");
-    $stmt->execute();
-    $stmt->bind_result($categoryId, $categoryName);
-    while ($stmt->fetch()) {
-        echo "<option value=\"$categoryId\">$categoryName</option>";
-    }
-    $stmt->close();
-    ?>
-    <option value="add_new">Add New Category</option>
-</select>
+        <select name="category_id" id="category_id" required>
+            <option value="">Select a category</option>
+            <?php
+            // Fetch categories from the database
+            $stmt = $conn->prepare("SELECT id, name FROM categories");
+            $stmt->execute();
+            $stmt->bind_result($categoryId, $categoryName);
+            while ($stmt->fetch()) {
+                echo "<option value=\"$categoryId\">$categoryName</option>";
+            }
+            $stmt->close();
+            ?>
+            <option value="add_new">Add New Category</option>
+        </select>
 
-<div id="newCategoryDiv" style="display: none;">
-    <label for="new_category">
-        New Category:
-    </label>
-    <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
-</div>
+        <div id="newCategoryDiv" style="display: none;">
+            <label for="new_category">New Category:</label>
+            <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
+        </div>
             <label for="description">Description of the missing item:</label>
             <textarea name="description" id="description" rows="4" placeholder="Describe the missing item" required></textarea>
 
@@ -343,8 +353,8 @@ if (isset($userId)) {
             });
         <?php endif; ?>
         document.getElementById('category_id').addEventListener('change', function() {
-    document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
-});
+            document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
+        });
 document.addEventListener('DOMContentLoaded', function() {
         const dateTimeInput = document.getElementById('time_missing');
 
