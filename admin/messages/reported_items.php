@@ -176,14 +176,19 @@ $result = $conn->query($sql);
     <div class="container">
         <h2>Reported Found Items</h2>
 
-        <!-- Search Form -->
-        <form class="search-form" method="GET" action="">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fas fa-search"></i></span>
-                <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
-                <button type="submit" class="search-button">Search</button>
-            </div>
-        </form>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- Report Found Item Button -->
+    <a href="https://ramonianlostgems.com/admin/messages/report_found_item.php" class="btn btn-success">Report Found Item</a>
+
+    <!-- Search Form -->
+    <form class="search-form d-flex" method="GET" action="">
+        <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-search"></i></span>
+            <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
+            <button type="submit" class="search-button">Search</button>
+        </div>
+    </form>
+</div>
 
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
