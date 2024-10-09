@@ -254,7 +254,6 @@ if (isset($userId)) {
 <div id="loader" class="loader-wrapper" style="display:none;">
         <div class="loader"></div>
     </div>
-    <?php require_once('inc/topBarNav.php') ?>
     <br>
     <br>
     <br>
