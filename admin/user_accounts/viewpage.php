@@ -156,16 +156,18 @@ $conn->close();
         <!-- Display School ID -->
         <p><strong>School ID:</strong></p>
         <?php
-        // Check if school_id_file is not NULL
-        if (!empty($user['school_id_file'])) {
-            $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);
-            echo '<a href="' . $schoolIdPath . '" data-lightbox="school-id" data-title="School ID">
-                    <img src="../../uploads/school_ids/<?= htmlspecialchars($user['profile_image']) ?>" alt="Profile Image">
-                  </a>';
-        } else {
-            echo '<p>No School ID uploaded.</p>';
-        }
-        ?>
+// Check if school_id_file is not NULL
+if (!empty($user['school_id_file'])) {
+    // Adjust the path to the actual location of the uploaded school ID image
+    $schoolIdPath = '../../uploads/school_ids/' . htmlspecialchars($user['school_id_file']);
+    echo '<a href="' . $schoolIdPath . '" data-lightbox="school-id" data-title="School ID">
+            <img src="' . $schoolIdPath . '" alt="School ID" class="proof-image" />
+          </a>';
+} else {
+    echo '<p>No School ID uploaded.</p>';
+}
+?>
+
     </div>
     <div class="back-link">
     <a href="javascript:void(0);" onclick="history.back();" class="btn btn-primary">Back to Users List</a>
