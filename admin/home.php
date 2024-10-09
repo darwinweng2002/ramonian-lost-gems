@@ -87,7 +87,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                   <div class="ps-3">
                     <?php 
-                    $Items = $conn->query("SELECT * FROM `user_staff` where `status` = 0")->num_rows;
+                    $Items = $conn->query("SELECT * FROM `user_staff` where `status` = 'pending'")->num_rows;
                     ?>
                     <h6><?= format_num($Items) ?></h6>
                     <!-- <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span> -->
