@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Success or error message for SweetAlert
-    $alertMessage = isset($error) ? $error : "Report missing item successfully created. Check the missing items to publish the item.";
+    $alertMessage = isset($error) ? $error : "Report missing item successfully created, update the status to published";
 }
 
 // Retrieve user information based on user type
