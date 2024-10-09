@@ -204,21 +204,6 @@ if (isset($_POST['guest_login'])) {
 
                   <br>
                   <br>
-                  <div id="g_id_onload"
-                    data-client_id="YGOCSPX-kVEygpsdOrU_3FQ8fHnfv86qUrRM"
-                    data-context="signin"
-                    data-ux_mode="popup"
-                    data-callback="handleCredentialResponse"
-                    data-auto_prompt="false">
-                  </div>
-                  <div class="g_id_signin"
-                    data-type="standard"
-                    data-shape="rectangular"
-                    data-theme="outline"
-                    data-text="signin_with"
-                    data-size="large"
-                    data-logo_alignment="left">
-                  </div>
                 </div>
               </div>
               <div class="back-btn-container">
