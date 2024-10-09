@@ -390,7 +390,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Set the max attribute to restrict future dates
         dateTimeInput.max = maxDateTime;
     });
-    <?php if (isset($alertMessage)): ?>
+    document.addEventListener('DOMContentLoaded', function () {
+            // Show loader on form submission
+            const form = document.querySelector('.message-form');
+            form.addEventListener('submit', function () {
+                document.getElementById('loader').style.display = 'flex';
+            });
+
+            <?php if (isset($alertMessage)): ?>
                 Swal.fire({
                     icon: '<?php echo isset($error) ? 'error' : 'success'; ?>',
                     title: '<?php echo isset($error) ? 'Oops!' : 'Success!'; ?>',
@@ -401,6 +408,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             <?php endif; ?>
+        });
     </script>
     <?php require_once('inc/footer.php') ?>
 </body>
