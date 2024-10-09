@@ -242,7 +242,7 @@ $result = $stmt->get_result();
                         echo "<p><strong>Level:</strong> " . $school_type . "</p>";
                     }
                 } else {
-                    echo "<p><strong>User Info:</strong> Guest User</p>";
+                    echo "<p><strong>User Info:</strong>No Info</p>";
                 }
 
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";

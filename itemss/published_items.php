@@ -241,7 +241,7 @@ if ($school_type === '0') {
                         echo "<img src='uploads/avatars/decent-avatar.png' alt='Default Avatar' class='avatar'>";
                     }
                 } else {
-                    echo "<p><strong>User Info:</strong> Guest User</p>";
+                    echo "<p><strong>User Info:</strong>No Info</p>";
                 }
 
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
