@@ -387,10 +387,13 @@ if (!$is_guest) {
                                             <div class="d-flex justify-content-center">
                                             <div class="text-center mb-3">
                                             <?php if ($avatar): ?>
-                                                <img src="../uploads/avatars/<?= htmlspecialchars($avatar) ?>" alt="User Avatar" style="width: 100px; height: 100px; border-radius: 50%;">
+                                            <img src="../uploads/avatars/<?= htmlspecialchars($avatar) ?>" alt="User Avatar" style="width: 100px; height: 100px; border-radius: 50%;">
                                             <?php else: ?>
-                                                <img src="../uploads/avatars/default-avatar.png" alt="Default Avatar" style="width: 100px; height: 100px; border-radius: 50%;">
+                                                <div style="width: 100px; height: 100px; border-radius: 50%; background-color: #ddd; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #555;">
+                                                    No Avatar
+                                                </div>
                                             <?php endif; ?>
+
                                         </div>
                                             </div>
                                             <p class="text-center small">Welcome, <?= htmlspecialchars($first_name ?? '') . ' ' . htmlspecialchars($last_name ?? '') ?></p>
