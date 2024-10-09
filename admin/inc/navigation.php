@@ -121,7 +121,7 @@
 
       <?php 
       // Fetch the count of approved accounts where status is set to 'approved' (status = 1)
-      $approved_accounts = $conn->query("SELECT COUNT(*) AS count FROM `user_staff` WHERE `status` = 'active'")->fetch_assoc();
+      $approved_accounts = $conn->query("SELECT COUNT(*) AS count FROM `user_staff` WHERE `status` = 'pending'")->fetch_assoc();
       ?>
       
       <!-- Check if there are any approved accounts -->
