@@ -222,15 +222,26 @@ $result = $stmt->get_result();
                 $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
                 $status = intval($msgData['status']);
 
-                // Map numeric school_type to string
-                $schoolTypeString = '';
-                if ($school_type === '0') {
-                    $schoolTypeString = 'High School';
-                } elseif ($school_type === '1') {
-                    $schoolTypeString = 'College';
-                } else {
-                    $schoolTypeString = 'N/A';
-                }
+               // Assuming $school_type is fetched correctly from the database
+$schoolTypeString = '';
+
+if ($school_type === '0') {
+    $schoolTypeString = 'High School';
+} elseif ($school_type === '1') {
+    $schoolTypeString = 'College';
+} else {
+    $schoolTypeString = 'N/A'; // If no valid school_type, fallback to N/A
+}
+
+// Display Level for user_member
+if ($userType === 'member') {
+    if ($schoolTypeString !== 'N/A') {
+        echo "<p><strong>Level:</strong> " . $schoolTypeString . "</p>";
+    } else {
+        echo "<p><strong>Level:</strong> N/A</p>";
+    }
+}
+
 
                 // Display avatar only if available
                 if ($firstName || $email || $college) {
