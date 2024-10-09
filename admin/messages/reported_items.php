@@ -176,7 +176,6 @@ $result = $conn->query($sql);
     <div class="container">
         <h2>Reported Found Items</h2>
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
     <!-- Report Found Item Button -->
     <a href="https://ramonianlostgems.com/admin/messages/report_found_item.php" class="btn btn-success">Report Found Item</a>
 
@@ -188,7 +187,6 @@ $result = $conn->query($sql);
             <button type="submit" class="search-button">Search</button>
         </div>
     </form>
-</div>
 
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
