@@ -19,7 +19,7 @@
                   </div>
                   <div class="ps-3">
                     <?php 
-                    $Items = $conn->query("SELECT * FROM `missing_items` where `status` = 0")->num_rows;
+                    $Items = $conn->query("SELECT * FROM `missing_items` where `status` = 1")->num_rows;
                     ?>
                     <h6><?= format_num($Items) ?></h6>
                     <!-- <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span> -->
@@ -141,7 +141,6 @@
                     <?php endforeach; ?>
                 </div>
                 <?php else: ?>
-                  <div class="text-muted text-center">No Banner has been set</div>
                 <?php endif; ?>
 
 
