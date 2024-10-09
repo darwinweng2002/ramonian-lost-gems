@@ -2,9 +2,8 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-include '../../config.php';
+include '../../config.php';// Start session if not already started
 
-// Database connection
 $conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
 
 // Check connection
@@ -40,10 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Prepare and execute the SQL statement
-    $sql = "INSERT INTO missing_items (title, description, last_seen_location, time_missing, contact, category_id, status, owner) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO missing_items (user_id, title, description, last_seen_location, time_missing, contact, category_id, status, owner) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssiss", $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
+    $stmt->bind_param("isssssiss", $userId, $title, $description, $lastSeenLocation, $timeMissing, $contact, $category_id, $status, $owner);
     $stmt->execute();
     $missingItemId = $stmt->insert_id; // Get the last inserted missing item ID
     $stmt->close();
@@ -64,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Success or error message for SweetAlert
-    $alertMessage = isset($error) ? $error : "Found item report has been successfully created.";
+    $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins before being published for public viewing.";
 }
 
 // Retrieve user information based on user type
@@ -86,13 +85,13 @@ if (isset($userId)) {
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
 <?php require_once('../inc/header.php') ?>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post Missing Item</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to your custom stylesheet -->
-
+    <?php require_once('inc/header.php'); ?>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         /* styles.css */
@@ -251,11 +250,12 @@ if (isset($userId)) {
     </style>
 </head>
 <body>
+<?php require_once('../inc/topBarNav.php') ?>
+<?php require_once('../inc/navigation.php') ?> 
 <div id="loader" class="loader-wrapper" style="display:none;">
         <div class="loader"></div>
     </div>
-<?php require_once('../inc/topBarNav.php') ?>
-<?php require_once('../inc/navigation.php') ?> 
+    <?php require_once('inc/topBarNav.php') ?>
     <br>
     <br>
     <br>
@@ -308,9 +308,17 @@ if (isset($userId)) {
             <label for="last_seen_location">Last Seen Location:</label>
             <input type="text" name="last_seen_location" id="last_seen_location" placeholder="Location where the item was last seen" required>
             <label for="contact">
-                </svg> Contact Information:
-            </label>
-            <input type="text" id="contact" name="contact" pattern="[0-9]{10,11}" placeholder="Enter contact information" required>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-contact">
+        <path d="M16 2v2"/>
+        <path d="M7 22v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/>
+        <path d="M8 2v2"/>
+        <circle cx="12" cy="11" r="3"/>
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+    </svg> 
+    Contact Information:
+</label>
+<input type="text" id="contact" name="contact" pattern="^09[0-9]{9}$" required>
+<span id="contactError"></span>
             <label for="time_missing">Time Missing:</label>
             <input type="datetime-local" name="time_missing" id="time_missing" required>
            
@@ -322,7 +330,7 @@ if (isset($userId)) {
             <button type="submit" class="submit-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
         <line x1="22" x2="11" y1="2" y2="13"/>
         <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-    </svg>Create report missing item.</button>
+    </svg>Submit Report</button>
         </form>
         <div class="back-btn-container">
     <button class="back-btn" onclick="history.back()">
@@ -334,6 +342,7 @@ if (isset($userId)) {
     </button>
 </div>
     </div>
+    <?php require_once('../inc/footer.php') ?>
     <script>
        function previewImages() {
         const previewContainer = document.getElementById('imagePreviewContainer');
@@ -387,6 +396,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // Set the max attribute to restrict future dates
         dateTimeInput.max = maxDateTime;
     });
+    const contactInput = document.getElementById('contact');
+    const contactError = document.getElementById('contactError');
+
+    // Add input event listener for real-time validation
+    contactInput.addEventListener('input', function () {
+        if (this.validity.patternMismatch) {
+            contactError.textContent = "Contact number must start with 09 and be exactly 11 digits.";
+            contactError.style.color = 'red';
+        } else {
+            contactError.textContent = ""; // Clear the error message if valid
+        }
+    });
     document.addEventListener('DOMContentLoaded', function () {
             // Show loader on form submission
             const form = document.querySelector('.message-form');
@@ -407,6 +428,6 @@ document.addEventListener('DOMContentLoaded', function() {
             <?php endif; ?>
         });
     </script>
-   <?php require_once('../inc/footer.php') ?>
+    <?php require_once('inc/footer.php') ?>
 </body>
 </html>
