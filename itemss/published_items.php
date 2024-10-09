@@ -265,8 +265,6 @@ if ($school_type === '0') {
                             echo "<p><strong>College:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
                         }
                     }
-                } else {
-                    echo "<p><strong>User Info:</strong> Guest User</p>";
                 }
 
                 echo "<dt class='text-muted'>Status</dt>";
