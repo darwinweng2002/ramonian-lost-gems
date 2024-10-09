@@ -36,12 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $new_category = $_POST['new_category'];
     $founder = $_POST['founder'];
 
-    // Handle category addition
     if ($category_id == 'add_new' && !empty($new_category)) {
         // Prepare the SQL query to insert the new category
         $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
         $stmt->bind_param("s", $new_category);
-
+    
         if ($stmt->execute()) {
             // Get the inserted category's ID
             $category_id = $stmt->insert_id;
@@ -51,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         $stmt->close();
     }
+    
 
     // Proceed to save the rest of the information
     $status = 0; // Default to 'Pending'
@@ -349,13 +349,7 @@ if (isset($userId)) {
                 </svg> Item Name:
             </label>
             <input type="text" name="title" id="title" placeholder="Enter item name" required>
-            <label for="category">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag">
-        <path d="M6 9v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/>
-        <path d="M14 2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8z"/>
-        <path d="M4 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
-    </svg> Category:
-</label>
+            <label for="category">Category:</label>
 <select name="category_id" id="category_id" required>
     <option value="">Select a category</option>
     <?php
@@ -370,22 +364,13 @@ if (isset($userId)) {
     ?>
     <option value="add_new">Add New Category</option>
 </select>
+
+<!-- Input field for new category, hidden by default -->
 <div id="newCategoryDiv" style="display: none;">
-    <label for="new_category">
-        New Category:
-    </label>
+    <label for="new_category">New Category:</label>
     <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
 </div>
-<div id="newCategoryDiv" style="display: none;">
-    <label for="new_category">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag-add">
-            <path d="M6 9v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/>
-            <path d="M4 14a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
-            <path d="M18 6h-5v5h-2V6H6v2h7v7h2V8h5V6z"/>
-        </svg> New Category:
-    </label>
-    <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
-</div>
+
             <label for="landmark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-location"><path d="M21 10a9 9 0 0 0-18 0c0 5.6 9 12 9 12s9-6.4 9-12z"/><path d="M12 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg> Location where the item was found:</label>
             <input type="text" name="landmark" id="landmark" placeholder="Location details" required>
 
@@ -483,9 +468,11 @@ function previewImages() {
                 confirmButtonText: 'OK'
             });
         <?php endif; ?>
-        document.getElementById('category_id').addEventListener('change', function() {
+       // Show the new category input field when 'Add New Category' is selected
+document.getElementById('category_id').addEventListener('change', function() {
     document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
 });
+
 
 document.addEventListener('DOMContentLoaded', function() {
         const dateTimeInput = document.getElementById('time_found');
