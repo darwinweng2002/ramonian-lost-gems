@@ -227,9 +227,37 @@ if (isset($userId)) {
             outline: none;
             box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
         }
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
+<div id="loader" class="loader-wrapper" style="display:none;">
+<div class="loader"></div>
     <?php require_once('inc/topBarNav.php') ?>
     <br>
     <br>
@@ -285,7 +313,7 @@ if (isset($userId)) {
             <label for="contact">
                 </svg> Contact Information:
             </label>
-            <input type="text" id="contact" name="contact" pattern="[0-9]{10,11}" placeholder="Enter contact information" required>
+            <input type="text" id="contact" name="contact" pattern="[0-9]{11}" placeholder="Enter contact information" required>
             <label for="time_missing">Time Missing:</label>
             <input type="datetime-local" name="time_missing" id="time_missing" required>
            
@@ -362,6 +390,17 @@ document.addEventListener('DOMContentLoaded', function() {
         // Set the max attribute to restrict future dates
         dateTimeInput.max = maxDateTime;
     });
+    <?php if (isset($alertMessage)): ?>
+                Swal.fire({
+                    icon: '<?php echo isset($error) ? 'error' : 'success'; ?>',
+                    title: '<?php echo isset($error) ? 'Oops!' : 'Success!'; ?>',
+                    text: '<?php echo htmlspecialchars($alertMessage); ?>',
+                    confirmButtonText: 'OK',
+                    didClose: () => {
+                        document.getElementById('loader').style.display = 'none'; // Hide loader after SweetAlert
+                    }
+                });
+            <?php endif; ?>
     </script>
     <?php require_once('inc/footer.php') ?>
 </body>
