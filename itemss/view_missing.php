@@ -215,12 +215,23 @@ $result = $stmt->get_result();
 
                 echo "<div class='message-box'>";
 
+                // Check if there is any user information (staff or member)
                 if ($firstName || $lastName || $email || $college) {
                     if ($avatar) {
                         $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                         echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                     } else {
                         echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                    }
+                    
+                    echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName . " " . $lastName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
+
+                    // Only show department and position if available
+                    if (!empty($position)) {
+                        echo "<p><strong>Position:</strong> " . $position . "</p>";
+                    }
+                    if (!empty($college)) {
+                        echo "<p><strong>Department:</strong> " . $college . "</p>";
                     }
                 } else {
                     echo "<p><strong>User Info:</strong> Guest User</p>";
@@ -233,15 +244,6 @@ $result = $stmt->get_result();
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
-
-                // Only show college/department and position if user is staff
-                if (!empty($position)) {
-                    echo "<p><strong>Department:</strong> " . ($college ? $college : 'N/A') . "</p>";
-                    echo "<p><strong>Position:</strong> " . ($position ? $position : 'N/A') . "</p>";
-                } else if ($firstName || $lastName || $college) {
-                    // For non-staff, just show college
-                    echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
-                }
 
                 echo "<dt class='text-muted'>Status</dt>";
                 echo "<dd class='ps-4'>";
