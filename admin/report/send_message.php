@@ -468,21 +468,14 @@ function previewImages() {
 }
 
 
-<?php if (isset($alertMessage)): ?>
-    <script>
-        Swal.fire({
-            icon: '<?php echo isset($error) ? 'error' : 'success'; ?>',
-            title: '<?php echo isset($error) ? 'Oops!' : 'Success!'; ?>',
-            text: '<?php echo htmlspecialchars($alertMessage); ?>',
-            confirmButtonText: 'OK'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = 'https://ramonianlostgems.com/admin/missing_items/send_message.php'; // Replace with the desired URL
-            }
-        });
-    </script>
-<?php endif; ?>
-
+        <?php if (isset($alertMessage)): ?>
+            Swal.fire({
+                icon: '<?php echo isset($error) ? 'error' : 'success'; ?>',
+                title: '<?php echo isset($error) ? 'Oops!' : 'Success!'; ?>',
+                text: '<?php echo htmlspecialchars($alertMessage); ?>',
+                confirmButtonText: 'OK'
+            });
+        <?php endif; ?>
         document.getElementById('category_id').addEventListener('change', function() {
     document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
 });

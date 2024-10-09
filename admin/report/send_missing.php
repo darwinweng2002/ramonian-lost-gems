@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Success or error message for SweetAlert
-    $alertMessage = isset($error) ? $error : "Report missing item successfully created. Check the missing items to set the status.";
+    $alertMessage = isset($error) ? $error : "Report missing item successfully created. Check the missing items to publish the item.";
 }
 
 // Retrieve user information based on user type
@@ -246,25 +246,6 @@ if (isset($userId)) {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .top-button-container {
-    margin-bottom: 15px; /* Space between the new button and the search form */
-}
-
-.top-button-container button {
-    font-size: 16px;
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.top-button-container button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-}
-
     </style>
 </head>
 <body>
@@ -284,8 +265,7 @@ if (isset($userId)) {
         <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paperclip"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg> Username: <?php echo htmlspecialchars($first_name . ' ' . $last_name); ?> (<?php echo htmlspecialchars($email); ?>)</p>
     </div>
 <?php endif; ?>
-<div class="top-button-container">
-<button class="btn btn-primary" onclick="window.location.href='your-link-here.php'">
+
         <form action="send_missing.php" method="post" enctype="multipart/form-data" class="message-form">
         <label for="owner">Owner's Name:</label>
         <?php if (isset($first_name) && isset($last_name) && isset($email)) { ?>
