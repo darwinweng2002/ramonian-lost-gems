@@ -285,7 +285,7 @@ if (isset($userId)) {
     <br>
     <div class="container">
         <!-- Display user information -->
-        <h2 class="user-info">Report Found Item</h2>
+        <h2 class="user-info">Reportasdasdadad FoundasdasdItem</h2>
         <?php if (isset($first_name) && isset($last_name) && isset($email) && isset($school_type) && isset($college)): ?>
             <div class="user-info">
     <p>
