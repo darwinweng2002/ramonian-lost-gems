@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Directory for uploading files
-    $uploadDir = '../uploads/items/';
+    $uploadDir = '../../uploads/items/';
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
     }
