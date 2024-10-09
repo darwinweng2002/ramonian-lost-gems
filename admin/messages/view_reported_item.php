@@ -264,7 +264,9 @@ if ($message_id > 0) {
                         echo "<p><strong>Images:</strong></p>";
                         echo "<div class='image-grid'>";
                         foreach ($msgData['images'] as $imagePath) {
-                            echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
+                            // Prepend the correct directory to the image filename
+                            $fullImagePath = 'uploads/items/' . $imagePath;
+                            echo "<a href='" . htmlspecialchars($fullImagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'><img src='" . htmlspecialchars($fullImagePath) . "' alt='Image'></a>";
                         }
                         echo "</div>";
                     }
