@@ -201,7 +201,7 @@ if (isset($_GET['id'])) {
                 echo "<p><strong>Owner Name:</strong> " . $owner . "</p>";
                 // Check if user is a guest
             if (empty($firstName) || empty($college)) {
-                echo "<p><strong>User Info:</strong> Guest User</p>";
+                echo "<p><strong>User Info:</strong> No Info</p>";
             } else {
                 echo "<p><strong>User Name:</strong> " . $firstName . " (" . $email . ")</p>";
                 echo "<p><strong>College:</strong> " . $college . "</p>";
