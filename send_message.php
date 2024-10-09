@@ -38,12 +38,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Handle category addition
     if ($category_id == 'add_new' && !empty($new_category)) {
+        // Prepare the SQL query to insert the new category
         $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
         $stmt->bind_param("s", $new_category);
-        $stmt->execute();
-        $category_id = $stmt->insert_id;
+
+        if ($stmt->execute()) {
+            // Get the inserted category's ID
+            $category_id = $stmt->insert_id;
+        } else {
+            // Handle insertion error
+            $error = "Failed to add new category: " . $stmt->error;
+        }
         $stmt->close();
     }
+
+    // Proceed to save the rest of the information
+    $status = 0; // Default to 'Pending'
 
     // Directory for uploading files
     $uploadDir = 'uploads/items/';
@@ -51,41 +61,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
     }
 
-    $uploadedFiles = [];
-
-    // Default status
-    $status = 0; // Default to 'Pending'
-
-    // Insert the message into the database
-    $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, time_found, contact, founder, category_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    // Insert the report message into the database
+    $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, time_found, contact, founder, category_id, status) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("issssssis", $userId, $message, $landmark, $title, $timeFound, $contact, $founder, $category_id, $status);
-    $stmt->execute();
-    $messageId = $stmt->insert_id; // Get the ID of the newly inserted message
+    if ($stmt->execute()) {
+        $messageId = $stmt->insert_id; // Get the ID of the newly inserted message
+    } else {
+        // Handle insertion error
+        $error = "Failed to submit the report: " . $stmt->error;
+    }
     $stmt->close();
 
     // Handle file uploads
-    $maxFileSize = 50 * 1024 * 1024; // 50MB
     foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
         $fileName = basename($_FILES['images']['name'][$key]);
-        $fileSize = $_FILES['images']['size'][$key];
-        $fileType = $_FILES['images']['type'][$key];
         $targetFilePath = $uploadDir . $fileName;
-        if ($fileSize > $maxFileSize) {
-            $error = "File " . $fileName . " exceeds the maximum file size of 50MB.";
-            break;
-        }
 
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        if (!in_array($fileType, $allowedTypes)) {
-            $error = "File type not allowed for file " . $fileName;
-            break;
-        }
         if (move_uploaded_file($tmpName, $targetFilePath)) {
             $stmt = $conn->prepare("INSERT INTO message_images (message_id, image_path) VALUES (?, ?)");
-            $stmt->bind_param("is", $messageId, $fileName); // Store just the filename in DB
+            $stmt->bind_param("is", $messageId, $fileName); // Store just the filename in the database
             $stmt->execute();
             $stmt->close();
-            $uploadedFiles[] = $targetFilePath;
         } else {
             $error = "Failed to upload file: " . $fileName;
         }
@@ -126,6 +123,7 @@ if (isset($userId)) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -488,6 +486,7 @@ function previewImages() {
         document.getElementById('category_id').addEventListener('change', function() {
     document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
 });
+
 document.addEventListener('DOMContentLoaded', function() {
         const dateTimeInput = document.getElementById('time_found');
 
