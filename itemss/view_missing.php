@@ -236,10 +236,10 @@ $result = $stmt->get_result();
                     if (!empty($position)) {
                         echo "<p><strong>Position:</strong> " . $position . "</p>";
                     }
-                    if ($college === 'N/A' && !empty($school_type)) {
+                    if ($college === 'N/A' && !empty($college)) {
+                        echo "<p><strong>Level:</strong> " . $college . "</p>";
+                    } elseif (!empty($school_type)) {
                         echo "<p><strong>Level:</strong> " . $school_type . "</p>";
-                    } elseif (!empty($college)) {
-                        echo "<p><strong>College:</strong> " . $college . "</p>";
                     }
                 } else {
                     echo "<p><strong>User Info:</strong> Guest User</p>";
