@@ -229,17 +229,16 @@ $result = $stmt->get_result();
                     } else {
                         echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
                     }
-
+                
                     echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName . " " . $lastName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
-
-                    // Only show position for staff and college/level for members
-                    if (!empty($position)) {
-                        echo "<p><strong>Position:</strong> " . $position . "</p>";
-                    }
-                    if ($college === 'N/A' && !empty($college)) {
-                        echo "<p><strong>Level:</strong> " . $college . "</p>";
-                    } elseif (!empty($school_type)) {
-                        echo "<p><strong>Level:</strong> " . $school_type . "</p>";
+                
+                    // Show level as "College" or "High School" based on the value of school_type
+                    if ($school_type == 1) {
+                        echo "<p><strong>Level:</strong> College</p>";
+                    } elseif ($school_type == 0) {
+                        echo "<p><strong>Level:</strong> High School</p>";
+                    } else {
+                        echo "<p><strong>Level:</strong> N/A</p>";  // Handle other cases if necessary
                     }
                 } else {
                     echo "<p><strong>User Info:</strong>No Info</p>";
