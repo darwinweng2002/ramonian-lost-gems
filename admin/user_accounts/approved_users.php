@@ -202,7 +202,7 @@ $result = $conn->query($sql);
                     if ($row['school_type'] == '1') {
                         // College
                         echo 'College';
-                    } else if ($row['school_type'] == '2') {
+                    } else if ($row['school_type'] == '0') {
                         // High School, display grade as well if available
                         echo 'High School';
                         if (!empty($row['grade'])) {
