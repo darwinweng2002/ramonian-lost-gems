@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Directory for uploading files
-    $uploadDir = 'uploads/items/';
+    $uploadDir = '../uploads/items/';
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
     }
@@ -115,7 +115,7 @@ if (isset($userId)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send M</title>
+    <title>Send Message</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to your custom stylesheet -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -285,7 +285,7 @@ if (isset($userId)) {
     <br>
     <div class="container">
         <!-- Display user information -->
-        <h2 class="user-info">Reportasdasdadad FoundasdasdItem</h2>
+        <h2 class="user-info">Report Found Item</h2>
         <?php if (isset($first_name) && isset($last_name) && isset($email) && isset($school_type) && isset($college)): ?>
             <div class="user-info">
     <p>
