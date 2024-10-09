@@ -34,7 +34,8 @@ $sql = "SELECT mi.id, mi.description, mi.last_seen_location, mi.time_missing, mi
         COALESCE(um.last_name, us.last_name) AS last_name, 
         COALESCE(um.college, us.department) AS college, 
         COALESCE(um.email, us.email) AS email, 
-        COALESCE(um.avatar, us.avatar) AS avatar, 
+        COALESCE(um.avatar, us.avatar) AS avatar,
+        us.position, -- Fetch position for staff members
         mi.contact, c.name as category_name, imi.image_path
         FROM missing_items mi
         LEFT JOIN user_member um ON mi.user_id = um.id
@@ -96,12 +97,12 @@ $result = $stmt->get_result();
             transform: scale(1.1);
         }
         .container .avatar {
-            width: 100px; /* Set the width of the avatar */
-            height: 100px; /* Set the height of the avatar to the same value as width for a circle */
-            border-radius: 100%; /* Makes the image circular */
-            object-fit: cover; /* Ensures the image covers the circle without distortion */
-            display: block; /* Ensures the image is displayed as a block element */
-            margin-bottom: 10px; /* Adds space below the image if needed */
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+            object-fit: cover;
+            display: block;
+            margin-bottom: 10px;
         }
         .image-grid {
             display: grid;
@@ -183,6 +184,7 @@ $result = $stmt->get_result();
                         'college' => $row['college'],
                         'email' => $row['email'],
                         'avatar' => $row['avatar'],
+                        'position' => $row['position'], // Store position for staff
                         'images' => [],
                         'contact' => $row['contact'],
                         'category_name' => $row['category_name']
@@ -209,6 +211,7 @@ $result = $stmt->get_result();
                 $contact = htmlspecialchars($itemData['contact'] ?? '');
                 $categoryName = htmlspecialchars($itemData['category_name'] ?? '');
                 $status = intval($itemData['status']);
+                $position = htmlspecialchars($itemData['position'] ?? ''); // Handle position
 
                 echo "<div class='message-box'>";
 
@@ -231,9 +234,13 @@ $result = $stmt->get_result();
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
 
-                if ($firstName || $lastName || $email || $college) {
-                    echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName . " " . $lastName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
-                    echo "<p><strong>College/Department:</strong> " . ($college ? $college : 'N/A') . "</p>";
+                // Only show college/department and position if user is staff
+                if (!empty($position)) {
+                    echo "<p><strong>Department:</strong> " . ($college ? $college : 'N/A') . "</p>";
+                    echo "<p><strong>Position:</strong> " . ($position ? $position : 'N/A') . "</p>";
+                } else if ($firstName || $lastName || $college) {
+                    // For non-staff, just show college
+                    echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
                 }
 
                 echo "<dt class='text-muted'>Status</dt>";
