@@ -2,8 +2,7 @@
 include('config.php');
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-session_start(); // Start session if not already started
+error_reporting(E_ALL);// Start session if not already started
 
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
     die("User not logged in");
