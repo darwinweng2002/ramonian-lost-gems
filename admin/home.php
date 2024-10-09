@@ -120,7 +120,7 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title"></h5>
+              
                 <?php 
                   if(is_dir(base_app.'uploads/banner')){
                     $images = scandir(base_app.'uploads/banner');
