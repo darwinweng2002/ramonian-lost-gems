@@ -227,9 +227,38 @@ if (isset($userId)) {
             outline: none;
             box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
         }
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
+<div id="loader" class="loader-wrapper" style="display:none;">
+        <div class="loader"></div>
+    </div>
     <?php require_once('inc/topBarNav.php') ?>
     <br>
     <br>
@@ -382,6 +411,25 @@ document.addEventListener('DOMContentLoaded', function() {
             contactError.textContent = ""; // Clear the error message if valid
         }
     });
+    document.addEventListener('DOMContentLoaded', function () {
+            // Show loader on form submission
+            const form = document.querySelector('.message-form');
+            form.addEventListener('submit', function () {
+                document.getElementById('loader').style.display = 'flex';
+            });
+
+            <?php if (isset($alertMessage)): ?>
+                Swal.fire({
+                    icon: '<?php echo isset($error) ? 'error' : 'success'; ?>',
+                    title: '<?php echo isset($error) ? 'Oops!' : 'Success!'; ?>',
+                    text: '<?php echo htmlspecialchars($alertMessage); ?>',
+                    confirmButtonText: 'OK',
+                    didClose: () => {
+                        document.getElementById('loader').style.display = 'none'; // Hide loader after SweetAlert
+                    }
+                });
+            <?php endif; ?>
+        });
     </script>
     <?php require_once('inc/footer.php') ?>
 </body>
