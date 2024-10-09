@@ -246,7 +246,7 @@ if (isset($_GET['id'])) {
                     echo "<p>No images available.</p>";
                 }
 
-                echo "<button class='publish-btn' data-id='" . htmlspecialchars($itemId) . "'>Publish</button>";
+                //echo "<button class='publish-btn' data-id='" . htmlspecialchars($itemId) . "'>Publish</button>";
                 echo "<button class='delete-btn' data-id='" . htmlspecialchars($itemId) . "'>Delete</button>";
                 echo "</div>";
             }
