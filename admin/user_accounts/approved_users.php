@@ -13,8 +13,7 @@ if ($conn->connect_error) {
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string(trim($_GET['search'])) : '';
 
 // Update SQL query to include search functionality based on relevant columns
-// Note: Use a flexible approach: If the search term is empty, it should still return 'approved' users.
-$sql = "SELECT first_name, last_name, college, course, year, email, school_type FROM user_member WHERE status = 'approved'";
+$sql = "SELECT * FROM user_member WHERE status = 'approved'";
 
 // Add search conditions only if a search term is provided
 if (!empty($searchTerm)) {
@@ -39,7 +38,125 @@ $result = $conn->query($sql);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* (same styling as before) */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h3 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .table-responsive {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow-x: auto; /* Enables horizontal scrolling */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px; /* This ensures the table will scroll when content is wide */
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            white-space: nowrap;
+            background-color: #f2f2f2;
+            color: #444;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            flex-grow: 1;
+        }
+
+        .search-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-button:hover {
+            background-color: #218838;
+        }
+
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+
+        .no-data {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #333;
+            padding: 30px 0;
+        }
+
+        /* Custom scrollbar for table container */
+        .table-responsive::-webkit-scrollbar {
+            height: 8px; /* Adjust the height for horizontal scrollbar */
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb {
+            background-color: #b0b0b0;
+            border-radius: 5px;
+        }
+
+        .table-responsive::-webkit-scrollbar-track {
+            background-color: #f4f4f4;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+            }
+
+            .search-input {
+                margin-bottom: 10px;
+            }
+
+            .btn-info {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -65,11 +182,11 @@ $result = $conn->query($sql);
                     <tr>
                         <th>First Name</th>
                         <th>Last Name</th>
+                        <th>Level</th> <!-- Adjusted column to show Level -->
                         <th>College</th>
                         <th>Course</th>
                         <th>Year</th>
                         <th>Username</th> <!-- Replace email with username if needed -->
-                        <th>School Type</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -79,28 +196,27 @@ $result = $conn->query($sql);
             <tr>
                 <td><?= htmlspecialchars($row['first_name']) ?></td>
                 <td><?= htmlspecialchars($row['last_name']) ?></td>
+                <td>
+                    <?php
+                    // Determine if user is in High School or College
+                    if ($row['school_type'] == '1') {
+                        // College
+                        echo 'College';
+                    } else if ($row['school_type'] == '2') {
+                        // High School, display grade as well if available
+                        echo 'High School';
+                        if (!empty($row['grade'])) {
+                            echo ' (Grade ' . htmlspecialchars($row['grade']) . ')';
+                        }
+                    } else {
+                        echo 'Unknown';
+                    }
+                    ?>
+                </td>
                 <td><?= htmlspecialchars($row['college']) ?></td>
                 <td><?= htmlspecialchars($row['course']) ?></td>
                 <td><?= htmlspecialchars($row['year']) ?></td>
                 <td><?= htmlspecialchars($row['email']) ?></td>
-                <td>
-                    <?php
-                    // Translate the school_type value to a readable format
-                    switch ($row['school_type']) {
-                        case 1:
-                            echo 'College';
-                            break;
-                        case 2:
-                            echo 'Secondary';
-                            break;
-                        case 3:
-                            echo 'University';
-                            break;
-                        default:
-                            echo 'High School';
-                    }
-                    ?>
-                </td>
                 <td>
                     <!-- Add View Button for actions -->
                     <a href="https://ramonianlostgems.com/admin/user_accounts/viewpage.php?id=<?= htmlspecialchars($row['id']) ?>" class="btn btn-info btn-sm">
@@ -172,7 +288,7 @@ $result = $conn->query($sql);
             });
         });
     });
-</script>
+    </script>
 </body>
 </html>
 
