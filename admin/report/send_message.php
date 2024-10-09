@@ -115,7 +115,7 @@ if (isset($userId)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Message</title>
+    <title>Send M</title>
     <link rel="stylesheet" href="styles.css"> <!-- Link to your custom stylesheet -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
