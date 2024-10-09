@@ -14,7 +14,7 @@ $searchTerm = isset($_GET['search']) ? $conn->real_escape_string(trim($_GET['sea
 
 // Update SQL query to include search functionality based on relevant columns
 // Note: Use a flexible approach: If the search term is empty, it should still return 'approved' users.
-$sql = "SELECT first_name, last_name, college, course, year, email, school_type FROM user_member WHERE status = 'approved'";
+$sql = "SELECT first_name, last_name, college, course, year, email, school_type, grade FROM user_member WHERE status = 'approved'";
 
 // Add search conditions only if a search term is provided
 if (!empty($searchTerm)) {
@@ -85,19 +85,16 @@ $result = $conn->query($sql);
                 <td><?= htmlspecialchars($row['email']) ?></td>
                 <td>
                     <?php
-                    // Translate the school_type value to a readable format
-                    switch ($row['school_type']) {
-                        case 1:
-                            echo 'Primary';
-                            break;
-                        case 2:
-                            echo 'Secondary';
-                            break;
-                        case 3:
-                            echo 'University';
-                            break;
-                        default:
-                            echo 'Unknown';
+                    // Display the school type and grade if the user is in high-school
+                    if ($row['school_type'] == 'high-school') {
+                        echo 'High-School';
+                        if (!empty($row['grade'])) {
+                            echo ' (Grade: ' . htmlspecialchars($row['grade']) . ')';
+                        }
+                    } else if ($row['school_type'] == 'college') {
+                        echo 'College';
+                    } else {
+                        echo 'Unknown';
                     }
                     ?>
                 </td>
