@@ -195,7 +195,7 @@ $result = $conn->query($sql);
         <h2>Reported Found Items</h2>
 
         <!-- Button aligned right above the search -->
-        <a href="https://ramonianlostgems.com/admin/send_message.php/" class="btn btn-success">
+        <a href="https://ramonianlostgems.com/admin/report/send_message.php/" class="btn btn-success">
                 <i class="fas fa-plus-circle"></i> Create report found item
             </a>
 

@@ -174,8 +174,8 @@ $result = $conn->query($sql);
 <section class="section">
     <div class="container">
         <h2>Reported Missing Items</h2>
-        <a href="https://ramonianlostgems.com/admin/send_missing.php/" class="btn btn-success">
-                <i class="fas fa-plus-circle"></i> Report Found Item
+        <a href="https://ramonianlostgems.com/admin/report/send_missing.php/" class="btn btn-success">
+                <i class="fas fa-plus-circle"></i> Create report missing item
             </a>
         <form class="search-form" method="GET" action="missing_tbl.php">
             <div class="input-group">
