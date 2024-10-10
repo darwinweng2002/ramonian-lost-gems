@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
 if (isset($_POST['guest_login'])) {
     $_SESSION['user_id'] = 'guest_' . bin2hex(random_bytes(5));
     $_SESSION['email'] = 'guest@example.com';
-    header("Location: https://ramonianlostgems.com/main.php");
+    header("Location: https://ramonianlostgems.com/itemss/items.php");
     exit();
 }
 ?>
