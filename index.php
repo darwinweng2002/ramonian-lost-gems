@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
                 $_SESSION['email'] = $email;
 
                 // Redirect to protected page
-                header("Location: https://ramonianlostgems.com/main.php");
+                header("Location: https://ramonianlostgems.com/itemss/items.php");
                 exit();
             } else {
                 $error_message = 'Invalid email or password.';
