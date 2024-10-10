@@ -67,20 +67,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $stmt->close();
 
-    // Handle file uploads
-    foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-        $fileName = basename($_FILES['images']['name'][$key]);
-        $targetFilePath = $uploadDir . $fileName;
-
-        if (move_uploaded_file($tmpName, $targetFilePath)) {
-            $stmt = $conn->prepare("INSERT INTO message_images (message_id, image_path) VALUES (?, ?)");
-            $stmt->bind_param("is", $messageId, $fileName); // Store just the filename in the database
-            $stmt->execute();
-            $stmt->close();
-        } else {
-            $error = "Failed to upload file: " . $fileName;
+    if (count($_FILES['images']['tmp_name']) < 1 || count($_FILES['images']['tmp_name']) > 6) {
+        $error = "You must upload between 1 and 6 images.";
+    } else {
+        // Handle file uploads
+        foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+            $fileName = basename($_FILES['images']['name'][$key]);
+            $targetFilePath = $uploadDir . $fileName;
+    
+            if (move_uploaded_file($tmpName, $targetFilePath)) {
+                $stmt = $conn->prepare("INSERT INTO message_images (message_id, image_path) VALUES (?, ?)");
+                $stmt->bind_param("is", $messageId, $fileName); // Store just the filename in the database
+                $stmt->execute();
+                $stmt->close();
+            } else {
+                $error = "Failed to upload file: " . $fileName;
+            }
         }
     }
+    
 
     // Success or error message for SweetAlert
     $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins, and you must surrender the item to the SSG office located at OSA Building 3rd floor before it is published for public viewing.";
