@@ -324,39 +324,42 @@ if (isset($_GET['id'])) {
         });
 
         // Delete button functionality
-        $('.delete-btn').on('click', function() {
+        $(document).ready(function() {
+        // Deny button functionality
+        $('.deny-btn').on('click', function() {
             var itemId = $(this).data('id');
             Swal.fire({
                 title: 'Are you sure?',
-                text: "Do you really want to delete this missing item?",
+                text: "Do you want to deny this missing item?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Yes, deny it!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: 'delete_message.php',
+                        url: 'deny_item.php', // Point to the deny endpoint
                         type: 'POST',
                         data: { id: itemId },
                         dataType: 'json',
                         success: function(response) {
                             if (response.success) {
-                                Swal.fire('Deleted!', 'The missing item has been deleted.', 'success')
+                                Swal.fire('Denied!', 'The missing item has been denied.', 'success')
                                 .then(() => location.reload());
                             } else {
-                                Swal.fire('Error', 'Failed to delete the missing item.', 'error');
+                                Swal.fire('Error!', 'Failed to deny the missing item.', 'error');
                             }
                         },
                         error: function(xhr, status, error) {
-                            Swal.fire('Error', 'An error occurred while deleting the item.', 'error');
+                            Swal.fire('Error!', 'An error occurred while denying the item.', 'error');
                         }
                     });
                 }
             });
         });
     });
+});
     </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>
