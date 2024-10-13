@@ -110,7 +110,7 @@ if (!$is_guest) {
     $message_stmt = $conn->prepare("
         SELECT mh.title, mh.time_found, mh.status, i.image_path 
         FROM message_history mh
-        LEFT JOIN found_item_images i ON mh.id = i.found_item_id
+        LEFT JOIN message_images i ON mh.id = i.message_images_id
         WHERE mh.user_id = ?
         GROUP BY mh.id
         LIMIT 1
@@ -560,7 +560,7 @@ if (!$is_guest) {
                 <tr>
                     <td><?= htmlspecialchars($message['title']) ?></td>
                     <td>
-                    <img src="../uploads/found_items/<?= htmlspecialchars($message['image_path']) ?>" alt="Item Image" style="width: 50px; height: auto; border-radius: 4px; margin-right: 10px;">
+                    <img src="../uploads/items/<?= htmlspecialchars($message['image_path']) ?>" alt="Item Image" style="width: 50px; height: auto; border-radius: 4px; margin-right: 10px;">
                     <?= htmlspecialchars($message['title']) ?>
                 </td>
 
