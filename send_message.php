@@ -433,24 +433,26 @@ if (isset($userId)) {
 
     <script>
        // Add this JavaScript function to validate the file size before upload
-function previewImages() {
+       function previewImages() {
     const previewContainer = document.getElementById('imagePreviewContainer');
     const validationMessage = document.getElementById('fileValidationMessage');
     const files = document.getElementById('images').files;
-    const maxSize = 50 * 1024 * 1024; // 50MB in bytes
 
-    previewContainer.innerHTML = ''; // Clear previous previews
-    validationMessage.style.display = 'none'; // Hide validation message
+    // Reset previous messages and previews
+    previewContainer.innerHTML = '';
+    validationMessage.style.display = 'none';
+
+    if (files.length > 6) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'You must upload between 1 and 6 images.',
+        });
+        return; // Stop further execution if limit exceeded
+    }
 
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
-
-        // Check file size
-        if (file.size > maxSize) {
-            validationMessage.textContent = `File ${file.name} is too large. Maximum size is 50MB.`;
-            validationMessage.style.display = 'block';
-            return; // Stop further processing if file is too large
-        }
 
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
