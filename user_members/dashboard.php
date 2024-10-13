@@ -110,7 +110,7 @@ if (!$is_guest) {
     $message_stmt = $conn->prepare("
         SELECT mh.title, mh.time_found, mh.status, i.image_path 
         FROM message_history mh
-        LEFT JOIN message_images i ON mh.id = i.message_images_id
+        LEFT JOIN message_images i ON mh.id = i.message_id
         WHERE mh.user_id = ?
         GROUP BY mh.id
         LIMIT 1
@@ -128,6 +128,7 @@ if (!$is_guest) {
     }
     $message_stmt->close();
 }
+
 ?>
 
 <!DOCTYPE html>
