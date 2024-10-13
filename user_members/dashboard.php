@@ -54,7 +54,6 @@ if (isset($_POST['upload_avatar']) && !$is_guest) {
 }
 
 // Fetch the user's claim history
-// Fetch the user's claim history
 $claimer = [];
 if (!$is_guest) {
     // Only fetch claim history for regular users
@@ -78,39 +77,53 @@ if (!$is_guest) {
     $claim_stmt->close();
 }
 
-
-
-// Fetch the user's posted missing items history
+// Fetch the user's posted missing items history (including first image)
 $missing_items = [];
 if (!$is_guest) {
     // Only fetch missing items for regular users
-    $missing_stmt = $conn->prepare("SELECT title, time_missing, status FROM missing_items WHERE user_id = ?");
+    $missing_stmt = $conn->prepare("
+        SELECT mi.title, mi.time_missing, mi.status, i.image_path 
+        FROM missing_items mi
+        LEFT JOIN missing_item_images i ON mi.id = i.missing_item_id
+        WHERE mi.user_id = ?
+        GROUP BY mi.id
+        LIMIT 1
+    ");
     $missing_stmt->bind_param("i", $user_id);
     $missing_stmt->execute();
-    $missing_stmt->bind_result($title, $time_missing, $status);
+    $missing_stmt->bind_result($title, $time_missing, $status, $image_path);
     while ($missing_stmt->fetch()) {
         $missing_items[] = [
             'title' => $title, 
             'time_missing' => $time_missing, 
-            'status' => $status
+            'status' => $status,
+            'image_path' => $image_path
         ];
     }
     $missing_stmt->close();
 }
 
-// Fetch the user's posted found items
+// Fetch the user's posted found items (including first image)
 $message_history = [];
 if (!$is_guest) {
     // Only fetch found items for regular users
-    $message_stmt = $conn->prepare("SELECT title, time_found, status FROM message_history WHERE user_id = ?");
+    $message_stmt = $conn->prepare("
+        SELECT mh.title, mh.time_found, mh.status, i.image_path 
+        FROM message_history mh
+        LEFT JOIN found_item_images i ON mh.id = i.found_item_id
+        WHERE mh.user_id = ?
+        GROUP BY mh.id
+        LIMIT 1
+    ");
     $message_stmt->bind_param("i", $user_id);
     $message_stmt->execute();
-    $message_stmt->bind_result($title, $time_found, $status);
+    $message_stmt->bind_result($title, $time_found, $status, $image_path);
     while ($message_stmt->fetch()) {
         $message_history[] = [
             'title' => $title, 
             'time_found' => $time_found,
-            'status' => $status
+            'status' => $status,
+            'image_path' => $image_path
         ];
     }
     $message_stmt->close();
@@ -347,6 +360,43 @@ if (!$is_guest) {
     width: 100%;
     table-layout: auto; /* Ensure the table takes full width and adjusts to content */
 }
+.modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        padding-top: 60px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+    .modal-content {
+        background-color: #fff;
+        margin: auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    #galleryImages img {
+        width: 100%;
+        max-height: 500px;
+        object-fit: contain;
+        margin-bottom: 10px;
+    }
     </style>
 </head>
 <body>
@@ -500,6 +550,7 @@ if (!$is_guest) {
         <thead>
             <tr>
                 <th style="width: 40%;">Item Name</th>
+                <th style="width: 40%;">Item Image</th>
                 <th style="width: 30%;">Date Posted</th>
                 <th style="width: 30%;">Status</th>
             </tr>
@@ -508,6 +559,11 @@ if (!$is_guest) {
             <?php foreach ($message_history as $message): ?>
                 <tr>
                     <td><?= htmlspecialchars($message['title']) ?></td>
+                    <td>
+                    <img src="../uploads/found_items/<?= htmlspecialchars($message['image_path']) ?>" alt="Item Image" style="width: 50px; height: auto; border-radius: 4px; margin-right: 10px;">
+                    <?= htmlspecialchars($message['title']) ?>
+                </td>
+
                     <td><?= htmlspecialchars($message['time_found']) ?></td>
                     <td>
                         <?php
@@ -554,6 +610,7 @@ if (!$is_guest) {
         <thead>
             <tr>
                 <th>Item Name</th>
+                <th>Item Image</th>
                 <th>Date Missing</th>
                 <th>Status</th>
             </tr>
@@ -562,6 +619,15 @@ if (!$is_guest) {
             <?php foreach ($missing_items as $missing_item): ?>
                 <tr>
                     <td><?= htmlspecialchars($missing_item['title']) ?></td>
+                    <td>
+                    <img src="../uploads/missing_items/<?= htmlspecialchars($missing_item['image_path']) ?>" 
+                        alt="Item Image" 
+                        style="width: 50px; height: auto; cursor: pointer;" 
+                        onclick="openGallery(<?= $missing_item_id ?>, 'missing_items')">
+                    <?= htmlspecialchars($missing_item['title']) ?>
+                </td>
+
+
                     <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
                     <td>
                         <?php
@@ -616,6 +682,12 @@ if (!$is_guest) {
                         </div>
                     </div>
                 </div>
+                <div id="imageGalleryModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="galleryImages"></div>
+    </div>
+</div>
             </section>
         </div>
     </main>
@@ -683,6 +755,32 @@ if (!$is_guest) {
             confirmButtonText: 'OK'
         });
     }
+    function openGallery(itemId, type) {
+    // Fetch all images for the selected item
+    $.ajax({
+        url: `fetch_images.php?item_id=${itemId}&type=${type}`, // Create this PHP to return images
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            const gallery = document.getElementById('galleryImages');
+            gallery.innerHTML = ''; // Clear previous images
+            data.forEach(image => {
+                const img = document.createElement('img');
+                img.src = `../uploads/${type}/${image.image_path}`;
+                gallery.appendChild(img);
+            });
+            document.getElementById('imageGalleryModal').style.display = 'block';
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching images:', error);
+        }
+    });
+}
+
+function closeModal() {
+    document.getElementById('imageGalleryModal').style.display = 'none';
+}
+
     </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>
