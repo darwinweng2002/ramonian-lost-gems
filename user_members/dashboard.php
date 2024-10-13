@@ -570,7 +570,7 @@ if (!$is_guest) {
                 <tr>
                     <td><?= htmlspecialchars($message['title']) ?></td>
                     <td>
-                    <img src="../uploads/items/<?= htmlspecialchars($message['image_path']) ?>" alt="Item Image" style="width: 50px; height: auto; border-radius: 4px; margin-right: 10px;">
+                    <img src="../uploads/items/<?= htmlspecialchars($message['image_path']) ?>" alt="Item Image" style="width: auto; height: auto; border-radius: 4px;">
                 </td>
 
                     <td><?= htmlspecialchars($message['time_found']) ?></td>
