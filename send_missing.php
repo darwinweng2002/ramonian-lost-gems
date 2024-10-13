@@ -352,74 +352,132 @@ if (isset($userId)) {
 </div>
     </div>
     <script>
-       function previewImages() {
-    const previewContainer = document.getElementById('imagePreviewContainer');
-    const validationMessage = document.getElementById('fileValidationMessage');
-    const files = document.getElementById('images').files;
-
-    // Reset previous messages and previews
-    previewContainer.innerHTML = '';
-    validationMessage.style.display = 'none';
-
-    if (files.length > 6) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops!',
-            text: 'You must upload between 1 and 6 images.',
-        });
-        return; // Stop further execution if limit exceeded
-    }
-
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-
-        if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                previewContainer.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        } else {
-            validationMessage.style.display = 'block'; // Show validation message if file type is not supported
-        }
-    }
-}
-
-
-        <?php if (isset($alertMessage)): ?>
-            Swal.fire({
-                icon: '<?php echo isset($error) ? 'error' : 'success'; ?>',
-                title: '<?php echo isset($error) ? 'Oops!' : 'Success!'; ?>',
-                text: '<?php echo htmlspecialchars($alertMessage); ?>',
-                confirmButtonText: 'OK'
-            });
-        <?php endif; ?>
-        document.getElementById('category_id').addEventListener('change', function() {
-    document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
-});
-document.addEventListener('DOMContentLoaded', function() {
-        const dateTimeInput = document.getElementById('time_missing');
-
-        // Get the current date and time in the format required for the datetime-local input
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-
-        // Format: YYYY-MM-DDTHH:MM (this is the format datetime-local expects)
-        const maxDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-
-        // Set the max attribute to restrict future dates
-        dateTimeInput.max = maxDateTime;
-    });
+      document.addEventListener('DOMContentLoaded', function () {
+    const submitButton = document.querySelector('.submit-btn');
+    const imageInput = document.getElementById('images');
+    const form = document.querySelector('.message-form');
     const contactInput = document.getElementById('contact');
     const contactError = document.getElementById('contactError');
+    const validationMessage = document.getElementById('fileValidationMessage');
+    const previewContainer = document.getElementById('imagePreviewContainer');
 
-    // Add input event listener for real-time validation
+    // Disable the submit button initially
+    submitButton.disabled = true;
+
+    // Validate images
+    function validateImages() {
+        const files = imageInput.files;
+        previewContainer.innerHTML = ''; // Clear previous previews
+        validationMessage.style.display = 'none'; // Hide validation message initially
+
+        // Check if the number of images is valid
+        if (files.length < 1 || files.length > 6) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: 'You must upload between 1 and 6 images.',
+            });
+            submitButton.disabled = true;
+            return false;
+        }
+
+        // Validate each file type
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (!file.type.startsWith('image/')) {
+                validationMessage.textContent = 'Supported file types: jpg, jpeg, png, gif.';
+                validationMessage.style.display = 'block'; // Show validation message
+                submitButton.disabled = true;
+                return false;
+            }
+        }
+
+        // If valid, show image previews
+        previewImages();
+        return true;
+    }
+
+    // Validate the contact number (11 digits starting with 09)
+    function validateContact() {
+        if (contactInput.validity.patternMismatch) {
+            contactError.textContent = "Contact number must start with 09 and be exactly 11 digits.";
+            contactError.style.color = 'red';
+            submitButton.disabled = true;
+            return false;
+        } else {
+            contactError.textContent = ''; // Clear the error message if valid
+            return true;
+        }
+    }
+
+    // Function to check if the form is valid
+    function enableSubmitIfValid() {
+        const isImageValid = validateImages();
+        const isContactValid = validateContact();
+        const isFormValid = form.checkValidity(); // HTML5 form validation for required fields
+
+        // Enable submit button only if all conditions are met
+        if (isImageValid && isContactValid && isFormValid) {
+            submitButton.disabled = false; // Enable button
+        } else {
+            submitButton.disabled = true; // Disable button if validations fail
+        }
+    }
+
+    // Image preview function
+    function previewImages() {
+        const files = imageInput.files;
+        previewContainer.innerHTML = ''; // Clear previous previews
+
+        // Loop through files and create previews
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file); // Read the image file as data URL
+            }
+        }
+    }
+
+    // Event listeners for real-time validation
+    imageInput.addEventListener('change', enableSubmitIfValid);
+    contactInput.addEventListener('input', enableSubmitIfValid);
+    form.addEventListener('input', enableSubmitIfValid); // Validate form on any input change
+
+    // Prevent form submission if validations fail
+    form.addEventListener('submit', function (e) {
+        if (submitButton.disabled) {
+            e.preventDefault(); // Stop form submission if button is still disabled
+        }
+    });
+
+    // Validate form on page load (in case some inputs are pre-filled)
+    enableSubmitIfValid();
+
+    // Handling dynamic display of new category input field
+    document.getElementById('category_id').addEventListener('change', function() {
+        document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
+    });
+
+    // Limit the date-time input to not allow future dates
+    const dateTimeInput = document.getElementById('time_missing');
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const maxDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    dateTimeInput.max = maxDateTime; // Set the max attribute to restrict future dates
+
+    // Add input event listener for real-time validation for contact number
     contactInput.addEventListener('input', function () {
         if (this.validity.patternMismatch) {
             contactError.textContent = "Contact number must start with 09 and be exactly 11 digits.";
@@ -428,25 +486,26 @@ document.addEventListener('DOMContentLoaded', function() {
             contactError.textContent = ""; // Clear the error message if valid
         }
     });
-    document.addEventListener('DOMContentLoaded', function () {
-            // Show loader on form submission
-            const form = document.querySelector('.message-form');
-            form.addEventListener('submit', function () {
-                document.getElementById('loader').style.display = 'flex';
-            });
 
-            <?php if (isset($alertMessage)): ?>
-                Swal.fire({
-                    icon: '<?php echo isset($error) ? 'error' : 'success'; ?>',
-                    title: '<?php echo isset($error) ? 'Oops!' : 'Success!'; ?>',
-                    text: '<?php echo htmlspecialchars($alertMessage); ?>',
-                    confirmButtonText: 'OK',
-                    didClose: () => {
-                        document.getElementById('loader').style.display = 'none'; // Hide loader after SweetAlert
-                    }
-                });
-            <?php endif; ?>
+    // Show loader on form submission
+    form.addEventListener('submit', function () {
+        document.getElementById('loader').style.display = 'flex';
+    });
+
+    // SweetAlert success or error messages (from backend)
+    <?php if (isset($alertMessage)): ?>
+        Swal.fire({
+            icon: '<?php echo isset($error) ? 'error' : 'success'; ?>',
+            title: '<?php echo isset($error) ? 'Oops!' : 'Success!'; ?>',
+            text: '<?php echo htmlspecialchars($alertMessage); ?>',
+            confirmButtonText: 'OK',
+            didClose: () => {
+                document.getElementById('loader').style.display = 'none'; // Hide loader after SweetAlert
+            }
         });
+    <?php endif; ?>
+});
+
     </script>
     <?php require_once('inc/footer.php') ?>
 </body>
