@@ -521,6 +521,7 @@ if (!$is_guest) {
         </ul>
     </div>
 </div>
+<div class="tab-content">
 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
     <h5 class="history-title">Claim History</h5>
     <table class="table table-striped claim-history-table">
@@ -685,6 +686,10 @@ if (!$is_guest) {
                         </div>
                     </div>
                 </div>
+                <div id="imageGalleryModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="galleryImages"></div>
     </div>
 </div>
             </section>
