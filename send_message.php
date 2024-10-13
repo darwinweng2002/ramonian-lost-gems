@@ -411,7 +411,7 @@ if (isset($userId)) {
 <p>Supported image file formats: <strong>jpg, jpeg, png, gif</strong>.</p>
 <div class="image-preview-container" id="imagePreviewContainer"></div>
 <p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
-<p id="imageUploadError" style="color: red; display: none;">You must upload between 1 and 6 images.</p>
+<p id="imageUploadError" style="color: red; display: none;">You must only upload between 1 and 6 images.</p>
 <button type="submit" class="submit-btn">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
         <line x1="22" x2="11" y1="2" y2="13"/>
