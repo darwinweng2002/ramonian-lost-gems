@@ -332,11 +332,12 @@ if (isset($userId)) {
             <input type="datetime-local" name="time_missing" id="time_missing" required>
            
             <label for="images">Upload Images:</label> <!-- Added the text label here -->
-<input type="file" name="images[]" id="images" multiple onchange="previewImages()">
-<div class="image-preview-container" id="imagePreviewContainer"></div>
-<p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
-<p id="imageUploadError" style="color: red; display: none;">You must upload between 1 and 6 images.</p>
-<p>Upload multiple images if necessary.</p>
+            <input type="file" name="images[]" id="images" accept=".jpg,.jpeg,.png,.gif" multiple onchange="previewImages()">
+            <p>Supported image file formats: <strong>jpg, jpeg, png, gif</strong>.</p>
+            <div class="image-preview-container" id="imagePreviewContainer"></div>
+            <p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
+            <p id="imageUploadError" style="color: red; display: none;">You must upload between 1 and 6 images.</p>
+            <p>Upload multiple images if necessary.</p>
             <button type="submit" class="submit-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
         <line x1="22" x2="11" y1="2" y2="13"/>
         <polygon points="22 2 15 22 11 13 2 9 22 2"/>
