@@ -338,7 +338,7 @@ if (isset($_GET['id'])) {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '../deny_item.php', // Point to the deny endpoint
+                    url: 'deny_item.php', // Point to the deny endpoint
                     type: 'POST',
                     data: { id: itemId },
                     dataType: 'json',
