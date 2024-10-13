@@ -84,7 +84,7 @@ if ($message_id > 0) {
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 10px;
         }
-        .delete-btn {
+        .deny-btn {
             background-color: #dc3545;
             color: white;
             border: none;
@@ -95,7 +95,7 @@ if ($message_id > 0) {
             bottom: 20px;
             right: 10px;
         }
-        .delete-btn:hover {
+        .deny-btn:hover {
             background-color: #c82333;
         }
         .publish-btn {
@@ -286,38 +286,42 @@ if ($message_id > 0) {
     <script>
       $(document).ready(function() {
         // SweetAlert for delete confirmation
-        $('.delete-btn').on('click', function() {
-            var messageId = $(this).data('id');
-            Swal.fire({
-                title: 'Are you sure you want to delete this item entry?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: 'delete_message.php',
-                        type: 'POST',
-                        data: { id: messageId },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire('Deleted!', 'The item has been deleted.', 'success');
-                                location.reload();
-                            } else {
-                                Swal.fire('Error!', response.error, 'error');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire('Error!', 'An error occurred: ' + error, 'error');
+        $(document).ready(function() {
+    // Handle the denied action using SweetAlert confirmation
+    $('.deny-btn').on('click', function() {
+        var messageId = $(this).data('id');
+        Swal.fire({
+            title: 'Are you sure you want to deny this item?',
+            text: "This item will be moved to the Denied Items section.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, deny it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: 'deny_item.php',
+                    type: 'POST',
+                    data: { id: messageId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire('Denied!', 'The item has been moved to the Denied Items section.', 'success');
+                            location.reload(); // Reload the page after success
+                        } else {
+                            Swal.fire('Error!', response.error, 'error');
                         }
-                    });
-                }
-            });
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire('Error!', 'An error occurred: ' + error, 'error');
+                    }
+                });
+            }
         });
+    });
+});
+
 
         // SweetAlert for publish confirmation
         $('.publish-btn').on('click', function() {
