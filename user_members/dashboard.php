@@ -539,7 +539,7 @@ if (!$is_guest) {
             <td><a href="https://ramonianlostgems.com/itemss/published_items.php?id=<?= htmlspecialchars($claim['item_id']) ?>">
                 <?= htmlspecialchars($claim['item_name']) ?></a></td>
             <td>
-                <img src="../uploads/items/<?= htmlspecialchars($claim['image_path']) ?>" alt="Item Image" style="width: 100px; height: auto; border-radius: 4px; margin-right: 10px;">
+                <img src="../uploads/items/<?= htmlspecialchars($claim['image_path']) ?>" alt="Item Image" style="width: 50px; height: auto; border-radius: 4px; margin-right: 10px;">
             </td>
             <td><?= htmlspecialchars($claim['claim_date']) ?></td>
             <td class="<?= $claim['status'] === 'approved' ? 'status-approved' : ($claim['status'] === 'rejected' ? 'status-declined' : ($claim['status'] === 'claimed' ? 'status-claimed' : 'status-pending')) ?>">
@@ -570,7 +570,7 @@ if (!$is_guest) {
                 <tr>
                     <td><?= htmlspecialchars($message['title']) ?></td>
                     <td>
-                    <img src="../uploads/items/<?= htmlspecialchars($message['image_path']) ?>" alt="Item Image" style="width: 100px; height: auto; border-radius: 4px; margin-right: 10px;">
+                    <img src="../uploads/items/<?= htmlspecialchars($message['image_path']) ?>" alt="Item Image" style="width: 50px; height: auto; border-radius: 4px; margin-right: 10px;">
                 </td>
 
                     <td><?= htmlspecialchars($message['time_found']) ?></td>
@@ -627,7 +627,7 @@ if (!$is_guest) {
                     <td>
                     <img src="../uploads/missing_items/<?= htmlspecialchars($missing_item['image_path']) ?>" 
                         alt="Item Image" 
-                        style="width: 100px; height: auto; cursor: pointer;" 
+                        style="width: 50px; height: auto; cursor: pointer;" 
                         onclick="openGallery(<?= $missing_item_id ?>, 'missing_items')">
                 </td>
 
