@@ -608,10 +608,6 @@ if (!$is_guest) {
         </tbody>
     </table>
 </div>
-
-
-
-
 <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
     <h5 class="history-title">Posted Missing Items</h5>
     <table class="table table-striped post-history-table">
@@ -693,6 +689,7 @@ if (!$is_guest) {
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <div id="galleryImages"></div>
+    </div>
     </div>
 </div>
             </section>
