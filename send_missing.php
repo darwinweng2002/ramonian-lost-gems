@@ -87,7 +87,6 @@ while ($stmt->fetch()) {
     $categories[] = ['id' => $categoryId, 'name' => $categoryName];
 }
 $stmt->close();
-?>
 // Retrieve user information based on user type
 if (isset($userId)) {
     if ($userType === 'user_member') {
