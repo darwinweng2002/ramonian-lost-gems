@@ -437,17 +437,21 @@ if (isset($userId)) {
     const previewContainer = document.getElementById('imagePreviewContainer');
     const validationMessage = document.getElementById('fileValidationMessage');
     const files = document.getElementById('images').files;
+    const submitButton = document.querySelector('.submit-btn'); // Grab the submit button
 
     // Reset previous messages and previews
     previewContainer.innerHTML = '';
     validationMessage.style.display = 'none';
+    submitButton.disabled = false; // Reset the button to enabled state by default
 
     if (files.length > 6) {
+        // If more than 6 images are uploaded, disable the submit button and show an error
         Swal.fire({
             icon: 'error',
             title: 'Oops!',
             text: 'You must upload between 1 and 6 images.',
         });
+        submitButton.disabled = true; // Disable the submit button
         return; // Stop further execution if limit exceeded
     }
 
