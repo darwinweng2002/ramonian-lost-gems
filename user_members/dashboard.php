@@ -53,29 +53,33 @@ if (isset($_POST['upload_avatar']) && !$is_guest) {
     }
 }
 
-// Fetch the user's claim history
+// Fetch the user's claim history with the image of the claimed item
 $claimer = [];
 if (!$is_guest) {
-    // Only fetch claim history for regular users
+    // Only fetch claim history for regular users, including the first image of the claimed item
     $claim_stmt = $conn->prepare("
-        SELECT c.item_id, i.title AS item_name, c.claim_date, c.status 
+        SELECT c.item_id, i.title AS item_name, c.claim_date, c.status, img.image_path
         FROM claimer c 
         JOIN message_history i ON c.item_id = i.id 
+        LEFT JOIN message_images img ON i.id = img.message_id
         WHERE c.user_id = ?
+        GROUP BY c.item_id
     ");
     $claim_stmt->bind_param("i", $user_id);
     $claim_stmt->execute();
-    $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status);
+    $claim_stmt->bind_result($item_id, $item_name, $claim_date, $status, $image_path);
     while ($claim_stmt->fetch()) {
         $claimer[] = [
             'item_id' => $item_id, 
             'item_name' => $item_name, 
             'claim_date' => $claim_date, 
-            'status' => $status
+            'status' => $status,
+            'image_path' => $image_path
         ];
     }
     $claim_stmt->close();
 }
+
 
 // Fetch the user's posted missing items history (including first image)
 $missing_items = [];
@@ -517,31 +521,35 @@ if (!$is_guest) {
         </ul>
     </div>
 </div>
-<div class="tab-content">
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
     <h5 class="history-title">Claim History</h5>
     <table class="table table-striped claim-history-table">
         <thead>
             <tr>
                 <th>Item Name</th>
+                <th>Item Image</th>
                 <th>Date Claimed</th>
                 <th>Status</th>
             </tr>
         </thead>
         <tbody>
         <?php foreach ($claimer as $claim): ?>
-    <tr>
-        <td><a href="https://ramonianlostgems.com/itemss/published_items.php?id=<?= htmlspecialchars($claim['item_id']) ?>"><?= htmlspecialchars($claim['item_name']) ?></a></td>
-        <td><?= htmlspecialchars($claim['claim_date']) ?></td>
-        <td class="<?= $claim['status'] === 'approved' ? 'status-approved' : ($claim['status'] === 'rejected' ? 'status-declined' : ($claim['status'] === 'claimed' ? 'status-claimed' : 'status-pending')) ?>">
-            <?= htmlspecialchars(ucfirst($claim['status'])) ?>
-        </td>
-    </tr>
-<?php endforeach; ?>
-
+        <tr>
+            <td><a href="https://ramonianlostgems.com/itemss/published_items.php?id=<?= htmlspecialchars($claim['item_id']) ?>">
+                <?= htmlspecialchars($claim['item_name']) ?></a></td>
+            <td>
+                <img src="../uploads/items/<?= htmlspecialchars($claim['image_path']) ?>" alt="Item Image" style="width: 50px; height: auto; border-radius: 4px; margin-right: 10px;">
+            </td>
+            <td><?= htmlspecialchars($claim['claim_date']) ?></td>
+            <td class="<?= $claim['status'] === 'approved' ? 'status-approved' : ($claim['status'] === 'rejected' ? 'status-declined' : ($claim['status'] === 'claimed' ? 'status-claimed' : 'status-pending')) ?>">
+                <?= htmlspecialchars(ucfirst($claim['status'])) ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
         </tbody>
     </table>
 </div>
+
 
 
 
