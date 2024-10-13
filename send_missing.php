@@ -30,12 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $new_category = $_POST['new_category'];
     $owner = $_POST['owner'];
 
-    // Check if category_id is set to add a new category
     if ($category_id == 'add_new' && !empty($new_category)) {
-        $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
-        $stmt->bind_param("s", $new_category);
+        // Insert new category with user_id to make it private
+        $stmt = $conn->prepare("INSERT INTO categories (name, user_id) VALUES (?, ?)");
+        $stmt->bind_param("si", $new_category, $userId); // Add the user ID to make it private
         $stmt->execute();
-        $category_id = $stmt->insert_id;
+        $category_id = $stmt->insert_id; // Use the new category ID
         $stmt->close();
     }
 
@@ -77,7 +77,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Success or error message for SweetAlert
     $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins before being published for public viewing.";
 }
-
+// Retrieve categories (only user's or admin's categories)
+$categories = [];
+$stmt = $conn->prepare("SELECT id, name FROM categories WHERE user_id = ? OR user_id IS NULL");
+$stmt->bind_param("i", $userId); // Fetch both user-specific categories and admin-added ones
+$stmt->execute();
+$stmt->bind_result($categoryId, $categoryName);
+while ($stmt->fetch()) {
+    $categories[] = ['id' => $categoryId, 'name' => $categoryName];
+}
+$stmt->close();
+?>
 // Retrieve user information based on user type
 if (isset($userId)) {
     if ($userType === 'user_member') {
@@ -290,27 +300,22 @@ if (isset($userId)) {
             <label for="title">Item Name:</label>
             <input type="text" name="title" id="title" placeholder="Enter item name" required>
             <label for="category">Category:</label>
-<select name="category_id" id="category_id" required>
+            <select name="category_id" id="category_id" required>
     <option value="">Select a category</option>
     <?php
-    // Fetch categories from the database
-    $stmt = $conn->prepare("SELECT id, name FROM categories");
-    $stmt->execute();
-    $stmt->bind_result($categoryId, $categoryName);
-    while ($stmt->fetch()) {
-        echo "<option value=\"$categoryId\">$categoryName</option>";
+    // Display available categories (user's and admin's)
+    foreach ($categories as $category) {
+        echo "<option value=\"{$category['id']}\">{$category['name']}</option>";
     }
-    $stmt->close();
     ?>
-    <option value="add_new">Add New Category</option>
+    <option value="add_new">Others</option>
 </select>
 
 <div id="newCategoryDiv" style="display: none;">
-    <label for="new_category">
-        New Category:
-    </label>
+    <label for="new_category">Others:</label>
     <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
 </div>
+
             <label for="description">Description of the missing item:</label>
             <textarea name="description" id="description" rows="4" placeholder="Describe the missing item" required></textarea>
 
@@ -399,9 +404,11 @@ if (isset($userId)) {
                 confirmButtonText: 'OK'
             });
         <?php endif; ?>
-        document.getElementById('category_id').addEventListener('change', function() {
+       // Show the new category input field when 'Add New Category' is selected
+document.getElementById('category_id').addEventListener('change', function() {
     document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
 });
+
 document.addEventListener('DOMContentLoaded', function() {
         const dateTimeInput = document.getElementById('time_missing');
 
