@@ -142,6 +142,8 @@ if (!$is_guest) {
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox.min.js"></script>
     <style>
         body {
             overflow: auto;
@@ -536,9 +538,12 @@ if (!$is_guest) {
         <tr>
             <td><a href="https://ramonianlostgems.com/itemss/published_items.php?id=<?= htmlspecialchars($claim['item_id']) ?>">
                 <?= htmlspecialchars($claim['item_name']) ?></a></td>
-            <td>
-                <img src="../uploads/items/<?= htmlspecialchars($claim['image_path']) ?>" alt="Item Image" style="width: 50px; height: auto; border-radius: 4px; margin-right: 10px;">
+                <td>
+                <a href="../uploads/items/<?= htmlspecialchars($claim['image_path']) ?>" data-lightbox="claimed-items" data-title="<?= htmlspecialchars($claim['item_name']) ?>">
+                    <img src="../uploads/items/<?= htmlspecialchars($claim['image_path']) ?>" alt="Item Image" style="width: 50px; height: auto; border-radius: 4px; margin-right: 10px;">
+                </a>
             </td>
+
             <td><?= htmlspecialchars($claim['claim_date']) ?></td>
             <td class="<?= $claim['status'] === 'approved' ? 'status-approved' : ($claim['status'] === 'rejected' ? 'status-declined' : ($claim['status'] === 'claimed' ? 'status-claimed' : 'status-pending')) ?>">
                 <?= htmlspecialchars(ucfirst($claim['status'])) ?>
@@ -568,8 +573,11 @@ if (!$is_guest) {
                 <tr>
                     <td><?= htmlspecialchars($message['title']) ?></td>
                     <td>
-                    <img src="../uploads/items/<?= htmlspecialchars($message['image_path']) ?>" alt="Item Image" style="width: 50px; height: auto; border-radius: 4px; margin-right: 10px;">
+                    <a href="../uploads/items/<?= htmlspecialchars($message['image_path']) ?>" data-lightbox="found-items" data-title="<?= htmlspecialchars($message['title']) ?>">
+                        <img src="../uploads/items/<?= htmlspecialchars($message['image_path']) ?>" alt="Item Image" style="width: 50px; height: auto; border-radius: 4px; margin-right: 10px;">
+                    </a>
                 </td>
+
 
                     <td><?= htmlspecialchars($message['time_found']) ?></td>
                     <td>
@@ -623,11 +631,11 @@ if (!$is_guest) {
                 <tr>
                     <td><?= htmlspecialchars($missing_item['title']) ?></td>
                     <td>
-                    <img src="../uploads/missing_items/<?= htmlspecialchars($missing_item['image_path']) ?>" 
-                        alt="Item Image" 
-                        style="width: 50px; height: auto; cursor: pointer;" 
-                        onclick="openGallery(<?= $missing_item_id ?>, 'missing_items')">
+                    <a href="../uploads/missing_items/<?= htmlspecialchars($missing_item['image_path']) ?>" data-lightbox="missing-items" data-title="<?= htmlspecialchars($missing_item['title']) ?>">
+                        <img src="../uploads/missing_items/<?= htmlspecialchars($missing_item['image_path']) ?>" alt="Item Image" style="width: 50px; height: auto; cursor: pointer;">
+                    </a>
                 </td>
+
 
 
                     <td><?= htmlspecialchars($missing_item['time_missing']) ?></td>
@@ -782,7 +790,13 @@ if (!$is_guest) {
 function closeModal() {
     document.getElementById('imageGalleryModal').style.display = 'none';
 }
-
+lightbox.option({
+      'resizeDuration': 200,       // Duration for resizing the image
+      'wrapAround': true,          // Allows infinite navigation in gallery
+      'alwaysShowNavOnTouchDevices': true, // Keeps navigation visible on mobile
+      'fadeDuration': 300,         // Time to fade images in and out
+      'imageFadeDuration': 300     // Time to fade the actual image
+    })
     </script>
     <?php require_once('../inc/footer.php'); ?>
 </body>
