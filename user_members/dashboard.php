@@ -685,11 +685,6 @@ if (!$is_guest) {
                         </div>
                     </div>
                 </div>
-                <div id="imageGalleryModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <div id="galleryImages"></div>
-    </div>
     </div>
 </div>
             </section>
