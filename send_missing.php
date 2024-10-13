@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $description = $_POST['description'];
     $lastSeenLocation = $_POST['last_seen_location'];
     $timeMissing = $_POST['time_missing'];
-    $status = 0; // Set to 0 for 'Pending' (assuming 0 is for 'Pending')
+    $status = 0; // Set to 0 for 'Pending'
     $contact = isset($_POST['contact']) ? $_POST['contact'] : '';
     $category_id = $_POST['category_id'];
     $new_category = $_POST['new_category'];
@@ -54,18 +54,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $missingItemId = $stmt->insert_id; // Get the last inserted missing item ID
     $stmt->close();
 
-    // Handle file uploads
-    foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
-        $fileName = basename($_FILES['images']['name'][$key]);
-        $targetFilePath = $uploadDir . $fileName;
+    // Validate image upload limit (between 1 and 6 files)
+    if (count($_FILES['images']['tmp_name']) < 1 || count($_FILES['images']['tmp_name']) > 6) {
+        $error = "You must upload between 1 and 6 images.";
+    } else {
+        // Handle file uploads
+        foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
+            $fileName = basename($_FILES['images']['name'][$key]);
+            $targetFilePath = $uploadDir . $fileName;
 
-        if (move_uploaded_file($tmpName, $targetFilePath)) {
-            $stmt = $conn->prepare("INSERT INTO missing_item_images (missing_item_id, image_path) VALUES (?, ?)");
-            $stmt->bind_param("is", $missingItemId, $fileName);
-            $stmt->execute();
-            $stmt->close();
-        } else {
-            $error = "Failed to upload file: " . $fileName;
+            if (move_uploaded_file($tmpName, $targetFilePath)) {
+                $stmt = $conn->prepare("INSERT INTO missing_item_images (missing_item_id, image_path) VALUES (?, ?)");
+                $stmt->bind_param("is", $missingItemId, $fileName);
+                $stmt->execute();
+                $stmt->close();
+            } else {
+                $error = "Failed to upload file: " . $fileName;
+            }
         }
     }
 
@@ -348,28 +353,40 @@ if (isset($userId)) {
     </div>
     <script>
        function previewImages() {
-        const previewContainer = document.getElementById('imagePreviewContainer');
-        const validationMessage = document.getElementById('fileValidationMessage');
-        const files = document.getElementById('images').files;
-        
-        previewContainer.innerHTML = ''; // Clear previous previews
-        validationMessage.style.display = 'none'; // Hide validation message
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const validationMessage = document.getElementById('fileValidationMessage');
+    const files = document.getElementById('images').files;
 
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const img = document.createElement('img');
-                    img.src = event.target.result;
-                    previewContainer.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                validationMessage.style.display = 'block'; // Show validation message if file type is not supported
-            }
+    // Reset previous messages and previews
+    previewContainer.innerHTML = '';
+    validationMessage.style.display = 'none';
+
+    if (files.length > 6) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: 'You must upload between 1 and 6 images.',
+        });
+        return; // Stop further execution if limit exceeded
+    }
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            validationMessage.style.display = 'block'; // Show validation message if file type is not supported
         }
     }
+}
+
 
         <?php if (isset($alertMessage)): ?>
             Swal.fire({
