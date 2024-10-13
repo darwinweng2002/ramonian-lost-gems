@@ -323,42 +323,41 @@ if (isset($_GET['id'])) {
             });
         });
 
-        // Delete button functionality
         $(document).ready(function() {
-        // Deny button functionality
-        $('.deny-btn').on('click', function() {
-            var itemId = $(this).data('id');
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "Do you want to deny this missing item?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, deny it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: '../deny_item.php', // Point to the deny endpoint
-                        type: 'POST',
-                        data: { id: itemId },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire('Denied!', 'The missing item has been denied.', 'success')
-                                .then(() => location.reload());
-                            } else {
-                                Swal.fire('Error!', 'Failed to deny the missing item.', 'error');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire('Error!', 'An error occurred while denying the item.', 'error');
+    // Deny button functionality
+    $('.deny-btn').on('click', function() {
+        var itemId = $(this).data('id');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to deny this missing item?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, deny it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '../deny_item.php', // Point to the deny endpoint
+                    type: 'POST',
+                    data: { id: itemId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire('Denied!', 'The missing item has been denied.', 'success')
+                                .then(() => location.reload());  // Reload the page to reflect the change
+                        } else {
+                            Swal.fire('Error!', 'Failed to deny the missing item: ' + response.error, 'error');
                         }
-                    });
-                }
-            });
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire('Error!', 'An error occurred while denying the item: ' + error, 'error');
+                    }
+                });
+            }
         });
     });
+});
 });
     </script>
     <?php require_once('../inc/footer.php'); ?>
