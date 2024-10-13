@@ -335,6 +335,7 @@ if (isset($userId)) {
 <input type="file" name="images[]" id="images" multiple onchange="previewImages()">
 <div class="image-preview-container" id="imagePreviewContainer"></div>
 <p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
+<p id="imageUploadError" style="color: red; display: none;">You must upload between 1 and 6 images.</p>
 <p>Upload multiple images if necessary.</p>
             <button type="submit" class="submit-btn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
         <line x1="22" x2="11" y1="2" y2="13"/>
@@ -357,19 +358,17 @@ if (isset($userId)) {
     const validationMessage = document.getElementById('fileValidationMessage');
     const files = document.getElementById('images').files;
     const submitButton = document.querySelector('.submit-btn'); // Grab the submit button
+    const imageUploadError = document.getElementById('imageUploadError'); // Grab the error message element
 
     // Reset previous messages and previews
     previewContainer.innerHTML = '';
     validationMessage.style.display = 'none';
+    imageUploadError.style.display = 'none'; // Hide the error message by default
     submitButton.disabled = false; // Reset the button to enabled state by default
 
     if (files.length > 6) {
-        // If more than 6 images are uploaded, disable the submit button and show an error
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops!',
-            text: 'You must upload between 1 and 6 images.',
-        });
+        // If more than 6 images are uploaded, disable the submit button and show an error message
+        imageUploadError.style.display = 'block'; // Show the error message in red
         submitButton.disabled = true; // Disable the submit button
         return; // Stop further execution if limit exceeded
     }
@@ -390,8 +389,6 @@ if (isset($userId)) {
         }
     }
 }
-
-
 
         <?php if (isset($alertMessage)): ?>
             Swal.fire({
