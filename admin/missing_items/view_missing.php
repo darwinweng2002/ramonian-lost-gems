@@ -90,7 +90,7 @@ if (isset($_GET['id'])) {
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 10px;
         }
-        .delete-btn {
+        .deny-btn {
             background-color: #dc3545;
             color: white;
             border: none;
@@ -101,7 +101,7 @@ if (isset($_GET['id'])) {
             bottom: 20px;
             right: 10px;
         }
-        .delete-btn:hover {
+        .deny-btn:hover {
             background-color: #c82333;
         }
         .publish-btn {
@@ -247,7 +247,7 @@ if (isset($_GET['id'])) {
                 }
 
                 //echo "<button class='publish-btn' data-id='" . htmlspecialchars($itemId) . "'>Publish</button>";
-                echo "<button class='delete-btn' data-id='" . htmlspecialchars($itemId) . "'>Delete</button>";
+                echo "<button class='deny-btn' data-id='" . htmlspecialchars($itemId) . "'>Deny</button>";
                 echo "</div>";
             }
         } else {
