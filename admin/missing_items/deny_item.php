@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $itemId = isset($_POST['id']) ? intval($_POST['id']) : 0;
 
     if ($itemId > 0) {
-        // Set the item as denied
+        // Set the item as denied by updating the missing_items table
         $sql = "UPDATE missing_items SET is_denied = 1 WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param('i', $itemId);
