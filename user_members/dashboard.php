@@ -91,7 +91,6 @@ if (!$is_guest) {
         LEFT JOIN missing_item_images i ON mi.id = i.missing_item_id
         WHERE mi.user_id = ?
         GROUP BY mi.id
-        LIMIT 1
     ");
     $missing_stmt->bind_param("i", $user_id);
     $missing_stmt->execute();
@@ -117,7 +116,6 @@ if (!$is_guest) {
         LEFT JOIN message_images i ON mh.id = i.message_id
         WHERE mh.user_id = ?
         GROUP BY mh.id
-        LIMIT 1
     ");
     $message_stmt->bind_param("i", $user_id);
     $message_stmt->execute();
