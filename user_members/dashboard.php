@@ -562,7 +562,6 @@ if (!$is_guest) {
                     <td><?= htmlspecialchars($message['title']) ?></td>
                     <td>
                     <img src="../uploads/items/<?= htmlspecialchars($message['image_path']) ?>" alt="Item Image" style="width: 50px; height: auto; border-radius: 4px; margin-right: 10px;">
-                    <?= htmlspecialchars($message['title']) ?>
                 </td>
 
                     <td><?= htmlspecialchars($message['time_found']) ?></td>
@@ -625,7 +624,6 @@ if (!$is_guest) {
                         alt="Item Image" 
                         style="width: 50px; height: auto; cursor: pointer;" 
                         onclick="openGallery(<?= $missing_item_id ?>, 'missing_items')">
-                    <?= htmlspecialchars($missing_item['title']) ?>
                 </td>
 
 
