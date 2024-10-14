@@ -253,7 +253,7 @@ $result = $stmt->get_result();
                 <?php endif; ?>
 
             <!-- Personal ID Section -->
-                <p><strong>Personal ID (<?= htmlspecialchars($row['id_type']); ?>):</strong></p>  <!-- Display the ID type -->
+                <p><strong>Uploaded ID (<?= htmlspecialchars($row['id_type']); ?>):</strong></p>  <!-- Display the ID type -->
                 <?php if (!empty($row['personal_id'])): ?>
                     <a href="/uploads/claims/<?= htmlspecialchars($row['personal_id']); ?>" data-lightbox="id" data-title="Personal ID">
                         <img src="/uploads/claims/<?= htmlspecialchars($row['personal_id']); ?>" alt="Personal ID" class="id-image" />
