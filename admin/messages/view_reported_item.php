@@ -238,17 +238,26 @@ if ($message_id > 0) {
 
                     echo "<div class='form-group'>";
                     echo "<label for='status' class='control-label'>Status</label>";
-                    echo "<select name='status' id='status-".$msgId."' class='form-select form-select-sm rounded-0' required='required'>";
-                    echo "<option value='0' " . ($msgData['status'] == 0 ? 'selected' : '') . ">Pending</option>";
-                    echo "<option value='1' " . ($msgData['status'] == 1 ? 'selected' : '') . ">Published</option>";
-                    echo "<option value='2' " . ($msgData['status'] == 2 ? 'selected' : '') . ">Claimed</option>";
-                    echo "<option value='3' " . ($msgData['status'] == 3 ? 'selected' : '') . ">Surrendered</option>";
-                    echo "<option value='4' " . ($msgData['status'] == 4 ? 'selected' : '') . ">Denied</option>";
+                    echo "<select name='status' id='status-" . htmlspecialchars($msgId) . "' class='form-select form-select-sm rounded-0' required='required'>";
+                    
+                    // Displaying options with correct status selected
+                    $statusOptions = [
+                        '0' => 'Pending',
+                        '1' => 'Published',
+                        '2' => 'Claimed',
+                        '3' => 'Surrendered',
+                        '4' => 'Denied'
+                    ];
+                    
+                    // Loop through status options and generate the select menu
+                    foreach ($statusOptions as $key => $label) {
+                        echo "<option value='" . htmlspecialchars($key) . "' " . ($msgData['status'] == $key ? 'selected' : '') . ">" . htmlspecialchars($label) . "</option>";
+                    }
+                    
                     echo "</select>";
-                    echo "<button class='btn btn-primary save-status-btn' data-id='" . $msgId . "'>Save Status</button>";
+                    echo "<button class='btn btn-primary save-status-btn' data-id='" . htmlspecialchars($msgId) . "'>Save Status</button>";
                     echo "</div>";
-
-                
+                    
                     // Add this in the section where the status badge is displayed
                     echo "<dt class='text-muted'>Status</dt>";
                     if ($msgData['status'] == 1) {
@@ -262,9 +271,6 @@ if ($message_id > 0) {
                     } else {
                         echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
                     }
-                
-                    
-                    
 
                     if (!empty($msgData['images'])) {
                         echo "<p><strong>Images:</strong></p>";
