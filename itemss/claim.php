@@ -73,29 +73,6 @@ $stmtClaimant->execute();
 $claimantResult = $stmtClaimant->get_result();
 $claimantData = $claimantResult->fetch_assoc();
 
-// Check if the user has already sent a claim request for this item
-$sqlCheckClaim = "SELECT id FROM claimer WHERE item_id = ? AND user_id = ? LIMIT 1";
-$stmtCheckClaim = $conn->prepare($sqlCheckClaim);
-$stmtCheckClaim->bind_param('ii', $itemId, $claimantId);
-$stmtCheckClaim->execute();
-$stmtCheckClaim->store_result();
-
-if ($stmtCheckClaim->num_rows > 0) {
-    // User already sent a claim request for this item
-    echo "<script>
-        Swal.fire({
-            title: 'Claim Request Already Submitted!',
-            text: 'You already sent a claim request for this item.',
-            icon: 'info',
-            confirmButtonText: 'OK'
-        }).then(function() {
-            window.location.href = 'dashboard.php'; // Redirect to dashboard or wherever necessary
-        });
-    </script>";
-    exit();  // Stop further form processing
-}
-$stmtCheckClaim->close();
-
 // Check if the user is a guest based on user_type from user_member table
 if ($userType === 'user_member' && isset($claimantData['user_type']) && $claimantData['user_type'] === 'guest') {
     $isGuest = true;
