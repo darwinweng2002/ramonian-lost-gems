@@ -150,6 +150,21 @@ $result = $stmt->get_result();
     border-radius: 5px;
     opacity: 0.6;
 }
+.deny-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+}
+
+.deny-btn:hover {
+    background-color: #c82333;
+}
     </style>
 </head>
 <body>
