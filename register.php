@@ -292,7 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   max-width: 500px; /* Set the maximum width to a smaller size */
   width: 100%; /* This ensures it's responsive for smaller screens */
   text-align: center;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 
@@ -315,6 +315,7 @@ button {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-size: 15px;
 }
 
 .btn-secondary {
