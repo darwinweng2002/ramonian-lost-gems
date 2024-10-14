@@ -21,7 +21,7 @@ $sql = "
            COALESCE(um.first_name, us.first_name) AS first_name, 
            COALESCE(um.last_name, us.last_name) AS last_name,
            c.item_description, c.date_lost, c.location_lost, 
-           c.proof_of_ownership, c.personal_id, c.id_type,  <!-- Add id_type here -->
+           c.proof_of_ownership, c.personal_id, c.id_type,  
            c.status, c.claim_date
     FROM claimer c
     LEFT JOIN message_history mh ON c.item_id = mh.id
