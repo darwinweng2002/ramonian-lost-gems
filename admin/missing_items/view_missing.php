@@ -270,13 +270,13 @@ $result = $stmt->get_result();
                     echo "<p>No images available.</p>";
                 }
 
-                $denyDisabled = $msgData['status'] != 0 ? 'disabled' : '';
-                    $denyClass = $msgData['status'] != 0 ? 'disabled-btn' : 'deny-btn';
-                    echo "<button class='" . $denyClass . "' data-id='" . htmlspecialchars($msgId) . "' " . $denyDisabled . ">Denied</button>";
-
-                    echo "</div>";
-                }
+               // Disable Deny button if status is not Pending (status = 0)
+               $denyButtonDisabled = ($status != 0) ? "disabled" : "";
+               $denyButtonClass = ($status != 0) ? "btn-disabled" : "deny-btn"; // Change the class to a disabled style if necessary
+               
+               echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny</button>";
             }
+        }
         ?>
     </div>
 
