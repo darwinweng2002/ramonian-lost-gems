@@ -238,7 +238,7 @@ $result = $conn->query($sql);
                         echo "<td>" . htmlspecialchars($row['founder']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['time_found']) . "</td>";
 
-                      // Display status as badge
+                        // Display status as badge
                         echo "<td>";
                         switch ($row['status']) {
                             case 1:
@@ -249,9 +249,6 @@ $result = $conn->query($sql);
                                 break;
                             case 3:
                                 echo "<span class='badge badge-surrendered'>Surrendered</span>";
-                                break;
-                            case 4:
-                                echo "<span class='badge badge-denied'>Denied</span>";
                                 break;
                             default:
                                 echo "<span class='badge badge-pending'>Pending</span>";
