@@ -165,6 +165,18 @@ $result = $stmt->get_result();
 .deny-btn:hover {
     background-color: #c82333;
 }
+.btn-disabled {
+    background-color: #d3d3d3;
+    color: #999;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: not-allowed;
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+    pointer-events: none; /* Disable click events */
+}
     </style>
 </head>
 <body>
