@@ -1,11 +1,19 @@
 <?php
 include '../../config.php';
 
-// Fetch denied found items
+// Define the base path where the images are stored
+$base_image_url = base_url . 'uploads/items/';  // Adjust this to your actual image directory
+
+// Fetch denied found items with their first image
 $sql_found = "
-    SELECT mh.id, mh.title, mh.landmark, mh.contact, mh.founder, mh.time_found, c.name as category_name, 'Found' as item_type
+    SELECT mh.id, mh.title, mh.landmark, mh.contact, mh.founder, mh.time_found, c.name as category_name, 'Found' as item_type, mi.image_path
     FROM message_history mh
     LEFT JOIN categories c ON mh.category_id = c.id
+    LEFT JOIN (
+        SELECT message_id, MIN(image_path) AS image_path
+        FROM message_images
+        GROUP BY message_id
+    ) mi ON mh.id = mi.message_id
     WHERE mh.is_denied = 1"; // Fetch denied found items
 
 // Execute the query
@@ -32,6 +40,11 @@ $result_found = $conn->query($sql_found);
             width: 90%;
             max-width: 1200px;
         }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -49,6 +62,12 @@ $result_found = $conn->query($sql_found);
             text-align: center;
             margin-top: 20px;
         }
+        .item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -58,6 +77,7 @@ $result_found = $conn->query($sql_found);
             <table>
                 <thead>
                     <tr>
+                        <th>Item Image</th>
                         <th>Item Name</th>
                         <th>Category</th>
                         <th>Finder</th>
@@ -72,6 +92,13 @@ $result_found = $conn->query($sql_found);
                     if ($result_found->num_rows > 0) {
                         while ($row = $result_found->fetch_assoc()) {
                             echo "<tr>";
+                            // Display the item image, with a fallback in case no image is available
+                            if (!empty($row['image_path'])) {
+                                $imageSrc = $base_image_url . htmlspecialchars($row['image_path']);
+                                echo "<td><img src='" . $imageSrc . "' alt='Item Image' class='item-image'></td>";
+                            } else {
+                                echo "<td><img src='default-image.jpg' alt='No Image' class='item-image'></td>";  // Provide a default image path
+                            }
                             echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['founder']) . "</td>";
@@ -82,7 +109,7 @@ $result_found = $conn->query($sql_found);
                         }
                     } else {
                         // If no denied found items are found
-                        echo "<tr><td colspan='6'>No denied found items found.</td></tr>";
+                        echo "<tr><td colspan='7'>No denied found items found.</td></tr>";
                     }
                     ?>
                 </tbody>
