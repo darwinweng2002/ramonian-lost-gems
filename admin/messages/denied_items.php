@@ -147,7 +147,7 @@ $result_found = $conn->query($sql_found);
         <h2>Denied Found Items</h2>
         
         <!-- Search Form -->
-        <form class="search-form" method="GET" action="denied_items.php">
+        <form class="search-form" method="GET" action="denied_found_items.php">
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
                 <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
