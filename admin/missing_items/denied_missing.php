@@ -36,6 +36,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Denied Missing Items</title>
+    <?php require_once('../inc/header.php'); ?>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
     <style>
         body {
@@ -81,6 +82,8 @@ $result = $conn->query($sql);
     </style>
 </head>
 <body>
+<?php require_once('../inc/topBarNav.php') ?>
+<?php require_once('../inc/navigation.php') ?> 
     <div class="container">
         <h1>Denied Missing Items</h1>
 
@@ -126,6 +129,7 @@ $result = $conn->query($sql);
         <?php } ?>
 
     </div>
+    <?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
 
