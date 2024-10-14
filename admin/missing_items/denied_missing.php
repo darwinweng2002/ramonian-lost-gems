@@ -12,11 +12,16 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch denied missing items
+// Fetch denied missing items with their first image
 $sql = "
-    SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.contact, mi.owner, c.name AS category_name
+    SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.contact, mi.owner, c.name AS category_name, imi.image_path
     FROM missing_items mi
     LEFT JOIN categories c ON mi.category_id = c.id
+    LEFT JOIN (
+        SELECT missing_item_id, MIN(image_path) AS image_path
+        FROM missing_item_images
+        GROUP BY missing_item_id
+    ) imi ON mi.id = imi.missing_item_id
     WHERE mi.is_denied = 1";  // Fetch only denied items
 
 $result = $conn->query($sql);
@@ -64,6 +69,12 @@ $result = $conn->query($sql);
             text-align: center;
             margin-top: 20px;
         }
+        .item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -74,6 +85,7 @@ $result = $conn->query($sql);
             <table>
                 <thead>
                     <tr>
+                        <th>Item Image</th>
                         <th>Item Title</th>
                         <th>Category</th>
                         <th>Owner</th>
@@ -87,6 +99,13 @@ $result = $conn->query($sql);
                     <?php
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
+                        // Display the item image, with a fallback in case no image is available
+                        if (!empty($row['image_path'])) {
+                            $imageSrc = htmlspecialchars($row['image_path']);
+                            echo "<td><img src='" . $imageSrc . "' alt='Item Image' class='item-image'></td>";
+                        } else {
+                            echo "<td><img src='default-image.jpg' alt='No Image' class='item-image'></td>";  // Provide a default image path
+                        }
                         echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['owner']) . "</td>";
