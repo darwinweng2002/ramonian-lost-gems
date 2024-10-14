@@ -4,7 +4,10 @@ include '../../config.php';
 // Define the base path where the images are stored
 $base_image_url = base_url . 'uploads/items/';  // Adjust this to your actual image directory
 
-// Fetch denied found items with their first image
+// Initialize search term
+$searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
+
+// SQL query to fetch denied found items with their first image and add search functionality
 $sql_found = "
     SELECT mh.id, mh.title, mh.landmark, mh.contact, mh.founder, mh.time_found, c.name as category_name, 'Found' as item_type, mi.image_path
     FROM message_history mh
@@ -14,7 +17,12 @@ $sql_found = "
         FROM message_images
         GROUP BY message_id
     ) mi ON mh.id = mi.message_id
-    WHERE mh.is_denied = 1"; // Fetch denied found items
+    WHERE mh.is_denied = 1
+    AND (mh.title LIKE '%$searchTerm%'
+        OR mh.landmark LIKE '%$searchTerm%'
+        OR mh.founder LIKE '%$searchTerm%'
+        OR c.name LIKE '%$searchTerm%')
+    ORDER BY mh.id DESC";
 
 // Execute the query
 $result_found = $conn->query($sql_found);
@@ -22,45 +30,64 @@ $result_found = $conn->query($sql_found);
 
 <!DOCTYPE html>
 <html lang="en">
+<?php require_once('../inc/header.php') ?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <title>Denied Found Items</title>
-    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            padding-top: 70px;
-            background-color: #f4f4f4;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
         }
         .container {
             margin: 30px auto;
-            width: 90%;
             max-width: 1200px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        h1 {
+        h2 {
             text-align: center;
             color: #333;
             margin-bottom: 20px;
         }
+        .table-responsive {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow-x: auto;
+        }
         table {
             width: 100%;
+            min-width: 1000px;
             border-collapse: collapse;
-            background-color: #fff;
         }
-        table th, table td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-        table th {
-            background-color: #f4f4f4;
-        }
-        .no-items {
+        th, td {
+            padding: 12px;
             text-align: center;
-            margin-top: 20px;
+        }
+        thead th {
+            background-color: #f2f2f2;
+            color: #444;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .no-data {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #333;
+            padding: 30px 0;
         }
         .item-image {
             width: 80px;
@@ -68,13 +95,68 @@ $result_found = $conn->query($sql_found);
             object-fit: cover;
             border-radius: 5px;
         }
+        .input-group {
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .search-input {
+            border: 1px solid #ddd;
+            border-right: none;
+            border-radius: 0;
+            padding: 10px;
+            outline: none;
+            box-shadow: none;
+            width: 200px;
+            flex-grow: 1;
+        }
+        .search-button {
+            border-radius: 0;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left: -5px;
+        }
+        .search-button:hover {
+            background-color: #218838;
+        }
+        .input-group-text {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-right: none;
+            color: #333;
+        }
+        .input-group-text i {
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
+<?php require_once('../inc/topBarNav.php') ?>
+<?php require_once('../inc/navigation.php') ?> 
+<br>
+<br>
+<section class="section">
     <div class="container">
-        <h1>Denied Found Items</h1>
+        <h2>Denied Found Items</h2>
+        
+        <!-- Search Form -->
+        <form class="search-form" method="GET" action="denied_found_items.php">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
+                <button type="submit" class="search-button">Search</button>
+            </div>
+        </form>
+
         <div class="table-responsive">
-            <table>
+            <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>Item Image</th>
@@ -116,11 +198,13 @@ $result_found = $conn->query($sql_found);
             </table>
         </div>
     </div>
-</body>
-</html>
+</section>
 
 <?php
 // Close connections
 $result_found->free();
 $conn->close();
 ?>
+<?php require_once('../inc/footer.php') ?>
+</body>
+</html>
