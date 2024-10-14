@@ -290,9 +290,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   max-width: 500px; /* Set the maximum width to a smaller size */
-  width: 90%; /* This ensures it's responsive for smaller screens */
+  width: 100%; /* This ensures it's responsive for smaller screens */
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 
