@@ -82,28 +82,6 @@ if ($userType === 'user_member' && isset($claimantData['user_type']) && $claiman
 if ($itemData['poster_id'] == $claimantId) {
     $isOwner = true;
 }
-// Check if the user has already sent a claim request for this item
-$sqlCheckClaim = "SELECT id FROM claimer WHERE item_id = ? AND user_id = ? LIMIT 1";
-$stmtCheckClaim = $conn->prepare($sqlCheckClaim);
-$stmtCheckClaim->bind_param('ii', $itemId, $claimantId);
-$stmtCheckClaim->execute();
-$stmtCheckClaim->store_result();
-
-if ($stmtCheckClaim->num_rows > 0) {
-    // User already sent a claim request for this item
-    echo "<script>
-        Swal.fire({
-            title: 'Claim Request Already Submitted!',
-            text: 'You already sent a claim request for this item.',
-            icon: 'info',
-            confirmButtonText: 'OK'
-        }).then(function() {
-            window.location.href = 'dashboard.php'; // Redirect to dashboard or wherever necessary
-        });
-    </script>";
-    exit();  // Stop further form processing
-}
-$stmtCheckClaim->close();
 
 // Process the form submission to save the claim request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
