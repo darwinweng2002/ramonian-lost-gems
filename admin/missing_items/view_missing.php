@@ -17,8 +17,8 @@ $result = null;
 if (isset($_GET['id'])) {
     $itemId = $_GET['id'];
 
-    // SQL query to get missing item details and associated images
-    $sql = "
+// SQL query to get missing item details and associated images
+$sql = "
     SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, mi.owner, user_info.first_name, user_info.college, user_info.email, user_info.avatar, c.name AS category_name, imi.image_path
     FROM missing_items mi
     LEFT JOIN (
@@ -30,13 +30,14 @@ if (isset($_GET['id'])) {
     ) user_info ON mi.user_id = user_info.user_id
     LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
     LEFT JOIN categories c ON mi.category_id = c.id
-    WHERE mi.id = ?
-    ";
+    WHERE mi.id = ? AND mi.is_denied = 0  -- Add this condition to exclude denied items
+";
 
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('i', $itemId);
-    $stmt->execute();
-    $result = $stmt->get_result();
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $itemId);
+$stmt->execute();
+$result = $stmt->get_result();
+
 }
 ?>
 
