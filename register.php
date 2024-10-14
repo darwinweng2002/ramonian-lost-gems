@@ -301,6 +301,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   text-align: justify; /* Justify the text */
   margin-bottom: 15px;
 }
+/* Button Container Styling */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
 
   </style>
 <!-- Terms and Conditions Modal -->
@@ -320,7 +354,10 @@ By using our mobile application, you agree to comply with and be bound by the fo
     <p class="terms-text">
     Your privacy and security are important to us. The information you provide, including your School ID, will be used solely for the purpose of verifying your status as a legitimate student of PRMSU Iba Campus. All personal information will remain confidential and will not be shared with any third parties. By proceeding, you acknowledge that your data will be handled in accordance with applicable privacy laws and regulations.
     </p>
-    <button id="acceptTerms" class="btn btn-primary">I Accept</button>
+    <div class="button-container">
+      <button id="declineTerms" class="btn btn-secondary">Decline</button>
+      <button id="acceptTerms" class="btn btn-primary">I Accept</button>
+    </div>
   </div>
 </div>
 
@@ -720,23 +757,25 @@ By using our mobile application, you agree to comply with and be bound by the fo
         }
     });
     $(document).ready(function() {
-    // Show the terms modal on page load
     var modal = $('#termsModal');
     var registerBtn = $('#register-btn');
     
     modal.css('display', 'flex'); // Show the modal
-    
-    // Disable the register button until terms are accepted
-    registerBtn.prop('disabled', true);
-    
+    registerBtn.prop('disabled', true); // Disable the register button until terms are accepted
+
     // When the user clicks "I Accept", hide the modal and enable the register button
     $('#acceptTerms').on('click', function() {
         modal.hide(); // Hide the modal
         registerBtn.prop('disabled', false); // Enable the register button
     });
-    
-    // You can also revalidate the form here to ensure everything is set.
+
+    // When the user clicks "Decline", redirect or handle as needed
+    $('#declineTerms').on('click', function() {
+        // You can redirect to another page, for example, the homepage
+        window.location.href = 'https://ramonianlostgems.com/';
+    });
 });
+
   </script>
 </body>
 </html>
