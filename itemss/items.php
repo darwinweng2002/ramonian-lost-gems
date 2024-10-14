@@ -38,11 +38,11 @@ if (isset($_GET['category_id'])) {
 // Fetch categories for dropdown
 $categoriesResult = $conn->query("SELECT id, name FROM categories");
 
-// SQL query for found items, including status, excluding denied items
+// SQL query for found items, including status
 $sqlFound = "SELECT mh.id, mh.title, mh.category_id, mh.time_found, mh.message, mh.status, GROUP_CONCAT(mi.image_path) AS image_paths
              FROM message_history mh
              LEFT JOIN message_images mi ON mh.id = mi.message_id
-             WHERE mh.is_published = 1 AND mh.status = 1 AND mh.is_denied = 0"; // Only fetch published and non-denied items
+             WHERE mh.is_published = 1 AND mh.status = 1"; // Only fetch items where status is Published
 
 // Search and filter by category
 if ($searchTerm) {
@@ -58,11 +58,11 @@ if ($selectedCategory) {
 $sqlFound .= " GROUP BY mh.id
                ORDER BY mh.id DESC";
 
-// SQL query for missing items, including status, excluding denied items
+// SQL query for missing items with extended search functionality
 $sqlMissing = "SELECT mi.id, mi.title, mi.category_id, mi.time_missing, mi.description, mi.status, GROUP_CONCAT(mii.image_path) AS image_paths
                FROM missing_items mi
                LEFT JOIN missing_item_images mii ON mi.id = mii.missing_item_id
-               WHERE mi.status = 1 AND mi.is_denied = 0";  // Fetch only published and non-denied items
+               WHERE mi.status = 1";  // Fetch only published items
 
 // Search and filter by category
 if ($searchTerm) {
