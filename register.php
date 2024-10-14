@@ -264,16 +264,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   align-items: center;
 }
 
-/* Modal Content Box */
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-  max-width: 600px;
-  width: 100%;
-  text-align: center;
-}
 
 .modal-content h2 {
   margin-top: 0;
@@ -296,7 +286,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 /* Modal Content Styling - Reduced Size */
 .modal-content {
   background-color: white;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   max-width: 500px; /* Set the maximum width to a smaller size */
