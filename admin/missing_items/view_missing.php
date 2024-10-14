@@ -286,7 +286,7 @@ $result = $stmt->get_result();
                $denyButtonDisabled = ($status != 0) ? "disabled" : "";
                $denyButtonClass = ($status != 0) ? "btn-disabled" : "deny-btn"; // Change the class to a disabled style if necessary
                
-               echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny</button>";
+               echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny report</button>";
             }
         }
         ?>
