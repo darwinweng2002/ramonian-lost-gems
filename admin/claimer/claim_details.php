@@ -62,7 +62,8 @@ $sql = "
         c.proof_of_ownership, 
         c.personal_id, 
         c.status, 
-        c.claim_date,
+        c.claim_date, 
+        c.id_type,  /* Add this line to retrieve the id_type */
         GROUP_CONCAT(mi.image_path) AS image_paths
     FROM claimer c
     LEFT JOIN message_history mh ON c.item_id = mh.id
@@ -251,8 +252,8 @@ $result = $stmt->get_result();
                     <p>No proof uploaded.</p>
                 <?php endif; ?>
 
-                <!-- Personal ID -->
-                <p><strong>Personal ID:</strong></p>
+            <!-- Personal ID Section -->
+                <p><strong>Personal ID (<?= htmlspecialchars($row['id_type']); ?>):</strong></p>  <!-- Display the ID type -->
                 <?php if (!empty($row['personal_id'])): ?>
                     <a href="/uploads/claims/<?= htmlspecialchars($row['personal_id']); ?>" data-lightbox="id" data-title="Personal ID">
                         <img src="/uploads/claims/<?= htmlspecialchars($row['personal_id']); ?>" alt="Personal ID" class="id-image" />
@@ -260,6 +261,7 @@ $result = $stmt->get_result();
                 <?php else: ?>
                     <p>No ID uploaded.</p>
                 <?php endif; ?>
+
             </div>
         <?php else: ?>
             <p>Claim not found.</p>
