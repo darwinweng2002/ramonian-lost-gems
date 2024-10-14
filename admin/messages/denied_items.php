@@ -5,7 +5,7 @@ include '../../config.php';
 $base_image_url = base_url . 'uploads/items/';  // Adjust this to your actual image directory
 
 // Initialize search term
-$searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
+$searchTerm = isset($_POST['searchTerm']) ? $conn->real_escape_string($_POST['searchTerm']) : '';
 
 // SQL query to fetch denied found items with their first image and add search functionality
 $sql_found = "
@@ -24,8 +24,29 @@ $sql_found = "
         OR c.name LIKE '%$searchTerm%')
     ORDER BY mh.id DESC";
 
-// Execute the query
 $result_found = $conn->query($sql_found);
+
+// If the request is AJAX, return the results in JSON format
+if (isset($_POST['ajax']) && $_POST['ajax'] == 1) {
+    $items = [];
+
+    while ($row = $result_found->fetch_assoc()) {
+        $items[] = [
+            'image' => !empty($row['image_path']) ? $base_image_url . htmlspecialchars($row['image_path']) : 'default-image.jpg',
+            'title' => htmlspecialchars($row['title']),
+            'category_name' => htmlspecialchars($row['category_name']),
+            'founder' => htmlspecialchars($row['founder']),
+            'landmark' => htmlspecialchars($row['landmark']),
+            'time_found' => htmlspecialchars($row['time_found']),
+            'contact' => htmlspecialchars($row['contact']),
+        ];
+    }
+
+    echo json_encode(['items' => $items]);
+    exit;
+}
+
+// Normal page load (for users who disable JavaScript or the initial page load)
 ?>
 
 <!DOCTYPE html>
@@ -199,7 +220,49 @@ $result_found = $conn->query($sql_found);
         </div>
     </div>
 </section>
+<script>
+$(document).ready(function() {
+    function fetchItems(query) {
+        $.ajax({
+            url: 'denied_found_items.php',
+            type: 'POST',
+            data: {searchTerm: query, ajax: 1}, // Pass search term and ajax=1 to indicate it's an AJAX request
+            dataType: 'json',
+            success: function(response) {
+                let items = response.items;
+                let tableBody = '';
 
+                if (items.length > 0) {
+                    $.each(items, function(index, item) {
+                        tableBody += '<tr>';
+                        tableBody += '<td><img src="' + item.image + '" alt="Item Image" class="item-image"></td>';
+                        tableBody += '<td>' + item.title + '</td>';
+                        tableBody += '<td>' + item.category_name + '</td>';
+                        tableBody += '<td>' + item.founder + '</td>';
+                        tableBody += '<td>' + item.landmark + '</td>';
+                        tableBody += '<td>' + item.time_found + '</td>';
+                        tableBody += '<td>' + item.contact + '</td>';
+                        tableBody += '</tr>';
+                    });
+                } else {
+                    tableBody = '<tr><td colspan="7" class="no-data">No denied found items found.</td></tr>';
+                }
+
+                $('#items-table-body').html(tableBody); // Update the table with new data
+            }
+        });
+    }
+
+    // Capture the search input in real-time and fetch the results via AJAX
+    $('#searchTerm').on('input', function() {
+        let query = $(this).val();
+        fetchItems(query); // Fetch results with the current input value
+    });
+
+    // Fetch all items initially when the page loads
+    fetchItems('');
+});
+</script>
 <?php
 // Close connections
 $result_found->free();
