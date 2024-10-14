@@ -232,12 +232,6 @@ $result = $stmt->get_result();
                 echo "</select>";
                 echo "<button class='btn btn-primary save-status-btn' data-id='" . $itemId . "'>Save Status</button>";
                 echo "</div>";
-                
-                // Disable Deny button if status is not Pending (status = 0)
-                $denyButtonDisabled = ($status != 0) ? "disabled" : "";
-                $denyButtonClass = ($status != 0) ? "btn-disabled" : "deny-btn"; // Change the class to a disabled style if necessary
-                
-                echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny</button>";
 
                 echo "<dt class='text-muted'>Status</dt>";
                 if ($status == 1) {
@@ -261,13 +255,14 @@ $result = $stmt->get_result();
                     echo "<p>No images available.</p>";
                 }
 
-                //echo "<button class='publish-btn' data-id='" . htmlspecialchars($itemId) . "'>Publish</button>";
-                echo "<button class='deny-btn' data-id='" . htmlspecialchars($itemId) . "'>Deny</button>";
-                echo "</div>";
-            }
+                $denyButtonDisabled = ($status != 0) ? "disabled" : "";
+$denyButtonClass = ($status != 0) ? "btn-disabled" : "deny-btn"; // Change the class to a disabled style if necessary
+
+echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny</button>";
         } else {
             echo "<p>No details available for this item.</p>";
         }
+    }
         ?>
     </div>
 
