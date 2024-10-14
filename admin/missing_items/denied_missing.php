@@ -4,6 +4,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// Define the base path where the images are stored
+$base_image_url = base_url . 'uploads/missing_items/';  // Adjust this to your actual image directory
+
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
@@ -101,7 +104,7 @@ $result = $conn->query($sql);
                         echo "<tr>";
                         // Display the item image, with a fallback in case no image is available
                         if (!empty($row['image_path'])) {
-                            $imageSrc = htmlspecialchars($row['image_path']);
+                            $imageSrc = $base_image_url . htmlspecialchars($row['image_path']);
                             echo "<td><img src='" . $imageSrc . "' alt='Item Image' class='item-image'></td>";
                         } else {
                             echo "<td><img src='default-image.jpg' alt='No Image' class='item-image'></td>";  // Provide a default image path
