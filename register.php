@@ -301,21 +301,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   text-align: justify; /* Justify the text */
   margin-bottom: 15px;
 }
-/* Button Container Styling */
+/* Button Container - Stack the buttons vertically */
 .button-container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column; /* Change to column layout */
+  gap: 10px; /* Add spacing between buttons */
   margin-top: 20px;
+}
+
+button {
+  width: 100%; /* Make buttons take the full width of the container */
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .btn-secondary {
   background-color: #6c757d;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
 .btn-secondary:hover {
@@ -326,10 +331,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
 .btn-primary:hover {
