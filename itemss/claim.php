@@ -336,15 +336,16 @@ h1, h3 {
             <input type="file" id="proof_of_ownership" name="proof_of_ownership" accept="image/*,application/pdf">
         </div>
         <div class="form-group">
-        <label for="id_type">Select ID Type:</label>
-        <select id="id_type" name="id_type" required>
-            <option value="">-- Select ID Type --</option>
-            <option value="Driver's License">Driver's License</option>
-            <option value="Passport">Passport</option>
-            <option value="National ID">National ID</option>
-            <option value="Student ID">Student ID</option>
-        </select>
-        </div>
+    <label for="id_type">Select ID Type:</label>
+    <select id="id_type" name="id_type" required>
+        <option value="">-- Select ID Type --</option>
+        <option value="Driver's License">Driver's License</option>
+        <option value="Passport">Passport</option>
+        <option value="National ID">National ID</option>
+        <option value="Student ID">Student ID</option>
+    </select>
+</div>
+
 
         <div class="form-group">
             <label for="personal_id">Upload your ID:</label>
