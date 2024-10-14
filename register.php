@@ -282,26 +282,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 .modal-content button {
   margin-top: 20px;
 }
+/* Centered Logo Styling */
+.logo-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo-container img {
+  max-width: 100px; /* Adjust the size as needed */
+}
+
+/* Modal Content Styling */
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Justified Text for Terms and Conditions */
+.terms-text {
+  text-align: justify; /* Justify the text */
+  margin-bottom: 15px;
+}
 
   </style>
 <!-- Terms and Conditions Modal -->
+<!-- Terms and Conditions Modal -->
 <div id="termsModal" class="modal">
   <div class="modal-content">
+    <!-- Centered Logo -->
+    <div class="logo-container">
+      <img src="path-to-your-logo.png" alt="Logo" class="logo-img">
+    </div>
+    
     <h2>Terms and Conditions</h2>
-    <p>
+    <p class="terms-text">
       We assure you that the school ID you submit will be used solely for verification purposes, 
       specifically to confirm that you are a legitimate student of PRMSU Iba Campus. 
       All personal information will remain confidential and will not be shared with any third parties. 
       Your data will be handled in strict compliance with applicable privacy laws and ethical guidelines 
       to ensure the protection of your information.
     </p>
-    <p>
+    <p class="terms-text">
       By proceeding, you agree that the information you submit, including your school ID, will be used for
       student validation and approval by the admin. Your account will be pending until verification is complete.
     </p>
     <button id="acceptTerms" class="btn btn-primary">I Accept</button>
   </div>
 </div>
+
   <main>
     <div class="container">
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
