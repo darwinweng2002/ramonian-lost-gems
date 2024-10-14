@@ -1,8 +1,4 @@
-
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 include '../config.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -87,29 +83,6 @@ if ($itemData['poster_id'] == $claimantId) {
     $isOwner = true;
 }
 
-// Check if the user has already sent a claim request for this item
-$sqlCheckClaim = "SELECT id FROM claimer WHERE item_id = ? AND user_id = ? LIMIT 1";
-$stmtCheckClaim = $conn->prepare($sqlCheckClaim);
-$stmtCheckClaim->bind_param('ii', $itemId, $claimantId);
-$stmtCheckClaim->execute();
-$stmtCheckClaim->store_result();
-
-if ($stmtCheckClaim->num_rows > 0) {
-    // User already sent a claim request for this item
-    echo "<script>
-        Swal.fire({
-            title: 'Claim Request Already Submitted!',
-            text: 'You already sent a claim request for this item.',
-            icon: 'info',
-            confirmButtonText: 'OK'
-        }).then(function() {
-            window.location.href = 'dashboard.php'; // Redirect to dashboard or wherever necessary
-        });
-    </script>";
-    exit();  // Stop further form processing
-}
-$stmtCheckClaim->close();
-
 // Process the form submission to save the claim request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_type = $_POST['id_type'];  // Capture the selected ID type
@@ -187,12 +160,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     }
 }
-
-// Close the database connection
-$stmtClaimant->close();
-$stmtItem->close();
-$conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
