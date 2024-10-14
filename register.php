@@ -316,7 +316,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   <div class="modal-content">
     <!-- Centered Logo -->
     <div class="logo-container">
-      <img src="path-to-your-logo.png" alt="Logo" class="logo-img">
+    <img src="/uploads/logo.png" alt="Logo" class="logo-img">
     </div>
     
     <h2>Terms and Conditions</h2>
