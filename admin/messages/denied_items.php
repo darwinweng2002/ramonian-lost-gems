@@ -5,7 +5,7 @@ include '../../config.php';
 $base_image_url = base_url . 'uploads/items/';  // Adjust this to your actual image directory
 
 // Initialize search term
-$searchTerm = isset($_POST['searchTerm']) ? $conn->real_escape_string($_POST['searchTerm']) : '';
+$searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
 // SQL query to fetch denied found items with their first image and add search functionality
 $sql_found = "
@@ -24,29 +24,8 @@ $sql_found = "
         OR c.name LIKE '%$searchTerm%')
     ORDER BY mh.id DESC";
 
+// Execute the query
 $result_found = $conn->query($sql_found);
-
-// If the request is AJAX, return the results in JSON format
-if (isset($_POST['ajax']) && $_POST['ajax'] == 1) {
-    $items = [];
-
-    while ($row = $result_found->fetch_assoc()) {
-        $items[] = [
-            'image' => !empty($row['image_path']) ? $base_image_url . htmlspecialchars($row['image_path']) : 'default-image.jpg',
-            'title' => htmlspecialchars($row['title']),
-            'category_name' => htmlspecialchars($row['category_name']),
-            'founder' => htmlspecialchars($row['founder']),
-            'landmark' => htmlspecialchars($row['landmark']),
-            'time_found' => htmlspecialchars($row['time_found']),
-            'contact' => htmlspecialchars($row['contact']),
-        ];
-    }
-
-    echo json_encode(['items' => $items]);
-    exit;
-}
-
-// Normal page load (for users who disable JavaScript or the initial page load)
 ?>
 
 <!DOCTYPE html>
@@ -55,10 +34,10 @@ if (isset($_POST['ajax']) && $_POST['ajax'] == 1) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <title>Denied Found Items</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -166,16 +145,16 @@ if (isset($_POST['ajax']) && $_POST['ajax'] == 1) {
 <section class="section">
     <div class="container">
         <h2>Denied Found Items</h2>
-
+        
         <!-- Search Form -->
-        <form class="search-form" method="POST" action="denied_found_items.php" id="search-form">
+        <form class="search-form" method="GET" action="denied_items.php">
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
-                <input type="text" name="search" id="searchTerm" class="search-input form-control" placeholder="Search items...">
+                <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
+                <button type="submit" class="search-button">Search</button>
             </div>
         </form>
 
-        <!-- Table to display the items -->
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>
@@ -189,57 +168,38 @@ if (isset($_POST['ajax']) && $_POST['ajax'] == 1) {
                         <th>Contact</th>
                     </tr>
                 </thead>
-                <tbody id="items-table-body">
-                    <!-- Results will be dynamically populated here via AJAX -->
+                <tbody>
+                    <?php
+                    // Display denied found items
+                    if ($result_found->num_rows > 0) {
+                        while ($row = $result_found->fetch_assoc()) {
+                            echo "<tr>";
+                            // Display the item image, with a fallback in case no image is available
+                            if (!empty($row['image_path'])) {
+                                $imageSrc = $base_image_url . htmlspecialchars($row['image_path']);
+                                echo "<td><img src='" . $imageSrc . "' alt='Item Image' class='item-image'></td>";
+                            } else {
+                                echo "<td><img src='default-image.jpg' alt='No Image' class='item-image'></td>";  // Provide a default image path
+                            }
+                            echo "<td>" . htmlspecialchars($row['title']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['founder']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['landmark']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['time_found']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['contact']) . "</td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        // If no denied found items are found
+                        echo "<tr><td colspan='7'>No denied found items found.</td></tr>";
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
     </div>
 </section>
 
-<script>
-$(document).ready(function() {
-    function fetchItems(query) {
-        $.ajax({
-            url: 'denied_found_items.php',
-            type: 'POST',
-            data: {searchTerm: query, ajax: 1}, // Pass search term and ajax=1 to indicate it's an AJAX request
-            dataType: 'json',
-            success: function(response) {
-                let items = response.items;
-                let tableBody = '';
-
-                if (items.length > 0) {
-                    $.each(items, function(index, item) {
-                        tableBody += '<tr>';
-                        tableBody += '<td><img src="' + item.image + '" alt="Item Image" class="item-image"></td>';
-                        tableBody += '<td>' + item.title + '</td>';
-                        tableBody += '<td>' + item.category_name + '</td>';
-                        tableBody += '<td>' + item.founder + '</td>';
-                        tableBody += '<td>' + item.landmark + '</td>';
-                        tableBody += '<td>' + item.time_found + '</td>';
-                        tableBody += '<td>' + item.contact + '</td>';
-                        tableBody += '</tr>';
-                    });
-                } else {
-                    tableBody = '<tr><td colspan="7" class="no-data">No denied found items found.</td></tr>';
-                }
-
-                $('#items-table-body').html(tableBody); // Update the table with new data
-            }
-        });
-    }
-
-    // Capture the search input in real-time and fetch the results via AJAX
-    $('#searchTerm').on('input', function() {
-        let query = $(this).val();
-        fetchItems(query); // Fetch results with the current input value
-    });
-
-    // Fetch all items initially when the page loads
-    fetchItems('');
-});
-</script>
 <?php
 // Close connections
 $result_found->free();
