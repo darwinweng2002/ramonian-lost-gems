@@ -173,71 +173,86 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- SweetAlert and CSS Integration -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        body {
-            font-family: 'Helvetica', Arial, sans-serif;
-            background-color: #f0f0f0;
-            padding-top: 70px;
-            margin: 0;
-        }
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border-radius: 10px;
-        }
-        h1, h3 {
-            color: #333;
-            text-align: center;
-            font-weight: normal;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.95rem;
-            color: #555;
-        }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            background-color: #fafafa;
-            color: #333;
-            transition: border-color 0.3s ease;
-        }
-        .form-group input:focus, .form-group textarea:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            cursor: pointer;
-            text-align: center;
-        }
-        .submit-btn:hover {
-            background-color: #0056b3;
-        }
-        .info-section p {
-            font-size: 1rem;
-            color: #444;
-            margin-bottom: 10px;
-        }
-        .info-section strong {
-            color: #000;
-        }
+     body {
+    font-family: 'Helvetica', Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding-top: 70px;
+    margin: 0;
+}
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+}
+h1, h3 {
+    color: #444;
+    text-align: center;
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+    color: #555;
+}
+.form-group input, .form-group textarea, .form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #fafafa;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+.form-group select {
+    appearance: none; /* Remove default dropdown arrow */
+    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"%3E%3Cpath fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+.form-group select:hover {
+    cursor: pointer;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+.info-section p {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 10px;
+}
+.info-section strong {
+    color: #000;
+}
+
     </style>
 </head>
 <body>
