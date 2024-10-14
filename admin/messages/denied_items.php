@@ -55,10 +55,10 @@ if (isset($_POST['ajax']) && $_POST['ajax'] == 1) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <title>Denied Found Items</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -166,16 +166,16 @@ if (isset($_POST['ajax']) && $_POST['ajax'] == 1) {
 <section class="section">
     <div class="container">
         <h2>Denied Found Items</h2>
-        
+
         <!-- Search Form -->
-        <form class="search-form" method="GET" action="denied_items.php">
+        <form class="search-form" method="POST" action="denied_found_items.php" id="search-form">
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
-                <input type="text" name="search" class="search-input form-control" placeholder="Search items..." value="<?= htmlspecialchars($searchTerm) ?>">
-                <button type="submit" class="search-button">Search</button>
+                <input type="text" name="search" id="searchTerm" class="search-input form-control" placeholder="Search items...">
             </div>
         </form>
 
+        <!-- Table to display the items -->
         <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead>
@@ -189,37 +189,14 @@ if (isset($_POST['ajax']) && $_POST['ajax'] == 1) {
                         <th>Contact</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php
-                    // Display denied found items
-                    if ($result_found->num_rows > 0) {
-                        while ($row = $result_found->fetch_assoc()) {
-                            echo "<tr>";
-                            // Display the item image, with a fallback in case no image is available
-                            if (!empty($row['image_path'])) {
-                                $imageSrc = $base_image_url . htmlspecialchars($row['image_path']);
-                                echo "<td><img src='" . $imageSrc . "' alt='Item Image' class='item-image'></td>";
-                            } else {
-                                echo "<td><img src='default-image.jpg' alt='No Image' class='item-image'></td>";  // Provide a default image path
-                            }
-                            echo "<td>" . htmlspecialchars($row['title']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['founder']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['landmark']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['time_found']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['contact']) . "</td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        // If no denied found items are found
-                        echo "<tr><td colspan='7'>No denied found items found.</td></tr>";
-                    }
-                    ?>
+                <tbody id="items-table-body">
+                    <!-- Results will be dynamically populated here via AJAX -->
                 </tbody>
             </table>
         </div>
     </div>
 </section>
+
 <script>
 $(document).ready(function() {
     function fetchItems(query) {
