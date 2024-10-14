@@ -1,17 +1,17 @@
 <?php
 include '../../config.php';
 
-// Initialize $result_missing as null to prevent undefined variable errors
+// Initialize $result_missing as null
 $result_missing = null;
 
 // Fetch denied missing items
 $sql_missing = "
-    SELECT mi.id, mi.title, mi.last_seen_location AS landmark, mi.contact, mi.owner AS founder, mi.time_missing AS time_found, c.name AS category_name
+    SELECT mi.id, mi.title, mi.last_seen_location AS landmark, mi.contact, mi.owner AS founder, mi.time_missing AS time_found, mi.description, c.name AS category_name
     FROM missing_items mi
     LEFT JOIN categories c ON mi.category_id = c.id
     WHERE mi.is_denied = 1"; // Fetch denied missing items
 
-// Execute the query and store the result in $result_missing
+// Execute the query
 $result_missing = $conn->query($sql_missing);
 
 // Check if query executed successfully
@@ -19,6 +19,13 @@ if (!$result_missing) {
     // Output the SQL error if the query failed
     echo "Error: " . $conn->error;
     exit;
+}
+
+// Debugging: Check if the query returned any results
+if ($result_missing->num_rows == 0) {
+    echo "No denied missing items found.";
+} else {
+    echo $result_missing->num_rows . " denied missing items found.";
 }
 ?>
 
