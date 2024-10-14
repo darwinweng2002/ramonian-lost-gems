@@ -155,7 +155,7 @@ $result = $conn->query($sql);
 <br>
 <section class="section">
     <div class="container">
-        <h2>Denied Missing Items</h2>
+        <h2>Denied Missing Item Reports</h2>
         
         <!-- Search Form -->
         <form class="search-form" method="GET" action="denied_missing_items.php">
