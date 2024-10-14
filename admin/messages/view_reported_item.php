@@ -243,6 +243,7 @@ if ($message_id > 0) {
                     echo "<option value='1' " . ($msgData['status'] == 1 ? 'selected' : '') . ">Published</option>";
                     echo "<option value='2' " . ($msgData['status'] == 2 ? 'selected' : '') . ">Claimed</option>";
                     echo "<option value='3' " . ($msgData['status'] == 3 ? 'selected' : '') . ">Surrendered</option>";
+                    echo "<option value='4' " . ($msgData['status'] == 4 ? 'selected' : '') . ">Denied</option>";
                     echo "</select>";
                     echo "<button class='btn btn-primary save-status-btn' data-id='" . $msgId . "'>Save Status</button>";
                     echo "</div>";
@@ -254,9 +255,12 @@ if ($message_id > 0) {
                         echo "<span class='badge bg-success px-3 rounded-pill'>Claimed</span>";
                     } elseif ($msgData['status'] == 3) {
                         echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
+                    } elseif ($msgData['status'] == 4) {
+                        echo "<span class='badge bg-danger px-3 rounded-pill'>Denied</span>";
                     } else {
                         echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
                     }
+                    
 
                     if (!empty($msgData['images'])) {
                         echo "<p><strong>Images:</strong></p>";
