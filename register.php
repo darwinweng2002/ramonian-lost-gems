@@ -293,15 +293,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 /* Modal Content Styling */
+/* Modal Content Styling - Reduced Size */
 .modal-content {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-  max-width: 600px;
-  width: 100%;
+  max-width: 500px; /* Set the maximum width to a smaller size */
+  width: 90%; /* This ensures it's responsive for smaller screens */
   text-align: center;
 }
+
 
 /* Justified Text for Terms and Conditions */
 .terms-text {
