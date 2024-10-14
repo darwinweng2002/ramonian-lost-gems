@@ -141,6 +141,15 @@ $result = $stmt->get_result();
         .table th, .table td {
             white-space: nowrap; /* Prevent text wrapping */
         }
+        .btn-disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    opacity: 0.6;
+}
     </style>
 </head>
 <body>
@@ -213,10 +222,9 @@ $result = $stmt->get_result();
                 echo "<p><strong>Category:</strong> " . $categoryName . "</p>";
                 echo "<p><strong>Contact:</strong> " . $contact . "</p>";
 
-                // Status dropdown
                 echo "<div class='form-group col-lg-12 col-md-12 col-sm-12 col-xs-12'>";
                 echo "<label for='status' class='control-label'>Status</label>";
-                echo "<select name='status' id='status-".$itemId."' class='form-select form-select-sm rounded-0' required='required'>";
+                echo "<select name='status' id='status-" . $itemId . "' class='form-select form-select-sm rounded-0' required='required'>";
                 echo "<option value='0' " . ($status == 0 ? 'selected' : '') . ">Pending</option>";
                 echo "<option value='1' " . ($status == 1 ? 'selected' : '') . ">Published</option>";
                 echo "<option value='2' " . ($status == 2 ? 'selected' : '') . ">Claimed</option>";
@@ -224,6 +232,12 @@ $result = $stmt->get_result();
                 echo "</select>";
                 echo "<button class='btn btn-primary save-status-btn' data-id='" . $itemId . "'>Save Status</button>";
                 echo "</div>";
+                
+                // Disable Deny button if status is not Pending (status = 0)
+                $denyButtonDisabled = ($status != 0) ? "disabled" : "";
+                $denyButtonClass = ($status != 0) ? "btn-disabled" : "deny-btn"; // Change the class to a disabled style if necessary
+                
+                echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny</button>";
 
                 echo "<dt class='text-muted'>Status</dt>";
                 if ($status == 1) {
