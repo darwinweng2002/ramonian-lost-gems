@@ -172,7 +172,7 @@ $result = $conn->query($sql);
                     <thead>
                         <tr>
                             <th>Item Image</th>
-                            <th>Item Title</th>
+                            <th>Item Name</th>
                             <th>Category</th>
                             <th>Owner</th>
                             <th>Last Seen Location</th>
