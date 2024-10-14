@@ -250,8 +250,58 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-  </style>
+/* Modal Background */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 10000; /* On top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  justify-content: center;
+  align-items: center;
+}
 
+/* Modal Content Box */
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.modal-content button {
+  margin-top: 20px;
+}
+
+  </style>
+<!-- Terms and Conditions Modal -->
+<div id="termsModal" class="modal">
+  <div class="modal-content">
+    <h2>Terms and Conditions</h2>
+    <p>
+      We assure you that the school ID you submit will be used solely for verification purposes, 
+      specifically to confirm that you are a legitimate student of PRMSU Iba Campus. 
+      All personal information will remain confidential and will not be shared with any third parties. 
+      Your data will be handled in strict compliance with applicable privacy laws and ethical guidelines 
+      to ensure the protection of your information.
+    </p>
+    <p>
+      By proceeding, you agree that the information you submit, including your school ID, will be used for
+      student validation and approval by the admin. Your account will be pending until verification is complete.
+    </p>
+    <button id="acceptTerms" class="btn btn-primary">I Accept</button>
+  </div>
+</div>
   <main>
     <div class="container">
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
@@ -647,6 +697,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             imagePreview.style.display = 'none'; // Hide the image
         }
     });
+    $(document).ready(function() {
+    // Show the terms modal on page load
+    var modal = $('#termsModal');
+    var registerBtn = $('#register-btn');
+    
+    modal.css('display', 'flex'); // Show the modal
+    
+    // Disable the register button until terms are accepted
+    registerBtn.prop('disabled', true);
+    
+    // When the user clicks "I Accept", hide the modal and enable the register button
+    $('#acceptTerms').on('click', function() {
+        modal.hide(); // Hide the modal
+        registerBtn.prop('disabled', false); // Enable the register button
+    });
+    
+    // You can also revalidate the form here to ensure everything is set.
+});
   </script>
 </body>
 </html>
