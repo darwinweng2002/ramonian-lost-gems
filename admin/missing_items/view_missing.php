@@ -18,20 +18,22 @@ if (isset($_GET['id'])) {
     $itemId = $_GET['id'];
 
 // SQL query to get missing item details and associated images
+// SQL query to fetch reported items, including status, user_member, and user_staff, excluding denied items
 $sql = "
-    SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, mi.owner, user_info.first_name, user_info.college, user_info.email, user_info.avatar, c.name AS category_name, imi.image_path
-    FROM missing_items mi
-    LEFT JOIN (
-        -- Fetch from user_member
-        SELECT id AS user_id, first_name, college, email, avatar FROM user_member
-        UNION
-        -- Fetch from user_staff
-        SELECT id AS user_id, first_name, department AS college, email, avatar FROM user_staff
-    ) user_info ON mi.user_id = user_info.user_id
-    LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
-    LEFT JOIN categories c ON mi.category_id = c.id
-    WHERE mi.id = ? AND mi.is_denied = 0  -- Add this condition to exclude denied items
-";
+SELECT mi.id, mi.title, mi.owner, user_info.first_name, user_info.college, mi.time_missing, mi.status, c.name AS category
+FROM missing_items mi
+LEFT JOIN (
+    -- Fetch data from user_member
+    SELECT id AS user_id, first_name, college, email FROM user_member
+    UNION
+    -- Fetch data from user_staff
+    SELECT id AS user_id, first_name, department AS college, email FROM user_staff
+) AS user_info ON mi.user_id = user_info.user_id
+LEFT JOIN categories c ON mi.category_id = c.id
+WHERE mi.is_denied = 0  -- Exclude denied items
+AND CONCAT_WS(' ', mi.title, user_info.first_name, user_info.college, c.name) LIKE '%$searchTerm%'
+ORDER BY mi.id DESC";
+
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
@@ -286,7 +288,7 @@ $result = $stmt->get_result();
                $denyButtonDisabled = ($status != 0) ? "disabled" : "";
                $denyButtonClass = ($status != 0) ? "btn-disabled" : "deny-btn"; // Change the class to a disabled style if necessary
                
-               echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny report</button>";
+               echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny Report</button>";
             }
         }
         ?>
