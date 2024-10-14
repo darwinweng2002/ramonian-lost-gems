@@ -247,11 +247,10 @@ $result = $stmt->get_result();
                     echo "<p>No images available.</p>";
                 }
 
-                $denyDisabled = $msgData['status'] != 0 ? 'disabled' : '';
-                $denyClass = $msgData['status'] != 0 ? 'disabled-btn' : 'deny-btn';
-                echo "<button class='" . $denyClass . "' data-id='" . htmlspecialchars($msgId) . "' " . $denyDisabled . ">Denied</button>";
-
+                //echo "<button class='publish-btn' data-id='" . htmlspecialchars($itemId) . "'>Publish</button>";
+                echo "<button class='deny-btn' data-id='" . htmlspecialchars($itemId) . "'>Deny</button>";
                 echo "</div>";
+            }
         } else {
             echo "<p>No details available for this item.</p>";
         }
