@@ -286,14 +286,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 /* Modal Content Styling - Reduced Size */
 .modal-content {
   background-color: white;
-  padding: 10px;
+  padding: 15px; /* Slightly reduce padding */
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-  max-width: 500px; /* Set the maximum width to a smaller size */
-  width: 100%; /* This ensures it's responsive for smaller screens */
+  max-width: 450px; /* Reduce max-width for a smaller modal */
+  width: 90%; /* Still responsive for smaller screens */
   text-align: center;
-  font-size: 13px;
 }
+
 
 
 /* Justified Text for Terms and Conditions */
