@@ -150,7 +150,7 @@ $result = $conn->query($sql);
         <table class="table table-striped table-bordered">
         <thead>
     <tr>
-        <th>Claim ID</th>
+       <!-- <th>Claim ID</th> -->
         <th>Item Name</th>
         <th>Claimant Name</th>
         <th>Description</th>
@@ -178,7 +178,7 @@ $result = $conn->query($sql);
         $idOutput = !empty($row['personal_id']) ? "<a href='$idFilePath' target='_blank'><img src='$idFilePath' alt='Personal ID' style='max-width: 100px; height: auto;'></a>" : "No ID uploaded";
         
         echo "<tr>";
-        echo "<td>" . htmlspecialchars($row['id']) . "</td>";
+        //echo "<td>" . htmlspecialchars($row['id']) . "</td>";
         echo "<td>" . htmlspecialchars($row['item_name']) . "</td>";
         echo "<td>" . htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) . "</td>";
         echo "<td>" . htmlspecialchars($row['item_description']) . "</td>";
