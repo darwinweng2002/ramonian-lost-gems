@@ -1,25 +1,25 @@
 <?php
 include '../../config.php';
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
-// Database connection
-$conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Initialize $result_missing as null to prevent undefined variable errors
+$result_missing = null;
 
 // Fetch denied missing items
-$sql = "
-    SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.contact, mi.owner, c.name AS category_name
+$sql_missing = "
+    SELECT mi.id, mi.title, mi.last_seen_location AS landmark, mi.contact, mi.owner AS founder, mi.time_missing AS time_found, c.name AS category_name
     FROM missing_items mi
     LEFT JOIN categories c ON mi.category_id = c.id
-    WHERE mi.is_denied = 1";  // Fetch only denied items
+    WHERE mi.is_denied = 1"; // Fetch denied missing items
 
-$result = $conn->query($sql);
+// Execute the query and store the result in $result_missing
+$result_missing = $conn->query($sql_missing);
+
+// Check if query executed successfully
+if (!$result_missing) {
+    // Output the SQL error if the query failed
+    echo "Error: " . $conn->error;
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
