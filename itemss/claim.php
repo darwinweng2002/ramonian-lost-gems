@@ -85,6 +85,14 @@ if ($itemData['poster_id'] == $claimantId) {
 
 // Process the form submission to save the claim request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id_type = $_POST['id_type'];  // Capture the selected ID type
+    $item_description = $_POST['item_description'];
+    $date_lost = $_POST['date_lost'];
+    $location_lost = $_POST['location_lost'];
+    $proof_of_ownership = $_FILES['proof_of_ownership']['name'];
+    $personal_id = $_FILES['personal_id']['name'];
+
+    // Check access restrictions
     if ($isGuest) {
         echo "<script>
             Swal.fire({
@@ -104,12 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
         </script>";
     } else {
-        $item_description = $_POST['item_description'];
-        $date_lost = $_POST['date_lost'];
-        $location_lost = $_POST['location_lost'];
-        $proof_of_ownership = $_FILES['proof_of_ownership']['name'];
-        $personal_id = $_FILES['personal_id']['name'];
-        
         // File Uploads (Move uploaded files to the appropriate folder)
         $target_dir = "../uploads/claims/";
         
@@ -125,14 +127,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             move_uploaded_file($_FILES["personal_id"]["tmp_name"], $target_file_id);
         }
 
-        // Insert the claim into the `claimer` table
+        // Insert the claim into the `claimer` table with the ID type
         $sql = "
-            INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, personal_id, status, claim_date) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+            INSERT INTO claimer (item_id, user_id, item_description, date_lost, location_lost, proof_of_ownership, personal_id, id_type, status, claim_date) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
         ";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param('iisssss', $itemId, $claimantId, $item_description, $date_lost, $location_lost, $proof_of_ownership, $personal_id);
+        $stmt->bind_param('iissssss', $itemId, $claimantId, $item_description, $date_lost, $location_lost, $proof_of_ownership, $personal_id, $id_type);
 
         if ($stmt->execute()) {
             echo "<script>
@@ -318,9 +320,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="file" id="proof_of_ownership" name="proof_of_ownership" accept="image/*,application/pdf">
         </div>
         <div class="form-group">
-            <label for="personal_id">Upload your ID (student card, national ID, etc.):</label>
+        <label for="id_type">Select ID Type:</label>
+        <select id="id_type" name="id_type" required>
+            <option value="">-- Select ID Type --</option>
+            <option value="Driver's License">Driver's License</option>
+            <option value="Passport">Passport</option>
+            <option value="National ID">National ID</option>
+            <option value="Student ID">Student ID</option>
+        </select>
+        </div>
+
+        <div class="form-group">
+            <label for="personal_id">Upload your ID:</label>
             <input type="file" id="personal_id" name="personal_id" accept="image/*,application/pdf" required>
         </div>
+
 
         <button type="submit" class="submit-btn">Submit Claim</button>
     </form>

@@ -21,7 +21,7 @@ $sql = "
            COALESCE(um.first_name, us.first_name) AS first_name, 
            COALESCE(um.last_name, us.last_name) AS last_name,
            c.item_description, c.date_lost, c.location_lost, 
-           c.proof_of_ownership, c.personal_id, 
+           c.proof_of_ownership, c.personal_id, c.id_type,  <!-- Add id_type here -->
            c.status, c.claim_date
     FROM claimer c
     LEFT JOIN message_history mh ON c.item_id = mh.id
@@ -30,6 +30,7 @@ $sql = "
     WHERE CONCAT_WS(' ', COALESCE(um.first_name, us.first_name), COALESCE(um.last_name, us.last_name), mh.title, c.item_description) LIKE '%$searchTerm%'
     ORDER BY c.claim_date DESC
 ";
+
 
 
 $result = $conn->query($sql);
@@ -147,58 +148,55 @@ $result = $conn->query($sql);
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>Claim ID</th>
-                    <th>Item Name</th>
-                    <th>Claimant Name</th>
-                    <th>Description</th>
-                    <th>Date Lost</th>
-                    <th>Location Lost</th>
-                    <th>Proof of Ownership</th>
-                    <th>School ID</th>
-                    <th>Claim Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        // File paths
-                        $proofFilePath = '/uploads/claims/' . htmlspecialchars($row['proof_of_ownership']);
-                        $idFilePath = '/uploads/claims/' . htmlspecialchars($row['personal_id']);
+        <thead>
+    <tr>
+        <th>Claim ID</th>
+        <th>Item Name</th>
+        <th>Claimant Name</th>
+        <th>Description</th>
+        <th>Date Lost</th>
+        <th>Location Lost</th>
+        <th>Proof of Ownership</th>
+        <th>ID Type</th> <!-- New Column for ID Type -->
+        <th>ID Document</th>
+        <th>Claim Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+</thead>
+<tbody>
+    <?php
+    while ($row = $result->fetch_assoc()) {
+        // File paths for ID uploads
+        $proofFilePath = '/uploads/claims/' . htmlspecialchars($row['proof_of_ownership']);
+        $idFilePath = '/uploads/claims/' . htmlspecialchars($row['personal_id']);
 
-                        // Display proof of ownership (image or link to PDF)
-                        $proofOutput = !empty($row['proof_of_ownership']) ? "<a href='$proofFilePath' target='_blank'><img src='$proofFilePath' alt='Proof of Ownership' style='max-width: 100px; height: auto;'></a>" : "No proof uploaded";
-                        
-                        // Display personal ID (image or link to PDF)
-                        $idOutput = !empty($row['personal_id']) ? "<a href='$idFilePath' target='_blank'><img src='$idFilePath' alt='Personal ID' style='max-width: 100px; height: auto;'></a>" : "No ID uploaded";
-
-                        echo "<tr id='claim-row-{$row['id']}'>";
-                        echo "<td>" . htmlspecialchars($row['id']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['item_name']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['item_description']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['date_lost']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['location_lost']) . "</td>";
-                        echo "<td>$proofOutput</td>";
-                        echo "<td>$idOutput</td>";
-                        echo "<td>" . htmlspecialchars($row['claim_date']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['status']) . "</td>";
-                        echo "<td>
-    <a href='https://ramonianlostgems.com/admin/claimer/claim_details.php?id=" . $row['id'] . "' class='btn btn-info btn-sm'>View</a>
-    <button class='btn btn-danger btn-sm delete-claim' data-claim-id='" . $row['id'] . "'>Delete</button>
-</td>";
-
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='12' class='no-data'>No claims found.</td></tr>";
-                }
-                ?>
-            </tbody>
+        // Output for proof of ownership
+        $proofOutput = !empty($row['proof_of_ownership']) ? "<a href='$proofFilePath' target='_blank'><img src='$proofFilePath' alt='Proof of Ownership' style='max-width: 100px; height: auto;'></a>" : "No proof uploaded";
+        
+        // Output for personal ID
+        $idOutput = !empty($row['personal_id']) ? "<a href='$idFilePath' target='_blank'><img src='$idFilePath' alt='Personal ID' style='max-width: 100px; height: auto;'></a>" : "No ID uploaded";
+        
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($row['id']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['item_name']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['item_description']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['date_lost']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['location_lost']) . "</td>";
+        echo "<td>$proofOutput</td>";
+        echo "<td>" . htmlspecialchars($row['id_type']) . "</td>";  // Show the selected ID type here
+        echo "<td>$idOutput</td>";
+        echo "<td>" . htmlspecialchars($row['claim_date']) . "</td>";
+        echo "<td>" . htmlspecialchars($row['status']) . "</td>";
+        echo "<td>
+            <a href='claim_details.php?id=" . $row['id'] . "' class='btn btn-info btn-sm'>View</a>
+            <button class='btn btn-danger btn-sm delete-claim' data-claim-id='" . $row['id'] . "'>Delete</button>
+        </td>";
+        echo "</tr>";
+    }
+    ?>
+</tbody>
         </table>
     </div>
 </div>
