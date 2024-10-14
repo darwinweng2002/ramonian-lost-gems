@@ -292,7 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   max-width: 500px; /* Set the maximum width to a smaller size */
   width: 90%; /* This ensures it's responsive for smaller screens */
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 
@@ -314,15 +314,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     <h2>Terms and Conditions</h2>
     <p class="terms-text">
-      We assure you that the school ID you submit will be used solely for verification purposes, 
-      specifically to confirm that you are a legitimate student of PRMSU Iba Campus. 
-      All personal information will remain confidential and will not be shared with any third parties. 
-      Your data will be handled in strict compliance with applicable privacy laws and ethical guidelines 
-      to ensure the protection of your information.
+    Welcome to Ramonian Lost Gems – Student Registration System
+    By registering for an account in the Ramonian Lost Gems platform, you agree to the following terms and conditions outlined below. This system is designed to securely verify and authenticate legitimate students of PRMSU Iba Campus.
     </p>
     <p class="terms-text">
-      By proceeding, you agree that the information you submit, including your school ID, will be used for
-      student validation and approval by the admin. Your account will be pending until verification is complete.
+    The personal information and identification documents you submit, including your School ID, will be used exclusively for student validation and account approval purposes. We are committed to protecting your privacy and ensuring that all data is handled in compliance with applicable privacy laws. Please read the following terms carefully before proceeding with the registration.
     </p>
     <button id="acceptTerms" class="btn btn-primary">I Accept</button>
   </div>
