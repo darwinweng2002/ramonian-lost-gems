@@ -158,6 +158,34 @@ if ($message_id > 0) {
                 overflow-x: auto;
             }
         }
+        .deny-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+}
+
+.deny-btn:hover {
+    background-color: #c82333;
+}
+
+.disabled-btn {
+    background-color: #d3d3d3;
+    color: #999;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: not-allowed;
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+    pointer-events: none; /* Disable click events */
+}
 
     </style>
 </head>
@@ -267,8 +295,11 @@ if ($message_id > 0) {
                         echo "</div>";
                     }
 
+                    $denyDisabled = $msgData['status'] != 0 ? 'disabled' : '';
+                    $denyClass = $msgData['status'] != 0 ? 'disabled-btn' : 'deny-btn';
+                    
                     echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "' " . ($msgData['status'] != 1 ? 'disabled title=\"Status is not set to Published\"' : '') . ">Publish</button>";
-                    echo "<button class='deny-btn' data-id='" . htmlspecialchars($msgId) . "'>Denied</button>";
+                    echo "<button class='" . $denyClass . "' data-id='" . htmlspecialchars($msgId) . "' " . $denyDisabled . ">Denied</button>";
 
                     echo "</div>";
                 }
