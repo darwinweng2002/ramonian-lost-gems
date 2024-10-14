@@ -72,20 +72,23 @@ $result = $conn->query($sql);
 
         <?php if ($result->num_rows > 0) { ?>
             <table>
-                <thead>
-                    <tr>
-                        <th>Item Title</th>
-                        <th>Category</th>
-                        <th>Owner</th>
-                        <th>Last Seen Location</th>
-                        <th>Time Missing</th>
-                        <th>Contact</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    while ($row = $result->fetch_assoc()) {
+            <thead>
+                <tr>
+                    <th>Item Title</th>
+                    <th>Category</th>
+                    <th>Owner</th>
+                    <th>Last Seen Location</th>
+                    <th>Time Missing</th>
+                    <th>Contact</th>
+                    <th>Description</th>
+                    <th>Action</th> <!-- Add Action column -->
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                // Display denied missing items
+                if ($result_missing->num_rows > 0) {
+                    while ($row = $result_missing->fetch_assoc()) {
                         echo "<tr>";
                         echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
@@ -94,16 +97,60 @@ $result = $conn->query($sql);
                         echo "<td>" . htmlspecialchars($row['time_missing']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['contact']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['description']) . "</td>";
+                        echo "<td><button class='undo-btn' data-id='" . htmlspecialchars($row['id']) . "'>Undo Deny</button></td>"; // Add Undo button
                         echo "</tr>";
                     }
-                    ?>
-                </tbody>
-            </table>
+                } else {
+                    echo "<tr><td colspan='8'>No denied missing items found.</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
         <?php } else { ?>
             <p class="no-items">No denied missing items found.</p>
         <?php } ?>
 
     </div>
+        <!-- Include jQuery and SweetAlert2 for the prompt -->
+        <script src="../js/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    $(document).ready(function() {
+        // Handle Undo Deny action
+        $('.undo-btn').on('click', function() {
+            var itemId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to undo deny this missing item?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, undo deny it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: 'undo.php', // Point to the new endpoint for undoing the deny
+                        type: 'POST',
+                        data: { id: itemId },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Success!', 'The item has been moved back to the active missing items.', 'success')
+                                .then(() => location.reload());  // Reload the page to reflect the change
+                            } else {
+                                Swal.fire('Error!', response.error, 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error!', 'An error occurred: ' + error, 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+    </script>
 </body>
 </html>
 
