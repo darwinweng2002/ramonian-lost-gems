@@ -1,28 +1,25 @@
 <?php
 include '../../config.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $itemId = isset($_POST['id']) ? intval($_POST['id']) : 0;
+// Get the missing item ID from the POST request
+$missing_item_id = isset($_POST['id']) ? intval($_POST['id']) : 0;
 
-    if ($itemId > 0) {
-        // Mark the missing item as denied by updating the "is_denied" column
-        $sql = "UPDATE missing_items SET is_denied = 1 WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param('i', $itemId);
+$response = ['success' => false, 'error' => ''];
 
-        if ($stmt->execute()) {
-            // Return a success response
-            echo json_encode(['success' => true]);
-        } else {
-            // Return an error response if the query fails
-            echo json_encode(['success' => false, 'error' => 'Failed to deny the item.']);
-        }
-
-        $stmt->close();
+if ($missing_item_id > 0) {
+    // Update the is_denied column to 1 (denied) for the missing item
+    $stmt = $conn->prepare("UPDATE missing_items SET is_denied = 1 WHERE id = ?");
+    $stmt->bind_param("i", $missing_item_id);
+    if ($stmt->execute()) {
+        $response['success'] = true;
     } else {
-        echo json_encode(['success' => false, 'error' => 'Invalid item ID.']);
+        $response['error'] = "Failed to update the item status.";
     }
+    $stmt->close();
+} else {
+    $response['error'] = "Invalid missing item ID.";
 }
 
-$conn->close();
+// Return JSON response
+echo json_encode($response);
 ?>

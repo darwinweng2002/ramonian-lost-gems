@@ -324,7 +324,7 @@ if (isset($_GET['id'])) {
         });
 
         $(document).ready(function() {
-    // Deny button functionality
+    // Deny button functionality for missing items
     $('.deny-btn').on('click', function() {
         var itemId = $(this).data('id');
         Swal.fire({
@@ -338,14 +338,17 @@ if (isset($_GET['id'])) {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: 'deny_item.php',  // Ensure this URL points to the correct endpoint
+                    url: 'deny_item.php', // Point to the deny endpoint
                     type: 'POST',
                     data: { id: itemId },
                     dataType: 'json',
                     success: function(response) {
                         if (response.success) {
                             Swal.fire('Denied!', 'The missing item has been denied.', 'success')
-                                .then(() => location.reload());  // Reload the page to reflect the change
+                                .then(() => {
+                                    // Remove the item from the page and reload the page
+                                    location.reload(); // This ensures the denied item is no longer visible
+                                });
                         } else {
                             Swal.fire('Error!', 'Failed to deny the missing item: ' + response.error, 'error');
                         }
@@ -355,6 +358,7 @@ if (isset($_GET['id'])) {
                     }
                 });
             }
+            
         });
     });
 });
