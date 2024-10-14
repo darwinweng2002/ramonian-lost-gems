@@ -249,8 +249,6 @@ $result = $stmt->get_result();
 
                 $denyDisabled = $msgData['status'] != 0 ? 'disabled' : '';
                 $denyClass = $msgData['status'] != 0 ? 'disabled-btn' : 'deny-btn';
-                
-                echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "' " . ($msgData['status'] != 1 ? 'disabled title=\"Status is not set to Published\"' : '') . ">Publish</button>";
                 echo "<button class='" . $denyClass . "' data-id='" . htmlspecialchars($msgId) . "' " . $denyDisabled . ">Denied</button>";
 
                 echo "</div>";
