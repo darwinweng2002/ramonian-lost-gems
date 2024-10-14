@@ -13,6 +13,7 @@ if ($conn->connect_error) {
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
 // SQL query to fetch reported items, including status, user_member, and user_staff
+// SQL query to fetch reported items, including status, user_member, and user_staff, excluding denied items
 $sql = "
 SELECT mi.id, mi.title, mi.owner, user_info.first_name, user_info.college, mi.time_missing, mi.status, c.name AS category
 FROM missing_items mi
@@ -24,8 +25,10 @@ LEFT JOIN (
     SELECT id AS user_id, first_name, department AS college, email FROM user_staff
 ) AS user_info ON mi.user_id = user_info.user_id
 LEFT JOIN categories c ON mi.category_id = c.id
-WHERE CONCAT_WS(' ', mi.title, user_info.first_name, user_info.college, c.name) LIKE '%$searchTerm%'
+WHERE mi.is_denied = 0  -- Exclude denied items
+AND CONCAT_WS(' ', mi.title, user_info.first_name, user_info.college, c.name) LIKE '%$searchTerm%'
 ORDER BY mi.id DESC";
+
 
 $result = $conn->query($sql);
 ?>
