@@ -190,9 +190,9 @@ $result = $conn->query($sql);
         echo "<td>" . htmlspecialchars($row['claim_date']) . "</td>";
         echo "<td>" . htmlspecialchars($row['status']) . "</td>";
         echo "<td>
-            <a href='claim_details.php?id=" . $row['id'] . "' class='btn btn-info btn-sm'>View</a>
-            <button class='btn btn-danger btn-sm delete-claim' data-claim-id='" . $row['id'] . "'>Delete</button>
-        </td>";
+             <a href='https://ramonianlostgems.com/admin/claimer/claim_details.php?id=" . $row['id'] . "' class='btn btn-info btn-sm'>View</a>
+    <button class='btn btn-danger btn-sm delete-claim' data-claim-id='" . $row['id'] . "'>Delete</button>
+</td>";
         echo "</tr>";
     }
     ?>
