@@ -248,6 +248,8 @@ if ($message_id > 0) {
                     echo "<button class='btn btn-primary save-status-btn' data-id='" . $msgId . "'>Save Status</button>";
                     echo "</div>";
 
+                
+                    // Add this in the section where the status badge is displayed
                     echo "<dt class='text-muted'>Status</dt>";
                     if ($msgData['status'] == 1) {
                         echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
@@ -255,11 +257,13 @@ if ($message_id > 0) {
                         echo "<span class='badge bg-success px-3 rounded-pill'>Claimed</span>";
                     } elseif ($msgData['status'] == 3) {
                         echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
-                    } elseif ($msgData['status'] == 4) {
+                    } elseif ($msgData['status'] == 4) {  // Add this case for 'Denied'
                         echo "<span class='badge bg-danger px-3 rounded-pill'>Denied</span>";
                     } else {
                         echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
                     }
+                
+                    
                     
 
                     if (!empty($msgData['images'])) {
@@ -363,42 +367,43 @@ if ($message_id > 0) {
 
         // SweetAlert for status update confirmation
         $('.save-status-btn').on('click', function() {
-            var messageId = $(this).data('id');
-            var selectedStatus = $('#status-' + messageId).val(); // Get the selected status
+    var messageId = $(this).data('id');
+    var selectedStatus = $('#status-' + messageId).val(); // Get the selected status
 
-            Swal.fire({
-                title: 'Update Status?',
-                text: "Are you sure you want to update the status?",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, update it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: 'update_status.php',
-                        type: 'POST',
-                        data: {
-                            id: messageId,
-                            status: selectedStatus
-                        },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire('Updated!', 'Status has been updated successfully.', 'success');
-                                location.reload();
-                            } else {
-                                Swal.fire('Error!', response.error, 'error');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            Swal.fire('Error!', 'An error occurred: ' + error, 'error');
-                        }
-                    });
+    Swal.fire({
+        title: 'Update Status?',
+        text: "Are you sure you want to update the status?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, update it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: 'update_status.php',
+                type: 'POST',
+                data: {
+                    id: messageId,
+                    status: selectedStatus
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire('Updated!', 'Status has been updated successfully.', 'success');
+                        location.reload();  // Reload the page to reflect the new status
+                    } else {
+                        Swal.fire('Error!', response.error, 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire('Error!', 'An error occurred: ' + error, 'error');
                 }
             });
-        });
+        }
+    });
+});
+
 
       });
       $(document).on('change', '.form-select', function() {
