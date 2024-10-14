@@ -310,7 +310,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 button {
-  width: 50%; /* Make buttons take the full width of the container */
+  width: 100%; /* Make buttons take the full width of the container */
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
