@@ -338,7 +338,7 @@ h1, h3 {
         <div class="form-group">
     <label for="id_type">Select ID Type:</label>
     <select id="id_type" name="id_type" required>
-        <option value="">-- Select ID Type --</option>
+        <option value="">Select ID Type</option>
         <option value="Driver's License">Driver's License</option>
         <option value="Passport">Passport</option>
         <option value="National ID">National ID</option>
