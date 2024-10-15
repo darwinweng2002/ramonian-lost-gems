@@ -1,18 +1,4 @@
-<style>
-  .sidebar-nav .nav-content a i {
-    font-size: .9rem;
-  }
-  /* Style to show dropdown on hover */
-  .nav-item.dropdown:hover .dropdown-menu {
-    display: block;
-  }
-  .dropdown-menu {
-    padding: 0;
-  }
-  .sidebar-nav .nav-content a i {
-    font-size: .9rem;
-}
-</style>
+
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
 
