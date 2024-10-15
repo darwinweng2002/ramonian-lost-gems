@@ -94,10 +94,10 @@
     <!-- Dropdown Menu for sub-links -->
     <ul class="dropdown-menu" aria-labelledby="deniedReportsDropdown">
       <li>
-        <a class="dropdown-item" href="https://ramonianlostgems.com/admin/messages/denied_found_items.php">Denied Found Items</a>
+        <a class="dropdown-item" href="https://ramonianlostgems.com/admin/messages/denied_items.php">Denied Found Items</a>
       </li>
       <li>
-        <a class="dropdown-item" href="https://ramonianlostgems.com/admin/missing_items/denied_missing_items.php">Denied Missing Items</a>
+        <a class="dropdown-item" href="https://ramonianlostgems.com/admin/missing_items/denied_missing.php">Denied Missing Items</a>
       </li>
     </ul>
   </li>
