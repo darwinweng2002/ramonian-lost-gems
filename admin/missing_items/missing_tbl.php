@@ -156,6 +156,10 @@ $result = $conn->query($sql);
         .badge-published { background-color: #007bff; }
         .badge-claimed { background-color: #28a745; }
         .badge-surrendered { background-color: #6c757d; }
+        .badge-denied {
+    background-color: #dc3545; /* Red color to indicate Denied status */
+}
+
         /* Custom scrollbar styling */
         .table-responsive::-webkit-scrollbar {
             height: 10px;
@@ -217,23 +221,27 @@ $result = $conn->query($sql);
                                 
                                 <!-- Display status as a badge -->
                                 <td>
-                                    <?php
-                                    switch ($row['status']) {
-                                        case 1:
-                                            echo "<span class='badge badge-published'>Published</span>";
-                                            break;
-                                        case 2:
-                                            echo "<span class='badge badge-claimed'>Claimed</span>";
-                                            break;
-                                        case 3:
-                                            echo "<span class='badge badge-surrendered'>Surrendered</span>";
-                                            break;
-                                        default:
-                                            echo "<span class='badge badge-pending'>Pending</span>";
-                                            break;
-                                    }
-                                    ?>
-                                </td>
+                                <?php
+                                switch ($row['status']) {
+                                    case 1:
+                                        echo "<span class='badge badge-published'>Published</span>";
+                                        break;
+                                    case 2:
+                                        echo "<span class='badge badge-claimed'>Claimed</span>";
+                                        break;
+                                    case 3:
+                                        echo "<span class='badge badge-surrendered'>Surrendered</span>";
+                                        break;
+                                    case 4:
+                                        echo "<span class='badge badge-denied'>Denied</span>"; // New Denied Status
+                                        break;
+                                    default:
+                                        echo "<span class='badge badge-pending'>Pending</span>";
+                                        break;
+                                }
+                                ?>
+                            </td>
+
 
                                 <td>
                                     <div class="d-flex justify-content-center">
