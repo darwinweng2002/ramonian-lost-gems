@@ -37,13 +37,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $founder = $_POST['founder'];
 
     if ($category_id == 'add_new' && !empty($new_category)) {
-        // Insert new category with user_id to make it private
-        $stmt = $conn->prepare("INSERT INTO categories (name, user_id, status) VALUES (?, ?, 0)"); // Set status to 0 by default (unpublished)
-        $stmt->bind_param("si", $new_category, $userId);
+        // Determine if the user is a guest (no user_id means guest)
+        $is_guest = !isset($_SESSION['user_id']) ? 1 : 0;
+    
+        // Insert new category with user_id to make it private or set as guest category
+        $stmt = $conn->prepare("INSERT INTO categories (name, user_id, is_guest, status) VALUES (?, ?, ?, 0)");
+        $stmt->bind_param("sii", $new_category, $userId, $is_guest); // Add 'is_guest' flag
         $stmt->execute();
         $category_id = $stmt->insert_id; // Use the new category ID
         $stmt->close();
-}
+    }
+    
     
 
     // Proceed to save the rest of the information
@@ -55,17 +59,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         mkdir($uploadDir, 0777, true); // Create directory if it doesn't exist
     }
 
-    // Insert the report message into the database
-    $stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, time_found, contact, founder, category_id, status) 
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("issssssis", $userId, $message, $landmark, $title, $timeFound, $contact, $founder, $category_id, $status);
-    if ($stmt->execute()) {
-        $messageId = $stmt->insert_id; // Get the ID of the newly inserted message
-    } else {
-        // Handle insertion error
-        $error = "Failed to submit the report: " . $stmt->error;
+// Insert the report message into the database
+$stmt = $conn->prepare("INSERT INTO message_history (user_id, message, landmark, title, time_found, contact, founder, category_id, status) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("issssssis", $userId, $message, $landmark, $title, $timeFound, $contact, $founder, $category_id, $status);
+
+if ($stmt->execute()) {
+    $messageId = $stmt->insert_id; // Get the ID of the newly inserted message
+
+    // Insert this block after successful report submission
+    if ($is_guest == 1 && isset($category_id)) {
+        $stmt = $conn->prepare("UPDATE categories SET status = 0 WHERE id = ? AND is_guest = 1");
+        $stmt->bind_param("i", $category_id); // Mark the category as hidden from other guests
+        $stmt->execute();
+        $stmt->close();
     }
-    $stmt->close();
+
+} else {
+    // Handle insertion error
+    $error = "Failed to submit the report: " . $stmt->error;
+}
+$stmt->close();
+
 
     if (count($_FILES['images']['tmp_name']) < 1 || count($_FILES['images']['tmp_name']) > 6) {
         $error = "You must upload between 1 to 6 images.";
@@ -91,14 +106,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins, and you must surrender the item to the SSG office located at OSA Building 3rd floor before it is published for public viewing.";
 }
 $categories = [];
-$stmt = $conn->prepare("SELECT id, name FROM categories WHERE user_id = ? OR user_id IS NULL");
-$stmt->bind_param("i", $userId); // Fetch both user-specific categories and admin-added ones
+if (!isset($_SESSION['user_id'])) {
+    // If it's a guest, only show categories that are admin-added (user_id IS NULL) or guest categories they added during this session
+    $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR (user_id = ? AND is_guest = 1))");
+    $stmt->bind_param("i", $userId); // Use session user ID to fetch guest-added categories
+} else {
+    // For logged-in users, show their own categories and admin categories
+    $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR user_id = ? OR is_guest = 1)");
+    $stmt->bind_param("i", $userId); // Fetch user-specific and admin-added categories
+}
 $stmt->execute();
 $stmt->bind_result($categoryId, $categoryName);
 while ($stmt->fetch()) {
     $categories[] = ['id' => $categoryId, 'name' => $categoryName];
 }
 $stmt->close();
+
 // Retrieve user information based on user type
 if (isset($userId)) {
     if ($userType === 'user_member') {
