@@ -581,35 +581,39 @@ if (!$is_guest) {
 
                     <td><?= htmlspecialchars($message['time_found']) ?></td>
                     <td>
-                        <?php
-                        $statusClass = '';
-                        $statusText = '';
-                        $showNotification = false;
+                    <?php
+                    $statusClass = '';
+                    $statusText = '';
+                    $showNotification = false;
 
-                        if ($message['status'] == 0) {
-                            $statusClass = 'badge-pending';
-                            $statusText = 'Pending';
-                        } elseif ($message['status'] == 1) {
-                            $statusClass = 'badge-published';
-                            $statusText = 'Published';
-                        } elseif ($message['status'] == 2) {
-                            $statusClass = 'badge-claimed';
-                            $statusText = 'Claimed';
-                        } elseif ($message['status'] == 3) {
-                            $statusClass = 'badge-surrendered';
-                            $statusText = 'Surrendered';
-                            $showNotification = true; // Show notification for surrendered items
-                        }
-                        ?>
-                        <span class="badge-status <?= $statusClass ?>" style="display: inline-flex; align-items: center;">
-                            <?= htmlspecialchars($statusText) ?>
-                            <?php if ($showNotification): ?>
-                                <i class="bi bi-bell-fill notification-icon"
-                                   onclick="showSurrenderNotification('<?= htmlspecialchars($message['title']) ?>')"
-                                   style="cursor: pointer; color: #ffc107; margin-left: 5px; display: inline-flex; align-items: center;"></i>
-                            <?php endif; ?>
-                        </span>
-                    </td>
+                    // Define status classes and text, including the new "Denied" status
+                    if ($message['status'] == 0) {
+                        $statusClass = 'badge-pending';
+                        $statusText = 'Pending';
+                    } elseif ($message['status'] == 1) {
+                        $statusClass = 'badge-published';
+                        $statusText = 'Published';
+                    } elseif ($message['status'] == 2) {
+                        $statusClass = 'badge-claimed';
+                        $statusText = 'Claimed';
+                    } elseif ($message['status'] == 3) {
+                        $statusClass = 'badge-surrendered';
+                        $statusText = 'Surrendered';
+                        $showNotification = true; // Show notification for surrendered items
+                    } elseif ($message['status'] == 4) { // New Denied status
+                        $statusClass = 'badge-danger';
+                        $statusText = 'Denied';
+                    }
+                    ?>
+                    <span class="badge-status <?= $statusClass ?>" style="display: inline-flex; align-items: center;">
+                        <?= htmlspecialchars($statusText) ?>
+                        <?php if ($showNotification): ?>
+                            <i class="bi bi-bell-fill notification-icon"
+                            onclick="showSurrenderNotification('<?= htmlspecialchars($message['title']) ?>')"
+                            style="cursor: pointer; color: #ffc107; margin-left: 5px; display: inline-flex; align-items: center;"></i>
+                        <?php endif; ?>
+                    </span>
+                </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
