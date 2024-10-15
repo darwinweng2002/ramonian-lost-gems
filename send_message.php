@@ -1,8 +1,8 @@
 <?php
+// Enable error reporting for debugging
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
 include('config.php'); // Include your DB connection
 
 // Start session if not already started
@@ -14,7 +14,6 @@ if (session_status() == PHP_SESSION_NONE) {
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
     die("User not logged in");
 }
-$userType = $_SESSION['user_type'] ?? 'guest'; // Default to 'guest' if user_type is not set
 
 // Get the user ID and user type
 if (isset($_SESSION['user_id'])) {
@@ -68,16 +67,13 @@ $stmt->bind_param("issssssis", $userId, $message, $landmark, $title, $timeFound,
 if ($stmt->execute()) {
     $messageId = $stmt->insert_id; // Get the ID of the newly inserted message
 
+    // Insert this block after successful report submission
     if ($is_guest == 1 && isset($category_id)) {
         $stmt = $conn->prepare("UPDATE categories SET status = 0 WHERE id = ? AND is_guest = 1");
         $stmt->bind_param("i", $category_id); // Mark the category as hidden from other guests
         $stmt->execute();
         $stmt->close();
     }
-    
-    
-    
-    
 
 } else {
     // Handle insertion error
@@ -110,26 +106,21 @@ $stmt->close();
     $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins, and you must surrender the item to the SSG office located at OSA Building 3rd floor before it is published for public viewing.";
 }
 $categories = [];
-
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] === 'guest') {
-    // Show only admin categories or categories added by this guest user during the session
-    $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR (user_id = ? AND is_guest = 1)) AND status = 1");
-    $stmt->bind_param("s", $_SESSION['user_id']); // Use session ID for guests
+if (!isset($_SESSION['user_id'])) {
+    // If it's a guest, only show categories that are admin-added (user_id IS NULL) or guest categories they added during this session
+    $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR (user_id = ? AND is_guest = 1))");
+    $stmt->bind_param("i", $userId); // Use session user ID to fetch guest-added categories
 } else {
-    // For logged-in users, show their own categories, admin categories, and published guest categories
-    $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR user_id = ? OR (is_guest = 1 AND status = 1))");
-    $stmt->bind_param("i", $userId);
+    // For logged-in users, show their own categories and admin categories
+    $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR user_id = ? OR is_guest = 1)");
+    $stmt->bind_param("i", $userId); // Fetch user-specific and admin-added categories
 }
-
-
 $stmt->execute();
 $stmt->bind_result($categoryId, $categoryName);
 while ($stmt->fetch()) {
     $categories[] = ['id' => $categoryId, 'name' => $categoryName];
 }
 $stmt->close();
-
-
 
 // Retrieve user information based on user type
 if (isset($userId)) {
