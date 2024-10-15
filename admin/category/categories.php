@@ -3,7 +3,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-include('config.php'); // Include your DB connection
+include '../../config.php';
 
 // Add new category logic
 if (isset($_POST['add_category'])) {
