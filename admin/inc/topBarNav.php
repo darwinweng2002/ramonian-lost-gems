@@ -1,3 +1,23 @@
+<style>
+  .nav-profile:hover {
+    background-color: transparent !important; /* Removes the hover background color */
+}
+
+.nav-profile .dropdown-menu.profile {
+    background-color: #f8f9fa !important; /* Set a consistent background for the dropdown */
+    border-color: #ddd;
+}
+
+.nav-profile .dropdown-menu.profile h6, 
+.nav-profile .dropdown-menu.profile span {
+    color: #333 !important; /* Ensures the username and role text are always visible */
+}
+
+.nav-profile .dropdown-menu.profile .dropdown-item:hover {
+    background-color: #e0e0e0 !important; /* Sets a soft hover background color for dropdown items */
+}
+
+</style>
 <!-- ======= Header ======= -->
 <header id="header" class="header fixed-top d-flex align-items-center">
 
