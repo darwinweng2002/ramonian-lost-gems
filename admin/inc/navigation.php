@@ -84,10 +84,19 @@
       </svg>
       <span>Denied Item Reports</span>
       <?php 
-      $denied_count = $conn->query("SELECT COUNT(*) AS count FROM `message_history` WHERE `status` = 'denied'")->fetch_assoc();
+      // Query to get the total count of denied items from both message_history and missing_items tables
+      $denied_count_query = "
+        SELECT SUM(denied_count) AS total_denied FROM (
+          SELECT COUNT(*) AS denied_count FROM `message_history` WHERE `status` = 'denied'
+          UNION ALL
+          SELECT COUNT(*) AS denied_count FROM `missing_items` WHERE `status` = 'denied'
+        ) as denied_items";
+
+      $denied_count_result = $conn->query($denied_count_query)->fetch_assoc();
+      $total_denied = $denied_count_result['total_denied'];
       ?>
-      <?php if($denied_count['count'] > 0): ?>
-        <span class="badge rounded-pill bg-danger text-light ms-4"><?= $denied_count['count'] ?></span>
+      <?php if($total_denied > 0): ?>
+        <span class="badge rounded-pill bg-danger text-light ms-4"><?= $total_denied ?></span>
       <?php endif; ?>
     </a>
 
@@ -100,7 +109,8 @@
         <a class="dropdown-item" href="https://ramonianlostgems.com/admin/missing_items/denied_missing.php">Denied Missing Items</a>
       </li>
     </ul>
-  </li>
+</li>
+
   <li class="nav-item">
     <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="https://ramonianlostgems.com/admin/user_accounts/view_users.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users">
