@@ -37,7 +37,14 @@ if (isset($_GET['category_id'])) {
 
 // Fetch categories for dropdown
 // Fetch categories for dropdown, show only published categories or admin-added categories
-$categoriesResult = $conn->query("SELECT id, name FROM categories WHERE (user_id IS NULL OR status = 1)");
+$categoriesResult = $conn->query("
+    SELECT DISTINCT c.id, c.name 
+    FROM categories c
+    LEFT JOIN message_history mh ON c.id = mh.category_id 
+    WHERE (c.user_id IS NULL) 
+    OR (c.status = 1 AND mh.status = 1)
+");
+
 
 
 // SQL query for found items, including status
