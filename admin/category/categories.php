@@ -5,24 +5,15 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 include '../../config.php';
 
-$successMessage = '';
-$errorMessage = '';
-
 // Add new category logic
 if (isset($_POST['add_category'])) {
     $newCategory = $_POST['new_category'];
     if (!empty($newCategory)) {
         $stmt = $conn->prepare("INSERT INTO categories (name) VALUES (?)");
         $stmt->bind_param("s", $newCategory);
-        if ($stmt->execute()) {
-            $successMessage = "Category added successfully!";
-        } else {
-            $errorMessage = "Failed to add category: " . $stmt->error;
-        }
+        $stmt->execute();
         $stmt->close();
-        // Redirect to the same page after submission
-        header("Location: ".$_SERVER['PHP_SELF']);
-        exit; // Make sure to stop further execution after redirect
+        $successMessage = "Category added successfully!";
     } else {
         $errorMessage = "Category name cannot be empty!";
     }
@@ -35,15 +26,9 @@ if (isset($_POST['update_category'])) {
     if (!empty($updatedName)) {
         $stmt = $conn->prepare("UPDATE categories SET name = ? WHERE id = ?");
         $stmt->bind_param("si", $updatedName, $categoryId);
-        if ($stmt->execute()) {
-            $successMessage = "Category updated successfully!";
-        } else {
-            $errorMessage = "Failed to update category: " . $stmt->error;
-        }
+        $stmt->execute();
         $stmt->close();
-        // Redirect to the same page after submission
-        header("Location: ".$_SERVER['PHP_SELF']);
-        exit;
+        $successMessage = "Category updated successfully!";
     } else {
         $errorMessage = "Category name cannot be empty!";
     }
@@ -54,15 +39,9 @@ if (isset($_POST['delete_category'])) {
     $categoryId = $_POST['category_id'];
     $stmt = $conn->prepare("DELETE FROM categories WHERE id = ?");
     $stmt->bind_param("i", $categoryId);
-    if ($stmt->execute()) {
-        $successMessage = "Category deleted successfully!";
-    } else {
-        $errorMessage = "Failed to delete category: " . $stmt->error;
-    }
+    $stmt->execute();
     $stmt->close();
-    // Redirect to the same page after submission
-    header("Location: ".$_SERVER['PHP_SELF']);
-    exit;
+    $successMessage = "Category deleted successfully!";
 }
 
 // Fetch all categories
