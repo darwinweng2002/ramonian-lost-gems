@@ -2,13 +2,20 @@
   .sidebar-nav .nav-content a i {
     font-size: .9rem;
   }
-  /* Style to show dropdown on hover */
-  .nav-item.dropdown:hover .dropdown-menu {
-    display: block;
-  }
-  .dropdown-menu {
-    padding: 0;
-  }
+  .nav-item .dropdown-menu {
+    position: absolute;
+    top: 100%;  /* Position below the trigger element */
+    left: 0;
+    z-index: 1050;  /* Make sure it appears on top */
+    display: none;  /* Hide the dropdown initially */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);  /* Add shadow for visibility */
+}
+
+/* Show dropdown when hovered or clicked */
+.nav-item.dropdown:hover .dropdown-menu,
+.nav-item .dropdown-menu.show {
+    display: block;  /* Display on hover or when active */
+}
 </style>
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
