@@ -9,8 +9,6 @@
   .dropdown-menu {
     padding: 0;
   }
-</style>
-<style>
   .sidebar-nav .nav-content a i {
     font-size: .9rem;
 }
