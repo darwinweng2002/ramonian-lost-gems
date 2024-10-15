@@ -68,12 +68,13 @@ if ($stmt->execute()) {
     $messageId = $stmt->insert_id; // Get the ID of the newly inserted message
 
     if ($is_guest == 1 && isset($category_id)) {
-        // Mark the guest category as hidden after submission (set status = 0)
+        // Mark the category as hidden from other guest users after submission
         $stmt = $conn->prepare("UPDATE categories SET status = 0 WHERE id = ? AND is_guest = 1");
         $stmt->bind_param("i", $category_id);
         $stmt->execute();
         $stmt->close();
     }
+    
     
 
 } else {
@@ -107,21 +108,24 @@ $stmt->close();
     $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins, and you must surrender the item to the SSG office located at OSA Building 3rd floor before it is published for public viewing.";
 }
 $categories = [];
-if (!isset($_SESSION['user_id'])) {
-    // If it's a guest, only show categories that are admin-added (user_id IS NULL) or guest categories with status = 1 (visible)
-    $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR (user_id = ? AND is_guest = 1 AND status = 1))");
-    $stmt->bind_param("i", $userId); // Use session user ID to fetch guest-added categories
+
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] === 'guest') {
+    // Show only admin categories or categories added by this guest user during the session
+    $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR (user_id = ? AND is_guest = 1)) AND status = 1");
+    $stmt->bind_param("i", $userId);
 } else {
-    // For logged-in users (admins), show all categories including guest categories, regardless of status
-    $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR user_id = ? OR is_guest = 1)");
-    $stmt->bind_param("i", $userId); // Fetch user-specific and admin-added categories
+    // For logged-in users, show their own categories, admin categories, and published guest categories
+    $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR user_id = ? OR (is_guest = 1 AND status = 1))");
+    $stmt->bind_param("i", $userId);
 }
+
 $stmt->execute();
 $stmt->bind_result($categoryId, $categoryName);
 while ($stmt->fetch()) {
     $categories[] = ['id' => $categoryId, 'name' => $categoryName];
 }
 $stmt->close();
+
 
 
 // Retrieve user information based on user type
