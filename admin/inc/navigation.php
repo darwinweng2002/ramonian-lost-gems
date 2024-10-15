@@ -76,12 +76,7 @@
   </li>
   <li class="nav-item dropdown"> <!-- Added dropdown class here -->
     <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users dropdown-toggle" href="#" id="deniedReportsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-      </svg>
+    <i class="fa fa-exclamation-circle"></i>
       <span>Denied Item Reports</span>
       <?php 
       // Query to get the total count of denied items from both message_history and missing_items tables
