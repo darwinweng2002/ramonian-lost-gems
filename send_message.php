@@ -36,17 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $new_category = $_POST['new_category'];
     $founder = $_POST['founder'];
 
-   // Check if category_id is set to add a new category
-   if ($category_id == 'add_new' && !empty($new_category)) {
-    // Insert new category with user_id to make it private
-    $stmt = $conn->prepare("INSERT INTO categories (name, user_id) VALUES (?, ?)");
-    $stmt->bind_param("si", $new_category, $userId); // Add the user ID to make it private
-    $stmt->execute();
-    $category_id = $stmt->insert_id; // Use the new category ID
-    $stmt->close();
-}
-    
-
     // Proceed to save the rest of the information
     $status = 0; // Default to 'Pending'
 
@@ -92,8 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $alertMessage = isset($error) ? $error : "Your report has been submitted successfully. It will be reviewed by the admins, and you must surrender the item to the SSG office located at OSA Building 3rd floor before it is published for public viewing.";
 }
 $categories = [];
-$stmt = $conn->prepare("SELECT id, name FROM categories WHERE user_id = ? OR user_id IS NULL");
-$stmt->bind_param("i", $userId); // Fetch both user-specific categories and admin-added ones
+$stmt = $conn->prepare("SELECT id, name FROM categories WHERE user_id IS NULL"); // Fetch only admin-defined categories
 $stmt->execute();
 $stmt->bind_result($categoryId, $categoryName);
 while ($stmt->fetch()) {
