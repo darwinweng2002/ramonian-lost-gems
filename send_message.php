@@ -69,12 +69,13 @@ if ($stmt->execute()) {
     $messageId = $stmt->insert_id; // Get the ID of the newly inserted message
 
     if ($is_guest == 1 && isset($category_id)) {
-        // Mark the category as hidden from other guest users after submission
         $stmt = $conn->prepare("UPDATE categories SET status = 0 WHERE id = ? AND is_guest = 1");
-        $stmt->bind_param("i", $category_id);
+        $stmt->bind_param("i", $category_id); // Mark the category as hidden from other guests
         $stmt->execute();
         $stmt->close();
     }
+    
+    
     
     
 
@@ -110,10 +111,10 @@ $stmt->close();
 }
 $categories = [];
 
-if (!isset($_SESSION['user_id']) || (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'guest')) {
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] === 'guest') {
     // Show only admin categories or categories added by this guest user during the session
     $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR (user_id = ? AND is_guest = 1)) AND status = 1");
-    $stmt->bind_param("i", $userId);
+    $stmt->bind_param("s", $_SESSION['user_id']); // Use session ID for guests
 } else {
     // For logged-in users, show their own categories, admin categories, and published guest categories
     $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR user_id = ? OR (is_guest = 1 AND status = 1))");
