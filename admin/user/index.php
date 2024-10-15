@@ -12,6 +12,8 @@ foreach($user->fetch_array() as $k =>$v){
 		border-radius: 100% 100%;
 	}
 </style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <section class="section">
 	<div class="card card-outline rounded-0 card-navy">
 		<div class="card-body">
