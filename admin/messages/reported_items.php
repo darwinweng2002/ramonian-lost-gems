@@ -184,6 +184,7 @@ $result = $conn->query($sql);
 .input-group {
     clear: both; /* Clears float from the button */
 }
+.badge-danger { background-color: #dc3545; } /* Denied status */
 
     </style>
 </head>
@@ -249,6 +250,9 @@ $result = $conn->query($sql);
                                 break;
                             case 3:
                                 echo "<span class='badge badge-surrendered'>Surrendered</span>";
+                                break;
+                            case 4: // New Denied status
+                                echo "<span class='badge badge-danger'>Denied</span>";
                                 break;
                             default:
                                 echo "<span class='badge badge-pending'>Pending</span>";
