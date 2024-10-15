@@ -3,6 +3,12 @@
     font-size: .9rem;
   }
   /* Style to show dropdown on hover */
+  .nav-item-dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  .dropdown-menu {
+    padding: 0;
+  }
 </style>
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
@@ -63,7 +69,7 @@
       <?php endif; ?>
     </a>
   </li>
-  <li class="nav-item dropdown"> <!-- Added dropdown class here -->
+  <li class="nav-item-dropdown"> <!-- Added dropdown class here -->
     <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users dropdown-toggle" href="#" id="deniedReportsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
     <i class="fa fa-exclamation-circle"></i>
       <span>Denied Item Reports</span>
