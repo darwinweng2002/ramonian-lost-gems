@@ -287,8 +287,8 @@ $result = $stmt->get_result();
                 }
 
                // Disable Deny button if status is not Pending (status = 0)
-               $denyButtonDisabled = ($status != 0) ? "disabled" : "";
-               $denyButtonClass = ($status != 0) ? "btn-disabled" : "deny-btn"; // Use a disabled class if necessary
+               $denyButtonDisabled = ($status != 4) ? "disabled" : "";
+               $denyButtonClass = ($status != 4) ? "btn-disabled" : "deny-btn"; // Use a disabled class if necessary
                
                echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny Report</button>";               
             }

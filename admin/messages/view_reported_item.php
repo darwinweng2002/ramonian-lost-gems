@@ -308,8 +308,8 @@ if ($message_id > 0) {
                         echo "</div>";
                     }
 
-                    $denyDisabled = $msgData['status'] != 0 ? 'disabled' : '';
-                    $denyClass = $msgData['status'] != 0 ? 'disabled-btn' : 'deny-btn';
+                    $denyDisabled = $msgData['status'] != 4 ? 'disabled' : '';
+                    $denyClass = $msgData['status'] != 4 ? 'disabled-btn' : 'deny-btn';
                     
                     echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "' " . ($msgData['status'] != 1 ? 'disabled title=\"Status is not set to Published\"' : '') . ">Publish Report</button>";
                     echo "<button class='" . $denyClass . "' data-id='" . htmlspecialchars($msgId) . "' " . $denyDisabled . ">Deny Report</button>";
