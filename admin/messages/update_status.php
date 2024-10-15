@@ -21,6 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param('ii', $newStatus, $itemId);
         
         if ($stmt->execute()) {
+            // If the item is published, also update the category status
+            if ($newStatus == 1) { // 1 = Published
+                // Set category status to 'published' when the item is published
+                $stmtCategory = $conn->prepare("UPDATE categories SET status = 1 
+                                                WHERE id = (SELECT category_id FROM message_history WHERE id = ? AND user_id IS NOT NULL)");
+                $stmtCategory->bind_param("i", $itemId);
+                $stmtCategory->execute();
+                $stmtCategory->close();
+            }
+
             echo json_encode(['success' => true]);
         } else {
             echo json_encode(['success' => false, 'error' => $stmt->error]);
