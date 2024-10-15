@@ -2,45 +2,12 @@
   .sidebar-nav .nav-content a i {
     font-size: .9rem;
   }
-
-  /* Smooth slide-down effect for dropdown */
-  .nav-item .dropdown-menu {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-in-out;
-  }
-
-  /* Expand the dropdown with animation */
+  /* Style to show dropdown on hover */
   .nav-item.dropdown:hover .dropdown-menu {
-    max-height: 200px; /* Adjust this value based on the content */
+    display: block;
   }
-
   .dropdown-menu {
     padding: 0;
-    border: none;
-  }
-
-  /* Additional styling for consistent look */
-  .dropdown-menu a {
-    padding: 10px 20px;
-    font-size: 14px;
-    color: #333;
-  }
-
-  .dropdown-menu a:hover {
-    background-color: #f2f2f2;
-    color: #000;
-  }
-
-  /* Style for the Denied Item Reports link */
-  .nav-link {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .nav-link .badge {
-    margin-left: auto;
   }
 </style>
 <style>
@@ -107,25 +74,25 @@
       <?php endif; ?>
     </a>
   </li>
-  <li class="nav-item dropdown">
-    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users dropdown-toggle" href="#">
+  <li class="nav-item dropdown"> <!-- Added dropdown class here -->
+    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users dropdown-toggle" href="#" id="deniedReportsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users">
         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
         <circle cx="9" cy="7" r="4"/>
         <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
-        <path d="M16 3.13a4 4 0 1 1 0 7.75"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
       </svg>
       <span>Denied Item Reports</span>
       <?php 
       $denied_count = $conn->query("SELECT COUNT(*) AS count FROM `message_history` WHERE `status` = 'denied'")->fetch_assoc();
       ?>
       <?php if($denied_count['count'] > 0): ?>
-        <span class="badge rounded-pill bg-danger text-light"><?= $denied_count['count'] ?></span>
+        <span class="badge rounded-pill bg-danger text-light ms-4"><?= $denied_count['count'] ?></span>
       <?php endif; ?>
     </a>
 
     <!-- Dropdown Menu for sub-links -->
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu" aria-labelledby="deniedReportsDropdown">
       <li>
         <a class="dropdown-item" href="https://ramonianlostgems.com/admin/messages/denied_found_items.php">Denied Found Items</a>
       </li>
