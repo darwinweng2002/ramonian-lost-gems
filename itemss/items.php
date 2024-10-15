@@ -36,7 +36,9 @@ if (isset($_GET['category_id'])) {
 }
 
 // Fetch categories for dropdown
-$categoriesResult = $conn->query("SELECT id, name FROM categories");
+// Fetch categories for dropdown, show only published categories or admin-added categories
+$categoriesResult = $conn->query("SELECT id, name FROM categories WHERE (user_id IS NULL OR status = 1)");
+
 
 // SQL query for found items, including status
 $sqlFound = "SELECT mh.id, mh.title, mh.category_id, mh.time_found, mh.message, mh.status, GROUP_CONCAT(mi.image_path) AS image_paths
