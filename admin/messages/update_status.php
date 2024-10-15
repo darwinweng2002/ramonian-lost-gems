@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newStatus = intval($_POST['status']);
     
     // Check that the status is valid (between 0 and 3)
-    if ($newStatus >= 0 && $newStatus <= 3) {
+    if ($newStatus >= 0 && $newStatus <= 4) {
         // Update the status in the database
         $stmt = $conn->prepare("UPDATE message_history SET status = ? WHERE id = ?");
         $stmt->bind_param('ii', $newStatus, $itemId);
