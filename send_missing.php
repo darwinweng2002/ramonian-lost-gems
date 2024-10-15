@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validate image upload limit (between 1 and 6 files)
     if (count($_FILES['images']['tmp_name']) < 1 || count($_FILES['images']['tmp_name']) > 6) {
-        $error = "You must only upload between 1 and 6 images.";
+        $error = "You must only upload between 1 to 6 images.";
     } else {
         // Handle file uploads
         foreach ($_FILES['images']['tmp_name'] as $key => $tmpName) {
@@ -307,7 +307,7 @@ if (isset($userId)) {
         echo "<option value=\"{$category['id']}\">{$category['name']}</option>";
     }
     ?>
-    <option value="add_new">Others</option>
+    <option value="add_new">Add other categories</option>
 </select>
 
 <div id="newCategoryDiv" style="display: none;">
