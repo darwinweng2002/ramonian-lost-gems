@@ -87,9 +87,9 @@
       // Query to get the total count of denied items from both message_history and missing_items tables
       $denied_count_query = "
         SELECT SUM(denied_count) AS total_denied FROM (
-          SELECT COUNT(*) AS denied_count FROM `message_history` WHERE `status` = 'denied'
+          SELECT COUNT(*) AS denied_count FROM `message_history` WHERE `is_denied` = '1'
           UNION ALL
-          SELECT COUNT(*) AS denied_count FROM `missing_items` WHERE `status` = 'denied'
+          SELECT COUNT(*) AS denied_count FROM `missing_items` WHERE `is_denied` = '1'
         ) as denied_items";
 
       $denied_count_result = $conn->query($denied_count_query)->fetch_assoc();
