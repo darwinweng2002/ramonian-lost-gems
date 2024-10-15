@@ -366,11 +366,11 @@ if (isset($userId)) {
         echo "<option value=\"{$category['id']}\">{$category['name']}</option>";
     }
     ?>
-    <option value="add_new">Add New Category</option>
+    <option value="add_new">Add other category</option>
 </select>
 
 <div id="newCategoryDiv" style="display: none;">
-    <label for="new_category">New Category:</label>
+    <label for="new_category">Others:</label>
     <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
 </div>
 

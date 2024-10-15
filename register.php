@@ -351,10 +351,10 @@ button {
     <h2>Terms and Conditions</h2>
     <p class="terms-text">
     Welcome to Ramonian Lost Gems
-By using our mobile application, you agree to comply with and be bound by the following terms and conditions. Please read them carefully before registering for an account. These terms govern your access to and use of the Ramonian Lost Gems platform, including the submission of personal information and verification documents for account registration.
+By using our mobile application, you agree to comply with and be bound by the following terms and conditions. Please read them carefully before registering for an account. These terms govern your access to and use of the Ramonian Lost Gems mobile application, including the submission of personal information and verification documents for account registration.
     </p>
     <p class="terms-text">
-    Your privacy and security are important to us. The information you provide, including your School ID, will be used solely for the purpose of verifying your status as a legitimate student of PRMSU Iba Campus. All personal information will remain confidential and will not be shared with any third parties. By proceeding, you acknowledge that your data will be handled in accordance with applicable privacy laws and regulations.
+    Your privacy and security are important to us. The information you provide, including your School ID or Employee ID, will be used solely for the purpose of verifying your status as a legitimate student or employee of PRMSU Iba Campus. All personal information will remain confidential and will not be shared with any third parties. By proceeding, you acknowledge that your data will be handled in accordance with applicable privacy laws and regulations.
     </p>
     <div class="button-container">
       <button id="declineTerms" class="btn btn-secondary">Decline</button>
