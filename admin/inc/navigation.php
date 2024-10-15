@@ -5,6 +5,7 @@
   /* Style to show dropdown on hover */
   .nav-item.dropdown:hover .dropdown-menu {
     display: block;
+    background-color: #4154F1;
   }
   .dropdown-menu {
     padding: 0;
