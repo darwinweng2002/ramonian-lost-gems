@@ -299,6 +299,10 @@ if (!$is_guest) {
     line-height: 1.5;
     white-space: nowrap;
 }
+.badge-danger {
+    background-color: #dc3545; /* Red for Denied status */
+    color: #fff;
+}
 
 .notification-icon {
     margin-left: 8px;
