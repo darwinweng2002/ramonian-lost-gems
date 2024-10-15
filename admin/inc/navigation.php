@@ -76,7 +76,7 @@
   </li>
   <li class="nav-item dropdown"> <!-- Added dropdown class here -->
     <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users dropdown-toggle" href="#" id="deniedReportsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="fa fa-ban"></i>
+    <i class="fa fa-exclamation-circle"></i>
       <span>Denied Item Reports</span>
       <?php 
       // Query to get the total count of denied items from both message_history and missing_items tables
