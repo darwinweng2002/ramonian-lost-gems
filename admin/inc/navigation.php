@@ -1,6 +1,18 @@
 <style>
   .sidebar-nav .nav-content a i {
     font-size: .9rem;
+  }
+  /* Style to show dropdown on hover */
+  .nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  .dropdown-menu {
+    padding: 0;
+  }
+</style>
+<style>
+  .sidebar-nav .nav-content a i {
+    font-size: .9rem;
 }
 </style>
 <!-- ======= Sidebar ======= -->
@@ -62,8 +74,8 @@
       <?php endif; ?>
     </a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="https://ramonianlostgems.com/admin/user_accounts/view_users.php">
+  <li class="nav-item dropdown"> <!-- Added dropdown class here -->
+    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users dropdown-toggle" href="#" id="deniedReportsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users">
         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
         <circle cx="9" cy="7" r="4"/>
@@ -71,20 +83,24 @@
         <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
       </svg>
       <span>Denied Item Reports</span>
-
       <?php 
-      // Fetch the count of pending accounts where status is set to 'pending' (status = 'pending')
-      $pending_accounts = $conn->query("SELECT COUNT(*) AS count FROM `message_history` WHERE `status` = 'denied'")->fetch_assoc();
+      $denied_count = $conn->query("SELECT COUNT(*) AS count FROM `message_history` WHERE `status` = 'denied'")->fetch_assoc();
       ?>
-      
-      <!-- Check if there are any pending accounts -->
-      <?php if($pending_accounts['count'] > 0): ?>
-        <span class="badge rounded-pill bg-danger text-light ms-4">
-          <?= $pending_accounts['count'] ?>  <!-- Display pending accounts count -->
-        </span>
+      <?php if($denied_count['count'] > 0): ?>
+        <span class="badge rounded-pill bg-danger text-light ms-4"><?= $denied_count['count'] ?></span>
       <?php endif; ?>
     </a>
-</li>
+
+    <!-- Dropdown Menu for sub-links -->
+    <ul class="dropdown-menu" aria-labelledby="deniedReportsDropdown">
+      <li>
+        <a class="dropdown-item" href="https://ramonianlostgems.com/admin/messages/denied_found_items.php">Denied Found Items</a>
+      </li>
+      <li>
+        <a class="dropdown-item" href="https://ramonianlostgems.com/admin/missing_items/denied_missing_items.php">Denied Missing Items</a>
+      </li>
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="https://ramonianlostgems.com/admin/user_accounts/view_users.php">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users">
