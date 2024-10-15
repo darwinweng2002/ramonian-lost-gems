@@ -93,7 +93,7 @@ if ($message_id > 0) {
     cursor: pointer;
     position: absolute;
     bottom: 20px;
-    right: 150px; /* Adjust this as needed */
+    right: 130px; /* Adjust this as needed */
 }
 
 .deny-btn {
@@ -307,7 +307,7 @@ if ($message_id > 0) {
                     $denyDisabled = $msgData['status'] != 0 ? 'disabled' : '';
                     $denyClass = $msgData['status'] != 0 ? 'disabled-btn' : 'deny-btn';
                     
-                    echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "' " . ($msgData['status'] != 1 ? 'disabled title=\"Status is not set to Published\"' : '') . ">Publish</button>";
+                    echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "' " . ($msgData['status'] != 1 ? 'disabled title=\"Status is not set to Published\"' : '') . ">Publish Report</button>";
                     echo "<button class='" . $denyClass . "' data-id='" . htmlspecialchars($msgId) . "' " . $denyDisabled . ">Deny Report</button>";
 
                     echo "</div>";
