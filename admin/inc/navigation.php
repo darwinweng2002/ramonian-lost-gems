@@ -1,4 +1,8 @@
-
+<style>
+  .sidebar-nav .nav-content a i {
+    font-size: .9rem;
+}
+</style>
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
 
