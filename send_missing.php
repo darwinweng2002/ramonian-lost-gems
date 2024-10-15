@@ -32,8 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($category_id == 'add_new' && !empty($new_category)) {
         // Insert new category with user_id to make it private
-        $stmt = $conn->prepare("INSERT INTO categories (name, user_id) VALUES (?, ?)");
-        $stmt->bind_param("si", $new_category, $userId); // Add the user ID to make it private
+        $stmt = $conn->prepare("INSERT INTO categories (name, user_id, status) VALUES (?, ?, 0)"); // Set status to 0 by default (unpublished)
+        $stmt->bind_param("si", $new_category, $userId);
         $stmt->execute();
         $category_id = $stmt->insert_id; // Use the new category ID
         $stmt->close();

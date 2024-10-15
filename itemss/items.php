@@ -41,9 +41,11 @@ $categoriesResult = $conn->query("
     SELECT DISTINCT c.id, c.name 
     FROM categories c
     LEFT JOIN message_history mh ON c.id = mh.category_id 
+    LEFT JOIN missing_items mi ON c.id = mi.category_id
     WHERE (c.user_id IS NULL) 
-    OR (c.status = 1 AND mh.status = 1)
+    OR (c.status = 1 AND (mh.status = 1 OR mi.status = 1))
 ");
+
 
 
 
