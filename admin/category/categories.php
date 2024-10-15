@@ -19,8 +19,8 @@ if (isset($_POST['add_category'])) {
     }
 }
 
+// Update category logic
 if (isset($_POST['update_category'])) {
-    print_r($_POST);  // Debugging line to see the submitted POST data
     $categoryId = $_POST['category_id'];
     $updatedName = $_POST['category_name'];
     if (!empty($updatedName)) {
@@ -33,7 +33,6 @@ if (isset($_POST['update_category'])) {
         $errorMessage = "Category name cannot be empty!";
     }
 }
-
 
 // Delete category logic
 if (isset($_POST['delete_category'])) {
@@ -178,15 +177,15 @@ $stmt->close();
             <tbody>
                 <?php foreach ($categories as $category): ?>
                 <tr>
+
                     <td><?php echo htmlspecialchars($category['name']); ?></td>
                     <td>
-                    <form action="" method="POST" style="display:inline;">
-                    <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                    <input type="hidden" name="update_category" value="true"> <!-- Hidden input to ensure it's update form -->
-                    <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>">
-                    <button type="submit">Edit</button>
-                </form>
-
+                        <!-- Edit Category -->
+                        <form action="" method="POST" style="display:inline;">
+                            <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
+                            <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>">
+                            <button type="submit" name="update_category">Edit</button>
+                        </form>
 
                         <!-- Delete Category -->
                         <form action="" method="POST" style="display:inline;">
