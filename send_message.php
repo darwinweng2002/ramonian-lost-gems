@@ -366,7 +366,6 @@ if (isset($userId)) {
         echo "<option value=\"{$category['id']}\">{$category['name']}</option>";
     }
     ?>
-    <option value="add_new">Add New Category</option>
 </select>
 
 <div id="newCategoryDiv" style="display: none;">
