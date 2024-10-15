@@ -256,7 +256,8 @@ $result = $stmt->get_result();
                 echo "<option value='1' " . ($status == 1 ? 'selected' : '') . ">Published</option>";
                 echo "<option value='2' " . ($status == 2 ? 'selected' : '') . ">Claimed</option>";
                 echo "<option value='3' " . ($status == 3 ? 'selected' : '') . ">Surrendered</option>";
-                echo "</select>";
+                echo "<option value='4' " . ($status == 4 ? 'selected' : '') . ">Denied</option>";  // New Denied status
+                echo "</select>";                
                 echo "<button class='btn btn-primary save-status-btn' data-id='" . $itemId . "'>Save Status</button>";
                 echo "</div>";
 
@@ -267,9 +268,12 @@ $result = $stmt->get_result();
                     echo "<span class='badge bg-success px-3 rounded-pill'>Claimed</span>";
                 } elseif ($status == 3) {
                     echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
+                } elseif ($status == 4) { // Denied status
+                    echo "<span class='badge bg-danger px-3 rounded-pill'>Denied</span>";
                 } else {
-                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";   
+                    echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
                 }
+
 
                 if (!empty($itemData['images'])) {
                     echo "<p><strong>Images:</strong></p>";
@@ -284,9 +288,9 @@ $result = $stmt->get_result();
 
                // Disable Deny button if status is not Pending (status = 0)
                $denyButtonDisabled = ($status != 0) ? "disabled" : "";
-               $denyButtonClass = ($status != 0) ? "btn-disabled" : "deny-btn"; // Change the class to a disabled style if necessary
+               $denyButtonClass = ($status != 0) ? "btn-disabled" : "deny-btn"; // Use a disabled class if necessary
                
-               echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny Report</button>";
+               echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny Report</button>";               
             }
         }
         ?>

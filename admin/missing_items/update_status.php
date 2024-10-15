@@ -28,7 +28,7 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
         }
 
         // If the item is not published (e.g., claimed, pending, surrendered), mark the category as not published
-        if ($status == 0 || $status == 2 || $status == 3) { // Pending, Claimed, or Surrendered
+        if ($status == 0 || $status == 2 || $status == 3 || $status == 4) { // Pending, Claimed, or Surrendered
             $stmtCategory = $conn->prepare("UPDATE categories SET status = 0 
                                             WHERE id = (SELECT category_id FROM missing_items WHERE id = ? AND user_id IS NOT NULL)");
             $stmtCategory->bind_param("i", $itemId);
