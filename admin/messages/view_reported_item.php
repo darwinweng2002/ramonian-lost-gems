@@ -93,7 +93,7 @@ if ($message_id > 0) {
     cursor: pointer;
     position: absolute;
     bottom: 20px;
-    right: 120px; /* Adjusted to provide enough space from the deny button */
+    right: 150px; /* Adjust this as needed */
 }
 
 .deny-btn {
@@ -105,12 +105,17 @@ if ($message_id > 0) {
     cursor: pointer;
     position: absolute;
     bottom: 20px;
-    right: 20px; /* Ensure this button is aligned to the right */
+    right: 20px;
 }
 
 .deny-btn:hover {
     background-color: #c82333;
 }
+
+.publish-btn:hover {
+    background-color: #218838;
+}
+
 
 .publish-btn:hover {
     background-color: #218838;
