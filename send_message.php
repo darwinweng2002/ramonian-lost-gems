@@ -14,6 +14,7 @@ if (session_status() == PHP_SESSION_NONE) {
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['staff_id'])) {
     die("User not logged in");
 }
+$userType = $_SESSION['user_type'] ?? 'guest'; // Default to 'guest' if user_type is not set
 
 // Get the user ID and user type
 if (isset($_SESSION['user_id'])) {
@@ -109,7 +110,7 @@ $stmt->close();
 }
 $categories = [];
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] === 'guest') {
+if (!isset($_SESSION['user_id']) || (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'guest')) {
     // Show only admin categories or categories added by this guest user during the session
     $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR (user_id = ? AND is_guest = 1)) AND status = 1");
     $stmt->bind_param("i", $userId);
@@ -118,6 +119,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] === 'guest') {
     $stmt = $conn->prepare("SELECT id, name FROM categories WHERE (user_id IS NULL OR user_id = ? OR (is_guest = 1 AND status = 1))");
     $stmt->bind_param("i", $userId);
 }
+
 
 $stmt->execute();
 $stmt->bind_result($categoryId, $categoryName);
