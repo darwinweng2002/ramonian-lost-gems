@@ -170,7 +170,6 @@ $stmt->close();
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Category Name</th>
                     <th>Actions</th>
                 </tr>
@@ -178,7 +177,6 @@ $stmt->close();
             <tbody>
                 <?php foreach ($categories as $category): ?>
                 <tr>
-                    <td><?php echo $category['id']; ?></td>
                     <td><?php echo htmlspecialchars($category['name']); ?></td>
                     <td>
                         <!-- Edit Category -->
