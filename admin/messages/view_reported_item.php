@@ -84,34 +84,38 @@ if ($message_id > 0) {
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 10px;
         }
-        .deny-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            position: absolute;
-            bottom: 20px;
-            right: 10px;
-        }
-        .deny-btn:hover {
-            background-color: #c82333;
-        }
         .publish-btn {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            position: absolute;
-            bottom: 20px;
-            right: 80px;
-        }
-        .publish-btn:hover {
-            background-color: #218838;
-        }
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 20px;
+    right: 120px; /* Adjusted to provide enough space from the deny button */
+}
+
+.deny-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 20px;
+    right: 20px; /* Ensure this button is aligned to the right */
+}
+
+.deny-btn:hover {
+    background-color: #c82333;
+}
+
+.publish-btn:hover {
+    background-color: #218838;
+}
+
         .container .avatar {
             width: 100px;
             height: 100px;
