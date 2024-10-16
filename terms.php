@@ -139,7 +139,7 @@ if (isset($_POST['guest_login'])) {
             <span><?= $_settings->info('name') ?></span>
           </a>
         </div>
-
+        <p>borat</p>
         </div>
           
             </div>
