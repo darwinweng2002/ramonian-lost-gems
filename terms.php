@@ -33,7 +33,6 @@ include 'config.php';
 
 .logo span {
   color: #fff;
-  text-shadow: 0px 0px 10px #000;
   text-align: center; /* Center the text */
   font-size: 24px; /* Adjust font size as needed */
 }
