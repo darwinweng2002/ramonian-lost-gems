@@ -234,7 +234,7 @@ $stmt->close();
                             <form action="" method="POST">
                                 <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
                                 <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>" required>
-                                <button type="submit" name="update_category" class="edit">Edit</button>
+                                <button type="submit" name="update_category" class="edit">Update</button>
                             </form>
 
                             <!-- Delete Category -->
