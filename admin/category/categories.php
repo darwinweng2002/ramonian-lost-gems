@@ -207,76 +207,6 @@ td {
     background-color: #f8d7da;
     color: #721c24;
 }
-
-/* Media queries for responsiveness */
-@media (max-width: 768px) {
-    /* Stack Add Category form elements vertically on smaller screens */
-    .add-category-form {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .add-category-form input[type="text"] {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 10px;
-    }
-
-    .add-category-form button {
-        width: 100%;
-    }
-
-    /* Adjust the table for smaller screens */
-    table, th, td {
-        font-size: 14px;
-        padding: 8px;
-    }
-
-    .actions {
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .actions button {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    /* Further adjustments for very small screens */
-    .container {
-        padding: 10px;
-    }
-
-    h2 {
-        font-size: 20px;
-    }
-
-    .add-category-form input[type="text"] {
-        font-size: 14px;
-    }
-
-    .add-category-form button {
-        font-size: 14px;
-        padding: 8px 16px;
-    }
-
-    table, th, td {
-        font-size: 12px;
-        padding: 6px;
-    }
-
-    .actions {
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .actions button {
-        font-size: 12px;
-        padding: 6px 12px;
-    }
-}
-
     </style>
 </head>
 <body>
@@ -349,6 +279,12 @@ td {
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // Add hidden input to simulate form submission
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'delete_category';
+                    form.appendChild(input);
+
                     // Submit the delete form after confirmation
                     form.submit();
                 }
@@ -371,6 +307,12 @@ td {
                 confirmButtonText: 'Yes, update it!'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // Add hidden input to simulate form submission
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'update_category';
+                    form.appendChild(input);
+
                     // Submit the edit form after confirmation
                     form.submit();
                 }
@@ -380,4 +322,3 @@ td {
 </script>
 </body>
 </html>
-
