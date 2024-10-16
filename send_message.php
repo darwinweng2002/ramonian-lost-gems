@@ -439,29 +439,37 @@ if (isset($userId)) {
     imageUploadError.style.display = 'none'; // Hide the error message by default
     submitButton.disabled = false; // Reset the button to enabled state by default
 
-    if (files.length > 6) {
-        // If more than 6 images are uploaded, disable the submit button and show an error message
+    if (files.length < 1 || files.length > 6) {
+        // If no files or more than 6 images are uploaded, disable the submit button and show an error message
         imageUploadError.style.display = 'block'; // Show the error message in red
         submitButton.disabled = true; // Disable the submit button
-        return; // Stop further execution if limit exceeded
+        return; // Stop further execution if file count is out of range
     }
 
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
 
-        if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                previewContainer.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        } else {
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
             validationMessage.style.display = 'block'; // Show validation message if file type is not supported
+            submitButton.disabled = true; // Disable the submit button
+            return; // Stop further execution if invalid file type is found
         }
+
+        // Preview valid image files
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = document.createElement('img');
+            img.src = event.target.result;
+            previewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
     }
+
+    // If all checks passed, enable the submit button
+    submitButton.disabled = false;
 }
+
 
 
 
