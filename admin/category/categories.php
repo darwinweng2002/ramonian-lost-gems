@@ -201,7 +201,6 @@ $stmt->close();
             </tbody>
         </table>
     </div>
-<?php $conn->close();?>
 <?php require_once('../inc/footer.php') ?>
 </body>
 </html>
