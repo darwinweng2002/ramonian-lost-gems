@@ -71,83 +71,62 @@ if (isset($_POST['guest_login'])) {
       overflow-x: hidden;
     }
     .logo {
-  display: flex;
-  flex-direction: column; /* Stack logo and text */
-  align-items: center; /* Center items horizontally */
-  margin-bottom: 10px; /* Space below the logo */
-}
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+    }
 
-.logo img {
-  max-height: 60px; /* Adjust height as needed */
-}
+    .logo img {
+      max-height: 60px;
+    }
 
-.logo span {
-  color: #fff;
-  text-shadow: 0px 0px 10px #000;
-  text-align: center; /* Center the text */
-  font-size: 24px; /* Adjust font size as needed */
-}
+    .logo span {
+      color: #fff;
+      text-shadow: 0px 0px 10px #000;
+      text-align: center;
+      font-size: 24px;
+    }
 
-  .loader-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 9999;
-  }
-  
-  .loader {
-    border: 8px solid #f3f3f3;
-    border-top: 8px solid #3498db;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  .swal2-popup {
-    position: fixed !important; 
-    top: 50% !important;        
-    left: 50% !important;       
-    transform: translate(-50%, -50%) !important; 
-    z-index: 9999 !important;   
-    overflow: auto;             
-}
-.hyper-link {
-  text-align: center; 
-}
+    .hyper-link {
+      text-align: center;
+    }
   </style>
+
   <main>
     <div class="container">
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-                    <div class="d-flex justify-content-center py-4">
-          <a href="#" class="logo d-flex align-items-center w-auto">
-            <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
-            <br>
-            <span><?= $_settings->info('name') ?></span>
-          </a>
-        </div>
-        <p>borat</p>
-        </div>
-          
+              <div class="d-flex justify-content-center py-4">
+                <a href="#" class="logo d-flex align-items-center w-auto">
+                  <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
+                  <br>
+                  <span><?= $_settings->info('name') ?></span>
+                </a>
+              </div><!-- End Logo -->
+
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="pt-4 pb-2">
+                    <h5 class="card-title text-center pb-0 fs-4">User Account Login</h5>
+                    <p class="text-center small">Enter your email & password to login</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hyper-link">
+                <a href="https://ramonianlostgems.com/admin/login.php">Login as Admin</a>
+              </div>
+
             </div>
           </div>
         </div>
       </section>
     </div>
   </main>
+
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
   <script src="<?= base_url ?>assets/js/jquery-3.6.4.min.js"></script>
   <script src="<?= base_url ?>assets/vendor/apexcharts/apexcharts.min.js"></script>
@@ -159,6 +138,109 @@ if (isset($_POST['guest_login'])) {
   <script src="<?= base_url ?>assets/vendor/tinymce/tinymce.min.js"></script>
   <script src="<?= base_url ?>assets/vendor/php-email-form/validate.js"></script>
   <script src="<?= base_url ?>assets/js/main.js"></script>
+
+<?php require_once('inc/footer.php') ?>
+</body>
+</html>
+<script>
+  $(document).ready(function() {
+    // Ensure loader shows when clicking Admin Login, Faculty Login, or Register links
+    $(document).on('click', 'a[href="https://ramonianlostgems.com/admin/login.php"], a[href="https://ramonianlostgems.com/staff_login.php"], a[href="https://ramonianlostgems.com/register.php"]', function(e) {
+        // Show the loader
+        $('#loader').show();
+    });
+
+    // Show loader on form submission for user login and guest login
+    $('form').on('submit', function(e) {
+        $('#loader').show();
+    });
+
+    // Check if there's an error message and show it
+    <?php if ($error_message): ?>
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: '<?php echo $error_message; ?>',
+        confirmButtonText: 'OK'
+      });
+    <?php endif; ?>
+});
+
+  // Function to handle Google Sign-In response (already existing)
+  function handleCredentialResponse(response) {
+    const data = jwt_decode(response.credential);
+
+    // Show the loader
+    $('#loader').show();
+         
+        
+        // Send the Google ID token to your server for verification and user registration/login
+        $.post("google-signin.php", {
+            id_token: response.credential,
+            first_name: data.given_name,
+            last_name: data.family_name,
+            email: data.email
+        }, function(result) {
+            $('#loader').hide();  // Hide the loader after response
+            if (result.success) {
+                // Redirect or notify the user
+                window.location.href = "dashboard.php";
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: result.message,
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    }
+    $(document).ready(function() {
+    // Function to check if both username and password fields are filled
+    function checkForm() {
+      var username = $('#yourEmail').val().trim();
+      var password = $('#yourPassword').val().trim();
+
+      // Enable the login button only if both fields have values
+      if (username && password) {
+        $('#loginButton').removeAttr('disabled');
+      } else {
+        $('#loginButton').attr('disabled', 'disabled');
+      }
+    }
+
+    // Trigger checkForm on keyup for both fields
+    $('#yourEmail, #yourPassword').on('keyup', function() {
+      checkForm();
+    });
+  });
+  $(document).ready(function() {
+    // Check if there's an error message and show it with SweetAlert
+    <?php if ($error_message): ?>
+      <?php if (strpos($error_message, 'awaiting admin approval') !== false): ?>
+        // Use SweetAlert with a custom icon for the "pending" status
+        Swal.fire({
+          icon: 'info',
+          title: 'Pending Approval',
+          text: '<?php echo $error_message; ?>',
+          confirmButtonText: 'OK',
+          customClass: {
+            icon: 'swal-custom-icon'  // Custom class if needed
+          }
+        });
+      <?php else: ?>
+        // Default SweetAlert error message
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: '<?php echo $error_message; ?>',
+          confirmButtonText: 'OK'
+        });
+      <?php endif; ?>
+    <?php endif; ?>
+  });
+</script>
+
 <?php require_once('inc/footer.php') ?>
 </body>
 </html>
