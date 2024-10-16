@@ -172,21 +172,21 @@ td {
     cursor: pointer;
 }
 
-.actions .edit {
+.actions #edit-btn {
     background-color: #28a745;
     color: white;
 }
 
-.actions .edit:hover {
+.actions #edit-btn:hover {
     background-color: #218838;
 }
 
-.actions .delete {
+.actions #delete-btn {
     background-color: #dc3545;
     color: white;
 }
 
-.actions .delete:hover {
+.actions #delete-btn:hover {
     background-color: #c82333;
 }
 
@@ -248,13 +248,13 @@ td {
                         <form action="" method="POST" class="edit-form">
                             <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
                             <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>" required>
-                            <button type="button" class="edit-button">Update</button>
+                            <button type="button" class="edit-button" id="edit-btn">Update</button>
                         </form>
 
                         <!-- Delete Category -->
                         <form action="" method="POST" class="delete-form">
                             <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                            <button type="button" class="delete-button">Delete</button>
+                            <button type="button" class="delete-button" id="delete-btn">Delete</button>
                         </form>
                     </div>
                 </td>
