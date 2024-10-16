@@ -32,8 +32,8 @@ include 'config.php';
     }
 
     .logo span {
-      color: #fff;
-      text-shadow: 0px 0px 10px #000;
+      color: #fff;  /* Set text color to white */
+      text-shadow: 0px 0px 10px #000;  /* Optional: Keep the shadow effect */
       text-align: center;
       font-size: 24px;
     }
