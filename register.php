@@ -339,30 +339,6 @@ button {
 }
 
   </style>
-<!-- Terms and Conditions Modal -->
-<!-- Terms and Conditions Modal -->
-<div id="termsModal" class="modal">
-  <div class="modal-content">
-    <!-- Centered Logo -->
-    <div class="logo-container">
-    <img src="/uploads/logo.png" alt="Logo" class="logo-img">
-    </div>
-    
-    <h2>Terms and Conditions</h2>
-    <p class="terms-text">
-    Welcome to Ramonian Lost Gems
-By using our mobile application, you agree to comply with and be bound by the following terms and conditions. Please read them carefully before registering for an account. These terms govern your access to and use of the Ramonian Lost Gems mobile application, including the submission of personal information and verification documents for account registration.
-    </p>
-    <p class="terms-text">
-    Your privacy and security are important to us. The information you provide, including your School ID or Employee ID, will be used solely for the purpose of verifying your status as a legitimate student or employee of PRMSU Iba Campus. All personal information will remain confidential and will not be shared with any third parties. By proceeding, you acknowledge that your data will be handled in accordance with applicable privacy laws and regulations.
-    </p>
-    <div class="button-container">
-      <button id="declineTerms" class="btn btn-secondary">Decline</button>
-      <button id="acceptTerms" class="btn btn-primary">I Accept</button>
-    </div>
-  </div>
-</div>
-
   <main>
     <div class="container">
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
@@ -497,6 +473,10 @@ By using our mobile application, you agree to comply with and be bound by the fo
                             <div class="col-12">
                             <button class="btn btn-primary w-100" type="submit" id="register-btn" disabled>Register</button>
                         </div>
+                        <div class="col-12 text-center mt-2">
+                        <small>By signing up, I agree to the <a href="terms.php" target="_blank">Terms and Conditions</a> and the <a href="privacy.php" target="_blank">Privacy Policy</a>.</small>
+                    </div>
+
                         </form>
                         <div class="loader-overlay" id="loaderOverlay">
     <div class="loader"></div>
@@ -758,26 +738,6 @@ By using our mobile application, you agree to comply with and be bound by the fo
             imagePreview.style.display = 'none'; // Hide the image
         }
     });
-    $(document).ready(function() {
-    var modal = $('#termsModal');
-    var registerBtn = $('#register-btn');
-    
-    modal.css('display', 'flex'); // Show the modal
-    registerBtn.prop('disabled', true); // Disable the register button until terms are accepted
-
-    // When the user clicks "I Accept", hide the modal and enable the register button
-    $('#acceptTerms').on('click', function() {
-        modal.hide(); // Hide the modal
-        registerBtn.prop('disabled', false); // Enable the register button
-    });
-
-    // When the user clicks "Decline", redirect or handle as needed
-    $('#declineTerms').on('click', function() {
-        // You can redirect to another page, for example, the homepage
-        window.location.href = 'https://ramonianlostgems.com/';
-    });
-});
-
   </script>
 </body>
 </html>
