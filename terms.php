@@ -1,56 +1,8 @@
 <?php
-session_start(); // Start the session
 
 // Include the database configuration file
 include 'config.php';
 
-// Variable to hold the error message
-$error_message = '';
-
-// Check if the form is submitted for regular login
-if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['guest_login'])) {
-    // Get form data
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
-
-    // Prepare and execute query
-    if ($stmt = $conn->prepare("SELECT id, password, status FROM user_member WHERE email = ?")) {
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows > 0) {
-            $stmt->bind_result($user_id, $hashed_password, $status);
-            $stmt->fetch();
-
-            if ($status === 'pending') {
-                $error_message = 'Your account is awaiting admin approval. Please wait for an email confirmation.';
-            } elseif (password_verify($password, $hashed_password)) {
-                // Start session and store user info
-                $_SESSION['user_id'] = $user_id;
-                $_SESSION['email'] = $email;
-
-                // Redirect to protected page
-                header("Location: https://ramonianlostgems.com/itemss/items.php");
-                exit();
-            } else {
-                $error_message = 'Invalid email or password.';
-            }
-        } else {
-            $error_message = 'No user found with that email.';
-        }
-    } else {
-        $error_message = 'Error preparing statement: ' . $conn->error;
-    }
-}
-
-// Handle "Login as Guest"
-if (isset($_POST['guest_login'])) {
-    $_SESSION['user_id'] = 'guest_' . bin2hex(random_bytes(5));
-    $_SESSION['email'] = 'guest@example.com';
-    header("Location: https://ramonianlostgems.com/itemss/items.php");
-    exit();
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -166,11 +118,6 @@ if (isset($_POST['guest_login'])) {
                   <li><strong>Limitation of Liability:</strong> Ramonian Lost Gems is not responsible for any direct or indirect damages resulting from the use of the mobile application, including the loss or theft of personal items.</li>
                 </ol>
               </div>
-
-              <div class="hyper-link">
-                <a href="https://ramonianlostgems.com/admin/login.php">Login as Admin</a>
-              </div>
-
             </div>
           </div>
         </div>
@@ -194,105 +141,6 @@ if (isset($_POST['guest_login'])) {
 <?php require_once('inc/footer.php') ?>
 </body>
 </html>
-<script>
-  $(document).ready(function() {
-    // Ensure loader shows when clicking Admin Login, Faculty Login, or Register links
-    $(document).on('click', 'a[href="https://ramonianlostgems.com/admin/login.php"], a[href="https://ramonianlostgems.com/staff_login.php"], a[href="https://ramonianlostgems.com/register.php"]', function(e) {
-        // Show the loader
-        $('#loader').show();
-    });
-
-    // Show loader on form submission for user login and guest login
-    $('form').on('submit', function(e) {
-        $('#loader').show();
-    });
-
-    // Check if there's an error message and show it
-    <?php if ($error_message): ?>
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: '<?php echo $error_message; ?>',
-        confirmButtonText: 'OK'
-      });
-    <?php endif; ?>
-});
-
-  // Function to handle Google Sign-In response (already existing)
-  function handleCredentialResponse(response) {
-    const data = jwt_decode(response.credential);
-
-    // Show the loader
-    $('#loader').show();
-         
-        
-        // Send the Google ID token to your server for verification and user registration/login
-        $.post("google-signin.php", {
-            id_token: response.credential,
-            first_name: data.given_name,
-            last_name: data.family_name,
-            email: data.email
-        }, function(result) {
-            $('#loader').hide();  // Hide the loader after response
-            if (result.success) {
-                // Redirect or notify the user
-                window.location.href = "dashboard.php";
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: result.message,
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
-    }
-    $(document).ready(function() {
-    // Function to check if both username and password fields are filled
-    function checkForm() {
-      var username = $('#yourEmail').val().trim();
-      var password = $('#yourPassword').val().trim();
-
-      // Enable the login button only if both fields have values
-      if (username && password) {
-        $('#loginButton').removeAttr('disabled');
-      } else {
-        $('#loginButton').attr('disabled', 'disabled');
-      }
-    }
-
-    // Trigger checkForm on keyup for both fields
-    $('#yourEmail, #yourPassword').on('keyup', function() {
-      checkForm();
-    });
-  });
-  $(document).ready(function() {
-    // Check if there's an error message and show it with SweetAlert
-    <?php if ($error_message): ?>
-      <?php if (strpos($error_message, 'awaiting admin approval') !== false): ?>
-        // Use SweetAlert with a custom icon for the "pending" status
-        Swal.fire({
-          icon: 'info',
-          title: 'Pending Approval',
-          text: '<?php echo $error_message; ?>',
-          confirmButtonText: 'OK',
-          customClass: {
-            icon: 'swal-custom-icon'  // Custom class if needed
-          }
-        });
-      <?php else: ?>
-        // Default SweetAlert error message
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: '<?php echo $error_message; ?>',
-          confirmButtonText: 'OK'
-        });
-      <?php endif; ?>
-    <?php endif; ?>
-  });
-</script>
-
 <?php require_once('inc/footer.php') ?>
 </body>
 </html>
