@@ -110,8 +110,32 @@ if (isset($_POST['guest_login'])) {
               <div class="card mb-3">
                 <div class="card-body">
                   <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">User Account Login</h5>
-                    <p class="text-center small">Enter your email & password to login</p>
+                    <h5 class="card-title text-center pb-0 fs-4">Terms and Conditions for Ramonian Lost Gems</h5>
+                    <p class="text-center small">1. Acceptance of Terms
+By registering and using the Ramonian Lost Gems mobile application, you agree to abide by these Terms and Conditions. These terms govern your access to and use of the application and its features, including the submission of personal information and ID verification documents for registration.
+
+2. User Registration and Approval
+To access the full features of the app, users must register an account. During registration, you are required to submit either a School ID (for students), Employee ID (for PRMSU employees), or any valid ID (for guest users). These documents are used for the sole purpose of validating your identity as a legitimate user of PRMSU Iba Campus or a guest.
+
+Once your registration is submitted, your account will not be immediately active. All accounts must be reviewed and approved by an administrator. You will be notified once your account is approved and ready for use. If your account is rejected, you will be notified via the email address you provided.
+
+3. Posting Lost and Found Items
+As a registered user, you can report lost and found items through the application. Reports must include specific details such as item name, description, and, optionally, multiple images of the item. Your reports will be reviewed by an admin before being published.
+
+4. Claiming Items
+Only registered users with approved accounts can submit claim requests for lost or found items. Guest users may report lost or found items but cannot claim them. All claims will be verified by an admin before final approval.
+
+5. Responsibilities of Admin Users
+Admins have the responsibility of managing and reviewing all reported lost and found items. Admins can publish, delete, or reject reported items. They can also manage claim requests and change the status of an item to 'claimed' once it has been returned to its owner. Admins are authorized to update the status of reports and manage user accounts.
+
+6. Prohibited Use
+You agree not to misuse the Ramonian Lost Gems application for any unauthorized purposes, including providing false information or attempting to claim items that do not belong to you.
+
+7. Modification of Terms
+We reserve the right to modify these Terms and Conditions at any time. Any changes will be posted on this page, and it is your responsibility to review the terms regularly. Continued use of the app after changes constitutes your acceptance of the modified terms.
+
+8. Limitation of Liability
+Ramonian Lost Gems is not responsible for any direct or indirect damages resulting from the use of the mobile application, including the loss or theft of personal items.</p>
                   </div>
                 </div>
               </div>
