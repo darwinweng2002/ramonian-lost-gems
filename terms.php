@@ -75,6 +75,39 @@ include 'config.php';
     .hyper-link {
       text-align: center;
     }
+    .back-btn-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-btn svg {
+            margin-right: 8px;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .back-btn:focus {
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+        }
   </style>
 </head>
 <?php require_once('inc/header.php'); ?>
@@ -89,7 +122,7 @@ include 'config.php';
               
               <div class="d-flex justify-content-center py-4">
                 <a href="#" class="logo d-flex align-items-center w-auto">
-                  <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
+                  <img src="uploads/logo.png" alt="">
                   <br>
                   <span><?= $_settings->info('name') ?></span>
                 </a>
@@ -121,6 +154,15 @@ include 'config.php';
             </div>
           </div>
         </div>
+        <div class="back-btn-container">
+    <button class="back-btn" onclick="history.back()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Back
+    </button>
+</div>
       </section>
     </div>
   </main>
