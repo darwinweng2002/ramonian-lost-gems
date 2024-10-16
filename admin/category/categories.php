@@ -62,7 +62,8 @@ $stmt->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Category Management</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Assuming you have a CSS file -->
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Assuming you have a CSS file -->
     <style>
         /* Basic styles */
         body {
@@ -87,7 +88,7 @@ $stmt->close();
         }
 
         form {
-            display: flex;
+            display: inline-block; 
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
@@ -100,17 +101,22 @@ $stmt->close();
             border-radius: 4px;
         }
 
-        button {
+                button {
             padding: 8px 16px;
             background-color: #28a745;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin-right: 10px; /* Add some spacing */
         }
 
         button.delete {
             background-color: #dc3545;
+        }
+        .actions {
+            display: flex; /* Use Flexbox to align buttons side-by-side */
+            gap: 10px; /* Gap between buttons */
         }
 
         table {
@@ -185,24 +191,91 @@ $stmt->close();
 
                     <td><?php echo htmlspecialchars($category['name']); ?></td>
                     <td>
+                    <div class="actions">
                         <!-- Edit Category -->
-                        <form action="" method="POST" style="display:inline;">
+                        <form action="" method="POST">
                             <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
                             <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>">
-                            <button type="submit" name="update_category">Edit</button>
+                            <button type="submit" name="update_category" class="edit">Edit</button>
                         </form>
 
                         <!-- Delete Category -->
-                        <form action="" method="POST" style="display:inline;">
+                        <form action="" method="POST">
                             <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                            <button type="submit" name="delete_category" class="delete" onclick="return confirm('Are you sure you want to delete this category?');">Delete</button>
+                            <button type="submit" name="delete_category" class="delete">Delete</button>
                         </form>
-                    </td>
+                    </div>
+                </td>
+
                 </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
 <?php require_once('../inc/footer.php') ?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Success alert for actions (add, edit, delete)
+    <?php if (isset($successMessage)): ?>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: '<?php echo htmlspecialchars($successMessage); ?>',
+            confirmButtonText: 'OK'
+        });
+    <?php endif; ?>
+
+    <?php if (isset($errorMessage)): ?>
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops!',
+            text: '<?php echo htmlspecialchars($errorMessage); ?>',
+            confirmButtonText: 'OK'
+        });
+    <?php endif; ?>
+
+    // Confirmation for delete and edit actions
+    document.querySelectorAll('.delete').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent form submission
+            
+            const form = this.closest('form'); // Get the form that contains the button
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You won\'t be able to revert this!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit the form if confirmed
+                }
+            });
+        });
+    });
+
+    document.querySelectorAll('.edit').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent form submission
+
+            const form = this.closest('form'); // Get the form that contains the button
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to update this category?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, edit it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit the form if confirmed
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
