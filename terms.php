@@ -69,22 +69,22 @@ if (isset($_POST['guest_login'])) {
     }
 
     .logo {
-  display: flex;
-  flex-direction: column; /* Stack logo and text */
-  align-items: center; /* Center items horizontally */
-  margin-bottom: 10px; /* Space below the logo */
-}
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+    }
 
-.logo img {
-  max-height: 60px; /* Adjust height as needed */
-}
+    .logo img {
+      max-height: 60px;
+    }
 
-.logo span {
-  color: #fff;
-  text-shadow: 0px 0px 10px #000;
-  text-align: center; /* Center the text */
-  font-size: 24px; /* Adjust font size as needed */
-}
+    .logo span {
+      color: #fff;
+      text-shadow: 0px 0px 10px #000;
+      text-align: center;
+      font-size: 24px;
+    }
 
     .terms-container {
       background-color: #ffffff;
@@ -103,10 +103,10 @@ if (isset($_POST['guest_login'])) {
 
     p {
       color: #555;
-      font-size: 14px;
+      font-size: 1rem;
       line-height: 1.8;
       margin-bottom: 20px;
-      text-align: justify;
+      text-align: justify; /* Justified alignment */
     }
 
     ol {
@@ -117,6 +117,7 @@ if (isset($_POST['guest_login'])) {
       margin-bottom: 15px;
       color: #555;
       font-size: 1rem;
+      text-align: justify; /* Justified alignment for list items */
     }
 
     .hyper-link {
@@ -165,6 +166,11 @@ if (isset($_POST['guest_login'])) {
                   <li><strong>Limitation of Liability:</strong> Ramonian Lost Gems is not responsible for any direct or indirect damages resulting from the use of the mobile application, including the loss or theft of personal items.</li>
                 </ol>
               </div>
+
+              <div class="hyper-link">
+                <a href="https://ramonianlostgems.com/admin/login.php">Login as Admin</a>
+              </div>
+
             </div>
           </div>
         </div>
