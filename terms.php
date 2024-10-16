@@ -103,7 +103,7 @@ if (isset($_POST['guest_login'])) {
 
     p {
       color: #555;
-      font-size: 1rem;
+      font-size: 14px;
       line-height: 1.8;
       margin-bottom: 20px;
       text-align: justify;
