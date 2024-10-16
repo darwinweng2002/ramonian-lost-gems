@@ -243,7 +243,7 @@ td {
 
     .add-category-form input[type="text"] {
         font-size: 14px;
-        width: 100%;
+        padding: 8px 16px;
     }
 
     .add-category-form button {
