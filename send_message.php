@@ -32,6 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST['title']; // New field
     $timeFound = $_POST['time_found']; // New field
     $contact = $_POST['contact'];
+    $category_id = $_POST['category_id'];
+    $new_category = $_POST['new_category'];
     $founder = $_POST['founder'];
 
     // Proceed to save the rest of the information
@@ -353,6 +355,13 @@ if (isset($userId)) {
     }
     ?>
 </select>
+
+<div id="newCategoryDiv" style="display: none;">
+    <label for="new_category">New Category:</label>
+    <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
+</div>
+
+
             <label for="landmark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-location"><path d="M21 10a9 9 0 0 0-18 0c0 5.6 9 12 9 12s9-6.4 9-12z"/><path d="M12 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg> Location where the item was found:</label>
             <input type="text" name="landmark" id="landmark" placeholder="Location details" required>
 
@@ -465,6 +474,13 @@ if (isset($userId)) {
             });
         <?php endif; ?>
        // Show the new category input field when 'Add New Category' is selected
+      // Show the new category input field when 'Add New Category' is selected
+document.getElementById('category_id').addEventListener('change', function() {
+    document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
+});
+
+
+
 document.addEventListener('DOMContentLoaded', function() {
         const dateTimeInput = document.getElementById('time_found');
 
