@@ -391,29 +391,27 @@ if (isset($userId)) {
             <label for="message"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-notebook-pen"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg> Description of the found item:</label>
             <textarea name="message" id="message" rows="4" placeholder="Enter your description" required></textarea>
             <label for="images">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image-up">
-        <path d="M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/>
-        <path d="m14 19.5 3-3 3 3"/>
-        <path d="M17 22v-5.5"/>
-        <circle cx="9" cy="9" r="2"/>
-    </svg> Please upload an image file of the item:
-</label>
-
-<input type="file" name="images[]" id="images" accept=".jpg,.jpeg,.png,.gif" multiple required>
-<p>Supported image file formats: <strong>jpg, jpeg, png, gif</strong>.</p>
-
-<!-- Invalid feedback message for images -->
-<span id="imageError" style="color: red; display: none;">Please upload at least one valid image.</span>
-
-<!-- Preview container -->
-<div class="image-preview-container" id="imagePreviewContainer"></div>
-
-<!-- Button for form submission -->
-<button type="submit" class="submit-btn" disabled>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
-        <line x1="22" x2="11" y1="2" y2="13"/>
-        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-    </svg> Send Report
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image-up">
+            <path d="M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/>
+            <path d="m14 19.5 3-3 3 3"/>
+            <path d="M17 22v-5.5"/>
+            <circle cx="9" cy="9" r="2"/>
+        </svg> Please upload an image file of the item:
+    </label>
+    
+    <input type="file" name="images[]" id="images" accept=".jpg,.jpeg,.png,.gif" multiple onchange="previewImages()" required>
+    <p>Supported image file formats: <strong>jpg, jpeg, png, gif</strong>.</p>
+    
+    <div class="image-preview-container" id="imagePreviewContainer"></div>
+    
+    <p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
+    <p id="imageUploadError" style="color: red; display: none;">You must upload between 1 and 6 images.</p>
+    
+    <button type="submit" class="submit-btn" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
+            <line x1="22" x2="11" y1="2" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg> Send Report
 </button>
         </form>
         <div class="back-btn-container">
@@ -435,37 +433,35 @@ function previewImages() {
     const previewContainer = document.getElementById('imagePreviewContainer');
     const validationMessage = document.getElementById('fileValidationMessage');
     const files = document.getElementById('images').files;
-    const submitButton = document.querySelector('.submit-btn');
-    const imageUploadError = document.getElementById('imageUploadError');
-    const imageError = document.getElementById('imageError'); // Error feedback for invalid file count
+    const submitButton = document.querySelector('.submit-btn'); // Grab the submit button
+    const imageUploadError = document.getElementById('imageUploadError'); // Grab the error message element
 
     // Reset previous messages and previews
     previewContainer.innerHTML = '';
     validationMessage.style.display = 'none';
-    imageUploadError.style.display = 'none';
-    submitButton.disabled = true;
-    imageError.style.display = 'none'; // Hide the real-time validation message by default
+    imageUploadError.style.display = 'none'; // Hide the error message by default
+    submitButton.disabled = true; // Disable the button by default until we confirm valid images
 
-    // Check if the number of images is out of valid range
     if (files.length < 1 || files.length > 6) {
-        imageUploadError.style.display = 'block';
-        imageError.style.display = 'block'; // Show real-time feedback
-        submitButton.disabled = true;
-        return;
+        // If no files or more than 6 images are uploaded, disable the submit button and show an error message
+        imageUploadError.style.display = 'block'; // Show the error message in red
+        submitButton.disabled = true; // Disable the submit button
+        return; // Stop further execution if file count is out of range
     }
 
-    let validFiles = 0;
+    let validFiles = 0; // Counter for valid image files
 
-    // Validate file types and display previews
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
 
+        // Validate file type (image only)
         if (!file.type.startsWith('image/')) {
-            validationMessage.style.display = 'block';
-            submitButton.disabled = true;
-            return;
+            validationMessage.style.display = 'block'; // Show validation message if file type is not supported
+            submitButton.disabled = true; // Disable the submit button
+            return; // Stop further execution if an invalid file type is found
         }
 
+        // If the file is valid, increase the counter
         validFiles++;
 
         // Preview valid image files
@@ -478,25 +474,11 @@ function previewImages() {
         reader.readAsDataURL(file);
     }
 
-    // If valid images are uploaded, hide the error and enable the submit button
+    // Enable the submit button only if there is at least one valid image
     if (validFiles > 0) {
         submitButton.disabled = false;
-        imageError.style.display = 'none'; // Hide error when valid images are uploaded
     }
 }
-
-// Event listener for real-time validation on file input
-document.getElementById('images').addEventListener('input', function() {
-    const files = document.getElementById('images').files;
-    const imageError = document.getElementById('imageError'); // Error message for validation
-
-    if (files.length < 1) {
-        imageError.textContent = "You must upload at least one image.";
-        imageError.style.display = 'block'; // Show real-time validation feedback
-    } else {
-        imageError.style.display = 'none'; // Clear the error message if valid images are uploaded
-    }
-});
 
 // Add event listener to form submission
 document.querySelector('.message-form').addEventListener('submit', function(event) {
