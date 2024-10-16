@@ -30,15 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $new_category = $_POST['new_category'];
     $owner = $_POST['owner'];
 
-    if ($category_id == 'add_new' && !empty($new_category)) {
-        // Insert new category with user_id to make it private
-        $stmt = $conn->prepare("INSERT INTO categories (name, user_id, status) VALUES (?, ?, 0)"); // Set status to 0 by default (unpublished)
-        $stmt->bind_param("si", $new_category, $userId);
-        $stmt->execute();
-        $category_id = $stmt->insert_id; // Use the new category ID
-        $stmt->close();
-    }
-
     // Directory for uploading files
     $uploadDir = 'uploads/missing_items/';
     if (!is_dir($uploadDir)) {
@@ -308,12 +299,6 @@ if (isset($userId)) {
     }
     ?>
 </select>
-
-<div id="newCategoryDiv" style="display: none;">
-    <label for="new_category">Others:</label>
-    <input type="text" name="new_category" id="new_category" placeholder="Enter new category name">
-</div>
-
             <label for="description">Description of the missing item:</label>
             <textarea name="description" id="description" rows="4" placeholder="Describe the missing item" required></textarea>
 
@@ -402,10 +387,6 @@ if (isset($userId)) {
                 confirmButtonText: 'OK'
             });
         <?php endif; ?>
-       // Show the new category input field when 'Add New Category' is selected
-document.getElementById('category_id').addEventListener('change', function() {
-    document.getElementById('newCategoryDiv').style.display = this.value === 'add_new' ? 'block' : 'none';
-});
 
 document.addEventListener('DOMContentLoaded', function() {
         const dateTimeInput = document.getElementById('time_missing');
