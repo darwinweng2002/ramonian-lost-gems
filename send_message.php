@@ -485,18 +485,17 @@ document.querySelector('.message-form').addEventListener('submit', function(even
     const files = document.getElementById('images').files;
     const submitButton = document.querySelector('.submit-btn');
 
-    // Check if no files are uploaded and prevent form submission
+    // Check if there are no files uploaded and prevent form submission
     if (files.length < 1 || submitButton.disabled) {
         event.preventDefault(); // Stop form submission
         Swal.fire({
             icon: 'error',
-            title: 'Image Upload Required',
-            text: 'You must upload between 1 and 6 images of the found item to submit the report.',
+            title: 'Oops!',
+            text: 'You must upload between 1 and 6 valid image files before submitting the report.',
             confirmButtonText: 'OK'
         });
     }
 });
-
 
         <?php if (isset($alertMessage)): ?>
             Swal.fire({
