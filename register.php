@@ -474,7 +474,7 @@ button {
                             <button class="btn btn-primary w-100" type="submit" id="register-btn" disabled>Register</button>
                         </div>
                         <div class="col-12 text-center mt-2">
-                        <small>By signing up, I agree to the <a href="terms.php" target="_blank">Terms and Conditions</a> and the <a href="privacy.php" target="_blank">Privacy Policy</a>.</small>
+                        <small>By signing up, I agree to the <a href="https://ramonianlostgems.com/terms.php" target="_blank">Terms and Conditions</a> and the <a href="https://ramonianlostgems.com/privacy.php" target="_blank">Privacy Policy</a>.</small>
                     </div>
 
                         </form>
