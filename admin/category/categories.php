@@ -13,23 +13,9 @@ if (isset($_POST['add_category'])) {
         $stmt->bind_param("s", $newCategory);
         $stmt->execute();
         $stmt->close();
-        echo "<script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Category added successfully!',
-                confirmButtonText: 'OK'
-            });
-        </script>";
+        $successMessage = "Category added successfully!";
     } else {
-        echo "<script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Category name cannot be empty!',
-                confirmButtonText: 'OK'
-            });
-        </script>";
+        $errorMessage = "Category name cannot be empty!";
     }
 }
 
@@ -42,23 +28,9 @@ if (isset($_POST['update_category'])) {
         $stmt->bind_param("si", $updatedName, $categoryId);
         $stmt->execute();
         $stmt->close();
-        echo "<script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Category updated successfully!',
-                confirmButtonText: 'OK'
-            });
-        </script>";
+        $successMessage = "Category updated successfully!";
     } else {
-        echo "<script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Category name cannot be empty!',
-                confirmButtonText: 'OK'
-            });
-        </script>";
+        $errorMessage = "Category name cannot be empty!";
     }
 }
 
@@ -69,14 +41,7 @@ if (isset($_POST['delete_category'])) {
     $stmt->bind_param("i", $categoryId);
     $stmt->execute();
     $stmt->close();
-    echo "<script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Category deleted successfully!',
-            confirmButtonText: 'OK'
-        });
-    </script>";
+    $successMessage = "Category deleted successfully!";
 }
 
 // Fetch all categories
@@ -319,61 +284,61 @@ td {
 <?php require_once('../inc/navigation.php'); ?>
 <br>
 <br>
-    <div class="container">
-        <h2>Category Management</h2>
+<div class="container">
+    <h2>Category Management</h2>
 
-        <!-- Display success or error messages -->
-        <?php if (isset($successMessage)): ?>
-            <div class="message success"><?php echo $successMessage; ?></div>
-        <?php elseif (isset($errorMessage)): ?>
-            <div class="message error"><?php echo $errorMessage; ?></div>
-        <?php endif; ?>
+    <!-- Display success or error messages -->
+    <?php if (isset($successMessage)): ?>
+        <div class="message success"><?php echo $successMessage; ?></div>
+    <?php elseif (isset($errorMessage)): ?>
+        <div class="message error"><?php echo $errorMessage; ?></div>
+    <?php endif; ?>
 
-        <!-- Add New Category Form -->
-        <form action="" method="POST" class="add-category-form">
-            <input type="text" name="new_category" placeholder="Enter new category" required>
-            <button type="submit" name="add_category">Add Category</button>
-        </form>
+    <!-- Add New Category Form -->
+    <form action="" method="POST" class="add-category-form">
+        <input type="text" name="new_category" placeholder="Enter new category" required>
+        <button type="submit" name="add_category">Add Category</button>
+    </form>
 
-        <!-- Display Categories -->
-        <table>
-            <thead>
-                <tr>
-                    <th>Category Name</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($categories as $category): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($category['name']); ?></td>
-                    <td>
-                        <div class="actions">
-                            <!-- Edit Category -->
-                            <form action="" method="POST">
-                                <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                                <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>" required>
-                                <button type="submit" name="update_category" class="edit">Update</button>
-                            </form>
+    <!-- Display Categories -->
+    <table>
+        <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($categories as $category): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($category['name']); ?></td>
+                <td>
+                    <div class="actions">
+                        <!-- Edit Category -->
+                        <form action="" method="POST" class="edit-form">
+                            <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
+                            <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>" required>
+                            <button type="button" class="edit-button">Update</button>
+                        </form>
 
-                            <!-- Delete Category -->
-                            <form action="" method="POST">
-                                <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                                <button type="submit" name="delete_category" class="delete" onclick="return confirm('Are you sure you want to delete this category?');">Delete</button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+                        <!-- Delete Category -->
+                        <form action="" method="POST" class="delete-form">
+                            <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
+                            <button type="button" class="delete-button">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 <?php require_once('../inc/footer.php'); ?>
 <script>
     // SweetAlert confirmation for Delete
     document.querySelectorAll('.delete-button').forEach(button => {
         button.addEventListener('click', function() {
-            const categoryId = this.getAttribute('data-category-id');
+            const form = this.closest('form');  // Get the form associated with the delete button
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -385,7 +350,6 @@ td {
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Submit the delete form after confirmation
-                    const form = this.closest('form');
                     form.submit();
                 }
             });
@@ -395,7 +359,8 @@ td {
     // SweetAlert confirmation for Edit
     document.querySelectorAll('.edit-button').forEach(button => {
         button.addEventListener('click', function() {
-            const categoryName = this.getAttribute('data-category-name');
+            const form = this.closest('form');  // Get the form associated with the edit button
+            const categoryName = form.querySelector('input[name="category_name"]').value;
             Swal.fire({
                 title: 'Confirm Update',
                 text: `Are you sure you want to update the category to "${categoryName}"?`,
@@ -407,7 +372,6 @@ td {
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Submit the edit form after confirmation
-                    const form = this.closest('form');
                     form.submit();
                 }
             });
