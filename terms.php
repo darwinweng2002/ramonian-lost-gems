@@ -42,7 +42,7 @@ include 'config.php';
 
     .terms-container {
       background-color: #ffffff;
-      padding: 20px;
+      padding: 25px; /* Adjusted padding for uniform margins */
       border-radius: 10px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
       margin-bottom: 30px;
@@ -118,7 +118,7 @@ include 'config.php';
       }
 
       .terms-container {
-        padding: 15px;
+        padding: 20px; /* Adjusted padding for mobile devices */
         margin: 10px;
         border-radius: 8px;
       }
@@ -144,7 +144,7 @@ include 'config.php';
 
     @media (max-width: 480px) {
       .terms-container {
-        padding: 10px;
+        padding: 15px; /* Smaller padding for very small screens */
       }
 
       h5 {
