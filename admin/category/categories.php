@@ -13,9 +13,23 @@ if (isset($_POST['add_category'])) {
         $stmt->bind_param("s", $newCategory);
         $stmt->execute();
         $stmt->close();
-        $successMessage = "Category added successfully!";
+        echo "<script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Category added successfully!',
+                confirmButtonText: 'OK'
+            });
+        </script>";
     } else {
-        $errorMessage = "Category name cannot be empty!";
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Category name cannot be empty!',
+                confirmButtonText: 'OK'
+            });
+        </script>";
     }
 }
 
@@ -28,9 +42,23 @@ if (isset($_POST['update_category'])) {
         $stmt->bind_param("si", $updatedName, $categoryId);
         $stmt->execute();
         $stmt->close();
-        $successMessage = "Category updated successfully!";
+        echo "<script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Category updated successfully!',
+                confirmButtonText: 'OK'
+            });
+        </script>";
     } else {
-        $errorMessage = "Category name cannot be empty!";
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Category name cannot be empty!',
+                confirmButtonText: 'OK'
+            });
+        </script>";
     }
 }
 
@@ -41,7 +69,14 @@ if (isset($_POST['delete_category'])) {
     $stmt->bind_param("i", $categoryId);
     $stmt->execute();
     $stmt->close();
-    $successMessage = "Category deleted successfully!";
+    echo "<script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Category deleted successfully!',
+            confirmButtonText: 'OK'
+        });
+    </script>";
 }
 
 // Fetch all categories
