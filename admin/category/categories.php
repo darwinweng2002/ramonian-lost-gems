@@ -57,13 +57,15 @@ $stmt->close();
 
 <!DOCTYPE html>
 <html lang="en">
+<?php require_once('../inc/header.php'); ?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Category Management</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Assuming you have a CSS file -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Assuming you have a CSS file -->
     <style>
+        /* Basic styles */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f7f7f7;
@@ -86,7 +88,10 @@ $stmt->close();
         }
 
         form {
-            display: inline-block;
+            display: inline-block; 
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
         input[type="text"] {
@@ -96,17 +101,22 @@ $stmt->close();
             border-radius: 4px;
         }
 
-        button {
+                button {
             padding: 8px 16px;
             background-color: #28a745;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin-right: 10px; /* Add some spacing */
         }
 
         button.delete {
             background-color: #dc3545;
+        }
+        .actions {
+            display: flex; /* Use Flexbox to align buttons side-by-side */
+            gap: 10px; /* Gap between buttons */
         }
 
         table {
@@ -128,11 +138,6 @@ $stmt->close();
             background-color: #f4f4f4;
         }
 
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-
         .message {
             text-align: center;
             padding: 10px;
@@ -152,7 +157,11 @@ $stmt->close();
     </style>
 </head>
 <body>
+<?php require_once('../inc/topBarNav.php'); ?>
+<?php require_once('../inc/navigation.php'); ?>
     <div class="container">
+        <br>
+        <br>
         <h2>Category Management</h2>
 
         <!-- Display success or error messages -->
@@ -179,23 +188,25 @@ $stmt->close();
             <tbody>
                 <?php foreach ($categories as $category): ?>
                 <tr>
+
                     <td><?php echo htmlspecialchars($category['name']); ?></td>
                     <td>
-                        <div class="actions">
-                            <!-- Edit Category -->
-                            <form action="" method="POST">
-                                <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                                <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>">
-                                <button type="submit" name="update_category" class="edit">Edit</button>
-                            </form>
+                    <div class="actions">
+                        <!-- Edit Category -->
+                        <form action="" method="POST">
+                            <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
+                            <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>">
+                            <button type="submit" name="update_category" class="edit">Edit</button>
+                        </form>
 
-                            <!-- Delete Category -->
-                            <form action="" method="POST">
-                                <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                                <button type="submit" name="delete_category" class="delete">Delete</button>
-                            </form>
-                        </div>
-                    </td>
+                        <!-- Delete Category -->
+                        <form action="" method="POST">
+                            <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
+                            <button type="submit" name="delete_category" class="delete">Delete</button>
+                        </form>
+                    </div>
+                </td>
+
                 </tr>
                 <?php endforeach; ?>
             </tbody>
