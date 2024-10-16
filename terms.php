@@ -60,9 +60,6 @@ if (isset($_POST['guest_login'])) {
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<?php require_once('inc/header.php'); ?>
-<body>
   <style>
     body {
       background-size: cover;
@@ -70,6 +67,7 @@ if (isset($_POST['guest_login'])) {
       backdrop-filter: brightness(.7);
       overflow-x: hidden;
     }
+
     .logo {
       display: flex;
       flex-direction: column;
@@ -88,17 +86,54 @@ if (isset($_POST['guest_login'])) {
       font-size: 24px;
     }
 
+    .terms-container {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    h5 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+      color: #333;
+    }
+
+    p {
+      color: #555;
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      text-align: justify;
+    }
+
+    ol {
+      padding-left: 20px;
+    }
+
+    ol li {
+      margin-bottom: 15px;
+      color: #555;
+      font-size: 1rem;
+    }
+
     .hyper-link {
       text-align: center;
     }
   </style>
+</head>
+<?php require_once('inc/header.php'); ?>
+<body>
 
   <main>
     <div class="container">
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
         <div class="container">
           <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+            <div class="col-lg-8 col-md-10 d-flex flex-column align-items-center justify-content-center">
+              
               <div class="d-flex justify-content-center py-4">
                 <a href="#" class="logo d-flex align-items-center w-auto">
                   <img src="<?= validate_image($_settings->info('logo')) ?>" alt="">
@@ -107,37 +142,28 @@ if (isset($_POST['guest_login'])) {
                 </a>
               </div><!-- End Logo -->
 
-              <div class="card mb-3">
-                <div class="card-body">
-                  <div class="pt-4 pb-2">
-                    <h5 class="card-title text-center pb-0 fs-4">Terms and Conditions for Ramonian Lost Gems</h5>
-                    <p class="text-center small">1. Acceptance of Terms
-By registering and using the Ramonian Lost Gems mobile application, you agree to abide by these Terms and Conditions. These terms govern your access to and use of the application and its features, including the submission of personal information and ID verification documents for registration.
+              <div class="terms-container">
+                <h5>Terms and Conditions for Ramonian Lost Gems</h5>
 
-2. User Registration and Approval
-To access the full features of the app, users must register an account. During registration, you are required to submit either a School ID (for students), Employee ID (for PRMSU employees), or any valid ID (for guest users). These documents are used for the sole purpose of validating your identity as a legitimate user of PRMSU Iba Campus or a guest.
+                <p>Welcome to Ramonian Lost Gems. By using our mobile application, you agree to comply with and be bound by the following terms and conditions. Please read them carefully before registering an account.</p>
 
-Once your registration is submitted, your account will not be immediately active. All accounts must be reviewed and approved by an administrator. You will be notified once your account is approved and ready for use. If your account is rejected, you will be notified via the email address you provided.
-
-3. Posting Lost and Found Items
-As a registered user, you can report lost and found items through the application. Reports must include specific details such as item name, description, and, optionally, multiple images of the item. Your reports will be reviewed by an admin before being published.
-
-4. Claiming Items
-Only registered users with approved accounts can submit claim requests for lost or found items. Guest users may report lost or found items but cannot claim them. All claims will be verified by an admin before final approval.
-
-5. Responsibilities of Admin Users
-Admins have the responsibility of managing and reviewing all reported lost and found items. Admins can publish, delete, or reject reported items. They can also manage claim requests and change the status of an item to 'claimed' once it has been returned to its owner. Admins are authorized to update the status of reports and manage user accounts.
-
-6. Prohibited Use
-You agree not to misuse the Ramonian Lost Gems application for any unauthorized purposes, including providing false information or attempting to claim items that do not belong to you.
-
-7. Modification of Terms
-We reserve the right to modify these Terms and Conditions at any time. Any changes will be posted on this page, and it is your responsibility to review the terms regularly. Continued use of the app after changes constitutes your acceptance of the modified terms.
-
-8. Limitation of Liability
-Ramonian Lost Gems is not responsible for any direct or indirect damages resulting from the use of the mobile application, including the loss or theft of personal items.</p>
-                  </div>
-                </div>
+                <ol>
+                  <li><strong>Acceptance of Terms:</strong> By registering and using the Ramonian Lost Gems mobile application, you agree to abide by these Terms and Conditions. These terms govern your access to and use of the application and its features, including the submission of personal information and ID verification documents for registration.</li>
+                  
+                  <li><strong>User Registration and Approval:</strong> To access the full features of the app, users must register an account. During registration, you are required to submit either a School ID (for students), Employee ID (for PRMSU employees), or any valid ID (for guest users). These documents are used for the sole purpose of validating your identity as a legitimate user of PRMSU Iba Campus or a guest. Once your registration is submitted, your account will not be immediately active. All accounts must be reviewed and approved by an administrator. You will be notified once your account is approved and ready for use. If your account is rejected, you will be notified via the email address you provided.</li>
+                  
+                  <li><strong>Posting Lost and Found Items:</strong> As a registered user, you can report lost and found items through the application. Reports must include specific details such as item name, description, and, optionally, multiple images of the item. Your reports will be reviewed by an admin before being published.</li>
+                  
+                  <li><strong>Claiming Items:</strong> Only registered users with approved accounts can submit claim requests for lost or found items. Guest users may report lost or found items but cannot claim them. All claims will be verified by an admin before final approval.</li>
+                  
+                  <li><strong>Responsibilities of Admin Users:</strong> Admins have the responsibility of managing and reviewing all reported lost and found items. Admins can publish, delete, or reject reported items. They can also manage claim requests and change the status of an item to 'claimed' once it has been returned to its owner. Admins are authorized to update the status of reports and manage user accounts.</li>
+                  
+                  <li><strong>Prohibited Use:</strong> You agree not to misuse the Ramonian Lost Gems application for any unauthorized purposes, including providing false information or attempting to claim items that do not belong to you.</li>
+                  
+                  <li><strong>Modification of Terms:</strong> We reserve the right to modify these Terms and Conditions at any time. Any changes will be posted on this page, and it is your responsibility to review the terms regularly. Continued use of the app after changes constitutes your acceptance of the modified terms.</li>
+                  
+                  <li><strong>Limitation of Liability:</strong> Ramonian Lost Gems is not responsible for any direct or indirect damages resulting from the use of the mobile application, including the loss or theft of personal items.</li>
+                </ol>
               </div>
 
               <div class="hyper-link">
@@ -152,6 +178,7 @@ Ramonian Lost Gems is not responsible for any direct or indirect damages resulti
   </main>
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
   <script src="<?= base_url ?>assets/js/jquery-3.6.4.min.js"></script>
   <script src="<?= base_url ?>assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="<?= base_url ?>assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
