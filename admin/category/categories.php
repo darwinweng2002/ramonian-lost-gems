@@ -200,6 +200,8 @@ $stmt->close();
 <body>
 <?php require_once('../inc/topBarNav.php'); ?>
 <?php require_once('../inc/navigation.php'); ?>
+<br>
+<br>
     <div class="container">
         <h2>Category Management</h2>
 
