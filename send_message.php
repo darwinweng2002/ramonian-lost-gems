@@ -32,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST['title']; // New field
     $timeFound = $_POST['time_found']; // New field
     $contact = $_POST['contact'];
-    $new_category = $_POST['new_category'];
     $founder = $_POST['founder'];
 
     // Proceed to save the rest of the information
