@@ -65,7 +65,7 @@ $stmt->close();
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-      /* Basic styles */
+/* Basic styles */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f7f7f7;
@@ -143,18 +143,29 @@ td {
     text-align: center;
 }
 
+/* Styling for actions and inputs */
 .actions {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     gap: 10px;
 }
 
 .actions form {
-    display: inline-block;
+    width: 100%;
+}
+
+.actions input[type="text"] {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%; /* Make input width 100% */
+    box-sizing: border-box;
 }
 
 .actions button {
-    padding: 8px 16px;
+    width: 100%;
+    padding: 10px;
     font-size: 14px;
     border: none;
     border-radius: 4px;
@@ -243,7 +254,6 @@ td {
 
     .add-category-form input[type="text"] {
         font-size: 14px;
-        padding: 8px 16px;
     }
 
     .add-category-form button {
