@@ -18,24 +18,27 @@ include 'config.php';
       background-repeat: no-repeat;
       backdrop-filter: brightness(.7);
       overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
     }
 
     .logo {
-  display: flex;
-  flex-direction: column; /* Stack logo and text */
-  align-items: center; /* Center items horizontally */
-  margin-bottom: 10px; /* Space below the logo */
-}
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+    }
 
-.logo img {
-  max-height: 60px; /* Adjust height as needed */
-}
+    .logo img {
+      max-height: 60px;
+    }
 
-.logo span {
-  color: #fff;
-  text-align: center; /* Center the text */
-  font-size: 24px; /* Adjust font size as needed */
-}
+    .logo span {
+      color: #fff;
+      text-align: center;
+      font-size: 24px;
+    }
 
     .terms-container {
       background-color: #ffffff;
@@ -43,6 +46,8 @@ include 'config.php';
       border-radius: 10px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
       margin-bottom: 30px;
+      width: 100%;
+      max-width: 800px; /* Set a maximum width for larger screens */
     }
 
     h5 {
@@ -52,12 +57,12 @@ include 'config.php';
       color: #333;
     }
 
-    p {
+    p, ol li {
       color: #555;
       font-size: 1rem;
       line-height: 1.8;
       margin-bottom: 20px;
-      text-align: justify; /* Justified alignment */
+      text-align: justify;
     }
 
     ol {
@@ -66,47 +71,95 @@ include 'config.php';
 
     ol li {
       margin-bottom: 15px;
-      color: #555;
-      font-size: 1rem;
-      text-align: justify; /* Justified alignment for list items */
     }
 
     .hyper-link {
       text-align: center;
     }
+
     .back-btn-container {
-            margin: 20px 0;
-            display: flex;
-            justify-content: flex-start;
-        }
+      margin: 20px 0;
+      display: flex;
+      justify-content: flex-start;
+    }
 
-        .back-btn {
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            transition: background-color 0.3s ease;
-        }
+    .back-btn {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
 
-        .back-btn svg {
-            margin-right: 8px;
-        }
+    .back-btn svg {
+      margin-right: 8px;
+    }
 
-        .back-btn:hover {
-            background-color: #0056b3;
-        }
+    .back-btn:hover {
+      background-color: #0056b3;
+    }
 
-        .back-btn:focus {
-            outline: none;
-            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
-        }
+    .back-btn:focus {
+      outline: none;
+      box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      body {
+        font-size: 14px;
+        padding: 10px;
+      }
+
+      .terms-container {
+        padding: 15px;
+        margin: 10px;
+        border-radius: 8px;
+      }
+
+      h5 {
+        font-size: 1.2rem;
+      }
+
+      .back-btn {
+        font-size: 14px;
+        padding: 8px 15px;
+      }
+
+      ol {
+        padding-left: 15px;
+      }
+
+      ol li {
+        font-size: 0.95rem;
+        margin-bottom: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .terms-container {
+        padding: 10px;
+      }
+
+      h5 {
+        font-size: 1.1rem;
+      }
+
+      p, ol li {
+        font-size: 0.9rem;
+      }
+
+      .back-btn {
+        font-size: 13px;
+        padding: 8px 10px;
+      }
+    }
   </style>
 </head>
 <?php require_once('inc/header.php'); ?>
