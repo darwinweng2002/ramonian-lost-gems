@@ -81,7 +81,7 @@ $stmt->close();
             border-radius: 8px;
         }
 
-        h1 {
+        h2 {
             text-align: center;
             color: #333;
         }
@@ -154,7 +154,9 @@ $stmt->close();
 <?php require_once('../inc/topBarNav.php'); ?>
 <?php require_once('../inc/navigation.php'); ?>
     <div class="container">
-        <h1>Category Management</h1>
+        <br>
+        <br>
+        <h2>Category Management</h2>
 
         <!-- Display success or error messages -->
         <?php if (isset($successMessage)): ?>
