@@ -63,7 +63,7 @@ $stmt->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Category Management</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Assuming you have a CSS file -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         /* Basic styles */
         body {
@@ -85,40 +85,40 @@ $stmt->close();
         h2 {
             text-align: center;
             color: #333;
+            margin-bottom: 30px;
         }
 
-        form {
-            display: inline-block; 
+        /* Add Category form styling */
+        .add-category-form {
+            display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
-        input[type="text"] {
-            padding: 8px;
-            width: 80%;
+        .add-category-form input[type="text"] {
+            flex: 1;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            font-size: 16px;
+            margin-right: 10px;
         }
 
-                button {
-            padding: 8px 16px;
+        .add-category-form button {
+            padding: 10px 20px;
             background-color: #28a745;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-right: 10px; /* Add some spacing */
+            font-size: 16px;
         }
 
-        button.delete {
-            background-color: #dc3545;
-        }
-        .actions {
-            display: flex; /* Use Flexbox to align buttons side-by-side */
-            gap: 10px; /* Gap between buttons */
+        .add-category-form button:hover {
+            background-color: #218838;
         }
 
+        /* Table and button styling */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -136,12 +136,53 @@ $stmt->close();
 
         th {
             background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Space between Edit and Delete buttons */
+        }
+
+        .actions form {
+            display: inline-block;
+        }
+
+        .actions button {
+            padding: 8px 16px;
+            font-size: 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .actions .edit {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .actions .edit:hover {
+            background-color: #218838;
+        }
+
+        .actions .delete {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .actions .delete:hover {
+            background-color: #c82333;
         }
 
         .message {
             text-align: center;
             padding: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             border-radius: 4px;
         }
 
@@ -160,8 +201,6 @@ $stmt->close();
 <?php require_once('../inc/topBarNav.php'); ?>
 <?php require_once('../inc/navigation.php'); ?>
     <div class="container">
-        <br>
-        <br>
         <h2>Category Management</h2>
 
         <!-- Display success or error messages -->
@@ -172,8 +211,8 @@ $stmt->close();
         <?php endif; ?>
 
         <!-- Add New Category Form -->
-        <form action="" method="POST">
-            <input type="text" name="new_category" placeholder="Enter new category">
+        <form action="" method="POST" class="add-category-form">
+            <input type="text" name="new_category" placeholder="Enter new category" required>
             <button type="submit" name="add_category">Add Category</button>
         </form>
 
@@ -188,27 +227,29 @@ $stmt->close();
             <tbody>
                 <?php foreach ($categories as $category): ?>
                 <tr>
-
                     <td><?php echo htmlspecialchars($category['name']); ?></td>
                     <td>
-                        <!-- Edit Category -->
-                        <form action="" method="POST" style="display:inline;">
-                            <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                            <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>">
-                            <button type="submit" name="update_category">Edit</button>
-                        </form>
+                        <div class="actions">
+                            <!-- Edit Category -->
+                            <form action="" method="POST">
+                                <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
+                                <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>" required>
+                                <button type="submit" name="update_category" class="edit">Edit</button>
+                            </form>
 
-                        <!-- Delete Category -->
-                        <form action="" method="POST" style="display:inline;">
-                            <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                            <button type="submit" name="delete_category" class="delete" onclick="return confirm('Are you sure you want to delete this category?');">Delete</button>
-                        </form>
+                            <!-- Delete Category -->
+                            <form action="" method="POST">
+                                <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
+                                <button type="submit" name="delete_category" class="delete" onclick="return confirm('Are you sure you want to delete this category?');">Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
-<?php require_once('../inc/footer.php') ?>
+<?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
+
