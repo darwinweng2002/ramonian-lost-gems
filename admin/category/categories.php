@@ -65,136 +65,207 @@ $stmt->close();
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* Basic styles */
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f7f7f7;
-            margin: 0;
-            padding: 20px;
-        }
+      /* Basic styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 20px;
+}
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
 
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
 
-        /* Add Category form styling */
-        .add-category-form {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
+/* Add Category form styling */
+.add-category-form {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
 
-        .add-category-form input[type="text"] {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-right: 10px;
-        }
+.add-category-form input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-right: 10px;
+}
 
-        .add-category-form button {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+.add-category-form button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
 
-        .add-category-form button:hover {
-            background-color: #218838;
-        }
+.add-category-form button:hover {
+    background-color: #218838;
+}
 
-        /* Table and button styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
+/* Table and button styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
 
-        table, th, td {
-            border: 1px solid #ccc;
-        }
+table, th, td {
+    border: 1px solid #ccc;
+}
 
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
+th, td {
+    padding: 10px;
+    text-align: left;
+}
 
-        th {
-            background-color: #f4f4f4;
-            text-align: center;
-        }
+th {
+    background-color: #f4f4f4;
+    text-align: center;
+}
 
-        td {
-            text-align: center;
-        }
+td {
+    text-align: center;
+}
 
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 10px; /* Space between Edit and Delete buttons */
-        }
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
 
-        .actions form {
-            display: inline-block;
-        }
+.actions form {
+    display: inline-block;
+}
 
-        .actions button {
-            padding: 8px 16px;
-            font-size: 14px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+.actions button {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
-        .actions .edit {
-            background-color: #28a745;
-            color: white;
-        }
+.actions .edit {
+    background-color: #28a745;
+    color: white;
+}
 
-        .actions .edit:hover {
-            background-color: #218838;
-        }
+.actions .edit:hover {
+    background-color: #218838;
+}
 
-        .actions .delete {
-            background-color: #dc3545;
-            color: white;
-        }
+.actions .delete {
+    background-color: #dc3545;
+    color: white;
+}
 
-        .actions .delete:hover {
-            background-color: #c82333;
-        }
+.actions .delete:hover {
+    background-color: #c82333;
+}
 
-        .message {
-            text-align: center;
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-        }
+/* Success and error message styling */
+.message {
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
 
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-        }
+.success {
+    background-color: #d4edda;
+    color: #155724;
+}
 
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    /* Stack Add Category form elements vertically on smaller screens */
+    .add-category-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .add-category-form input[type="text"] {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .add-category-form button {
+        width: 100%;
+    }
+
+    /* Adjust the table for smaller screens */
+    table, th, td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .actions button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Further adjustments for very small screens */
+    .container {
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .add-category-form input[type="text"] {
+        font-size: 14px;
+    }
+
+    .add-category-form button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    table, th, td {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .actions {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .actions button {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
     </style>
 </head>
 <body>
