@@ -46,7 +46,8 @@
     </a>
   </li>
   <li class="nav-item">
-  <i class="fa fa-terminal"></i>
+    <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="https://ramonianlostgems.com/admin/category/categories.php">
+    <i class="fa fa-folder"></i>
       <span>Categories</span>
       <?php 
       $message = $conn->query("SELECT * FROM `categories` where `status` = 0")->num_rows;
