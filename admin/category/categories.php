@@ -40,9 +40,14 @@ if (isset($_POST['delete_category'])) {
     $stmt = $conn->prepare("DELETE FROM categories WHERE id = ?");
     $stmt->bind_param("i", $categoryId);
     $stmt->execute();
+    if ($stmt->affected_rows > 0) {
+        $successMessage = "Category deleted successfully!";
+    } else {
+        $errorMessage = "Failed to delete category.";
+    }
     $stmt->close();
-    $successMessage = "Category deleted successfully!";
 }
+
 
 // Fetch all categories
 $categories = [];
@@ -192,18 +197,19 @@ $stmt->close();
                     <td><?php echo htmlspecialchars($category['name']); ?></td>
                     <td>
                     <div class="actions">
-                        <!-- Edit Category -->
-                        <form action="" method="POST">
-                            <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                            <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>">
-                            <button type="submit" name="update_category" class="edit">Edit</button>
-                        </form>
+                       <!-- Edit Category -->
+                    <form action="" method="POST" onsubmit="return confirmEdit(event);">
+                        <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
+                        <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>">
+                        <button type="submit" name="update_category" class="edit">Edit</button>
+                    </form>
 
-                        <!-- Delete Category -->
-                        <form action="" method="POST">
-                            <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                            <button type="submit" name="delete_category" class="delete">Delete</button>
-                        </form>
+                    <!-- Delete Category -->
+                    <form action="" method="POST" onsubmit="return confirmDelete(event);">
+                        <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
+                        <button type="submit" name="delete_category" class="delete">Delete</button>
+                    </form>
+
                     </div>
                 </td>
 
@@ -213,7 +219,6 @@ $stmt->close();
         </table>
     </div>
 <?php require_once('../inc/footer.php') ?>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // Success alert for actions (add, edit, delete)
     <?php if (isset($successMessage)): ?>
@@ -234,48 +239,48 @@ $stmt->close();
         });
     <?php endif; ?>
 
-    // Confirmation for delete and edit actions
-    document.querySelectorAll('.delete').forEach(button => {
-        button.addEventListener('click', function (event) {
-            event.preventDefault(); // Prevent form submission
-            
-            const form = this.closest('form'); // Get the form that contains the button
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'You won\'t be able to revert this!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit(); // Submit the form if confirmed
-                }
-            });
-        });
+ // SweetAlert for confirmation before deletion
+function confirmDelete(event) {
+    event.preventDefault(); // Prevent form submission
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            event.target.submit(); // Submit form if confirmed
+        }
     });
 
-    document.querySelectorAll('.edit').forEach(button => {
-        button.addEventListener('click', function (event) {
-            event.preventDefault(); // Prevent form submission
+    return false; // Prevent default form submission
+}
 
-            const form = this.closest('form'); // Get the form that contains the button
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'Do you want to update this category?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, edit it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit(); // Submit the form if confirmed
-                }
-            });
-        });
+// SweetAlert for confirmation before edit
+function confirmEdit(event) {
+    event.preventDefault(); // Prevent form submission
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to update this category?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, update it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            event.target.submit(); // Submit form if confirmed
+        }
     });
+
+    return false; // Prevent default form submission
+}
+
 </script>
 </body>
 </html>
