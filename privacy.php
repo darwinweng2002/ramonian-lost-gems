@@ -148,22 +148,21 @@ include 'config.php';
                   <li><strong>Guest User Data:</strong> Guest users are required to provide a valid ID during registration to validate their identity. However, guest users have limited access to the app's features and are not required to provide as much personal information as registered users.</li>
                   
                   <li><strong>Changes to Privacy Policy:</strong> We reserve the right to modify this Privacy Policy at any time. Any changes will be posted on this page, and it is your responsibility to review the policy regularly. Continued use of the app after changes to the policy indicates your acceptance of the revised terms.</li>
-                  
-                  <li><strong>Contact Information:</strong> If you have any questions regarding this Privacy Policy or the handling of your data, please contact us at privacy@ramonianlostgems.com.</li>
                 </ol>
               </div>
             </div>
           </div>
         </div>
         <div class="back-btn-container">
-    <button class="back-btn" onclick="history.back()">
+    <a href="https://ramonianlostgems.com/register.php" class="back-btn">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left">
             <line x1="19" y1="12" x2="5" y2="12"/>
             <polyline points="12 19 5 12 12 5"/>
         </svg>
         Back
-    </button>
+    </a>
 </div>
+
       </section>
     </div>
   </main>
