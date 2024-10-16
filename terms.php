@@ -13,7 +13,7 @@ include 'config.php';
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
-    body {
+   body {
       background-size: cover;
       background-repeat: no-repeat;
       backdrop-filter: brightness(.7);
@@ -21,22 +21,22 @@ include 'config.php';
     }
 
     .logo {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 10px;
-    }
+  display: flex;
+  flex-direction: column; /* Stack logo and text */
+  align-items: center; /* Center items horizontally */
+  margin-bottom: 10px; /* Space below the logo */
+}
 
-    .logo img {
-      max-height: 60px;
-    }
+.logo img {
+  max-height: 60px; /* Adjust height as needed */
+}
 
-    .logo span {
-      color: #fff;  /* Set text color to white */
-      text-shadow: 0px 0px 10px #000;  /* Optional: Keep the shadow effect */
-      text-align: center;
-      font-size: 24px;
-    }
+.logo span {
+  color: #fff;
+  text-shadow: 0px 0px 10px #000;
+  text-align: center; /* Center the text */
+  font-size: 24px; /* Adjust font size as needed */
+}
 
     .terms-container {
       background-color: #ffffff;
@@ -124,7 +124,7 @@ include 'config.php';
                 <a href="#" class="logo d-flex align-items-center w-auto">
                   <img src="uploads/logo.png" alt="">
                   <br>
-                  <span>Ramonian Lost Gems</span> 
+                  <span><?= $_settings->info('name') ?></span>
                 </a>
               </div><!-- End Logo -->
 
