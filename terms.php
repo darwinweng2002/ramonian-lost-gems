@@ -124,7 +124,7 @@ include 'config.php';
                 <a href="#" class="logo d-flex align-items-center w-auto">
                   <img src="uploads/logo.png" alt="">
                   <br>
-                  <span><?= $_settings->info('name') ?></span>
+                  <span>Ramonian Lost Gems</span> 
                 </a>
               </div><!-- End Logo -->
 
