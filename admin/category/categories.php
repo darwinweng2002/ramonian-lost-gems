@@ -13,23 +13,9 @@ if (isset($_POST['add_category'])) {
         $stmt->bind_param("s", $newCategory);
         $stmt->execute();
         $stmt->close();
-        echo "<script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Category added successfully!',
-                confirmButtonText: 'OK'
-            });
-        </script>";
+        $successMessage = "Category added successfully!";
     } else {
-        echo "<script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Category name cannot be empty!',
-                confirmButtonText: 'OK'
-            });
-        </script>";
+        $errorMessage = "Category name cannot be empty!";
     }
 }
 
@@ -42,23 +28,9 @@ if (isset($_POST['update_category'])) {
         $stmt->bind_param("si", $updatedName, $categoryId);
         $stmt->execute();
         $stmt->close();
-        echo "<script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Category updated successfully!',
-                confirmButtonText: 'OK'
-            });
-        </script>";
+        $successMessage = "Category updated successfully!";
     } else {
-        echo "<script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Category name cannot be empty!',
-                confirmButtonText: 'OK'
-            });
-        </script>";
+        $errorMessage = "Category name cannot be empty!";
     }
 }
 
@@ -69,14 +41,7 @@ if (isset($_POST['delete_category'])) {
     $stmt->bind_param("i", $categoryId);
     $stmt->execute();
     $stmt->close();
-    echo "<script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Category deleted successfully!',
-            confirmButtonText: 'OK'
-        });
-    </script>";
+    $successMessage = "Category deleted successfully!";
 }
 
 // Fetch all categories
@@ -322,6 +287,13 @@ td {
     <div class="container">
         <h2>Category Management</h2>
 
+        <!-- Display success or error messages -->
+        <?php if (isset($successMessage)): ?>
+            <div class="message success"><?php echo $successMessage; ?></div>
+        <?php elseif (isset($errorMessage)): ?>
+            <div class="message error"><?php echo $errorMessage; ?></div>
+        <?php endif; ?>
+
         <!-- Add New Category Form -->
         <form action="" method="POST" class="add-category-form">
             <input type="text" name="new_category" placeholder="Enter new category" required>
@@ -343,16 +315,16 @@ td {
                     <td>
                         <div class="actions">
                             <!-- Edit Category -->
-                            <form action="" method="POST" class="edit-form">
+                            <form action="" method="POST">
                                 <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
                                 <input type="text" name="category_name" value="<?php echo htmlspecialchars($category['name']); ?>" required>
-                                <button type="button" class="edit-button" data-category-id="<?php echo $category['id']; ?>" data-category-name="<?php echo htmlspecialchars($category['name']); ?>">Update</button>
+                                <button type="submit" name="update_category" class="edit">Update</button>
                             </form>
 
                             <!-- Delete Category -->
-                            <form action="" method="POST" class="delete-form">
+                            <form action="" method="POST">
                                 <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                                <button type="button" class="delete-button" data-category-id="<?php echo $category['id']; ?>">Delete</button>
+                                <button type="submit" name="delete_category" class="delete" onclick="return confirm('Are you sure you want to delete this category?');">Delete</button>
                             </form>
                         </div>
                     </td>
