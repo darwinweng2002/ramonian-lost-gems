@@ -320,7 +320,7 @@ if (isset($userId)) {
             <input type="datetime-local" name="time_missing" id="time_missing" required>
            
             <label for="images">Please upload an image file of the item:</label> <!-- Added the text label here -->
-            <input type="file" name="images[]" id="images" accept=".jpg,.jpeg,.png,.gif" multiple onchange="previewImages()">
+            <input type="file" name="images[]" id="images" accept=".jpg,.jpeg,.png,.gif" multiple onchange="previewImages()" required>
             <p>Supported image file formats: <strong>jpg, jpeg, png, gif</strong>.</p>
             <div class="image-preview-container" id="imagePreviewContainer"></div>
             <p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
