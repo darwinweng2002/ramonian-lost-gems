@@ -1,11 +1,10 @@
 <?php  
-require 'vendor/autoload.php';
-
-// Include the database configuration file
+include 'config.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-include 'config.php';
+//require 'vendor/autoload.php';
+
 
 // Include PHPMailer for email notifications (add PHPMailer to your project)
 use PHPMailer\PHPMailer\PHPMailer;
