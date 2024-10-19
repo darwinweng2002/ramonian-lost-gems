@@ -1,22 +1,20 @@
 <?php  
-include 'config.php';
+require 'vendor/autoload.php';
+
+// Include the database configuration file
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-// require 'vendor/autoload.php';
-
+include 'config.php';
 
 // Include PHPMailer for email notifications (add PHPMailer to your project)
-//use PHPMailer\PHPMailer\PHPMailer;
-//use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 // Correct path to PHPMailer files
-
-require("PHPMailer/src/PHPMailer.php");
-require("PHPMailer/src/SMTP.php");
-
-$mail = new PHPMailer\PHPMailer\PHPMailer();
-$mail->SMTPDebug = 3;
+require 'PHPMailer-master/src/Exception.php';
+require 'PHPMailer-master/src/PHPMailer.php';
+require 'PHPMailer-master/src/SMTP.php';
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -70,19 +68,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Execute the query and check for success
     if ($stmt->execute()) {
         // Send email to the user notifying them that the registration is successful and awaiting approval
-        // $mail = new PHPMailer(true);
+        $mail = new PHPMailer(true);
         try {
             $mail->isSMTP();
-            $mail->Host = 'mail.smtp2go.com';
+            $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'ran_ramonian'; // Add your Gmail account
-            $mail->Password = 'test123456'; // Add your Gmail password
-            $mail->SMTPSecure = 'tls';
-            $mail->Port = 2525;
+            $mail->Username = 'your_gmail_account@gmail.com'; // Add your Gmail account
+            $mail->Password = 'your_gmail_password'; // Add your Gmail password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
 
-            // $mail->setFrom('randolfh.wizworxx@gmail.com', 'Admin');
-            $mail->FromName = "ran_ramonian";
-
+            $mail->setFrom('your_gmail_account@gmail.com', 'Your App Name');
             $mail->addAddress($email);  // Add user email address
 
             $mail->isHTML(true);
@@ -98,11 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $response = ['success' => false, 'message' => 'Failed to register user.'];
     }
-    if(!$mail->send()){
-        echo "Mailer Error :" . $mail->ErrorInfo;
-    }else{
-        echo "Msg has been sent";
-    }
+
     $stmt->close();
     $conn->close();
 
