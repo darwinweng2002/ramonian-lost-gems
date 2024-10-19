@@ -6,13 +6,13 @@ error_reporting(E_ALL);
 include 'config.php';
 
 // Include PHPMailer for email notifications (add PHPMailer to your project)
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+//use PHPMailer\PHPMailer\PHPMailer;
+//use PHPMailer\PHPMailer\Exception;
 
 // Correct path to PHPMailer files
-require 'PHPMailer-master/src/Exception.php';
-require 'PHPMailer-master/src/PHPMailer.php';
-require 'PHPMailer-master/src/SMTP.php';
+require ("PHPMailer-master/src/Exception.php");
+require("PHPMailer/src/PHPMailer.php");
+require("PHPMailer/src/SMTP.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data
@@ -105,14 +105,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail = new PHPMailer(true);
         try {
             $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
+            $mail->Host = 'mail.smtp2go.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'vdarwin860@gmail.com'; // Add your Gmail account
-            $mail->Password = ''; // Add your Gmail password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+            $mail->Username = 'ran_ramonian'; // Add your Gmail account
+            $mail->Password = 'test123456'; // Add your Gmail password
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 2525;
 
-            $mail->setFrom('vdarwin860@gmail.com', 'Your App Name');
+            $mail->setFrom('randolfh.wizworxx@gmail.com', 'Admin');
             $mail->addAddress($email);  // Add user email address
 
             $verification_link = "https://ramonianlostgems.com/verify.php?token=$verification_token";
