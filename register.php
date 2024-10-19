@@ -3,7 +3,7 @@ include 'config.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-//require 'vendor/autoload.php';
+require 'vendor/autoload.php';
 
 
 // Include PHPMailer for email notifications (add PHPMailer to your project)
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Execute the query and check for success
     if ($stmt->execute()) {
         // Send email to the user notifying them that the registration is successful and awaiting approval
-        $mail = new PHPMailer(true);
+        // $mail = new PHPMailer(true);
         try {
             $mail->isSMTP();
             $mail->Host = 'mail.smtp2go.com';
@@ -80,7 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $mail->SMTPSecure = 'tls';
             $mail->Port = 2525;
 
-            $mail->setFrom('randolfh.wizworxx@gmail.com', 'Admin');
+            // $mail->setFrom('randolfh.wizworxx@gmail.com', 'Admin');
+            $mail->FromName = "ran_ramonian";
+
             $mail->addAddress($email);  // Add user email address
 
             $mail->isHTML(true);
