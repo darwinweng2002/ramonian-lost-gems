@@ -10,7 +10,7 @@ include 'config.php';
 //use PHPMailer\PHPMailer\Exception;
 
 // Correct path to PHPMailer files
-require ("PHPMailer-master/src/Exception.php");
+// require ("PHPMailer-master/src/Exception.php");
 require("PHPMailer/src/PHPMailer.php");
 require("PHPMailer/src/SMTP.php");
 
