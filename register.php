@@ -11,9 +11,12 @@ error_reporting(E_ALL);
 //use PHPMailer\PHPMailer\Exception;
 
 // Correct path to PHPMailer files
+
 require("PHPMailer/src/PHPMailer.php");
 require("PHPMailer/src/SMTP.php");
 
+$mail = new PHPMailer\PHPMailer\PHPMailer();
+$mail->SMTPDebug = 3;
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -93,7 +96,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $response = ['success' => false, 'message' => 'Failed to register user.'];
     }
-
+    if(!$mail->send()){
+        echo "Mailer Error :" . $mail->ErrorInfo;
+    }else{
+        echo "Msg has been sent";
+    }
     $stmt->close();
     $conn->close();
 
