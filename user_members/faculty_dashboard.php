@@ -392,9 +392,9 @@ $is_non_teaching = empty($department);
                                     </div>
                                     <!-- Avatar Upload Form -->
                                     <form action="" method="post" enctype="multipart/form-data">
-                                        <input type="file" name="avatar" accept="image/*">
-                                        <button type="submit" name="upload_avatar" class="btn btn-primary">Upload Avatar</button>
-                                    </form>
+                                    <input type="file" name="avatar" accept="image/*">
+                                    <button type="submit" name="upload_avatar" class="btn btn-primary">Upload Avatar</button>
+                                </form>
                                     <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
         <a class="nav-link active" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">Claim History</a>
