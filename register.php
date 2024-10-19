@@ -12,9 +12,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 // Correct path to PHPMailer files
-// require 'PHPMailer-master/src/Exception.php';
-// require 'PHPMailer-master/src/PHPMailer.php';
-// require 'PHPMailer-master/src/SMTP.php';
+require 'PHPMailer-master/src/Exception.php';
+require 'PHPMailer-master/src/PHPMailer.php';
+require 'PHPMailer-master/src/SMTP.php';
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -250,8 +250,95 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-  </style>
+/* Modal Background */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 10000; /* On top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  justify-content: center;
+  align-items: center;
+}
 
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.modal-content button {
+  margin-top: 20px;
+}
+/* Centered Logo Styling */
+.logo-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo-container img {
+  max-width: 100px; /* Adjust the size as needed */
+}
+
+/* Modal Content Styling */
+/* Modal Content Styling - Reduced Size */
+.modal-content {
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  max-width: 500px; /* Set the maximum width to a smaller size */
+  width: 100%; /* This ensures it's responsive for smaller screens */
+  text-align: center;
+  font-size: 12px;
+}
+
+
+/* Justified Text for Terms and Conditions */
+.terms-text {
+  text-align: justify; /* Justify the text */
+  margin-bottom: 15px;
+}
+/* Button Container - Stack the buttons vertically */
+.button-container {
+  display: flex;
+  flex-direction: column; /* Change to column layout */
+  gap: 10px; /* Add spacing between buttons */
+  margin-top: 20px;
+}
+
+button {
+  width: 100%; /* Make buttons take the full width of the container */
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 15px;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+  </style>
   <main>
     <div class="container">
       <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
@@ -328,7 +415,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <option value="COE">College of Engineering</option>
                                     <option value="CIT">College of Industrial Technology</option>
                                     <option value="CAF">College of Agriculture and Forestry</option>
-                                    <option value="NUR">College of Nursing</option>
+                                    <option value="CON">College of Nursing</option>
                                     <option value="CTHM">College of Tourism and Hospitality Management</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your college.</div>
@@ -347,18 +434,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <select name="year" class="form-control" id="year" required>
                                     <option value="" disabled selected>Select your year</option>
                                     <option value="N/A">N/A</option>
-                                    <option value="1st - year">1st - year</option>
-                                    <option value="2nd - year">2nd - year</option>
-                                    <option value="3rd - year">3rd - year</option>
-                                    <option value="4th - year">4th - year</option>
+                                    <option value="1st - year">1st</option>
+                                    <option value="2nd - year">2nd</option>
+                                    <option value="3rd - year">3rd</option>
+                                    <option value="4th - year">4th</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your year.</div>
                                 <small class="text-muted">Please select N/A if you are not a college student.</small>
                             </div>
                             <div class="col-12">
-                            <label for="school_id" class="form-label">School ID (JPG, PNG)</label>
+                            <label for="school_id" class="form-label">School ID</label>
                             <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
-                            <div class="invalid-feedback">Please upload your School ID (JPG or PNG).</div>
+                            <div class="invalid-feedback">Please upload your School ID (acceptable file type: jpg, jpeg, png).</div>
                             <!-- Image preview container -->
                             <div id="imagePreviewContainer" style="margin-top: 10px;">
                                 <img id="imagePreview" src="#" alt="Preview will appear here..." style="max-width: 100%; display: none; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
@@ -367,9 +454,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
 
                         <div class="col-12">
-                        <label for="email" class="form-label">Username or Email</label>
+                        <label for="email" class="form-label">Username</label>
                         <input type="text" name="email" class="form-control" id="email" required>
-                        <div class="invalid-feedback" id="email-error">Please enter a valid email or username (8-16 characters).</div>
+                        <div class="invalid-feedback" id="email-error">Please enter a username (8-16 characters).</div>
                     </div>
 
 
@@ -386,6 +473,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <div class="col-12">
                             <button class="btn btn-primary w-100" type="submit" id="register-btn" disabled>Register</button>
                         </div>
+                        <div class="col-12 text-center mt-2">
+                        <small>By signing up, I agree to the <a href="https://ramonianlostgems.com/terms.php" target="_blank">Terms and Conditions</a> and the <a href="https://ramonianlostgems.com/privacy.php" target="_blank">Privacy Policy</a>.</small>
+                    </div>
+
                         </form>
                         <div class="loader-overlay" id="loaderOverlay">
     <div class="loader"></div>
@@ -401,7 +492,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <line x1="19" y1="12" x2="5" y2="12"/>
             <polyline points="12 19 5 12 12 5"/>
         </svg>
-        Cancel
+        Back
     </a>
 </div>
 
