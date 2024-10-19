@@ -3,7 +3,10 @@ require("../../PHPMailer/src/PHPMailer.php");
 require("../../PHPMailer/src/SMTP.php");
 include '../../config.php';
 
-
+$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 // Initialize search term
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
@@ -17,17 +20,15 @@ $result = $conn->query($sql);
 
 // This code for gmail smtp.
 
-//use PHPMailer\PHPMailer\PHPMailer;
-//use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 //require 'vendor/autoload.php';
 
 // Database connection
-$conn = new mysqli("localhost", "u450897284_root", "Lfisgemsdb1234", "u450897284_lfis_db");
+
 
 // Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+
 
 // Get user ID from POST request
 $user_id = $_POST['user_id'];
