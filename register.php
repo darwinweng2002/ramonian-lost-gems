@@ -11,8 +11,9 @@ error_reporting(E_ALL);
 //use PHPMailer\PHPMailer\Exception;
 
 // Correct path to PHPMailer files
-require("PHPMailer/src/PHPMailer.php")
-require("PHPMailer/src/SMTP.php")
+require("PHPMailer/src/PHPMailer.php");
+require("PHPMailer/src/SMTP.php");
+
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
