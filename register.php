@@ -7,8 +7,8 @@ error_reporting(E_ALL);
 
 
 // Include PHPMailer for email notifications (add PHPMailer to your project)
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+//use PHPMailer\PHPMailer\PHPMailer;
+//use PHPMailer\PHPMailer\Exception;
 
 // Correct path to PHPMailer files
 require("PHPMailer/src/PHPMailer.php")
