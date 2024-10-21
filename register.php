@@ -363,8 +363,8 @@ button {
                         <div class="col-12">
                                 <label for="school_type" class="form-label">Please select your user role</label>
                                 <select name="school_type" class="form-control" id="school_type" required>
-                                    <option value="1">Student(College)</option>
-                                    <option value="0">Student(High School)</option>
+                                    <option value="1">Student (College)</option>
+                                    <option value="0">Student (High School)</option>
                                     <option value="2">Employee</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your school type.</div>
