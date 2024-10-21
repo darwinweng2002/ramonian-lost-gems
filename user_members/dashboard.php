@@ -491,7 +491,7 @@ if (!$is_guest) {
     <ul class="list-group mb-3">
     <!-- Level Display: College, High School, or Employee -->
     <li class="list-group-item d-flex justify-content-between">
-        <strong>Level:</strong>
+        <strong>User Type:</strong>
         <span>
             <?php 
             if ($school_type == 1) {
@@ -532,7 +532,7 @@ if (!$is_guest) {
     <?php if ($school_type == 2): // Employee ?>
         <!-- Show Employee-specific fields for Employee users -->
         <li class="list-group-item d-flex justify-content-between">
-            <strong>Teaching Status:</strong>
+            <strong>Employee Type:</strong>
             <span><?= htmlspecialchars($teaching_status ?? 'N/A') ?></span>
         </li>
         <li class="list-group-item d-flex justify-content-between">
