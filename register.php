@@ -738,6 +738,47 @@ button {
             imagePreview.style.display = 'none'; // Hide the image
         }
     });
+    document.addEventListener('DOMContentLoaded', function () {
+    const schoolTypeSelect = document.getElementById('school_type');
+    const gradeSelect = document.getElementById('grade');
+    const departmentSelect = document.getElementById('college');
+    const courseSelect = document.getElementById('course');
+    const yearSelect = document.getElementById('year');
+
+    // Function to handle changes based on user selection
+    function handleSchoolTypeChange() {
+        const schoolType = schoolTypeSelect.value;
+
+        if (schoolType === '0') {  // High School selected
+            // Set College-specific fields to N/A and disable them
+            departmentSelect.value = 'N/A';
+            departmentSelect.disabled = true;
+            courseSelect.value = 'N/A';
+            courseSelect.disabled = true;
+            yearSelect.value = 'N/A';
+            yearSelect.disabled = true;
+
+            // Enable Grade field
+            gradeSelect.disabled = false;
+        } else if (schoolType === '1') {  // College selected
+            // Set Grade to N/A and disable it
+            gradeSelect.value = 'N/A';
+            gradeSelect.disabled = true;
+
+            // Enable College-specific fields
+            departmentSelect.disabled = false;
+            courseSelect.disabled = false;
+            yearSelect.disabled = false;
+        }
+    }
+
+    // Attach event listener to school type dropdown
+    schoolTypeSelect.addEventListener('change', handleSchoolTypeChange);
+
+    // Initial state check to disable fields if the form is pre-populated
+    handleSchoolTypeChange();
+});
+
   </script>
 </body>
 </html>
