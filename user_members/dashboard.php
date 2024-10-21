@@ -20,10 +20,10 @@ $is_guest = (strpos($user_id, 'guest_') === 0);
 
 // Prepare and execute query to fetch user information for regular users
 if (!$is_guest) {
-    $stmt = $conn->prepare("SELECT first_name, last_name, course, year, email, school_type, grade, college, avatar, user_type FROM user_member WHERE id = ?");
+    $stmt = $conn->prepare("SELECT first_name, last_name, course, year, email, school_type, grade, college, avatar, user_type, teaching_status, department_or_position FROM user_member WHERE id = ?");
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
-    $stmt->bind_result($first_name, $last_name, $course, $year, $email, $school_type, $grade, $college, $avatar, $user_type);
+    $stmt->bind_result($first_name, $last_name, $course, $year, $email, $school_type, $grade, $college, $avatar, $user_type, $teaching_status, $department_or_position);
     $stmt->fetch();
     $stmt->close();
 }
@@ -533,11 +533,11 @@ if (!$is_guest) {
         <!-- Show Employee-specific fields for Employee users -->
         <li class="list-group-item d-flex justify-content-between">
             <strong>Teaching Status:</strong>
-            <span><?= htmlspecialchars($teaching_status ?? '') ?></span>
+            <span><?= htmlspecialchars($teaching_status ?? 'N/A') ?></span>
         </li>
         <li class="list-group-item d-flex justify-content-between">
             <strong>Department/Position:</strong>
-            <span><?= htmlspecialchars($department_or_position ?? '') ?></span>
+            <span><?= htmlspecialchars($department_or_position ?? 'N/A') ?></span>
         </li>
     <?php endif; ?>
 
@@ -546,6 +546,7 @@ if (!$is_guest) {
         <span><?= htmlspecialchars($email ?? '') ?></span>
     </li>
 </ul>
+
 
     </div>
 </div>
