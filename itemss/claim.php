@@ -31,7 +31,7 @@ if (isset($_SESSION['user_id'])) {
     }
 
     $userType = 'user_member';
-    $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, user_type FROM user_member WHERE id = ?";
+    $sqlClaimant = "SELECT first_name, last_name, email, college, course, year, school_type, teaching_status, department_or_position FROM user_member WHERE id = ?";
 } elseif (isset($_SESSION['staff_id'])) {
     // Staff user
     $claimantId = $_SESSION['staff_id'];
@@ -217,18 +217,6 @@ h1, h3 {
     outline: none;
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
 }
-.form-group select {
-    appearance: none; /* Remove default dropdown arrow */
-    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"%3E%3Cpath fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/%3E%3C/svg%3E');
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 16px;
-    padding-right: 40px;
-}
-.form-group select:hover {
-    cursor: pointer;
-}
-
 .submit-btn {
     width: 100%;
     padding: 12px;
@@ -296,17 +284,14 @@ h1, h3 {
             <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
             <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
 
-            <!-- Display College for user_member, and Position/Department for user_staff -->
-            <?php if ($userType == 'user_member'): ?>
+            <!-- Display based on school_type -->
+            <?php if ($claimantData['school_type'] == 1): // College ?>
                 <p>College: <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
                 <p>Course: <?= htmlspecialchars($claimantData['course'] ?? 'N/A'); ?></p>
                 <p>Year Level: <?= htmlspecialchars($claimantData['year'] ?? 'N/A'); ?></p>
-            <?php elseif ($userType == 'user_staff'): ?>
-                <?php if (!empty($claimantData['position'])): ?>
-                    <p>Position: <?= htmlspecialchars($claimantData['position']); ?></p>
-                <?php else: ?>
-                    <p>Department: <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
-                <?php endif; ?>
+            <?php elseif ($claimantData['school_type'] == 2): // Employee ?>
+                <p>Teaching Status: <?= htmlspecialchars($claimantData['teaching_status'] ?? 'N/A'); ?></p>
+                <p>Department/Position: <?= htmlspecialchars($claimantData['department_or_position'] ?? 'N/A'); ?></p>
             <?php endif; ?>
         <?php endif; ?>
     </div>
