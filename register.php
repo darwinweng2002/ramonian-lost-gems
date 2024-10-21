@@ -355,13 +355,13 @@ button {
                 <div class="card mb-3">
                     <div class="card-body">
                         <div class="pt-4 pb-2">
-                            <h5 class="card-title text-center pb-0 fs-4">Student User Registration</h5>
+                            <h5 class="card-title text-center pb-0 fs-4">User Account Registration</h5>
                             <p class="text-center small">Fill in the form to create an account</p>
                         </div>
                         
                         <form class="row g-3 needs-validation" novalidate method="POST" action="register_process.php" enctype="multipart/form-data">
                         <div class="col-12">
-                                <label for="school_type" class="form-label">Are you a College or High School student?</label>
+                                <label for="school_type" class="form-label">Please select your user role</label>
                                 <select name="school_type" class="form-control" id="school_type" required>
                                     <option value="1">College</option>
                                     <option value="0">High School</option>
