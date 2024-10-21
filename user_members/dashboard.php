@@ -468,21 +468,65 @@ if (!$is_guest) {
                                         </form>
 
                                         <?php if (!$is_guest): ?>
-    <!-- Display tabs only for non-guest users -->
-    <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Profile Information</a>
+                                            <ul class="list-group mb-3">
+    <!-- Level Display: College, High School, or Employee -->
+    <li class="list-group-item d-flex justify-content-between">
+        <strong>Level:</strong>
+        <span>
+            <?php 
+            if ($school_type == 1) {
+                echo 'College';
+            } elseif ($school_type == 0) {
+                echo 'High School';
+            } elseif ($school_type == 2) {
+                echo 'Employee';
+            }
+            ?>
+        </span>
+    </li>
+
+    <?php if ($school_type == 0): // High School ?>
+        <!-- Show Grade for High School -->
+        <li class="list-group-item d-flex justify-content-between">
+            <strong>Grade:</strong>
+            <span><?= htmlspecialchars($grade ?? '') ?></span>
         </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Claim History</a>
+    <?php endif; ?>
+
+    <?php if ($school_type == 1): // College ?>
+        <!-- Show College-specific fields for College students -->
+        <li class="list-group-item d-flex justify-content-between">
+            <strong>Course:</strong>
+            <span><?= htmlspecialchars($course ?? '') ?></span>
         </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Posted Found Items</a>
+        <li class="list-group-item d-flex justify-content-between">
+            <strong>Year:</strong>
+            <span><?= htmlspecialchars($year ?? '') ?></span>
         </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link" id="history-tab" data-bs-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">Posted Missing Items</a>
+        <li class="list-group-item d-flex justify-content-between">
+            <strong>Department:</strong>
+            <span><?= htmlspecialchars($college ?? '') ?></span>
         </li>
-    </ul>
+    <?php endif; ?>
+
+    <?php if ($school_type == 2): // Employee ?>
+        <!-- Show Employee-specific fields for Employee users -->
+        <li class="list-group-item d-flex justify-content-between">
+            <strong>Teaching Status:</strong>
+            <span><?= htmlspecialchars($teaching_status ?? '') ?></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <strong>Department/Position:</strong>
+            <span><?= htmlspecialchars($department_or_position ?? '') ?></span>
+        </li>
+    <?php endif; ?>
+
+    <li class="list-group-item d-flex justify-content-between">
+        <strong>Email:</strong>
+        <span><?= htmlspecialchars($email ?? '') ?></span>
+    </li>
+</ul>
+
 
     <!-- Show tab content only for non-guest users -->
     <!-- Show tab content only for non-guest users -->
