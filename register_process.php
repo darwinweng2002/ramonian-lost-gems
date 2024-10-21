@@ -96,6 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $college = 'N/A';
     $course = 'N/A';
     $year = 'N/A';
+    $teaching_status = NULL;
+    $department_or_position = NULL;
 
     // Handling user role-specific fields
     if ($school_type == '1') {  // College selected
@@ -103,21 +105,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $course = $_POST['course'];
         $year = $_POST['year'];
         $grade = 'N/A'; // College students do not have grades
-        $teaching_status = NULL;
-        $department_or_position = NULL;
     } else if ($school_type == '0') {  // High School selected
         $grade = $_POST['grade'];
-        $college = 'N/A';
-        $course = 'N/A';
-        $year = 'N/A';
-        $teaching_status = NULL;
-        $department_or_position = NULL;
     } else if ($school_type == '2') {  // Employee selected
-        $grade = 'N/A';
-        $college = 'N/A';
-        $course = 'N/A';
-        $year = 'N/A';
-
         // Employee-specific fields
         $teaching_status = $_POST['teaching_status'];
         if ($teaching_status == 'Teaching') {
@@ -134,7 +124,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Set user status as "pending" until verification is complete
     $status = 'pending';
 
-    // Prepare the SQL statement for insertion
     $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, school_type, grade, email, password, school_id_file, status, verification_token, token_expiration, teaching_status, department_or_position) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
@@ -145,8 +134,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    $stmt->bind_param("sssssssssssssss", $first_name, $last_name, $college, $course, $year, $school_type, $grade, $email, $password, $school_id_file, $status, $verification_token, $token_expiration, $teaching_status, $department_or_position);
+    // Bind the parameters for the prepared statement
+    $stmt->bind_param(
+        "sssssssssssssss", 
+        $first_name, 
+        $last_name, 
+        $college, 
+        $course, 
+        $year, 
+        $school_type, 
+        $grade, 
+        $email, 
+        $password, 
+        $school_id_file, 
+        $status, 
+        $verification_token, 
+        $token_expiration, 
+        $teaching_status, 
+        $department_or_position
+    );
 
+    // Execute the query and catch any SQL errors
     try {
         $stmt->execute();
     } catch (mysqli_sql_exception $e) {
@@ -156,7 +164,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    $stmt->close(); // Close statement
+    // Close the statement after execution
+    $stmt->close();
 
     // Send email to the user with the verification link
     $mail = new PHPMailer(true);
@@ -181,6 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail->send();
     } catch (Exception $e) {
         error_log("Mailer error: " . $e->getMessage());
+        // Optionally handle failure of email notification here
     }
 
     // Final response after successful registration
