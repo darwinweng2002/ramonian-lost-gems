@@ -21,12 +21,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Retrieve form data
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
-    $college = $_POST['college'];
-    $course = $_POST['course'];
-    $year = $_POST['year'];
-    $email = $_POST['email']; // This could be either an email or a username (8-16 chars)
-    $school_type = $_POST['school_type'];
+    $school_type = $_POST['school_type'];  // 1 for College, 0 for High School
     $grade = $_POST['grade'];
+    $email = $_POST['email'];
+
+    // For College Students
+    if ($school_type == '1') {  // College selected
+        $college = $_POST['college'];
+        $course = $_POST['course'];
+        $year = $_POST['year'];
+    } else {  // High School selected, set College-related fields to N/A
+        $college = 'N/A';
+        $course = 'N/A';
+        $year = 'N/A';
+    }
 
     // Validate if passwords match
     if ($_POST['password'] !== $_POST['confirm_password']) {

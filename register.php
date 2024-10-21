@@ -753,7 +753,7 @@ button {
             // Set College-specific fields to N/A and disable them
             departmentSelect.value = 'N/A';
             departmentSelect.disabled = true;
-            courseSelect.value = 'N/A';
+            courseSelect.innerHTML = '<option value="N/A">N/A</option>'; // Set N/A for Course
             courseSelect.disabled = true;
             yearSelect.value = 'N/A';
             yearSelect.disabled = true;
@@ -767,6 +767,7 @@ button {
 
             // Enable College-specific fields
             departmentSelect.disabled = false;
+            courseSelect.innerHTML = '<option value="" disabled selected>Select your course</option>';
             courseSelect.disabled = false;
             yearSelect.disabled = false;
         }
@@ -778,7 +779,6 @@ button {
     // Initial state check to disable fields if the form is pre-populated
     handleSchoolTypeChange();
 });
-
   </script>
 </body>
 </html>
