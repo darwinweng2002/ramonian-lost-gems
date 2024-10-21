@@ -17,9 +17,9 @@ if ($user_id <= 0) {
     exit;
 }
 
-// Fetch user details from the database, including the fields for employees
+// Fetch user details from the database, including the fields for employees and high school students
 $sql = "SELECT first_name, last_name, email, school_id_file, registration_date, 
-               college, course, year, status, school_type, teaching_status, department_or_position 
+               college, course, year, status, school_type, grade, teaching_status, department_or_position 
         FROM user_member 
         WHERE id = ?";
 
@@ -149,13 +149,19 @@ $conn->close();
         <p><strong>Last Name:</strong> <?= htmlspecialchars($user['last_name']) ?></p>
         <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
 
-        <!-- College, Course, and Year fields -->
-        <p id="collegeField"><strong>College:</strong> <?= htmlspecialchars($user['college']) ?></p>
-        <p id="courseField"><strong>Course:</strong> <?= htmlspecialchars($user['course']) ?></p>
-        <p id="yearField"><strong>Year:</strong> <?= htmlspecialchars($user['year']) ?></p>
+        <!-- Display Level based on school_type -->
+        <?php if ($user['school_type'] == '1'): ?>
+            <!-- College Fields -->
+            <p id="collegeField"><strong>College:</strong> <?= htmlspecialchars($user['college']) ?></p>
+            <p id="courseField"><strong>Course:</strong> <?= htmlspecialchars($user['course']) ?></p>
+            <p id="yearField"><strong>Year:</strong> <?= htmlspecialchars($user['year']) ?></p>
 
-        <!-- Employee specific fields -->
-        <?php if ($user['school_type'] == '2'): ?>
+        <?php elseif ($user['school_type'] == '0'): ?>
+            <!-- High School Fields -->
+            <p><strong>Level:</strong> High School (Grade <?= htmlspecialchars($user['grade']) ?>)</p>
+
+        <?php elseif ($user['school_type'] == '2'): ?>
+            <!-- Employee Fields -->
             <p><strong>Role:</strong> Employee</p>
             <p><strong>Teaching Status:</strong> <?= htmlspecialchars($user['teaching_status']) ?></p>
             <p><strong>Department/Position:</strong> <?= htmlspecialchars($user['department_or_position']) ?></p>
