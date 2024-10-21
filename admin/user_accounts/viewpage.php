@@ -17,8 +17,9 @@ if ($user_id <= 0) {
     exit;
 }
 
-// Fetch user details from the database
-$sql = "SELECT first_name, last_name, email, school_id_file, registration_date, college, course, year, status 
+// Fetch user details from the database, including the fields for employees
+$sql = "SELECT first_name, last_name, email, school_id_file, registration_date, 
+               college, course, year, status, school_type, teaching_status, department_or_position 
         FROM user_member 
         WHERE id = ?";
 
@@ -147,16 +148,25 @@ $conn->close();
         <p><strong>First Name:</strong> <?= htmlspecialchars($user['first_name']) ?></p>
         <p><strong>Last Name:</strong> <?= htmlspecialchars($user['last_name']) ?></p>
         <p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
-        <p><strong>College:</strong> <?= htmlspecialchars($user['college']) ?></p>
-        <p><strong>Course:</strong> <?= htmlspecialchars($user['course']) ?></p>
-        <p><strong>Year:</strong> <?= htmlspecialchars($user['year']) ?></p>
+
+        <!-- College, Course, and Year fields -->
+        <p id="collegeField"><strong>College:</strong> <?= htmlspecialchars($user['college']) ?></p>
+        <p id="courseField"><strong>Course:</strong> <?= htmlspecialchars($user['course']) ?></p>
+        <p id="yearField"><strong>Year:</strong> <?= htmlspecialchars($user['year']) ?></p>
+
+        <!-- Employee specific fields -->
+        <?php if ($user['school_type'] == '2'): ?>
+            <p><strong>Role:</strong> Employee</p>
+            <p><strong>Teaching Status:</strong> <?= htmlspecialchars($user['teaching_status']) ?></p>
+            <p><strong>Department/Position:</strong> <?= htmlspecialchars($user['department_or_position']) ?></p>
+        <?php endif; ?>
+
         <p><strong>Status:</strong> <?= htmlspecialchars($user['status']) ?></p>
         <p><strong>Registration Date:</strong> <?= htmlspecialchars($user['registration_date']) ?></p>
 
         <!-- Display School ID -->
         <p><strong>School ID:</strong></p>
         <?php
-        // Check if school_id_file is not NULL
         if (!empty($user['school_id_file'])) {
             $schoolIdPath = '/' . htmlspecialchars($user['school_id_file']);
             echo '<a href="' . $schoolIdPath . '" data-lightbox="school-id" data-title="School ID">
@@ -168,11 +178,32 @@ $conn->close();
         ?>
     </div>
     <div class="back-link">
-    <a href="javascript:void(0);" onclick="history.back();" class="btn btn-primary">Back to Users List</a>
-</div>
+        <a href="javascript:void(0);" onclick="history.back();" class="btn btn-primary">Back to Users List</a>
+    </div>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
+
+<!-- JavaScript to hide fields if their value is 'N/A' -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Hide the fields if the value is 'N/A'
+        const collegeField = document.getElementById('collegeField');
+        const courseField = document.getElementById('courseField');
+        const yearField = document.getElementById('yearField');
+
+        if (collegeField.textContent.includes('N/A')) {
+            collegeField.style.display = 'none';
+        }
+        if (courseField.textContent.includes('N/A')) {
+            courseField.style.display = 'none';
+        }
+        if (yearField.textContent.includes('N/A')) {
+            yearField.style.display = 'none';
+        }
+    });
+</script>
+
 </body>
 </html>
