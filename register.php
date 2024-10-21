@@ -373,6 +373,7 @@ button {
                                 <select name="school_type" class="form-control" id="school_type" required>
                                     <option value="1">College</option>
                                     <option value="0">High School</option>
+                                    <option value="2">Employee</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your school type.</div>
                             </div>
@@ -442,6 +443,27 @@ button {
                                 <div class="invalid-feedback">Please select your year.</div>
                                 <small class="text-muted">Please select N/A if you are not a college student.</small>
                             </div>
+                            <div class="col-12" id="teaching-status-section" style="display: none;">
+                            <label for="teaching_status" class="form-label">Teaching or Non-Teaching</label>
+                            <select name="teaching_status" class="form-control" id="teaching_status">
+                                <option value="" disabled selected>Select your teaching status</option>
+                                <option value="Teaching">Teaching</option>
+                                <option value="Non-Teaching">Non-Teaching</option>
+                            </select>
+                            <div class="invalid-feedback">Please select your teaching status.</div>
+                        </div>
+
+                        <div class="col-12" id="department-section" style="display: none;">
+                            <label for="department" class="form-label">Department</label>
+                            <input type="text" name="department" class="form-control" id="department" placeholder="Enter your department" required>
+                            <div class="invalid-feedback">Please enter your department.</div>
+                        </div>
+
+                        <div class="col-12" id="position-section" style="display: none;">
+                            <label for="position" class="form-label">Position</label>
+                            <input type="text" name="position" class="form-control" id="position" placeholder="Enter your position" required>
+                            <div class="invalid-feedback">Please enter your position.</div>
+                        </div>
                             <div class="col-12">
                             <label for="school_id" class="form-label">School ID</label>
                             <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
@@ -744,41 +766,78 @@ button {
     const departmentSelect = document.getElementById('college');
     const courseSelect = document.getElementById('course');
     const yearSelect = document.getElementById('year');
+    const teachingStatusSection = document.getElementById('teaching-status-section');
+    const departmentSection = document.getElementById('department-section');
+    const positionSection = document.getElementById('position-section');
+    const teachingStatusSelect = document.getElementById('teaching_status');
 
     // Function to handle changes based on user selection
     function handleSchoolTypeChange() {
         const schoolType = schoolTypeSelect.value;
 
         if (schoolType === '0') {  // High School selected
-            // Set College-specific fields to N/A and disable them
             departmentSelect.value = 'N/A';
             departmentSelect.disabled = true;
-            courseSelect.innerHTML = '<option value="N/A">N/A</option>'; // Set N/A for Course
+            courseSelect.innerHTML = '<option value="N/A">N/A</option>';
             courseSelect.disabled = true;
             yearSelect.value = 'N/A';
             yearSelect.disabled = true;
 
-            // Enable Grade field
             gradeSelect.disabled = false;
+            hideEmployeeFields();
         } else if (schoolType === '1') {  // College selected
-            // Set Grade to N/A and disable it
             gradeSelect.value = 'N/A';
             gradeSelect.disabled = true;
 
-            // Enable College-specific fields
             departmentSelect.disabled = false;
-            courseSelect.innerHTML = '<option value="" disabled selected>Select your course</option>';
             courseSelect.disabled = false;
             yearSelect.disabled = false;
+            hideEmployeeFields();
+        } else if (schoolType === '2') {  // Employee selected
+            // Automatically set fields to N/A for employees
+            gradeSelect.value = 'N/A';
+            gradeSelect.disabled = true;
+            departmentSelect.value = 'N/A';
+            departmentSelect.disabled = true;
+            courseSelect.innerHTML = '<option value="N/A">N/A</option>';
+            courseSelect.disabled = true;
+            yearSelect.value = 'N/A';
+            yearSelect.disabled = true;
+
+            showEmployeeFields();  // Show employee-specific fields
         }
     }
 
-    // Attach event listener to school type dropdown
-    schoolTypeSelect.addEventListener('change', handleSchoolTypeChange);
+    function handleTeachingStatusChange() {
+        const teachingStatus = teachingStatusSelect.value;
 
-    // Initial state check to disable fields if the form is pre-populated
+        if (teachingStatus === 'Teaching') {
+            departmentSection.style.display = 'block';
+            positionSection.style.display = 'none';
+        } else if (teachingStatus === 'Non-Teaching') {
+            departmentSection.style.display = 'none';
+            positionSection.style.display = 'block';
+        }
+    }
+
+    function hideEmployeeFields() {
+        teachingStatusSection.style.display = 'none';
+        departmentSection.style.display = 'none';
+        positionSection.style.display = 'none';
+    }
+
+    function showEmployeeFields() {
+        teachingStatusSection.style.display = 'block';
+    }
+
+    // Attach event listeners
+    schoolTypeSelect.addEventListener('change', handleSchoolTypeChange);
+    teachingStatusSelect.addEventListener('change', handleTeachingStatusChange);
+
+    // Initial state check
     handleSchoolTypeChange();
 });
+
   </script>
 </body>
 </html>

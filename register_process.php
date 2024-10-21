@@ -5,7 +5,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 include 'config.php';
 
-// Include PHPMailer for email notifications (add PHPMailer to your project)
+// Include PHPMailer for email notifications
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -18,25 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Log start of registration process
     error_log("Registration process started.");
 
-    // Retrieve form data
+    // Retrieve common form data
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
-    $school_type = $_POST['school_type'];  // 1 for College, 0 for High School
-    $grade = $_POST['grade'];
+    $school_type = $_POST['school_type'];  // 1 for College, 0 for High School, 2 for Employee
     $email = $_POST['email'];
 
-    // For College Students
-    if ($school_type == '1') {  // College selected
-        $college = $_POST['college'];
-        $course = $_POST['course'];
-        $year = $_POST['year'];
-    } else {  // High School selected, set College-related fields to N/A
-        $college = 'N/A';
-        $course = 'N/A';
-        $year = 'N/A';
-    }
-
-    // Validate if passwords match
+    // Handle password validation
     if ($_POST['password'] !== $_POST['confirm_password']) {
         $response = ['success' => false, 'message' => 'Passwords do not match.'];
         echo json_encode($response);
@@ -46,9 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Hash the password
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
 
-    // Check if the input is either an email or a valid username (8-16 characters)
+    // Validate email or username
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        // If it's not an email, check if it's a valid username
         if (strlen($email) < 8 || strlen($email) > 16) {
             $response = ['success' => false, 'message' => 'Username must be between 8 and 16 characters long.'];
             echo json_encode($response);
@@ -56,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Check if the email/username is already registered
+    // Check if email/username is already registered
     $stmt = $conn->prepare("SELECT * FROM user_member WHERE email = ?");
     if (!$stmt) {
         error_log("Database error: Failed to prepare SQL query for user lookup: " . $conn->error);
@@ -64,11 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo json_encode($response);
         exit;
     }
-
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
-
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         if ($user['status'] === 'approved') {
@@ -92,8 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $school_id_file = $target_dir . basename($_FILES["school_id"]["name"]);
     $imageFileType = strtolower(pathinfo($school_id_file, PATHINFO_EXTENSION));
-
-    // Check if file is a valid image type
     $valid_file_types = ['jpg', 'jpeg', 'png'];
     if (!in_array($imageFileType, $valid_file_types)) {
         $response = ['success' => false, 'message' => 'Invalid file format for school ID. Only JPG, JPEG, and PNG are allowed.'];
@@ -101,23 +84,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Attempt to move the uploaded file
     if (!move_uploaded_file($_FILES["school_id"]["tmp_name"], $school_id_file)) {
-        error_log('File upload error: ' . print_r($_FILES, true));  // Logs detailed error in PHP error logs
+        error_log('File upload error: ' . print_r($_FILES, true));  
         $response = ['success' => false, 'message' => 'Error uploading school ID.'];
         echo json_encode($response);
         exit;
     }
 
+    // Set default values for the following fields to N/A for employees or high school students
+    $grade = 'N/A';
+    $college = 'N/A';
+    $course = 'N/A';
+    $year = 'N/A';
+
+    // Handling user role-specific fields
+    if ($school_type == '1') {  // College selected
+        $college = $_POST['college'];
+        $course = $_POST['course'];
+        $year = $_POST['year'];
+        $grade = 'N/A'; // College students do not have grades
+        $teaching_status = NULL;
+        $department_or_position = NULL;
+    } else if ($school_type == '0') {  // High School selected
+        $grade = $_POST['grade'];
+        $college = 'N/A';
+        $course = 'N/A';
+        $year = 'N/A';
+        $teaching_status = NULL;
+        $department_or_position = NULL;
+    } else if ($school_type == '2') {  // Employee selected
+        $grade = 'N/A';
+        $college = 'N/A';
+        $course = 'N/A';
+        $year = 'N/A';
+
+        // Employee-specific fields
+        $teaching_status = $_POST['teaching_status'];
+        if ($teaching_status == 'Teaching') {
+            $department_or_position = $_POST['department']; // Department field for Teaching
+        } else if ($teaching_status == 'Non-Teaching') {
+            $department_or_position = $_POST['position']; // Position field for Non-Teaching
+        }
+    }
+
     // Generate a unique verification token and set expiration (24 hours)
-    $verification_token = bin2hex(random_bytes(50));  // Generate token
-    $token_expiration = date("Y-m-d H:i:s", strtotime('+24 hours')); // Set expiration time
+    $verification_token = bin2hex(random_bytes(50));  
+    $token_expiration = date("Y-m-d H:i:s", strtotime('+24 hours')); 
 
     // Set user status as "pending" until verification is complete
     $status = 'pending';
 
-    // Prepare the SQL statement
-    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, school_type, grade, email, password, school_id_file, status, verification_token, token_expiration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    // Prepare the SQL statement for insertion
+    $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, school_type, grade, email, password, school_id_file, status, verification_token, token_expiration, teaching_status, department_or_position) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     if (!$stmt) {
         error_log("Database error: Failed to prepare SQL query for registration: " . $conn->error);
@@ -126,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    $stmt->bind_param("sssssssssssss", $first_name, $last_name, $college, $course, $year, $school_type, $grade, $email, $password, $school_id_file, $status, $verification_token, $token_expiration);
+    $stmt->bind_param("sssssssssssssss", $first_name, $last_name, $college, $course, $year, $school_type, $grade, $email, $password, $school_id_file, $status, $verification_token, $token_expiration, $teaching_status, $department_or_position);
 
     try {
         $stmt->execute();
@@ -137,8 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Close statement
-    $stmt->close();
+    $stmt->close(); // Close statement
 
     // Send email to the user with the verification link
     $mail = new PHPMailer(true);
@@ -146,13 +164,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'your_gmail_account@gmail.com'; // Add your Gmail account
-        $mail->Password = 'your_gmail_password'; // Add your Gmail password
+        $mail->Username = 'your_gmail_account@gmail.com'; 
+        $mail->Password = 'your_gmail_password'; 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
         $mail->setFrom('your_gmail_account@gmail.com', 'Your App Name');
-        $mail->addAddress($email);  // Add user email address
+        $mail->addAddress($email);  
 
         $verification_link = "https://ramonianlostgems.com/verify.php?token=$verification_token";
 
@@ -163,7 +181,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail->send();
     } catch (Exception $e) {
         error_log("Mailer error: " . $e->getMessage());
-        // You can choose to continue even if email fails to send
     }
 
     // Final response after successful registration
