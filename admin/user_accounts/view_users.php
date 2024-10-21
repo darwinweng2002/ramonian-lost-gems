@@ -251,22 +251,35 @@ $result = $conn->query($sql);
                                 <td><?= htmlspecialchars($row['last_name']) ?></td>
 
                                 <!-- Logic to display "High School" or "College" based on the value -->
+                               <!-- Logic to display "High School", "College", or "Employee" based on the value -->
                                 <td>
-                                <?php
-                                    // Determine the Level
-                                    $level = htmlspecialchars($row['school_type']) == '1' ? 'College' : 'High School';
+                                    <?php
+                                        $schoolType = htmlspecialchars($row['school_type']);
+                                        $level = '';
 
-                                    // Fetch the grade information, assuming it is stored in 'grade' column
-                                    $grade = htmlspecialchars($row['grade']);
+                                        if ($schoolType == '1') {
+                                            // College
+                                            $level = 'College';
+                                        } elseif ($schoolType == '0') {
+                                            // High School
+                                            $level = 'High School (Grade ' . htmlspecialchars($row['grade']) . ')';
+                                        } elseif ($schoolType == '2') {
+                                            // Employee
+                                            $teachingStatus = htmlspecialchars($row['teaching_status']);
+                                            $departmentOrPosition = htmlspecialchars($row['department_or_position']);
 
-                                    // Logic to display the level with grade or without it
-                                    if ($level === 'College') {
+                                            // Customize the display for teaching or non-teaching employees
+                                            if ($teachingStatus == 'Teaching') {
+                                                $level = 'Employee (Teaching, ' . $departmentOrPosition . ')';
+                                            } else {
+                                                $level = 'Employee (Non-Teaching, ' . $departmentOrPosition . ')';
+                                            }
+                                        }
+
                                         echo $level;
-                                    } else {
-                                        echo $level . ($grade !== 'N/A' ? ' (Grade ' . $grade . ')' : '');
-                                    }
-                                ?>
+                                    ?>
                                 </td>
+
 
                                 <td><?= htmlspecialchars($row['college']) ?></td>
                                 <td><?= htmlspecialchars($row['course']) ?></td>
