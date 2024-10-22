@@ -366,6 +366,7 @@ button {
                                     <option value="1">Student (College)</option>
                                     <option value="0">Student (High School)</option>
                                     <option value="2">Employee</option>
+                                    <option value="3">Guest</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your school type.</div>
                             </div>
@@ -775,19 +776,22 @@ button {
             yearSelect.disabled = true;
 
             gradeSelect.disabled = false;
+            gradeSelect.style.display = 'block'; // Show grade field
             hideEmployeeFields();
         } else if (schoolType === '1') {  // College selected
             gradeSelect.value = 'N/A';
             gradeSelect.disabled = true;
+            gradeSelect.style.display = 'none'; // Hide grade field
 
             departmentSelect.disabled = false;
             courseSelect.disabled = false;
             yearSelect.disabled = false;
+            showCollegeFields();
             hideEmployeeFields();
         } else if (schoolType === '2') {  // Employee selected
-            // Automatically set fields to N/A for employees
             gradeSelect.value = 'N/A';
             gradeSelect.disabled = true;
+            gradeSelect.style.display = 'none'; // Hide grade field
             departmentSelect.value = 'N/A';
             departmentSelect.disabled = true;
             courseSelect.innerHTML = '<option value="N/A">N/A</option>';
@@ -795,7 +799,21 @@ button {
             yearSelect.value = 'N/A';
             yearSelect.disabled = true;
 
+            hideCollegeFields();
             showEmployeeFields();  // Show employee-specific fields
+        } else if (schoolType === '3') {  // Guest selected
+            // Hide unnecessary fields for guests
+            gradeSelect.value = 'N/A';
+            gradeSelect.style.display = 'none';  // Hide grade section for guests
+            departmentSelect.value = 'N/A';
+            departmentSelect.disabled = true;
+            courseSelect.innerHTML = '<option value="N/A">N/A</option>';
+            courseSelect.disabled = true;
+            yearSelect.value = 'N/A';
+            yearSelect.disabled = true;
+
+            hideCollegeFields();
+            hideEmployeeFields();  // Hide employee-specific fields
         }
     }
 
@@ -821,14 +839,25 @@ button {
         teachingStatusSection.style.display = 'block';
     }
 
+    function hideCollegeFields() {
+        departmentSelect.style.display = 'none';
+        courseSelect.style.display = 'none';
+        yearSelect.style.display = 'none';
+    }
+
+    function showCollegeFields() {
+        departmentSelect.style.display = 'block';
+        courseSelect.style.display = 'block';
+        yearSelect.style.display = 'block';
+    }
+
     // Attach event listeners
     schoolTypeSelect.addEventListener('change', handleSchoolTypeChange);
     teachingStatusSelect.addEventListener('change', handleTeachingStatusChange);
 
     // Initial state check
-    handleSchoolTypeChange();
+    handleSchoolTypeChange();  // Trigger field adjustments based on the initial value
 });
-
   </script>
 </body>
 </html>

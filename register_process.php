@@ -18,10 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Log start of registration process
     error_log("Registration process started.");
 
-    // Retrieve common form data
+    // Retrieve form data
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
-    $school_type = $_POST['school_type'];  // 1 for College, 0 for High School, 2 for Employee
+    $school_type = $_POST['school_type'];  // 1 for College, 0 for High School, 2 for Employee, 3 for Guest
     $email = $_POST['email'];
 
     // Handle password validation
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Set default values for the following fields to N/A for employees or high school students
+    // Default values for all roles
     $grade = 'N/A';
     $college = 'N/A';
     $course = 'N/A';
@@ -99,29 +99,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $teaching_status = NULL;
     $department_or_position = NULL;
 
-    // Handling user role-specific fields
-    if ($school_type == '1') {  // College selected
+    // Handle role-specific fields
+    if ($school_type == '1') {  // College
         $college = $_POST['college'];
         $course = $_POST['course'];
         $year = $_POST['year'];
-        $grade = 'N/A'; // College students do not have grades
-    } else if ($school_type == '0') {  // High School selected
+    } elseif ($school_type == '0') {  // High School
         $grade = $_POST['grade'];
-    } else if ($school_type == '2') {  // Employee selected
-        // Employee-specific fields
+    } elseif ($school_type == '2') {  // Employee
         $teaching_status = $_POST['teaching_status'];
-        if ($teaching_status == 'Teaching') {
-            $department_or_position = $_POST['department']; // Department field for Teaching
-        } else if ($teaching_status == 'Non-Teaching') {
-            $department_or_position = $_POST['position']; // Position field for Non-Teaching
-        }
+        $department_or_position = $teaching_status == 'Teaching' ? $_POST['department'] : $_POST['position'];
     }
 
-    // Generate a unique verification token and set expiration (24 hours)
+    // Guest users: default all unnecessary fields to 'N/A'
+    if ($school_type == '3') {  // Guest
+        $grade = 'N/A';
+        $college = 'N/A';
+        $course = 'N/A';
+        $year = 'N/A';
+        $teaching_status = NULL;
+        $department_or_position = NULL;
+    }
+
+    // Verification token for email verification (if applicable)
     $verification_token = bin2hex(random_bytes(50));  
     $token_expiration = date("Y-m-d H:i:s", strtotime('+24 hours')); 
 
-    // Set user status as "pending" until verification is complete
+    // Set user status as "pending"
     $status = 'pending';
 
     $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, school_type, grade, email, password, school_id_file, status, verification_token, token_expiration, teaching_status, department_or_position) 
@@ -134,7 +138,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Bind the parameters for the prepared statement
     $stmt->bind_param(
         "sssssssssssssss", 
         $first_name, 
@@ -154,7 +157,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $department_or_position
     );
 
-    // Execute the query and catch any SQL errors
     try {
         $stmt->execute();
     } catch (mysqli_sql_exception $e) {
@@ -164,10 +166,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Close the statement after execution
     $stmt->close();
 
-    // Send email to the user with the verification link
+    // Send email with verification link
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
@@ -190,11 +191,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail->send();
     } catch (Exception $e) {
         error_log("Mailer error: " . $e->getMessage());
-        // Optionally handle failure of email notification here
     }
 
-    // Final response after successful registration
     $response = ['success' => true, 'message' => 'Your registration was successful! Please wait for the admin to review and approve your account.'];
     echo json_encode($response);
 }
-?>
