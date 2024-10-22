@@ -393,7 +393,6 @@ button {
                                     <option value="12">Grade 12</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your grade level.</div>
-                                <small class="text-muted">Please select N/A if you are not a high school student.</small>
                             </div>
                             <div class="col-12">
                                 <label for="college" class="form-label">Department</label>
@@ -411,7 +410,6 @@ button {
                                     <option value="CTHM">College of Tourism and Hospitality Management</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your college.</div>
-                                <small class="text-muted">Please select N/A if you are not a college student.</small>
                             </div>
                             <div class="col-12">
                                 <label for="course" class="form-label">Course</label>
@@ -419,7 +417,6 @@ button {
                                     <option value="" disabled selected>Select your course</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your course.</div>
-                                <small class="text-muted">Please select N/A if you are not a college student.</small>
                             </div>
                             <div class="col-12">
                                 <label for="year" class="form-label">Year</label>
@@ -432,7 +429,6 @@ button {
                                     <option value="4th - year">4th</option>
                                 </select>
                                 <div class="invalid-feedback">Please select your year.</div>
-                                <small class="text-muted">Please select N/A if you are not a college student.</small>
                             </div>
                             <div class="col-12" id="teaching-status-section" style="display: none;">
                             <label for="teaching_status" class="form-label">Teaching or Non-Teaching</label>
