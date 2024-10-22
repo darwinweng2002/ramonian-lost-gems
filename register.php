@@ -754,12 +754,12 @@ button {
     });
     document.addEventListener('DOMContentLoaded', function () {
     const schoolTypeSelect = document.getElementById('school_type');
-    const gradeSelect = document.getElementById('grade');
-    const departmentSelect = document.getElementById('college');
-    const courseSelect = document.getElementById('course');
-    const yearSelect = document.getElementById('year');
+    const gradeSection = document.querySelector('.col-12:nth-child(3)'); // Assuming the grade section is the third field
+    const departmentSection = document.querySelector('.col-12:nth-child(4)'); // Assuming the department section is the fourth field
+    const courseSection = document.querySelector('.col-12:nth-child(5)'); // Assuming the course section is the fifth field
+    const yearSection = document.querySelector('.col-12:nth-child(6)'); // Assuming the year section is the sixth field
     const teachingStatusSection = document.getElementById('teaching-status-section');
-    const departmentSection = document.getElementById('department-section');
+    const departmentFieldSection = document.getElementById('department-section');
     const positionSection = document.getElementById('position-section');
     const teachingStatusSelect = document.getElementById('teaching_status');
 
@@ -768,52 +768,33 @@ button {
         const schoolType = schoolTypeSelect.value;
 
         if (schoolType === '0') {  // High School selected
-            departmentSelect.value = 'N/A';
-            departmentSelect.disabled = true;
-            courseSelect.innerHTML = '<option value="N/A">N/A</option>';
-            courseSelect.disabled = true;
-            yearSelect.value = 'N/A';
-            yearSelect.disabled = true;
+            departmentSection.style.display = 'none';
+            courseSection.style.display = 'none';
+            yearSection.style.display = 'none';
 
-            gradeSelect.disabled = false;
-            gradeSelect.style.display = 'block'; // Show grade field
+            gradeSection.style.display = 'block';  // Show grade section for high school
             hideEmployeeFields();
         } else if (schoolType === '1') {  // College selected
-            gradeSelect.value = 'N/A';
-            gradeSelect.disabled = true;
-            gradeSelect.style.display = 'none'; // Hide grade field
-
-            departmentSelect.disabled = false;
-            courseSelect.disabled = false;
-            yearSelect.disabled = false;
-            showCollegeFields();
+            gradeSection.style.display = 'none';  // Hide grade section for college
+            departmentSection.style.display = 'block';
+            courseSection.style.display = 'block';
+            yearSection.style.display = 'block';
             hideEmployeeFields();
         } else if (schoolType === '2') {  // Employee selected
-            gradeSelect.value = 'N/A';
-            gradeSelect.disabled = true;
-            gradeSelect.style.display = 'none'; // Hide grade field
-            departmentSelect.value = 'N/A';
-            departmentSelect.disabled = true;
-            courseSelect.innerHTML = '<option value="N/A">N/A</option>';
-            courseSelect.disabled = true;
-            yearSelect.value = 'N/A';
-            yearSelect.disabled = true;
+            gradeSection.style.display = 'none';  // Hide grade for employees
+            departmentSection.style.display = 'none';
+            courseSection.style.display = 'none';
+            yearSection.style.display = 'none';
 
-            hideCollegeFields();
             showEmployeeFields();  // Show employee-specific fields
         } else if (schoolType === '3') {  // Guest selected
-            // Hide unnecessary fields for guests
-            gradeSelect.value = 'N/A';
-            gradeSelect.style.display = 'none';  // Hide grade section for guests
-            departmentSelect.value = 'N/A';
-            departmentSelect.disabled = true;
-            courseSelect.innerHTML = '<option value="N/A">N/A</option>';
-            courseSelect.disabled = true;
-            yearSelect.value = 'N/A';
-            yearSelect.disabled = true;
+            // Hide all unnecessary fields for guest users
+            gradeSection.style.display = 'none';
+            departmentSection.style.display = 'none';
+            courseSection.style.display = 'none';
+            yearSection.style.display = 'none';
 
-            hideCollegeFields();
-            hideEmployeeFields();  // Hide employee-specific fields
+            hideEmployeeFields();  // Hide employee fields for guests
         }
     }
 
@@ -821,34 +802,22 @@ button {
         const teachingStatus = teachingStatusSelect.value;
 
         if (teachingStatus === 'Teaching') {
-            departmentSection.style.display = 'block';
+            departmentFieldSection.style.display = 'block';
             positionSection.style.display = 'none';
         } else if (teachingStatus === 'Non-Teaching') {
-            departmentSection.style.display = 'none';
+            departmentFieldSection.style.display = 'none';
             positionSection.style.display = 'block';
         }
     }
 
     function hideEmployeeFields() {
         teachingStatusSection.style.display = 'none';
-        departmentSection.style.display = 'none';
+        departmentFieldSection.style.display = 'none';
         positionSection.style.display = 'none';
     }
 
     function showEmployeeFields() {
         teachingStatusSection.style.display = 'block';
-    }
-
-    function hideCollegeFields() {
-        departmentSelect.style.display = 'none';
-        courseSelect.style.display = 'none';
-        yearSelect.style.display = 'none';
-    }
-
-    function showCollegeFields() {
-        departmentSelect.style.display = 'block';
-        courseSelect.style.display = 'block';
-        yearSelect.style.display = 'block';
     }
 
     // Attach event listeners
