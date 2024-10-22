@@ -369,8 +369,16 @@ button {
                                 </select>
                                 <div class="invalid-feedback">Please select your school type.</div>
                             </div>
-
-                            <!-- Grade field -->
+                            <div class="col-12">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" name="first_name" class="form-control" id="firstName" required>
+                                <div class="invalid-feedback">Please enter your first name.</div>
+                            </div>
+                            <div class="col-12">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text"  name="last_name" class="form-control" id="lastName" required>
+                                <div class="invalid-feedback">Please enter your last name.</div>
+                            </div>
                             <div class="col-12">
                                 <label for="grade" class="form-label">Grade</label>
                                 <select name="grade" class="form-control" id="grade" required>
@@ -385,16 +393,6 @@ button {
                                 </select>
                                 <div class="invalid-feedback">Please select your grade level.</div>
                                 <small class="text-muted">Please select N/A if you are not a high school student.</small>
-                            </div>
-                            <div class="col-12">
-                                <label for="firstName" class="form-label">First Name</label>
-                                <input type="text" name="first_name" class="form-control" id="firstName" required>
-                                <div class="invalid-feedback">Please enter your first name.</div>
-                            </div>
-                            <div class="col-12">
-                                <label for="lastName" class="form-label">Last Name</label>
-                                <input type="text"  name="last_name" class="form-control" id="lastName" required>
-                                <div class="invalid-feedback">Please enter your last name.</div>
                             </div>
                             <div class="col-12">
                                 <label for="college" class="form-label">Department</label>
@@ -456,6 +454,7 @@ button {
                             <input type="text" name="position" class="form-control" id="position" placeholder="Enter your position" required>
                             <div class="invalid-feedback">Please enter your position.</div>
                         </div>
+
                             <div class="col-12">
                             <label for="school_id" class="form-label">School ID</label>
                             <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
