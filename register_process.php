@@ -172,27 +172,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
+        $mail->Host = 'mail.smtp2go.com'; // Replace with your SMTP server
         $mail->SMTPAuth = true;
-        $mail->Username = 'your_gmail_account@gmail.com'; 
-        $mail->Password = 'your_gmail_password'; 
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+        $mail->Username = 'ran_ramonian';  // Replace with your SMTP username
+        $mail->Password = 'test123456';     // Replace with your SMTP password
+        $mail->SMTPSecure = "tls";
+        $mail->Port = 2525 // Port for TLS
 
-        $mail->setFrom('your_gmail_account@gmail.com', 'Your App Name');
-        $mail->addAddress($email);  
+        $mail->setFrom('admin@ramonianlostgems.com', 'Your App Name'); // Replace with your "from" email and name
+        $mail->addAddress($email);  // User's email
 
-        $verification_link = "https://ramonianlostgems.com/verify.php?token=$verification_token";
+        $verification_link = "https://yourwebsite.com/verify.php?token=$verification_token"; // Your verification link
 
         $mail->isHTML(true);
         $mail->Subject = 'Verify Your Email';
-        $mail->Body = "Hello $first_name, <br>Click <a href='$verification_link'>here</a> to verify your email and activate your account.";
+        $mail->Body = "Hello $first_name,<br><br>Thank you for registering! Please click the link below to verify your email and activate your account:<br><br><a href='$verification_link'>Verify my account</a><br><br>Best regards,<br>Your App Name";
 
         $mail->send();
     } catch (Exception $e) {
         error_log("Mailer error: " . $e->getMessage());
     }
 
-    $response = ['success' => true, 'message' => 'Your registration was successful! Please wait for the admin to review and approve your account.'];
+    $response = ['success' => true, 'message' => 'Your registration was successful! Please check your email to verify your account.'];
     echo json_encode($response);
 }
