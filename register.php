@@ -453,9 +453,9 @@ button {
                         </div>
 
                             <div class="col-12">
-                            <label for="school_id" class="form-label">School ID</label>
+                            <label for="school_id" class="form-label">Upload ID</label>
                             <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
-                            <div class="invalid-feedback">Please upload your School ID (acceptable file type: jpg, jpeg, png).</div>
+                            <div class="invalid-feedback">Please upload your ID (acceptable file type: jpg, jpeg, png).</div>
                             <!-- Image preview container -->
                             <div id="imagePreviewContainer" style="margin-top: 10px;">
                                 <img id="imagePreview" src="#" alt="Preview will appear here..." style="max-width: 100%; display: none; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
