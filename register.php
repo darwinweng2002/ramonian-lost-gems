@@ -754,10 +754,10 @@ button {
     });
     document.addEventListener('DOMContentLoaded', function () {
     const schoolTypeSelect = document.getElementById('school_type');
-    const gradeSection = document.querySelector('.col-12:nth-child(3)'); // Assuming the grade section is the third field
-    const departmentSection = document.querySelector('.col-12:nth-child(4)'); // Assuming the department section is the fourth field
-    const courseSection = document.querySelector('.col-12:nth-child(5)'); // Assuming the course section is the fifth field
-    const yearSection = document.querySelector('.col-12:nth-child(6)'); // Assuming the year section is the sixth field
+    const gradeSection = document.getElementById('grade'); // Grade field
+    const departmentSection = document.getElementById('college'); // Department field
+    const courseSection = document.getElementById('course'); // Course field
+    const yearSection = document.getElementById('year'); // Year field
     const teachingStatusSection = document.getElementById('teaching-status-section');
     const departmentFieldSection = document.getElementById('department-section');
     const positionSection = document.getElementById('position-section');
@@ -768,32 +768,29 @@ button {
         const schoolType = schoolTypeSelect.value;
 
         if (schoolType === '0') {  // High School selected
-            departmentSection.style.display = 'none';
-            courseSection.style.display = 'none';
-            yearSection.style.display = 'none';
-
-            gradeSection.style.display = 'block';  // Show grade section for high school
+            gradeSection.parentElement.style.display = 'block'; // Show grade section for high school
+            departmentSection.parentElement.style.display = 'none'; // Hide department for high school
+            courseSection.parentElement.style.display = 'none'; // Hide course for high school
+            yearSection.parentElement.style.display = 'none'; // Hide year for high school
             hideEmployeeFields();
         } else if (schoolType === '1') {  // College selected
-            gradeSection.style.display = 'none';  // Hide grade section for college
-            departmentSection.style.display = 'block';
-            courseSection.style.display = 'block';
-            yearSection.style.display = 'block';
+            gradeSection.parentElement.style.display = 'none';  // Hide grade section for college
+            departmentSection.parentElement.style.display = 'block'; // Show department
+            courseSection.parentElement.style.display = 'block'; // Show course
+            yearSection.parentElement.style.display = 'block'; // Show year
             hideEmployeeFields();
         } else if (schoolType === '2') {  // Employee selected
-            gradeSection.style.display = 'none';  // Hide grade for employees
-            departmentSection.style.display = 'none';
-            courseSection.style.display = 'none';
-            yearSection.style.display = 'none';
-
+            gradeSection.parentElement.style.display = 'none';  // Hide grade for employees
+            departmentSection.parentElement.style.display = 'none'; // Hide department for employees
+            courseSection.parentElement.style.display = 'none'; // Hide course for employees
+            yearSection.parentElement.style.display = 'none'; // Hide year for employees
             showEmployeeFields();  // Show employee-specific fields
         } else if (schoolType === '3') {  // Guest selected
             // Hide all unnecessary fields for guest users
-            gradeSection.style.display = 'none';
-            departmentSection.style.display = 'none';
-            courseSection.style.display = 'none';
-            yearSection.style.display = 'none';
-
+            gradeSection.parentElement.style.display = 'none';
+            departmentSection.parentElement.style.display = 'none';
+            courseSection.parentElement.style.display = 'none';
+            yearSection.parentElement.style.display = 'none';
             hideEmployeeFields();  // Hide employee fields for guests
         }
     }
@@ -827,6 +824,7 @@ button {
     // Initial state check
     handleSchoolTypeChange();  // Trigger field adjustments based on the initial value
 });
+
   </script>
 </body>
 </html>
