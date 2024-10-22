@@ -460,7 +460,6 @@ button {
                             <div id="imagePreviewContainer" style="margin-top: 10px;">
                                 <img id="imagePreview" src="#" alt="Preview will appear here..." style="max-width: 100%; display: none; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
                             </div>
-                            <small class="text-muted">We assure you that the school ID you submit will be used solely for verification purposes, specifically to confirm that you are a legitimate student of PRMSU Iba Campus. All personal information will remain confidential and will not be shared with any third parties. Your data will be handled in strict compliance with applicable privacy laws and ethical guidelines to ensure the protection of your information.</small>
                         </div>
 
                         <div class="col-12">
