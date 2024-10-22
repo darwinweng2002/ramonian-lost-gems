@@ -14,6 +14,9 @@ require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
 
+// Enable detailed MySQLi error reporting
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Log start of registration process
     error_log("Registration process started.");
@@ -128,12 +131,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Set user status as "pending"
     $status = 'pending';
 
+    // Prepare and log SQL execution
     $stmt = $conn->prepare("INSERT INTO user_member (first_name, last_name, college, course, year, school_type, grade, email, password, school_id_file, status, verification_token, token_expiration, teaching_status, department_or_position) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
+    
     if (!$stmt) {
-        error_log("Database error: Failed to prepare SQL query for registration: " . $conn->error);
-        $response = ['success' => false, 'message' => 'Database error while registering user.'];
+        error_log("Failed to prepare statement: " . $conn->error);
+        $response = ['success' => false, 'message' => 'Failed to register user due to a database error.'];
         echo json_encode($response);
         exit;
     }
@@ -159,9 +163,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     try {
         $stmt->execute();
-    } catch (mysqli_sql_exception $e) {
-        error_log("SQL error: " . $e->getMessage());
-        $response = ['success' => false, 'message' => 'Failed to register user.'];
+        error_log("Database entry created successfully for $email.");
+    } catch (Exception $e) {
+        error_log("Failed to execute statement: " . $e->getMessage());
+        $response = ['success' => false, 'message' => 'Failed to register user due to a database error.'];
         echo json_encode($response);
         exit;
     }
@@ -176,19 +181,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mail->SMTPAuth = true;
         $mail->Username = 'ran_ramonian';  // Replace with your SMTP username
         $mail->Password = 'test123456';     // Replace with your SMTP password
-        $mail->SMTPSecure = "tls";
-        $mail->Port = 2525 // Port for TLS
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 2525; // Port for TLS
 
         $mail->setFrom('admin@ramonianlostgems.com', 'Your App Name'); // Replace with your "from" email and name
         $mail->addAddress($email);  // User's email
 
-        $verification_link = "https://yourwebsite.com/verify.php?token=$verification_token"; // Your verification link
+        $verification_link = "https://ramonianlostgems.com/verify.php?token=$verification_token"; // Your verification link
 
         $mail->isHTML(true);
         $mail->Subject = 'Verify Your Email';
         $mail->Body = "Hello $first_name,<br><br>Thank you for registering! Please click the link below to verify your email and activate your account:<br><br><a href='$verification_link'>Verify my account</a><br><br>Best regards,<br>Your App Name";
 
         $mail->send();
+        error_log("Email sent to $email.");
     } catch (Exception $e) {
         error_log("Mailer error: " . $e->getMessage());
     }
