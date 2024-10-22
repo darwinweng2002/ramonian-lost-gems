@@ -6,9 +6,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 // Correct path to PHPMailer files
-require 'PHPMailer/src/Exception.php';
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
+require '../../PHPMailer/src/Exception.php';
+require '../../PHPMailer/src/PHPMailer.php';
+require '../../PHPMailer/src/SMTP.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = isset($_POST['user_id']) ? (int)$_POST['user_id'] : 0;
