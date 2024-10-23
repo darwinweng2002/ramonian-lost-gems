@@ -235,7 +235,7 @@ $result = $conn->query($sql);
                     <tr>
                         <th>First Name</th>
                         <th>Last Name</th>
-                        <th>Level</th>
+                        <th>User Role</th>
                         <th>College</th>
                         <th>Course</th>
                         <th>Year</th>
