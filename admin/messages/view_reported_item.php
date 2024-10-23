@@ -270,22 +270,28 @@ if ($message_id > 0) {
                     echo "<p><strong>Description:</strong> " . $message . "</p>";
                     echo "<p><strong>Contact:</strong> " . $contact . "</p>";
 
-                    if ($schoolType == 2) { // Employee
-                        echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
-                        echo "<p><strong>Department:</strong> " . ($department ? $department : 'N/A') . "</p>";
-                        echo "<p><strong>Teaching Status:</strong> " . ($teachingStatus ? $teachingStatus : 'N/A') . "</p>";
-                    } elseif ($schoolType == 0) { // High School Student
-                        echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
-                        echo "<p><strong>Grade:</strong> " . ($year ? $year : 'N/A') . "</p>";
-                    } elseif ($schoolType == 1) { // College Student
-                        echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
-                        echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
-                        echo "<p><strong>Course:</strong> " . ($course ? $course : 'N/A') . "</p>";
-                        echo "<p><strong>Year Level:</strong> " . ($year ? $year : 'N/A') . "</p>";
-                    } else { // Unknown or Guest
-                        echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
-                        echo "<p><strong>User Role:</strong> Guest</p>";
-                    }
+                    
+// Assuming school_type is already fetched in $schoolType
+$userRole = 'N/A'; // Default value for user role
+
+// Determine user role based on school_type
+if ($schoolType == 0) {
+    $userRole = 'High School Student';
+} elseif ($schoolType == 1) {
+    $userRole = 'College Student';
+} elseif ($schoolType == 2) {
+    $userRole = 'Employee';
+} elseif ($schoolType == 3) {
+    $userRole = 'Guest';
+}
+
+// Display user info with role
+if ($firstName || $email || $college) {
+    echo "<p><strong>User Info:</strong> " . ($firstName ? htmlspecialchars($firstName) : 'N/A') . " (" . ($email ? htmlspecialchars($email) : 'N/A') . ")</p>";
+    echo "<p><strong>User Role:</strong> " . htmlspecialchars($userRole) . "</p>";
+    echo "<p><strong>Department:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
+}
+
 
                     echo "<div class='form-group'>";
                     echo "<label for='status' class='control-label'>Status</label>";
