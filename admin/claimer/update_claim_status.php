@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $status_message = "
                     Hello {$claimantName},<br><br>
                     Your claim request for the item <strong>{$itemName}</strong> has been approved.<br>
-                    Please proceed to the OSA Building 3rd floor Student Organization Office for actual verification.<br><br>
+                    Please proceed to the OSA Building 3rd floor Student Organization Office for actual verification and please bring your ID.<br><br>
                     Thank you.
                 ";
             } elseif ($new_status === 'rejected') {
