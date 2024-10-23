@@ -154,6 +154,8 @@ $result = $stmt->get_result();
     <?php require_once('../inc/topBarNav.php'); ?>
 
     <div class="container">
+        <br>
+        <br>
         <h3>Claim Details</h3>
         
         <?php if ($result->num_rows > 0): ?>
