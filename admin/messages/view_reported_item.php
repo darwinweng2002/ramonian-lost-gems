@@ -280,13 +280,13 @@ if ($message_id > 0) {
 $userRole = 'N/A'; // Default value for user role
 
 // Determine user role based on school_type
-if ($schoolType == 0) {
+if ($school_type == 0) {
     $userRole = 'High School Student';
-} elseif ($schoolType == 1) {
+} elseif ($school_type == 1) {
     $userRole = 'College Student';
-} elseif ($schoolType == 2) {
+} elseif ($school_type== 2) {
     $userRole = 'Employee';
-} elseif ($schoolType == 3) {
+} elseif ($school_type == 3) {
     $userRole = 'Guest';
 }
 
