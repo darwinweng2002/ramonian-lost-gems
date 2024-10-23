@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Email content
                 $mail->isHTML(true);
-                $mail->Subject = 'Item Status Update: ' . $itemTitle;
+                $mail->Subject = 'Reported Found Item Status Update: ' . $itemTitle;
                 $mail->Body    = "Hello $reporterName, <br><br>Your reported item titled '<strong>$itemTitle</strong>' has been updated to the status of '<strong>$statusText</strong>'.<br><br>Thank you for your contribution.";
 
                 $mail->send();
