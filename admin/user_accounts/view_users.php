@@ -259,10 +259,10 @@ $result = $conn->query($sql);
 
                                         if ($schoolType == '1') {
                                             // College
-                                            $level = 'College';
+                                            $level = 'Student - College';
                                         } elseif ($schoolType == '0') {
                                             // High School
-                                            $level = 'High School (Grade ' . htmlspecialchars($row['grade']) . ')';
+                                            $level = 'Student - High School (Grade ' . htmlspecialchars($row['grade']) . ')';
                                         } elseif ($schoolType == '2') {
                                             // Employee
                                             $teachingStatus = htmlspecialchars($row['teaching_status']);
