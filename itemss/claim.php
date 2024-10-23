@@ -272,29 +272,47 @@ h1, h3 {
         <?php endif; ?>
     </div>
 
-    <!-- Display Claimant's Information -->
     <div class="info-section">
-        <?php if ($isGuest): ?>
-            <!-- Guest restriction message -->
-            <p style="color: red; text-align: center;">Guest users are not allowed to claim items.</p>
-        <?php elseif ($isOwner): ?>
-            <!-- Owner restriction message -->
-            <p style="color: red; text-align: center;">You cannot claim your own post.</p>
-        <?php else: ?>
-            <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
-            <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
+    <?php if ($isGuest): ?>
+        <!-- Guest restriction message -->
+        <p style="color: red; text-align: center;">Guest users are not allowed to claim items.</p>
+    <?php elseif ($isOwner): ?>
+        <!-- Owner restriction message -->
+        <p style="color: red; text-align: center;">You cannot claim your own post.</p>
+    <?php else: ?>
+        <p><strong>Name:</strong> <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
+        <p><strong>Email:</strong> <?= htmlspecialchars($claimantData['email']); ?></p>
+        
+        <!-- Display User Role/Type based on school_type -->
+        <p><strong>User Role:</strong> 
+            <?php 
+                // Check the value of school_type and display the corresponding user role
+                if ($claimantData['school_type'] == 1) {
+                    echo 'College';
+                } elseif ($claimantData['school_type'] == 0) {
+                    echo 'High School';
+                } elseif ($claimantData['school_type'] == 2) {
+                    echo 'Employee';
+                } elseif ($claimantData['school_type'] == 3) {
+                    echo 'Guest';
+                } else {
+                    echo 'Unknown'; // Fallback for unknown types
+                }
+            ?>
+        </p>
 
-            <!-- Display based on school_type -->
-            <?php if ($claimantData['school_type'] == 1): // College ?>
-                <p>College: <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
-                <p>Course: <?= htmlspecialchars($claimantData['course'] ?? 'N/A'); ?></p>
-                <p>Year Level: <?= htmlspecialchars($claimantData['year'] ?? 'N/A'); ?></p>
-            <?php elseif ($claimantData['school_type'] == 2): // Employee ?>
-                <p>Teaching Status: <?= htmlspecialchars($claimantData['teaching_status'] ?? 'N/A'); ?></p>
-                <p>Department/Position: <?= htmlspecialchars($claimantData['department_or_position'] ?? 'N/A'); ?></p>
-            <?php endif; ?>
+        <!-- Additional fields based on the user role -->
+        <?php if ($claimantData['school_type'] == 1): // College ?>
+            <p><strong>College:</strong> <?= htmlspecialchars($claimantData['college'] ?? 'N/A'); ?></p>
+            <p><strong>Course:</strong> <?= htmlspecialchars($claimantData['course'] ?? 'N/A'); ?></p>
+            <p><strong>Year Level:</strong> <?= htmlspecialchars($claimantData['year'] ?? 'N/A'); ?></p>
+        <?php elseif ($claimantData['school_type'] == 2): // Employee ?>
+            <p><strong>Teaching Status:</strong> <?= htmlspecialchars($claimantData['teaching_status'] ?? 'N/A'); ?></p>
+            <p><strong>Department/Position:</strong> <?= htmlspecialchars($claimantData['department_or_position'] ?? 'N/A'); ?></p>
         <?php endif; ?>
-    </div>
+    <?php endif; ?>
+</div>
+
 
     <?php if (!$isGuest && !$isOwner): ?>
     <!-- Claim Form -->
