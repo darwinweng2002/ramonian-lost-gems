@@ -249,29 +249,6 @@ h1, h3 {
     <h1>Claim This Item</h1>
 
     <!-- Display Item Information -->
-    <h3>Item Information</h3>
-    <div class="info-section">
-        <?php if ($itemData): ?>
-            <p>Item Name: <?= htmlspecialchars($itemData['title'] ?? ''); ?></p>
-            <p>Category: <?= htmlspecialchars($itemData['category_name'] ?? ''); ?></p>
-
-            <!-- Check if the founder's name or email is empty -->
-            <?php if (empty($itemData['first_name']) && empty($itemData['email'])): ?>
-                <p>Found by: Guest User</p>
-            <?php else: ?>
-                <p>Found by: <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
-                <p>Email: <?= htmlspecialchars($itemData['email']); ?></p>
-            <?php endif; ?>
-
-            <p>Time Found: <?= htmlspecialchars($itemData['time_found'] ?? ''); ?></p>
-            <p>Location Found: <?= htmlspecialchars($itemData['landmark'] ?? ''); ?></p>
-            <p>Description: <?= htmlspecialchars($itemData['message'] ?? ''); ?></p>
-            <p>Contact: <?= htmlspecialchars($itemData['contact'] ?? ''); ?></p>
-        <?php else: ?>
-            <p>Item not found or not published.</p>
-        <?php endif; ?>
-    </div>
-
     <div class="info-section">
     <?php if ($isGuest): ?>
         <!-- Guest restriction message -->
@@ -280,17 +257,17 @@ h1, h3 {
         <!-- Owner restriction message -->
         <p style="color: red; text-align: center;">You cannot claim your own post.</p>
     <?php else: ?>
-        <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
-        <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
+        <p><strong>Name:</strong> <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
+        <p><strong>Email:</strong> <?= htmlspecialchars($claimantData['email']); ?></p>
         
         <!-- Display User Role/Type based on school_type -->
-        <p>User Role:
+        <p><strong>User Role:</strong> 
             <?php 
                 // Check the value of school_type and display the corresponding user role
                 if ($claimantData['school_type'] == 1) {
-                    echo 'Student - College';
+                    echo 'College';
                 } elseif ($claimantData['school_type'] == 0) {
-                    echo 'Student - High School';
+                    echo 'High School';
                 } elseif ($claimantData['school_type'] == 2) {
                     echo 'Employee';
                 } elseif ($claimantData['school_type'] == 3) {
@@ -312,6 +289,31 @@ h1, h3 {
         <?php endif; ?>
     <?php endif; ?>
 </div>
+
+<!-- Display Item Information -->
+<h3>Item Information</h3>
+<div class="info-section">
+    <?php if ($itemData): ?>
+        <p><strong>Item Name:</strong> <?= htmlspecialchars($itemData['title'] ?? ''); ?></p>
+        <p><strong>Category:</strong> <?= htmlspecialchars($itemData['category_name'] ?? ''); ?></p>
+
+        <!-- Check if the founder's name or email is empty -->
+        <?php if (empty($itemData['first_name']) && empty($itemData['email'])): ?>
+            <p><strong>Found by:</strong> Guest User</p>
+        <?php else: ?>
+            <p><strong>Found by:</strong> <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
+            <p><strong>Email:</strong> <?= htmlspecialchars($itemData['email']); ?></p>
+        <?php endif; ?>
+
+        <p><strong>Time Found:</strong> <?= htmlspecialchars($itemData['time_found'] ?? ''); ?></p>
+        <p><strong>Location Found:</strong> <?= htmlspecialchars($itemData['landmark'] ?? ''); ?></p>
+        <p><strong>Description:</strong> <?= htmlspecialchars($itemData['message'] ?? ''); ?></p>
+        <p><strong>Contact:</strong> <?= htmlspecialchars($itemData['contact'] ?? ''); ?></p>
+    <?php else: ?>
+        <p><strong>Item not found or not published.</strong></p>
+    <?php endif; ?>
+</div>
+
 
 
     <?php if (!$isGuest && !$isOwner): ?>
