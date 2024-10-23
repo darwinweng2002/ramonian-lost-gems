@@ -296,7 +296,6 @@ if (isset($userId)) {
     <div class="container">
         <!-- Display user information -->
         <h2 class="user-info">Report Found Item</h2>
-        <div class="info-section">
     <?php if ($isGuest): ?>
         <!-- Guest User: Only show Username and User Role -->
         <p>
@@ -378,10 +377,6 @@ if (isset($userId)) {
             Username: <?= htmlspecialchars($first_name . ' ' . $last_name); ?> (<?= htmlspecialchars($email); ?>)
         </p>
     <?php endif; ?>
-</div>
-
-
-<?php endif; ?>
          
         <form action="send_message.php" method="post" enctype="multipart/form-data" class="message-form">
         <label for="founder">
