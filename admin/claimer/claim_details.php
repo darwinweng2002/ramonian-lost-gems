@@ -56,6 +56,7 @@ $sql = "
         mh.title AS item_name, 
         COALESCE(um.first_name, us.first_name) AS first_name, 
         COALESCE(um.last_name, us.last_name) AS last_name, 
+        COALESCE(um.email, us.email) AS email,  -- Add this line to fetch the email
         c.item_description, 
         c.date_lost, 
         c.location_lost, 
@@ -72,6 +73,7 @@ $sql = "
     LEFT JOIN message_images mi ON mh.id = mi.message_id
     WHERE c.id = ?
     GROUP BY c.id";
+
 
 
 $stmt = $conn->prepare($sql);
@@ -223,7 +225,7 @@ $result = $stmt->get_result();
                 <?php endif; ?>
 
                 <!-- Fetch claimant's name from either user_member or user_staff -->
-                <p><strong>Claimant Name:</strong> <?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></p>
+                <p><strong>Claimant Name:</strong> <?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?> (<?= htmlspecialchars($row['email']); ?>)</p>
                 <p><strong>Description:</strong> <?= htmlspecialchars($row['item_description']); ?></p>
                 <p><strong>Date Lost:</strong> <?= htmlspecialchars($row['date_lost']); ?></p>
                 <p><strong>Location Lost:</strong> <?= htmlspecialchars($row['location_lost']); ?></p>
