@@ -158,7 +158,7 @@ $conn->close();
 
         <?php elseif ($user['school_type'] == '0'): ?>
             <!-- High School Fields -->
-            <p><strong>Level:</strong> High School (Grade <?= htmlspecialchars($user['grade']) ?>)</p>
+            <p><strong>User Role:</strong> Student - High School (Grade <?= htmlspecialchars($user['grade']) ?>)</p>
 
         <?php elseif ($user['school_type'] == '2'): ?>
             <!-- Employee Fields -->
