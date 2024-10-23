@@ -246,6 +246,7 @@ if ($message_id > 0) {
                             'title' => $row['title'],
                             'college' => $row['college'],
                             'email' => $row['email'],
+                            'school_type' => $row['school_type'],
                             'avatar' => $row['avatar'],
                             'contact' => $row['contact'],
                             'founder' => $row['founder'],
