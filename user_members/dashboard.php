@@ -496,9 +496,9 @@ if (!$is_guest) {
             <?php 
             // Check the school_type column to determine the User Type
             if ($school_type == 1) {
-                echo 'College';
+                echo 'Student - College';
             } elseif ($school_type == 0) {
-                echo 'High School';
+                echo 'Student - High School';
             } elseif ($school_type == 2) {
                 echo 'Employee';
             } elseif ($school_type == 3) {
