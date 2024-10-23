@@ -254,6 +254,8 @@ if ($message_id > 0) {
                     $founder = htmlspecialchars($msgData['founder'] ?? '');
                     $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
                     $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
+                    $isStaff = ($msgData['user_type'] === 'staff') ? true : false;
+
 
                     if ($firstName || $email || $college) {
                         if ($avatar) {
