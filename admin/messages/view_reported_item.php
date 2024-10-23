@@ -230,7 +230,6 @@ if ($message_id > 0) {
                             'founder' => $row['founder'],
                             'time_found' => $row['time_found'],
                             'category_name' => $row['category_name'],
-                            'is_staff' => $row['is_staff'],
                             'status' => $row['status']
                         ];
                     }
@@ -254,7 +253,6 @@ if ($message_id > 0) {
                     $founder = htmlspecialchars($msgData['founder'] ?? '');
                     $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
                     $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
-                    $isStaff = htmlspecialchars($msgData['is_staff'] ?? '');
 
                     if ($firstName || $email || $college) {
                         if ($avatar) {
