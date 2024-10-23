@@ -2,6 +2,14 @@
 // Include database configuration
 include '../../config.php';
 
+// Include PHPMailer for email notifications
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../../PHPMailer/src/Exception.php';
+require '../../PHPMailer/src/PHPMailer.php';
+require '../../PHPMailer/src/SMTP.php';
+
 // Start session if necessary
 session_start();
 
@@ -36,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status'])) {
     if ($stmt->execute()) {
         // Check if any rows were actually updated
         if ($stmt->affected_rows > 0) {
+            sendStatusEmail($claimId, $new_status, $conn);  // Call the function to send an email
             echo "<script>alert('Claim status updated successfully!'); window.location.href = 'claim_details.php?id={$claimId}';</script>";
         } else {
             echo "<script>alert('No changes made. The status might already be set to the selected value.'); window.location.href = 'claim_details.php?id={$claimId}';</script>";
@@ -47,39 +56,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status'])) {
     $stmt->close();
 }
 
-// Fetch claim details
-// Fetch claim details
-$sql = "
-    SELECT 
-        c.id, 
-        c.item_id, 
-        mh.title AS item_name, 
-        COALESCE(um.first_name, us.first_name) AS first_name, 
-        COALESCE(um.last_name, us.last_name) AS last_name, 
-        COALESCE(um.email, us.email) AS email,  -- Add this line to fetch the email
-        c.item_description, 
-        c.date_lost, 
-        c.location_lost, 
-        c.proof_of_ownership, 
-        c.personal_id, 
-        c.status, 
-        c.claim_date, 
-        c.id_type,  /* Add this line to retrieve the id_type */
-        GROUP_CONCAT(mi.image_path) AS image_paths
-    FROM claimer c
-    LEFT JOIN message_history mh ON c.item_id = mh.id
-    LEFT JOIN user_member um ON c.user_id = um.id
-    LEFT JOIN user_staff us ON c.user_id = us.id
-    LEFT JOIN message_images mi ON mh.id = mi.message_id
-    WHERE c.id = ?
-    GROUP BY c.id";
+// Function to send status update email using PHPMailer
+function sendStatusEmail($claimId, $status, $conn) {
+    // Fetch the claimant email
+    $sql = "
+        SELECT 
+            COALESCE(um.email, us.email) AS email
+        FROM claimer c
+        LEFT JOIN user_member um ON c.user_id = um.id
+        LEFT JOIN user_staff us ON c.user_id = us.id
+        WHERE c.id = ?
+    ";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('i', $claimId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    
+    $email = $row['email'];
+    
+    if (!$email) {
+        echo "<script>alert('No claimant email found.');</script>";
+        return;
+    }
 
+    // Initialize PHPMailer
+    $mail = new PHPMailer(true);
+    
+    try {
+        //Server settings
+        $mail->isSMTP();
+                $mail->Host = 'mail.smtp2go.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'ran_ramonian'; // Your email
+                $mail->Password = 'test123456'; // Your email password
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = 2525;
 
+        //Recipients
+        $mail->setFrom('admin@ramonianlostgems.com', 'Ramonian Lost Gems'); // Your app name
+        $mail->addAddress($reporterEmail, $reporterName);  // Claimant's email
 
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('i', $claimId);
-$stmt->execute();
-$result = $stmt->get_result();
+        //Content
+        $mail->isHTML(true);
+        $mail->Subject = "Your Claim Status has been Updated";
+        $mail->Body    = "Hello,<br><br>Your claim request status for the reported item has been updated to: <strong>" . ucfirst($status) . "</strong>.<br><br>Best regards,<br>Ramonian Lost Gems";
+
+        // Send the email
+        $mail->send();
+        echo "<script>alert('Email notification sent to claimant.');</script>";
+    } catch (Exception $e) {
+        echo "<script>alert('Failed to send email. Error: {$mail->ErrorInfo}');</script>";
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
