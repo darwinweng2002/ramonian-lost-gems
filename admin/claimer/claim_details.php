@@ -87,6 +87,7 @@ $result = $stmt->get_result();
             margin: 10px 0;
         }
 
+        /* Image grid styling */
         .image-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -121,6 +122,7 @@ $result = $stmt->get_result();
             transform: scale(1.05);
         }
 
+        /* Status update form styling */
         form {
             margin-top: 20px;
         }
@@ -146,6 +148,19 @@ $result = $stmt->get_result();
 
         button:hover {
             background-color: #0056b3;
+        }
+
+        /* Logo styling */
+        .logo img {
+            max-height: 55px;
+            width: auto;
+            display: inline-block;
+            margin-left: 15px;
+        }
+
+        .logo span {
+            font-size: 1.5rem;
+            color: #333;
         }
     </style>
 </head>
