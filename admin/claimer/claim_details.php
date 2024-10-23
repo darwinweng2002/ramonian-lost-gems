@@ -1,14 +1,11 @@
 <?php
 // Include database configuration
 include '../../config.php';
+ // If you installed via Composer
 
-// Include PHPMailer for email notifications
+// PHPMailer files (if manually installed, update the path accordingly)
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-require '../../PHPMailer/src/Exception.php';
-require '../../PHPMailer/src/PHPMailer.php';
-require '../../PHPMailer/src/SMTP.php';
 
 // Start session if necessary
 session_start();
@@ -101,7 +98,7 @@ function sendStatusEmail($claimId, $status, $conn) {
         //Content
         $mail->isHTML(true);
         $mail->Subject = "Your Claim Status has been Updated";
-        $mail->Body    = "Hello,<br><br>Your claim request status for the reported item has been updated to: <strong>" . ucfirst($status) . "</strong>.<br><br>Best regards,<br>Ramonian Lost Gems";
+        $mail->Body    = "Hello,<br><br>Your claim request status for the reported item has been updated to: <strong>" . ucfirst($status) . "</strong>.<br><br>Best regards,<br>Ramonian Lost";
 
         // Send the email
         $mail->send();
