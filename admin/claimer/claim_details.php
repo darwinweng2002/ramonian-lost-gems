@@ -19,35 +19,6 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 // Get claim ID from URL
 $claimId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Handle form submission for status update
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status'])) {
-    $new_status = $_POST['status'];
-
-    // Update claim status in the database
-    $update_sql = "UPDATE claimer SET status = ? WHERE id = ?";
-    $stmt = $conn->prepare($update_sql);
-    
-    if (!$stmt) {
-        die('MySQL prepare failed: ' . $conn->error);
-    }
-
-    $stmt->bind_param('si', $new_status, $claimId);
-    
-    if ($stmt->execute()) {
-        // Check if any rows were actually updated
-        if ($stmt->affected_rows > 0) {
-            echo "<script>alert('Claim status updated successfully!'); window.location.href = 'claim_details.php?id={$claimId}';</script>";
-        } else {
-            echo "<script>alert('No changes made. The status might already be set to the selected value.'); window.location.href = 'claim_details.php?id={$claimId}';</script>";
-        }
-    } else {
-        echo "<script>alert('Failed to update claim status.'); window.location.href = 'claim_details.php?id={$claimId}';</script>";
-    }
-
-    $stmt->close();
-}
-
-// Fetch claim details
 // Fetch claim details
 $sql = "
     SELECT 
@@ -56,7 +27,7 @@ $sql = "
         mh.title AS item_name, 
         COALESCE(um.first_name, us.first_name) AS first_name, 
         COALESCE(um.last_name, us.last_name) AS last_name, 
-        COALESCE(um.email, us.email) AS email,  -- Add this line to fetch the email
+        COALESCE(um.email, us.email) AS email,  
         c.item_description, 
         c.date_lost, 
         c.location_lost, 
@@ -64,7 +35,7 @@ $sql = "
         c.personal_id, 
         c.status, 
         c.claim_date, 
-        c.id_type,  /* Add this line to retrieve the id_type */
+        c.id_type,  
         GROUP_CONCAT(mi.image_path) AS image_paths
     FROM claimer c
     LEFT JOIN message_history mh ON c.item_id = mh.id
@@ -73,8 +44,6 @@ $sql = "
     LEFT JOIN message_images mi ON mh.id = mi.message_id
     WHERE c.id = ?
     GROUP BY c.id";
-
-
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $claimId);
@@ -85,11 +54,12 @@ $result = $stmt->get_result();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php require_once('../inc/header.php'); ?>
+    <?php require_once('../inc/header.php'); ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claim Details</title>
     <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/css/lightbox.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert script -->
     <style>
         /* General Styling */
         body {
@@ -117,7 +87,6 @@ $result = $stmt->get_result();
             margin: 10px 0;
         }
 
-        /* Image grid styling */
         .image-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -152,7 +121,6 @@ $result = $stmt->get_result();
             transform: scale(1.05);
         }
 
-        /* Status update form styling */
         form {
             margin-top: 20px;
         }
@@ -179,19 +147,6 @@ $result = $stmt->get_result();
         button:hover {
             background-color: #0056b3;
         }
-
-        /* Logo styling */
-        .logo img {
-            max-height: 55px;
-            width: auto;
-            display: inline-block;
-            margin-left: 15px;
-        }
-
-        .logo span {
-            font-size: 1.5rem;
-            color: #333;
-        }
     </style>
 </head>
 <body>
@@ -199,8 +154,6 @@ $result = $stmt->get_result();
     <?php require_once('../inc/topBarNav.php'); ?>
 
     <div class="container">
-        <br>
-        <br>
         <h3>Claim Details</h3>
         
         <?php if ($result->num_rows > 0): ?>
@@ -233,7 +186,8 @@ $result = $stmt->get_result();
                 <p><strong>Claim Date:</strong> <?= htmlspecialchars($row['claim_date']); ?></p>
 
                 <!-- Status Update Form -->
-                <form action="" method="POST">
+                <form id="statusForm" method="POST">
+                    <input type="hidden" name="claim_id" value="<?= htmlspecialchars($claimId); ?>">
                     <label for="status">Update Status:</label>
                     <select name="status" id="status">
                         <option value="pending" <?= ($row['status'] === 'pending') ? 'selected' : '' ?>>Pending</option>
@@ -241,7 +195,7 @@ $result = $stmt->get_result();
                         <option value="rejected" <?= ($row['status'] === 'rejected') ? 'selected' : '' ?>>Rejected</option>
                         <option value="claimed" <?= ($row['status'] === 'claimed') ? 'selected' : '' ?>>Claimed</option>
                     </select>
-                    <button type="submit">Update Status</button>
+                    <button type="button" id="submitStatusBtn">Update Status</button>
                 </form>
 
                 <!-- Proof of Ownership -->
@@ -263,7 +217,6 @@ $result = $stmt->get_result();
                 <?php else: ?>
                     <p>No ID uploaded.</p>
                 <?php endif; ?>
-
             </div>
         <?php else: ?>
             <p>Claim not found.</p>
@@ -271,6 +224,47 @@ $result = $stmt->get_result();
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.3/dist/js/lightbox-plus-jquery.min.js"></script>
+    
+    <!-- SweetAlert and AJAX Script -->
+    <script>
+        document.getElementById('submitStatusBtn').addEventListener('click', function(e) {
+            const status = document.getElementById('status').value;
+            const claimId = document.querySelector('input[name="claim_id"]').value;
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `You are about to change the status to ${status}.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, update it!',
+                cancelButtonText: 'No, cancel!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const formData = new FormData(document.getElementById('statusForm'));
+
+                    fetch('update_claim_status.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('Updated!', 'The claim status has been updated.', 'success')
+                            .then(() => {
+                                window.location.href = `claim_details.php?id=${claimId}`;
+                            });
+                        } else {
+                            Swal.fire('Error!', 'There was an error updating the status.', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire('Error!', 'Something went wrong.', 'error');
+                    });
+                }
+            });
+        });
+    </script>
+    
     <?php require_once('../inc/footer.php'); ?>
 </body>
 </html>
