@@ -16,7 +16,6 @@ if ($conn->connect_error) {
 $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 if ($message_id > 0) {
-    // SQL query to fetch the details of the selected message by its ID from both user_member and user_staff
     $sql = "
     SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, user_info.first_name, user_info.college, user_info.email, user_info.avatar, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name, user_info.school_type, user_info.teaching_status, user_info.department_or_position, user_info.grade
     FROM message_history mh
@@ -49,11 +48,29 @@ if ($message_id > 0) {
         FROM user_staff
     ) AS user_info ON mh.user_id = user_info.user_id
     LEFT JOIN categories c ON mh.category_id = c.id
-    WHERE mh.is_denied = 0 AND mh.id = $message_id"; // Exclude denied items
+    WHERE mh.is_denied = 0 AND mh.id = $message_id";
 
-
-    // Fetch only the selected message
     $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            // Fetch necessary details and assign them to variables
+            $firstName = $row['first_name'] ?? 'N/A';
+            $email = $row['email'] ?? 'N/A';
+            $college = $row['college'] ?? 'N/A';
+            $avatar = $row['avatar'] ?? 'default-avatar.png';
+            $contact = $row['contact'] ?? 'N/A';
+            $founder = $row['founder'] ?? 'N/A';
+            $timeFound = $row['time_found'] ?? 'N/A';
+            $categoryName = $row['category_name'] ?? 'N/A';
+            $schoolType = $row['school_type'] ?? 'N/A';
+            $teachingStatus = $row['teaching_status'] ?? 'N/A';
+            $departmentOrPosition = $row['department_or_position'] ?? 'N/A';
+            $grade = $row['grade'] ?? 'N/A';
+            $year = $row['grade'] ?? 'N/A'; // Assuming grade is the same as year in this case
+            $status = $row['status'] ?? 0;
+        }
+    }
 } else {
     echo "Invalid message ID.";
     exit;
