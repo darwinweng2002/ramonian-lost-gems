@@ -15,13 +15,13 @@ $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($message_id > 0) {
     // SQL query to fetch the details of the selected message by its ID from both user_member and user_staff
     $sql = "
-    SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, user_info.first_name, user_info.school_type, user_info.college, user_info.course, user_info.year, user_info.department_or_position, user_info.teaching_status, user_info.email, user_info.avatar, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name
+    SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, user_info.first_name, user_info.college, user_info.email, user_info.avatar, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name
     FROM message_history mh
     LEFT JOIN message_images mi ON mh.id = mi.message_id
     LEFT JOIN (
-        SELECT id AS user_id, first_name, school_type, college, course, year, email, avatar, 'member' AS user_type FROM user_member
+        SELECT id AS user_id, first_name, college, school_type, teaching_status, department_or_position, grade, email, avatar, 'member' AS user_type FROM user_member
         UNION
-        SELECT id AS user_id, first_name, 2 AS school_type, department AS department_or_position, teaching_status, email, avatar, 'staff' AS user_type FROM user_staff
+        SELECT id AS user_id, first_name, department AS college, email, avatar, 'staff' AS user_type FROM user_staff
     ) AS user_info ON mh.user_id = user_info.user_id
     LEFT JOIN categories c ON mh.category_id = c.id
     WHERE mh.is_denied = 0 AND mh.id = $message_id"; // Exclude denied items
