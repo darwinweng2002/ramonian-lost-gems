@@ -293,6 +293,7 @@ if (isset($userId)) {
 
         <?php else: // College ?>
             <!-- For College Students: Show College and Username -->
+            <p>User Role: Student - College</p>
             <p>College: <?= htmlspecialchars($college); ?></p>
             <p>Username: <?= htmlspecialchars($first_name . ' ' . $last_name); ?> (<?= htmlspecialchars($email); ?>)</p>
 
