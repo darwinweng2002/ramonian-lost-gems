@@ -17,9 +17,9 @@ if ($user_id <= 0) {
     exit;
 }
 
-// Fetch user details from the database, including the fields for employees, high school students, and guests
+// Fetch user details from the database, including the fields for employees and high school students
 $sql = "SELECT first_name, last_name, email, school_id_file, registration_date, 
-               college, course, year, status, school_type, grade, teaching_status, department_or_position, contact
+               college, course, year, status, school_type, grade, teaching_status, department_or_position 
         FROM user_member 
         WHERE id = ?";
 
@@ -151,26 +151,28 @@ $conn->close();
 
         <!-- Display Level based on school_type -->
         <?php if ($user['school_type'] == '1'): ?>
-            <!-- College Fields -->
-            <p id="collegeField"><strong>College:</strong> <?= htmlspecialchars($user['college']) ?></p>
-            <p id="courseField"><strong>Course:</strong> <?= htmlspecialchars($user['course']) ?></p>
-            <p id="yearField"><strong>Year:</strong> <?= htmlspecialchars($user['year']) ?></p>
+    <!-- College Fields -->
+    <p id="collegeField"><strong>College:</strong> <?= htmlspecialchars($user['college']) ?></p>
+    <p id="courseField"><strong>Course:</strong> <?= htmlspecialchars($user['course']) ?></p>
+    <p id="yearField"><strong>Year:</strong> <?= htmlspecialchars($user['year']) ?></p>
 
-        <?php elseif ($user['school_type'] == '0'): ?>
-            <!-- High School Fields -->
-            <p><strong>User Role:</strong> Student - High School (Grade <?= htmlspecialchars($user['grade']) ?>)</p>
+<?php elseif ($user['school_type'] == '0'): ?>
+    <!-- High School Fields -->
+    <p><strong>User Role:</strong> Student - High School (Grade <?= htmlspecialchars($user['grade']) ?>)</p>
 
-        <?php elseif ($user['school_type'] == '2'): ?>
-            <!-- Employee Fields -->
-            <p><strong>Role:</strong> Employee</p>
-            <p><strong>Teaching Status:</strong> <?= htmlspecialchars($user['teaching_status']) ?></p>
-            <p><strong>Department/Position:</strong> <?= htmlspecialchars($user['department_or_position']) ?></p>
+<?php elseif ($user['school_type'] == '2'): ?>
+    <!-- Employee Fields -->
+    <p><strong>Role:</strong> Employee</p>
+    <p><strong>Teaching Status:</strong> <?= htmlspecialchars($user['teaching_status']) ?></p>
+    <p><strong>Department/Position:</strong> <?= htmlspecialchars($user['department_or_position']) ?></p>
 
-        <?php elseif ($user['school_type'] == '3'): ?>
-            <!-- Guest User Fields -->
-            <p><strong>User Role:</strong> Guest</p>
-            <p><strong>Contact Info:</strong> <?= htmlspecialchars($user['contact']) ?></p>
-        <?php endif; ?>
+<?php elseif ($user['school_type'] == '3'): ?>
+    <!-- Guest User Fields -->
+    <p><strong>User Role:</strong> Guest</p>
+    <p><strong>Contact Info:</strong> <?= htmlspecialchars($user['contact']) ?></p>
+
+<?php endif; ?>
+
 
         <p><strong>Status:</strong> <?= htmlspecialchars($user['status']) ?></p>
         <p><strong>Registration Date:</strong> <?= htmlspecialchars($user['registration_date']) ?></p>
