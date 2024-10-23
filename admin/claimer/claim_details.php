@@ -1,11 +1,6 @@
 <?php
 // Include database configuration
 include '../../config.php';
- // If you installed via Composer
-
-// PHPMailer files (if manually installed, update the path accordingly)
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 // Start session if necessary
 session_start();
@@ -41,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status'])) {
     if ($stmt->execute()) {
         // Check if any rows were actually updated
         if ($stmt->affected_rows > 0) {
-            sendStatusEmail($claimId, $new_status, $conn);  // Call the function to send an email
             echo "<script>alert('Claim status updated successfully!'); window.location.href = 'claim_details.php?id={$claimId}';</script>";
         } else {
             echo "<script>alert('No changes made. The status might already be set to the selected value.'); window.location.href = 'claim_details.php?id={$claimId}';</script>";
@@ -53,17 +47,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status'])) {
     $stmt->close();
 }
 
-// Function to send status update email using PHPMailer
-function sendStatusEmail($claimId, $status, $conn) {
-    // Fetch the claimant email
-    $sql = "
+// Fetch claim details
+// Fetch claim details
+$sql = "
     SELECT 
         c.id, 
         c.item_id, 
         mh.title AS item_name, 
         COALESCE(um.first_name, us.first_name) AS first_name, 
         COALESCE(um.last_name, us.last_name) AS last_name, 
-        COALESCE(um.email, us.email) AS email, 
         c.item_description, 
         c.date_lost, 
         c.location_lost, 
@@ -71,7 +63,7 @@ function sendStatusEmail($claimId, $status, $conn) {
         c.personal_id, 
         c.status, 
         c.claim_date, 
-        c.id_type,  
+        c.id_type,  /* Add this line to retrieve the id_type */
         GROUP_CONCAT(mi.image_path) AS image_paths
     FROM claimer c
     LEFT JOIN message_history mh ON c.item_id = mh.id
@@ -80,50 +72,12 @@ function sendStatusEmail($claimId, $status, $conn) {
     LEFT JOIN message_images mi ON mh.id = mi.message_id
     WHERE c.id = ?
     GROUP BY c.id";
-    
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('i', $claimId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    
-    $email = $row['email'];
-    
-    if (!$email) {
-        echo "<script>alert('No claimant email found.');</script>";
-        return;
-    }
 
-    // Initialize PHPMailer
-    $mail = new PHPMailer(true);
-    
-    try {
-        //Server settings
-        $mail->isSMTP();
-                $mail->Host = 'mail.smtp2go.com';
-                $mail->SMTPAuth = true;
-                $mail->Username = 'ran_ramonian'; // Your email
-                $mail->Password = 'test123456'; // Your email password
-                $mail->SMTPSecure = 'tls';
-                $mail->Port = 2525;
 
-        //Recipients
-        $mail->setFrom('admin@ramonianlostgems.com', 'Ramonian Lost Gems'); // Your app name
-        $mail->addAddress($reporterEmail, $reporterName);  // Claimant's email
-
-        //Content
-        $mail->isHTML(true);
-        $mail->Subject = "Your Claim Status has been Updated";
-        $mail->Body    = "Hello,<br><br>Your claim request status for the reported item has been updated to: <strong>" . ucfirst($status) . "</strong>.<br><br>Best regards,<br>Ramonian Lost";
-
-        // Send the email
-        $mail->send();
-        echo "<script>alert('Email notification sent to claimant.');</script>";
-    } catch (Exception $e) {
-        echo "<script>alert('Failed to send email. Error: {$mail->ErrorInfo}');</script>";
-    }
-}
-
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $claimId);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <!DOCTYPE html>
@@ -269,7 +223,7 @@ function sendStatusEmail($claimId, $status, $conn) {
                 <?php endif; ?>
 
                 <!-- Fetch claimant's name from either user_member or user_staff -->
-                <p><strong>Claimant Name:</strong> <?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?> (<?= htmlspecialchars($row['email']); ?>)</p>
+                <p><strong>Claimant Name:</strong> <?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?></p>
                 <p><strong>Description:</strong> <?= htmlspecialchars($row['item_description']); ?></p>
                 <p><strong>Date Lost:</strong> <?= htmlspecialchars($row['date_lost']); ?></p>
                 <p><strong>Location Lost:</strong> <?= htmlspecialchars($row['location_lost']); ?></p>
