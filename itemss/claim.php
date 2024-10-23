@@ -289,9 +289,9 @@ h2, h3 {
             <?php 
                 // Check the value of school_type and display the corresponding user role
                 if ($claimantData['school_type'] == 1) {
-                    echo 'College';
+                    echo 'Student - College';
                 } elseif ($claimantData['school_type'] == 0) {
-                    echo 'High School';
+                    echo 'Student - High School';
                 } elseif ($claimantData['school_type'] == 2) {
                     echo 'Employee';
                 } elseif ($claimantData['school_type'] == 3) {
