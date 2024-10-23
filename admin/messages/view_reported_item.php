@@ -15,11 +15,11 @@ $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($message_id > 0) {
     // SQL query to fetch the details of the selected message by its ID from both user_member and user_staff
     $sql = "
-    SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, user_info.first_name, user_info.college, user_info.email, user_info.avatar, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name
+    SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, user_info.first_name, user_info.college, user_info.email, user_info.avatar, user_info.school_type, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name
     FROM message_history mh
     LEFT JOIN message_images mi ON mh.id = mi.message_id
     LEFT JOIN (
-        SELECT id AS user_id, first_name, college, email, avatar, 'member' AS user_type FROM user_member
+        SELECT id AS user_id, first_name, college, email, avatar, school_type, 'member' AS user_type FROM user_member
         UNION
         SELECT id AS user_id, first_name, department AS college, email, avatar, 'staff' AS user_type FROM user_staff
     ) AS user_info ON mh.user_id = user_info.user_id
@@ -218,6 +218,7 @@ if ($message_id > 0) {
                             'first_name' => $row['first_name'],
                             'landmark' => $row['landmark'],
                             'title' => $row['title'],
+                            'school_type' => $row['school_type'],
                             'college' => $row['college'],
                             'email' => $row['email'],
                             'avatar' => $row['avatar'],
@@ -269,9 +270,21 @@ if ($message_id > 0) {
                     echo "<p><strong>Description:</strong> " . $message . "</p>";
                     echo "<p><strong>Contact:</strong> " . $contact . "</p>";
 
-                    if ($firstName || $email || $college) {
+                    if ($schoolType == 2) { // Employee
                         echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
-                        echo "<p><strong>Department:</strong> " . ($college ? $college : 'N/A') . "</p>";
+                        echo "<p><strong>Department:</strong> " . ($department ? $department : 'N/A') . "</p>";
+                        echo "<p><strong>Teaching Status:</strong> " . ($teachingStatus ? $teachingStatus : 'N/A') . "</p>";
+                    } elseif ($schoolType == 0) { // High School Student
+                        echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
+                        echo "<p><strong>Grade:</strong> " . ($year ? $year : 'N/A') . "</p>";
+                    } elseif ($schoolType == 1) { // College Student
+                        echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
+                        echo "<p><strong>College:</strong> " . ($college ? $college : 'N/A') . "</p>";
+                        echo "<p><strong>Course:</strong> " . ($course ? $course : 'N/A') . "</p>";
+                        echo "<p><strong>Year Level:</strong> " . ($year ? $year : 'N/A') . "</p>";
+                    } else { // Unknown or Guest
+                        echo "<p><strong>User Info:</strong> " . ($firstName ? $firstName : 'N/A') . " (" . ($email ? $email : 'N/A') . ")</p>";
+                        echo "<p><strong>User Role:</strong> Guest</p>";
                     }
 
                     echo "<div class='form-group'>";
