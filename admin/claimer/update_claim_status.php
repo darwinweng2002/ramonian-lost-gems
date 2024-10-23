@@ -8,6 +8,7 @@ use PHPMailer\PHPMailer\Exception;
 require '../../PHPMailer/src/Exception.php';
 require '../../PHPMailer/src/PHPMailer.php';
 require '../../PHPMailer/src/SMTP.php';
+
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
@@ -57,8 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($updateStmt->execute()) {
             // Send email notification to claimant
             $mail = new PHPMailer(true);
-            
+
             try {
+                // Enable SMTP Debugging
+                $mail->SMTPDebug = 2; // For debugging purposes, set to 0 when in production
+                $mail->Debugoutput = 'html'; // Output debug info in HTML format
+                
                 // Server settings
                 $mail->isSMTP();
                 $mail->Host = 'mail.smtp2go.com'; // Set your SMTP server
@@ -100,14 +105,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 // Send the email
-                $mail->send();
-                
-                // Redirect with success status
-                header('Location: admin_view_claims.php?status=success');
+                if ($mail->send()) {
+                    echo "Mail sent successfully";
+                    header('Location: admin_view_claims.php?status=success');
+                } else {
+                    echo "Mailer Error: {$mail->ErrorInfo}";
+                }
+
             } catch (Exception $e) {
                 // Log error if email sending fails
-                error_log("Mailer Error: {$mail->ErrorInfo}");
-                header('Location: admin_view_claims.php?status=email_error');
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
         } else {
             // Redirect with error status if update fails
@@ -124,4 +131,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $conn->close();
-?>
