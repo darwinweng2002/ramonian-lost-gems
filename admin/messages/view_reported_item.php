@@ -24,10 +24,11 @@ if ($message_id > 0) {
     LEFT JOIN (
         SELECT id AS user_id, first_name, college, email, avatar, school_type, 'member' AS user_type FROM user_member
         UNION
-        SELECT id AS user_id, first_name, department AS college, email, avatar, 'staff' AS user_type FROM user_staff
+        SELECT id AS user_id, first_name, department AS college, email, avatar, NULL AS school_type, 'staff' AS user_type FROM user_staff
     ) AS user_info ON mh.user_id = user_info.user_id
     LEFT JOIN categories c ON mh.category_id = c.id
-    WHERE mh.is_denied = 0 AND mh.id = $message_id"; // Exclude denied items
+    WHERE mh.is_denied = 0 AND mh.id = $message_id"; 
+// Exclude denied items
 
     // Fetch only the selected message
     $result = $conn->query($sql);
