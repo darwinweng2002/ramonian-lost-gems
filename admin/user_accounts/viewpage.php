@@ -17,9 +17,9 @@ if ($user_id <= 0) {
     exit;
 }
 
-// Fetch user details from the database, including the fields for employees and high school students
+// Fetch user details from the database, including the fields for employees, high school students, and guests
 $sql = "SELECT first_name, last_name, email, school_id_file, registration_date, 
-               college, course, year, status, school_type, grade, teaching_status, department_or_position 
+               college, course, year, status, school_type, grade, teaching_status, department_or_position, contact
         FROM user_member 
         WHERE id = ?";
 
@@ -165,6 +165,11 @@ $conn->close();
             <p><strong>Role:</strong> Employee</p>
             <p><strong>Teaching Status:</strong> <?= htmlspecialchars($user['teaching_status']) ?></p>
             <p><strong>Department/Position:</strong> <?= htmlspecialchars($user['department_or_position']) ?></p>
+
+        <?php elseif ($user['school_type'] == '3'): ?>
+            <!-- Guest User Fields -->
+            <p><strong>User Role:</strong> Guest</p>
+            <p><strong>Contact Info:</strong> <?= htmlspecialchars($user['contact']) ?></p>
         <?php endif; ?>
 
         <p><strong>Status:</strong> <?= htmlspecialchars($user['status']) ?></p>
