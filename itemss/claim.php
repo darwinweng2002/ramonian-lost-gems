@@ -187,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     border-radius: 12px;
 }
-h1, h3 {
+h2, h3 {
     color: #444;
     text-align: center;
     font-weight: 400;
@@ -272,6 +272,7 @@ h1, h3 {
     <?php endif; ?>
 </div>
  <!-- Display Item Information -->
+ <h3>Claimant Information</h3>
  <div class="info-section">
     <?php if ($isGuest): ?>
         <!-- Guest restriction message -->
