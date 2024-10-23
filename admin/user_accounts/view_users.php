@@ -252,7 +252,7 @@ $result = $conn->query($sql);
 
                                 <!-- Logic to display "High School" or "College" based on the value -->
                                <!-- Logic to display "High School", "College", or "Employee" based on the value -->
-                                <td>
+                               <td>
                                     <?php
                                         $schoolType = htmlspecialchars($row['school_type']);
                                         $level = '';
@@ -274,11 +274,15 @@ $result = $conn->query($sql);
                                             } else {
                                                 $level = 'Employee (Non-Teaching, ' . $departmentOrPosition . ')';
                                             }
+                                        } elseif ($schoolType == '3' || empty($schoolType)) {
+                                            // Guest user (if school_type is 3 or empty)
+                                            $level = 'Guest';
                                         }
 
                                         echo $level;
                                     ?>
                                 </td>
+
 
 
                                 <td><?= htmlspecialchars($row['college']) ?></td>
