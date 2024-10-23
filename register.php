@@ -465,6 +465,7 @@ button {
                         <div class="col-12">
                         <label for="email" class="form-label">Email</label>
                         <input type="text" name="email" class="form-control" id="email" required>
+                        <small style="color: #666;">Please use an active email address for registration.</small>
                         <div class="invalid-feedback" id="email-error">Please enter a username (8-16 characters).</div>
                     </div>
 
