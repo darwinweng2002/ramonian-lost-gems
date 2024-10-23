@@ -270,12 +270,37 @@ if (isset($userId)) {
     <br>
     <div class="container">
     <h2 class="user-info">Report Missing Item</h2>
-        <?php if (isset($first_name) && isset($last_name) && isset($email) && isset($college)): ?>
+<?php if (isset($first_name) && isset($last_name) && isset($email)): ?>
     <div class="user-info">
-        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-graduation-cap"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg> College: <?php echo htmlspecialchars($college); ?></p>
-        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paperclip"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg> Username: <?php echo htmlspecialchars($first_name . ' ' . $last_name); ?> (<?php echo htmlspecialchars($email); ?>)</p>
+        
+        <?php if ($school_type == 3): // Guest ?>
+            <!-- For Guest Users: Only show Username and User Role -->
+            <p>Username: <?= htmlspecialchars($first_name . ' ' . $last_name); ?> (<?= htmlspecialchars($email); ?>)</p>
+            <p>User Role: Guest</p>
+
+        <?php elseif ($school_type == 2): // Employee ?>
+            <!-- For Employees: Show Username, User Role, Teaching Status, and Department/Position -->
+            <p>Username: <?= htmlspecialchars($first_name . ' ' . $last_name); ?> (<?= htmlspecialchars($email); ?>)</p>
+            <p>User Role: Employee</p>
+            <p>Teaching Status: <?= htmlspecialchars($teaching_status ?? 'N/A'); ?></p>
+            <p>Department/Position: <?= htmlspecialchars($department_or_position ?? 'N/A'); ?></p>
+
+        <?php elseif ($school_type == 0): // High School ?>
+            <!-- For High School Students: Show Grade and Username -->
+            <p>User Role: High School Student</p>
+            <p>Grade: <?= htmlspecialchars($grade ?? 'N/A'); ?></p>
+            <p>Username: <?= htmlspecialchars($first_name . ' ' . $last_name); ?> (<?= htmlspecialchars($email); ?>)</p>
+
+        <?php else: // College ?>
+            <!-- For College Students: Show College and Username -->
+            <p>College: <?= htmlspecialchars($college); ?></p>
+            <p>Username: <?= htmlspecialchars($first_name . ' ' . $last_name); ?> (<?= htmlspecialchars($email); ?>)</p>
+
+        <?php endif; ?>
+
     </div>
 <?php endif; ?>
+
 
         <form action="send_missing.php" method="post" enctype="multipart/form-data" class="message-form">
         <label for="owner">Owner's Name:</label>
