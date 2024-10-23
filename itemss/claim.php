@@ -246,10 +246,33 @@ h1, h3 {
 <body>
 <?php require_once('../inc/topBarNav.php') ?>
 <div class="container">
-    <h1>Claim This Item</h1>
+    <h2>Send Claim Request</h2>
 
-    <!-- Display Item Information -->
-    <div class="info-section">
+<!-- Display Item Information -->
+<h3>Item Information</h3>
+<div class="info-section">
+    <?php if ($itemData): ?>
+        <p><strong>Item Name:</strong> <?= htmlspecialchars($itemData['title'] ?? ''); ?></p>
+        <p><strong>Category:</strong> <?= htmlspecialchars($itemData['category_name'] ?? ''); ?></p>
+
+        <!-- Check if the founder's name or email is empty -->
+        <?php if (empty($itemData['first_name']) && empty($itemData['email'])): ?>
+            <p><strong>Found by:</strong> Guest User</p>
+        <?php else: ?>
+            <p><strong>Found by:</strong> <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
+            <p><strong>Email:</strong> <?= htmlspecialchars($itemData['email']); ?></p>
+        <?php endif; ?>
+
+        <p><strong>Time Found:</strong> <?= htmlspecialchars($itemData['time_found'] ?? ''); ?></p>
+        <p><strong>Location Found:</strong> <?= htmlspecialchars($itemData['landmark'] ?? ''); ?></p>
+        <p><strong>Description:</strong> <?= htmlspecialchars($itemData['message'] ?? ''); ?></p>
+        <p><strong>Contact:</strong> <?= htmlspecialchars($itemData['contact'] ?? ''); ?></p>
+    <?php else: ?>
+        <p><strong>Item not found or not published.</strong></p>
+    <?php endif; ?>
+</div>
+ <!-- Display Item Information -->
+ <div class="info-section">
     <?php if ($isGuest): ?>
         <!-- Guest restriction message -->
         <p style="color: red; text-align: center;">Guest users are not allowed to claim items.</p>
@@ -289,31 +312,6 @@ h1, h3 {
         <?php endif; ?>
     <?php endif; ?>
 </div>
-
-<!-- Display Item Information -->
-<h3>Item Information</h3>
-<div class="info-section">
-    <?php if ($itemData): ?>
-        <p><strong>Item Name:</strong> <?= htmlspecialchars($itemData['title'] ?? ''); ?></p>
-        <p><strong>Category:</strong> <?= htmlspecialchars($itemData['category_name'] ?? ''); ?></p>
-
-        <!-- Check if the founder's name or email is empty -->
-        <?php if (empty($itemData['first_name']) && empty($itemData['email'])): ?>
-            <p><strong>Found by:</strong> Guest User</p>
-        <?php else: ?>
-            <p><strong>Found by:</strong> <?= htmlspecialchars($itemData['first_name'] . ' ' . $itemData['last_name']); ?></p>
-            <p><strong>Email:</strong> <?= htmlspecialchars($itemData['email']); ?></p>
-        <?php endif; ?>
-
-        <p><strong>Time Found:</strong> <?= htmlspecialchars($itemData['time_found'] ?? ''); ?></p>
-        <p><strong>Location Found:</strong> <?= htmlspecialchars($itemData['landmark'] ?? ''); ?></p>
-        <p><strong>Description:</strong> <?= htmlspecialchars($itemData['message'] ?? ''); ?></p>
-        <p><strong>Contact:</strong> <?= htmlspecialchars($itemData['contact'] ?? ''); ?></p>
-    <?php else: ?>
-        <p><strong>Item not found or not published.</strong></p>
-    <?php endif; ?>
-</div>
-
 
 
     <?php if (!$isGuest && !$isOwner): ?>
