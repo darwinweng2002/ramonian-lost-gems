@@ -489,17 +489,22 @@ if (!$is_guest) {
 <div class="tab-content">
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
     <ul class="list-group mb-3">
-    <!-- Level Display: College, High School, or Employee -->
+    <!-- Level Display: College, High School, Employee, or Guest -->
     <li class="list-group-item d-flex justify-content-between">
         <strong>User Type:</strong>
         <span>
             <?php 
+            // Check the school_type column to determine the User Type
             if ($school_type == 1) {
                 echo 'College';
             } elseif ($school_type == 0) {
                 echo 'High School';
             } elseif ($school_type == 2) {
                 echo 'Employee';
+            } elseif ($school_type == 3) {
+                echo 'Guest';  // Added case for Guest users
+            } else {
+                echo 'Unknown'; // Fallback for unknown types
             }
             ?>
         </span>
@@ -546,8 +551,6 @@ if (!$is_guest) {
         <span><?= htmlspecialchars($email ?? '') ?></span>
     </li>
 </ul>
-
-
     </div>
 </div>
 <div class="tab-content">
