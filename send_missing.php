@@ -82,14 +82,14 @@ $stmt->close();
 if (isset($userId)) {
     if ($userType === 'user_member') {
         // Query for regular user
-        $stmt = $conn->prepare("SELECT first_name, last_name, college, email FROM user_member WHERE id = ?");
+        $stmt = $conn->prepare("SELECT first_name, last_name, college,  school_type, teaching_status, department_or_position, grade, email FROM user_member WHERE id = ?");
     } else {
         // Query for staff user
-        $stmt = $conn->prepare("SELECT first_name, last_name, department AS college, email FROM user_staff WHERE id = ?");
+        $stmt = $conn->prepare("SELECT first_name, last_name, department AS college,  email FROM user_staff WHERE id = ?");
     }
     $stmt->bind_param("i", $userId);
     $stmt->execute();
-    $stmt->bind_result($first_name, $last_name, $college, $email);
+    $stmt->bind_result($first_name, $last_name, $college,  $school_type, $teaching_status, $department_or_position, $grade, $email);
     $stmt->fetch();
     $stmt->close();
 }
@@ -282,12 +282,12 @@ if (isset($userId)) {
             <!-- For Employees: Show Username, User Role, Teaching Status, and Department/Position -->
             <p>Username: <?= htmlspecialchars($first_name . ' ' . $last_name); ?> (<?= htmlspecialchars($email); ?>)</p>
             <p>User Role: Employee</p>
-            <p>Teaching Status: <?= htmlspecialchars($teaching_status ?? 'N/A'); ?></p>
+            <p>Employee Type: <?= htmlspecialchars($teaching_status ?? 'N/A'); ?></p>
             <p>Department/Position: <?= htmlspecialchars($department_or_position ?? 'N/A'); ?></p>
 
         <?php elseif ($school_type == 0): // High School ?>
             <!-- For High School Students: Show Grade and Username -->
-            <p>User Role: High School Student</p>
+            <p>User Role: Student - High School</p>
             <p>Grade: <?= htmlspecialchars($grade ?? 'N/A'); ?></p>
             <p>Username: <?= htmlspecialchars($first_name . ' ' . $last_name); ?> (<?= htmlspecialchars($email); ?>)</p>
 
