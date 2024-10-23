@@ -91,10 +91,10 @@ $stmt->close();
 // Retrieve user information based on user type
 if (isset($userId)) {
     if ($userType === 'user_member') {
-        $stmt = $conn->prepare("SELECT first_name, last_name, college, school_type, email FROM user_member WHERE id = ?");
+        $stmt = $conn->prepare("SELECT first_name, last_name, college, school_type, teaching_status, department_or_position,  email FROM user_member WHERE id = ?");
         $stmt->bind_param("i", $userId);
         $stmt->execute();
-        $stmt->bind_result($first_name, $last_name, $college, $school_type, $email);
+        $stmt->bind_result($first_name, $last_name, $college, $school_type, $teaching_status, $department_or_position, $email);
     } else {
         $stmt = $conn->prepare("SELECT first_name, last_name, department AS college, email FROM user_staff WHERE id = ?");
         $stmt->bind_param("i", $userId);
@@ -107,16 +107,21 @@ if (isset($userId)) {
     $stmt->close();
 
     // Map the numeric school_type to a string value, only if $userType is 'user_member'
-    $schoolTypeString = '';
-    if ($userType === 'user_member') {
-        if ($school_type == 0) {
-            $schoolTypeString = 'High School';
-        } elseif ($school_type == 1) {
-            $schoolTypeString = 'College';
-        } else {
-            $schoolTypeString = 'N/A';
-        }
+   // Map the numeric school_type to a string value, only if $userType is 'user_member'
+$schoolTypeString = '';
+if ($userType === 'user_member') {
+    if ($school_type == 0) {
+        $schoolTypeString = 'Student - High School';
+    } elseif ($school_type == 1) {
+        $schoolTypeString = 'Student - College';
+    } elseif ($school_type == 2) {
+        $schoolTypeString = 'Employee'; // For Employee
+    } elseif ($school_type == 3) {
+        $schoolTypeString = 'Guest'; // For Guest
+    } else {
+        $schoolTypeString = 'N/A';
     }
+}
 }
 ?>
 
