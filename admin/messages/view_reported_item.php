@@ -244,6 +244,7 @@ if ($message_id > 0) {
                     $title = htmlspecialchars($msgData['title'] ?? '');
                     $landmark = htmlspecialchars($msgData['landmark'] ?? '');
                     $message = htmlspecialchars($msgData['message'] ?? '');
+                    $school_type = htmlspecialchars($msgData['school_type'] ?? '');
                     $avatar = htmlspecialchars($msgData['avatar'] ?? '');
                     $contact = htmlspecialchars($msgData['contact'] ?? '');
                     $founder = htmlspecialchars($msgData['founder'] ?? '');
