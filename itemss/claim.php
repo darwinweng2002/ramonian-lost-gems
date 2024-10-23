@@ -280,17 +280,17 @@ h1, h3 {
         <!-- Owner restriction message -->
         <p style="color: red; text-align: center;">You cannot claim your own post.</p>
     <?php else: ?>
-        <p><strong>Name:</strong> <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
-        <p><strong>Email:</strong> <?= htmlspecialchars($claimantData['email']); ?></p>
+        <p>Name: <?= htmlspecialchars($claimantData['first_name'] . ' ' . $claimantData['last_name']); ?></p>
+        <p>Email: <?= htmlspecialchars($claimantData['email']); ?></p>
         
         <!-- Display User Role/Type based on school_type -->
-        <p><strong>User Role:</strong> 
+        <p>User Role:
             <?php 
                 // Check the value of school_type and display the corresponding user role
                 if ($claimantData['school_type'] == 1) {
-                    echo 'College';
+                    echo 'Student - College';
                 } elseif ($claimantData['school_type'] == 0) {
-                    echo 'High School';
+                    echo 'Student - High School';
                 } elseif ($claimantData['school_type'] == 2) {
                     echo 'Employee';
                 } elseif ($claimantData['school_type'] == 3) {
