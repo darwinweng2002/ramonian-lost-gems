@@ -169,8 +169,6 @@ $conn->close();
 <?php elseif ($user['school_type'] == '3'): ?>
     <!-- Guest User Fields -->
     <p><strong>User Role:</strong> Guest</p>
-    <p><strong>Contact Info:</strong> <?= htmlspecialchars($user['contact']) ?></p>
-
 <?php endif; ?>
 
 
