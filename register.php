@@ -452,15 +452,14 @@ button {
                             <div class="invalid-feedback">Please enter your position.</div>
                         </div>
 
-                            <div class="col-12">
-                            <label for="school_id" class="form-label">Upload ID</label>
-                            <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
-                            <div class="invalid-feedback">Please upload your ID (acceptable file type: jpg, jpeg, png).</div>
-                            <!-- Image preview container -->
-                            <div id="imagePreviewContainer" style="margin-top: 10px;">
-                                <img id="imagePreview" src="#" alt="Preview will appear here..." style="max-width: 100%; display: none; border: 1px solid #ddd; padding: 5px; border-radius: 4px;">
-                            </div>
-                        </div>
+                        <div class="col-12">
+                        <label for="school_id" class="form-label">Upload ID</label>
+                        <input type="file" name="school_id" class="form-control" id="school_id" accept=".jpg,.jpeg,.png" required>
+                        <div class="invalid-feedback">Please upload your ID (acceptable file type: jpg, jpeg, png).</div>
+                        <!-- Insert the small text element here -->
+                        <small id="idHelpText" class="form-text text-muted"></small> <!-- This small text will show the message -->
+                    </div>
+
 
                         <div class="col-12">
                         <label for="email" class="form-label">Email</label>
@@ -820,7 +819,32 @@ button {
     // Initial state check
     handleSchoolTypeChange();  // Trigger field adjustments based on the initial value
 });
+document.addEventListener('DOMContentLoaded', function () {
+        const schoolTypeSelect = document.getElementById('school_type');
+        const idHelpText = document.getElementById('idHelpText'); // The small text element for showing messages
 
+        // Function to update the help text based on the selected role
+        function updateIdHelpText() {
+            const selectedRole = schoolTypeSelect.value;
+
+            // Update the text based on the selected role
+            if (selectedRole === '1' || selectedRole === '0') {
+                idHelpText.textContent = 'Please upload your valid school ID for verification purposes.';
+            } else if (selectedRole === '2') {
+                idHelpText.textContent = 'Please upload your valid employee ID for verification purposes.';
+            } else if (selectedRole === '3') {
+                idHelpText.textContent = 'As a guest, please upload a valid government-issued ID for verification purposes.';
+            } else {
+                idHelpText.textContent = ''; // Clear the text if no role is selected
+            }
+        }
+
+        // Listen for changes in the "school_type" dropdown
+        schoolTypeSelect.addEventListener('change', updateIdHelpText);
+
+        // Initialize the help text when the page loads
+        updateIdHelpText();
+    });
   </script>
 </body>
 </html>
