@@ -19,19 +19,23 @@ if (isset($_GET['id'])) {
 
 // SQL query to get missing item details and associated images
 $sql = "
-    SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, mi.owner, user_info.first_name, user_info.college, user_info.school_type,  user_info.email, user_info.avatar, c.name AS category_name, imi.image_path
+    SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, mi.owner, 
+           user_info.first_name, user_info.college, user_info.email, user_info.avatar, 
+           COALESCE(user_info.school_type, 'N/A') AS school_type,  -- Use COALESCE to handle missing values
+           c.name AS category_name, imi.image_path
     FROM missing_items mi
     LEFT JOIN (
         -- Fetch from user_member
         SELECT id AS user_id, first_name, college, school_type, email, avatar FROM user_member
         UNION
-        -- Fetch from user_staff
-        SELECT id AS user_id, first_name, department AS college, school_type, email, avatar FROM user_staff
+        -- Fetch from user_staff (no school_type column here)
+        SELECT id AS user_id, first_name, department AS college, NULL AS school_type, email, avatar FROM user_staff
     ) user_info ON mi.user_id = user_info.user_id
     LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
     LEFT JOIN categories c ON mi.category_id = c.id
     WHERE mi.id = ? AND mi.is_denied = 0  -- Add this condition to exclude denied items
 ";
+
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
