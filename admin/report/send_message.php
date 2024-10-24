@@ -444,6 +444,15 @@ if (isset($userId)) {
     previewContainer.innerHTML = ''; // Clear previous previews
     validationMessage.style.display = 'none'; // Hide validation message
 
+    // Check if at least one image is uploaded
+    if (files.length === 0) {
+        validationMessage.textContent = "You must upload at least one image.";
+        validationMessage.style.color = 'red';
+        validationMessage.style.display = 'block';
+        submitButton.disabled = true; // Disable the submit button
+        return; // Stop further execution
+    }
+
     // Check if the number of files exceeds the limit
     if (files.length > 6) {
         validationMessage.textContent = "The maximum number of images to be uploaded is 6.";
@@ -489,7 +498,31 @@ if (isset($userId)) {
     submitButton.disabled = false;
 }
 
+// Add this function to validate image upload before form submission
+document.querySelector('.message-form').addEventListener('submit', function(event) {
+    const files = document.getElementById('images').files;
+    const validationMessage = document.getElementById('fileValidationMessage');
+    const submitButton = document.querySelector('.submit-btn');
 
+    // Check if at least one file is uploaded
+    if (files.length === 0) {
+        validationMessage.textContent = "You must upload at least one image.";
+        validationMessage.style.color = 'red';
+        validationMessage.style.display = 'block';
+        submitButton.disabled = true; // Disable the submit button
+        event.preventDefault(); // Prevent form submission
+        return;
+    }
+
+    // Check if the number of files exceeds 6
+    if (files.length > 6) {
+        validationMessage.textContent = "You must only upload between 1 to 6 images.";
+        validationMessage.style.color = 'red';
+        validationMessage.style.display = 'block';
+        submitButton.disabled = true; // Disable the submit button
+        event.preventDefault(); // Prevent form submission
+    }
+});
 
         <?php if (isset($alertMessage)): ?>
             Swal.fire({
