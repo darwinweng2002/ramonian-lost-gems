@@ -19,19 +19,20 @@ if (isset($_GET['id'])) {
 
 // SQL query to get missing item details and associated images
 $sql = "
-    SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, mi.owner, user_info.first_name, user_info.college, user_info.email, user_info.avatar, c.name AS category_name, imi.image_path
+    SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, mi.owner, user_info.first_name, user_info.college, user_info.email, user_info.avatar, user_info.school_type, c.name AS category_name, imi.image_path
     FROM missing_items mi
     LEFT JOIN (
         -- Fetch from user_member
-        SELECT id AS user_id, first_name, college, email, avatar FROM user_member
+        SELECT id AS user_id, first_name, college, email, avatar, school_type FROM user_member
         UNION
         -- Fetch from user_staff
-        SELECT id AS user_id, first_name, department AS college, email, avatar FROM user_staff
+        SELECT id AS user_id, first_name, department AS college, email, avatar, 'Staff' AS school_type FROM user_staff
     ) user_info ON mi.user_id = user_info.user_id
     LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
     LEFT JOIN categories c ON mi.category_id = c.id
-    WHERE mi.id = ? AND mi.is_denied = 0  -- Add this condition to exclude denied items
+    WHERE mi.id = ? AND mi.is_denied = 0
 ";
+
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
@@ -241,8 +242,27 @@ $result = $stmt->get_result();
             if (empty($firstName) || empty($college)) {
                 echo "<p><strong>User Info:</strong> No Info</p>";
             } else {
-                echo "<p><strong>User Name:</strong> " . $firstName . " (" . $email . ")</p>";
-                echo "<p><strong>College:</strong> " . $college . "</p>";
+               // Mapping the school_type to human-readable user role
+            $userRole = '';
+            if ($itemData['school_type'] === '1') {
+                $userRole = 'College Student';
+            } elseif ($itemData['school_type'] === '0') {
+                $userRole = 'High School Student';
+            } elseif ($itemData['school_type'] === '2') {
+                $userRole = 'Employee';
+            } elseif ($itemData['school_type'] === '3') {
+                $userRole = 'Guest';
+            } elseif ($itemData['school_type'] === 'Staff') {
+                $userRole = 'Staff';
+            } else {
+                $userRole = 'Unknown';
+            }
+
+            // Display user info and role
+            echo "<p><strong>User Info:</strong> " . $firstName . " (" . $email . ")</p>";
+            echo "<p><strong>User Role:</strong> " . $userRole . "</p>";
+            echo "<p><strong>College:</strong> " . $college . "</p>";
+
             }
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
                 echo "<p><strong>Date and time the item was lost:</strong> " . $timeMissing . "</p>";
