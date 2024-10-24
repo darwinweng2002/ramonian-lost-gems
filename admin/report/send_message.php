@@ -434,23 +434,38 @@ if (isset($userId)) {
 
     <script>
        // Add this JavaScript function to validate the file size before upload
-function previewImages() {
+       function previewImages() {
     const previewContainer = document.getElementById('imagePreviewContainer');
     const validationMessage = document.getElementById('fileValidationMessage');
     const files = document.getElementById('images').files;
-    const maxSize = 50 * 1024 * 1024; // 50MB in bytes
+    const submitButton = document.querySelector('.submit-btn'); // Select the submit button
+    const maxFileSize = 50 * 1024 * 1024; // 50MB in bytes
 
     previewContainer.innerHTML = ''; // Clear previous previews
     validationMessage.style.display = 'none'; // Hide validation message
 
+    // Check if the number of files exceeds the limit
+    if (files.length > 6) {
+        validationMessage.textContent = "The maximum number of images to be uploaded is 6.";
+        validationMessage.style.color = 'red'; // Display in red
+        validationMessage.style.display = 'block'; // Show validation message
+        submitButton.disabled = true; // Disable the submit button
+        return; // Stop further execution if the limit is exceeded
+    } else {
+        submitButton.disabled = false; // Enable the submit button if the number of images is valid
+    }
+
+    // Loop through and preview each file
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
 
         // Check file size
-        if (file.size > maxSize) {
+        if (file.size > maxFileSize) {
             validationMessage.textContent = `File ${file.name} is too large. Maximum size is 50MB.`;
+            validationMessage.style.color = 'red';
             validationMessage.style.display = 'block';
-            return; // Stop further processing if file is too large
+            submitButton.disabled = true; // Disable the submit button if the file size is too large
+            return; // Stop further execution if file size exceeds the limit
         }
 
         if (file && file.type.startsWith('image/')) {
@@ -462,10 +477,18 @@ function previewImages() {
             };
             reader.readAsDataURL(file);
         } else {
-            validationMessage.style.display = 'block'; // Show validation message if file type is not supported
+            validationMessage.textContent = "Supported file types: jpg, jpeg, png, gif.";
+            validationMessage.style.color = 'red';
+            validationMessage.style.display = 'block';
+            submitButton.disabled = true; // Disable the submit button for invalid file types
+            return;
         }
     }
+
+    // If all checks pass, enable the submit button
+    submitButton.disabled = false;
 }
+
 
 
         <?php if (isset($alertMessage)): ?>
@@ -527,6 +550,20 @@ document.addEventListener('DOMContentLoaded', function() {
             contactError.textContent = ""; // Clear the error message if valid
         }
     });
+    document.querySelector('.message-form').addEventListener('submit', function(event) {
+    const files = document.getElementById('images').files;
+    const validationMessage = document.getElementById('fileValidationMessage');
+    const submitButton = document.querySelector('.submit-btn');
+
+    // Prevent form submission if the number of files exceeds 6
+    if (files.length > 6) {
+        validationMessage.textContent = "You must only upload between 1 to 6 images.";
+        validationMessage.style.color = 'red';
+        validationMessage.style.display = 'block';
+        submitButton.disabled = true; // Disable the submit button
+        event.preventDefault(); // Prevent form submission
+    }
+});
     </script>
 </body>
 </html>
