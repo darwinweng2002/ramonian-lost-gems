@@ -25,7 +25,7 @@ $sql = "
         -- Fetch from user_member
         SELECT id AS user_id, first_name, college, email, avatar, school_type FROM user_member
         UNION
-        -- Fetch from user_staff
+        -- Fetch from user_staff (since user_staff doesn't have school_type, assign 'Staff')
         SELECT id AS user_id, first_name, department AS college, email, avatar, 'Staff' AS school_type FROM user_staff
     ) user_info ON mi.user_id = user_info.user_id
     LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
@@ -242,9 +242,7 @@ $result = $stmt->get_result();
             if (empty($firstName) || empty($college)) {
                 echo "<p><strong>User Info:</strong> No Info</p>";
             } else {
-               // Mapping the school_type to human-readable user role
-          // Safeguard against undefined or missing school_type
-// Determine user role based on school_type
+               // Determine user role based on school_type
 $userRole = 'Unknown'; // Default value
 
 if ($school_type !== null) { // school_type exists
@@ -268,12 +266,10 @@ if ($school_type !== null) { // school_type exists
     $userRole = 'Staff';
 }
 
-
-// Display user info and role
-echo "<p><strong>User Info:</strong> " . $firstName . " (" . $email . ")</p>";
-echo "<p><strong>User Role:</strong> " . $userRole . "</p>";
-echo "<p><strong>College:</strong> " . $college . "</p>";
-
+// Display user info with role
+echo "<p><strong>User Info:</strong> " . ($firstName ? htmlspecialchars($firstName) : 'N/A') . " (" . ($email ? htmlspecialchars($email) : 'N/A') . ")</p>";
+echo "<p><strong>User Role:</strong> " . htmlspecialchars($userRole) . "</p>";
+echo "<p><strong>Department:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
 
             }
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
