@@ -243,25 +243,36 @@ $result = $stmt->get_result();
                 echo "<p><strong>User Info:</strong> No Info</p>";
             } else {
                // Mapping the school_type to human-readable user role
-            $userRole = '';
-            if ($itemData['school_type'] === '1') {
-                $userRole = 'College Student';
-            } elseif ($itemData['school_type'] === '0') {
-                $userRole = 'High School Student';
-            } elseif ($itemData['school_type'] === '2') {
-                $userRole = 'Employee';
-            } elseif ($itemData['school_type'] === '3') {
-                $userRole = 'Guest';
-            } elseif ($itemData['school_type'] === 'Staff') {
-                $userRole = 'Staff';
-            } else {
-                $userRole = 'Unknown';
-            }
+          // Safeguard against undefined or missing school_type
+$userRole = isset($itemData['school_type']) ? $itemData['school_type'] : 'Unknown';
 
-            // Display user info and role
-            echo "<p><strong>User Info:</strong> " . $firstName . " (" . $email . ")</p>";
-            echo "<p><strong>User Role:</strong> " . $userRole . "</p>";
-            echo "<p><strong>College:</strong> " . $college . "</p>";
+// Mapping the school_type to human-readable user role
+switch ($userRole) {
+    case '1':
+        $userRole = 'College Student';
+        break;
+    case '0':
+        $userRole = 'High School Student';
+        break;
+    case '2':
+        $userRole = 'Employee';
+        break;
+    case '3':
+        $userRole = 'Guest';
+        break;
+    case 'Staff':
+        $userRole = 'Staff';
+        break;
+    default:
+        $userRole = 'Unknown';
+        break;
+}
+
+// Display user info and role
+echo "<p><strong>User Info:</strong> " . $firstName . " (" . $email . ")</p>";
+echo "<p><strong>User Role:</strong> " . $userRole . "</p>";
+echo "<p><strong>College:</strong> " . $college . "</p>";
+
 
             }
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
