@@ -95,7 +95,7 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
                     Hello $reporterName, <br><br>
                     The status of your missing item report titled <strong>$itemTitle</strong> has been updated to <strong>$statusMessage</strong>. <br><br>
                     Please log in to the system to check for further details.
-                    <br><br>Best regards, <br>Your App Name
+                    <br><br>Best regards, <br>Ramonian Lost Gems
                 ";
 
                 $mail->send();
