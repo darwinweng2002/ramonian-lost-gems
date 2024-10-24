@@ -19,20 +19,19 @@ if (isset($_GET['id'])) {
 
 // SQL query to get missing item details and associated images
 $sql = "
-    SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, mi.owner, user_info.first_name, user_info.college, user_info.email, user_info.avatar, user_info.school_type, c.name AS category_name, imi.image_path
+    SELECT mi.id, mi.title, mi.description, mi.last_seen_location, mi.time_missing, mi.status, mi.contact, mi.owner, user_info.first_name, user_info.college, user_info.school_type,  user_info.email, user_info.avatar, c.name AS category_name, imi.image_path
     FROM missing_items mi
     LEFT JOIN (
         -- Fetch from user_member
-        SELECT id AS user_id, first_name, college, email, avatar, school_type FROM user_member
+        SELECT id AS user_id, first_name, college, school_type, email, avatar FROM user_member
         UNION
-        -- Fetch from user_staff (since user_staff doesn't have school_type, assign 'Staff')
-        SELECT id AS user_id, first_name, department AS college, email, avatar, 'Staff' AS school_type FROM user_staff
+        -- Fetch from user_staff
+        SELECT id AS user_id, first_name, department AS college, school_type, email, avatar FROM user_staff
     ) user_info ON mi.user_id = user_info.user_id
     LEFT JOIN missing_item_images imi ON mi.id = imi.missing_item_id
     LEFT JOIN categories c ON mi.category_id = c.id
-    WHERE mi.id = ? AND mi.is_denied = 0
+    WHERE mi.id = ? AND mi.is_denied = 0  -- Add this condition to exclude denied items
 ";
-
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('i', $itemId);
@@ -200,6 +199,7 @@ $result = $stmt->get_result();
                     'status' => $row['status'],
                     'first_name' => $row['first_name'],
                     'college' => $row['college'],
+                    'school_type' => $row['school_type'],
                     'email' => $row['email'],
                     'avatar' => $row['avatar'],
                     'images' => [],
@@ -220,6 +220,7 @@ $result = $stmt->get_result();
             $title = htmlspecialchars($itemData['title'] ?? '');
             $lastSeenLocation = htmlspecialchars($itemData['last_seen_location'] ?? '');
             $description = htmlspecialchars($itemData['description'] ?? '');
+            $school_type = htmlspecialchars($itemData['school_type'] ?? '');
             $owner = htmlspecialchars($itemData['owner'] ?? '');
             $avatar = htmlspecialchars($itemData['avatar'] ?? '');
             $timeMissing = htmlspecialchars($itemData['time_missing'] ?? '');
@@ -239,39 +240,26 @@ $result = $stmt->get_result();
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
                 echo "<p><strong>Owner Name:</strong> " . $owner . "</p>";
                 // Check if user is a guest
-            if (empty($firstName) || empty($college)) {
-                echo "<p><strong>User Info:</strong> No Info</p>";
-            } else {
-               // Determine user role based on school_type
-$userRole = 'Unknown'; // Default value
+           // Assuming school_type is already fetched in $schoolType
+$userRole = 'N/A'; // Default value for user role
 
-if ($school_type !== null) { // school_type exists
-    switch ($school_type) {
-        case '0':
-            $userRole = 'High School Student';
-            break;
-        case '1':
-            $userRole = 'College Student';
-            break;
-        case '2':
-            $userRole = 'Employee';
-            break;
-        case '3':
-            $userRole = 'Guest';
-            break;
-        default:
-            $userRole = 'Unknown';
-    }
-} elseif ($user_type === 'staff') { // If user_type is staff and no school_type
-    $userRole = 'Staff';
+// Determine user role based on school_type
+if ($school_type == 0) {
+    $userRole = 'High School Student';
+} elseif ($school_type == 1) {
+    $userRole = 'College Student';
+} elseif ($school_type== 2) {
+    $userRole = 'Employee';
+} elseif ($school_type == 3) {
+    $userRole = 'Guest';
 }
 
 // Display user info with role
-echo "<p><strong>User Info:</strong> " . ($firstName ? htmlspecialchars($firstName) : 'N/A') . " (" . ($email ? htmlspecialchars($email) : 'N/A') . ")</p>";
-echo "<p><strong>User Role:</strong> " . htmlspecialchars($userRole) . "</p>";
-echo "<p><strong>Department:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
-
-            }
+if ($firstName || $email || $college) {
+    echo "<p><strong>User Info:</strong> " . ($firstName ? htmlspecialchars($firstName) : 'N/A') . " (" . ($email ? htmlspecialchars($email) : 'N/A') . ")</p>";
+    echo "<p><strong>User Role:</strong> " . htmlspecialchars($userRole) . "</p>";
+    echo "<p><strong>Department:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
+}
                 echo "<p><strong>Last Seen Location:</strong> " . $lastSeenLocation . "</p>";
                 echo "<p><strong>Date and time the item was lost:</strong> " . $timeMissing . "</p>";
                 echo "<p><strong>Description:</strong> " . $description . "</p>";
