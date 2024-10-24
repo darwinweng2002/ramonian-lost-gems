@@ -342,10 +342,11 @@ if (isset($userId)) {
     </div>
     <?php require_once('../inc/footer.php') ?>
     <script>
-      function previewImages() {
+     function previewImages() {
     const previewContainer = document.getElementById('imagePreviewContainer');
     const validationMessage = document.getElementById('fileValidationMessage');
     const files = document.getElementById('images').files;
+    const submitButton = document.querySelector('.submit-btn'); // Select the submit button
 
     previewContainer.innerHTML = ''; // Clear previous previews
     validationMessage.style.display = 'none'; // Hide validation message
@@ -355,7 +356,10 @@ if (isset($userId)) {
         validationMessage.textContent = "The maximum number of images to be uploaded is 6."; // Set error message
         validationMessage.style.color = 'red'; // Display in red
         validationMessage.style.display = 'block'; // Show validation message
+        submitButton.disabled = true; // Disable the submit button
         return; // Stop further execution if the limit is exceeded
+    } else {
+        submitButton.disabled = false; // Enable the submit button if the number of images is valid
     }
 
     // Loop through and preview each file
@@ -373,6 +377,8 @@ if (isset($userId)) {
             validationMessage.textContent = "Supported file types: jpg, jpeg, png, gif.";
             validationMessage.style.color = 'red';
             validationMessage.style.display = 'block';
+            submitButton.disabled = true; // Disable submit button for invalid file types
+            return;
         }
     }
 }
@@ -440,14 +446,17 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.message-form').addEventListener('submit', function(event) {
     const files = document.getElementById('images').files;
     const validationMessage = document.getElementById('fileValidationMessage');
+    const submitButton = document.querySelector('.submit-btn');
 
     if (files.length > 6) {
         validationMessage.textContent = "You must only upload between 1 to 6 images.";
         validationMessage.style.color = 'red';
         validationMessage.style.display = 'block';
+        submitButton.disabled = true; // Disable the submit button
         event.preventDefault(); // Prevent form submission
     }
 });
+
 
     </script>
 </body>
