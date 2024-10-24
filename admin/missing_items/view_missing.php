@@ -244,29 +244,30 @@ $result = $stmt->get_result();
             } else {
                // Mapping the school_type to human-readable user role
           // Safeguard against undefined or missing school_type
-$userRole = isset($itemData['school_type']) ? $itemData['school_type'] : 'Unknown';
+// Determine user role based on school_type
+$userRole = 'Unknown'; // Default value
 
-// Mapping the school_type to human-readable user role
-switch ($userRole) {
-    case '1':
-        $userRole = 'College Student';
-        break;
-    case '0':
-        $userRole = 'High School Student';
-        break;
-    case '2':
-        $userRole = 'Employee';
-        break;
-    case '3':
-        $userRole = 'Guest';
-        break;
-    case 'Staff':
-        $userRole = 'Staff';
-        break;
-    default:
-        $userRole = 'Unknown';
-        break;
+if ($school_type !== null) { // school_type exists
+    switch ($school_type) {
+        case '0':
+            $userRole = 'High School Student';
+            break;
+        case '1':
+            $userRole = 'College Student';
+            break;
+        case '2':
+            $userRole = 'Employee';
+            break;
+        case '3':
+            $userRole = 'Guest';
+            break;
+        default:
+            $userRole = 'Unknown';
+    }
+} elseif ($user_type === 'staff') { // If user_type is staff and no school_type
+    $userRole = 'Staff';
 }
+
 
 // Display user info and role
 echo "<p><strong>User Info:</strong> " . $firstName . " (" . $email . ")</p>";
