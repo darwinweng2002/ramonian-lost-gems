@@ -342,29 +342,41 @@ if (isset($userId)) {
     </div>
     <?php require_once('../inc/footer.php') ?>
     <script>
-       function previewImages() {
-        const previewContainer = document.getElementById('imagePreviewContainer');
-        const validationMessage = document.getElementById('fileValidationMessage');
-        const files = document.getElementById('images').files;
-        
-        previewContainer.innerHTML = ''; // Clear previous previews
-        validationMessage.style.display = 'none'; // Hide validation message
+      function previewImages() {
+    const previewContainer = document.getElementById('imagePreviewContainer');
+    const validationMessage = document.getElementById('fileValidationMessage');
+    const files = document.getElementById('images').files;
 
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const img = document.createElement('img');
-                    img.src = event.target.result;
-                    previewContainer.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                validationMessage.style.display = 'block'; // Show validation message if file type is not supported
-            }
+    previewContainer.innerHTML = ''; // Clear previous previews
+    validationMessage.style.display = 'none'; // Hide validation message
+
+    // Check if the number of files exceeds the limit
+    if (files.length > 6) {
+        validationMessage.textContent = "The maximum number of images to be uploaded is 6."; // Set error message
+        validationMessage.style.color = 'red'; // Display in red
+        validationMessage.style.display = 'block'; // Show validation message
+        return; // Stop further execution if the limit is exceeded
+    }
+
+    // Loop through and preview each file
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            validationMessage.textContent = "Supported file types: jpg, jpeg, png, gif.";
+            validationMessage.style.color = 'red';
+            validationMessage.style.display = 'block';
         }
     }
+}
+
 
         <?php if (isset($alertMessage)): ?>
             Swal.fire({
@@ -425,6 +437,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             <?php endif; ?>
         });
+        document.querySelector('.message-form').addEventListener('submit', function(event) {
+    const files = document.getElementById('images').files;
+    const validationMessage = document.getElementById('fileValidationMessage');
+
+    if (files.length > 6) {
+        validationMessage.textContent = "You must only upload between 1 to 6 images.";
+        validationMessage.style.color = 'red';
+        validationMessage.style.display = 'block';
+        event.preventDefault(); // Prevent form submission
+    }
+});
+
     </script>
 </body>
 </html>
