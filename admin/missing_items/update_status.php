@@ -90,13 +90,51 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
 
                 // Content
                 $mail->isHTML(true);
-                $mail->Subject = 'Update on Your Missing Item Report';
-                $mail->Body = "
-                    Hello $reporterName, <br><br>
-                    The status of your missing item report titled <strong>$itemTitle</strong> has been updated to <strong>$statusMessage</strong>. <br><br>
-                    Please log in to the system to check for further details.
-                    <br><br>Best regards, <br>Ramonian Lost Gems
-                ";
+                $mail->Subject = 'Status Update for Your Reported Item: ' . $itemTitle;
+                
+                if ($newStatus == 1) { // Published
+                    $mail->Body = "
+                        Dear $reporterName, <br><br>
+                        We are pleased to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been <strong>published</strong> by the admins. 
+                        Your report is now visible to other users on our mobile application. Thank you for helping us reconnect lost items with their owners.<br><br>
+                        Best regards,<br>
+                        Admins of Ramonian Lost Gems
+                    ";
+                } elseif ($newStatus == 2) { // Claimed
+                    $mail->Body = "
+                        Dear $reporterName, <br><br>
+                        We are happy to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been successfully <strong>claimed</strong> by its rightful owner. 
+                        Thank you for your valuable contribution in helping us return lost items.<br><br>
+                        Best regards,<br>
+                        Admins of Ramonian Lost Gems
+                    ";
+                } elseif ($newStatus == 3) { // Surrendered
+                    $mail->Body = "
+                        Dear $reporterName, <br><br>
+                        We would like to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been <strong>surrendered</strong> to the SSG officers for safekeeping. 
+                        Thank you for your efforts in reporting and submitting this item.<br><br>
+                        Best regards,<br>
+                        Admins of Ramonian Lost Gems
+                    ";
+                } elseif ($newStatus == 4) { // Denied
+                    $mail->Body = "
+                        Dear $reporterName, <br><br>
+                        We regret to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been <strong>denied</strong> by our review team. 
+                        This could be due to various reasons, such as insufficient information or the item not fitting our criteria. 
+                        We sincerely apologize for any inconvenience this may have caused, and we encourage you to review the guidelines and submit a new report if applicable.<br><br>
+                        Best regards,<br>
+                        Admins of Ramonian Lost Gems
+                    ";
+                } else { // Pending (Fallback in case)
+                    $mail->Body = "
+                        Dear $reporterName, <br><br>
+                        The status of your reported found item titled '<strong>$itemTitle</strong>' is currently <strong>pending</strong>. 
+                        The admins of Ramonian Lost Gems is reviewing your report and will update you once a decision has been made.<br><br>
+                        Best regards,<br>
+                        Admins of Ramonian Lost Gems
+                    ";
+                }
+                
 
                 $mail->send();
             } catch (Exception $e) {

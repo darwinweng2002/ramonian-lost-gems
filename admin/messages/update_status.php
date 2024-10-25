@@ -98,8 +98,8 @@ $mail->Subject = 'Status Update for Your Reported Item: ' . $itemTitle;
 if ($newStatus == 1) { // Published
     $mail->Body = "
         Dear $reporterName, <br><br>
-        We are pleased to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been <strong>published</strong> by our team. 
-        Your report is now visible to other users on our platform. Thank you for helping us reconnect lost items with their owners.<br><br>
+        We are pleased to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been <strong>published</strong> by the admins. 
+        Your report is now visible to other users on our mobile application. Thank you for helping us reconnect lost items with their owners.<br><br>
         Best regards,<br>
         Admins of Ramonian Lost Gems
     ";
