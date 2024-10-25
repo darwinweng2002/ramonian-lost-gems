@@ -217,6 +217,6 @@ $conn->close();
         }
     });
 </script>
-
+<?php require_once('../inc/footer.php') ?>
 </body>
 </html>
