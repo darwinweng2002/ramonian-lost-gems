@@ -121,7 +121,7 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
                 } elseif ($status == 4) { // Denied
                     $mail->Body = "
                         Dear $reporterName, <br><br>
-                        We regret to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been <strong>denied</strong> by our review team. 
+                        We regret to inform you that your reported missing item titled '<strong>$itemTitle</strong>' has been <strong>denied</strong> by the admins. 
                         This could be due to various reasons, such as insufficient information or the item not fitting our criteria. 
                         We sincerely apologize for any inconvenience this may have caused, and we encourage you to review the guidelines and submit a new report if applicable.<br><br>
                         Best regards,<br>
