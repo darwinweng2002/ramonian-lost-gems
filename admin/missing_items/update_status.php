@@ -75,7 +75,7 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
             // Prepare email notification
             $mail = new PHPMailer(true);
             try {
-                //Server settings
+                // Server settings
                 $mail->isSMTP();
                 $mail->Host = 'mail.smtp2go.com'; // Set your SMTP server
                 $mail->SMTPAuth = true;
@@ -83,16 +83,17 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
                 $mail->Password = 'test123456'; // Your email password
                 $mail->SMTPSecure = 'tls';
                 $mail->Port = 2525;
-
+            
                 // Recipients
                 $mail->setFrom('admin@ramonianlostgems.com', 'Ramonian Lost Gems'); // Change this to your "From" email
                 $mail->addAddress($reporterEmail); // The reporter's email
-
+            
                 // Content
                 $mail->isHTML(true);
                 $mail->Subject = 'Status Update for Your Reported Item: ' . $itemTitle;
-                
-                if ($newStatus == 1) { // Published
+            
+                // Ensure we use $status (the correct variable) instead of $newStatus
+                if ($status == 1) { // Published
                     $mail->Body = "
                         Dear $reporterName, <br><br>
                         We are pleased to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been <strong>published</strong> by the admins. 
@@ -100,7 +101,7 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
                         Best regards,<br>
                         Admins of Ramonian Lost Gems
                     ";
-                } elseif ($newStatus == 2) { // Claimed
+                } elseif ($status == 2) { // Claimed
                     $mail->Body = "
                         Dear $reporterName, <br><br>
                         We are happy to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been successfully <strong>claimed</strong> by its rightful owner. 
@@ -108,7 +109,7 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
                         Best regards,<br>
                         Admins of Ramonian Lost Gems
                     ";
-                } elseif ($newStatus == 3) { // Surrendered
+                } elseif ($status == 3) { // Surrendered
                     $mail->Body = "
                         Dear $reporterName, <br><br>
                         We would like to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been <strong>surrendered</strong> to the SSG officers for safekeeping. 
@@ -116,7 +117,7 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
                         Best regards,<br>
                         Admins of Ramonian Lost Gems
                     ";
-                } elseif ($newStatus == 4) { // Denied
+                } elseif ($status == 4) { // Denied
                     $mail->Body = "
                         Dear $reporterName, <br><br>
                         We regret to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been <strong>denied</strong> by our review team. 
@@ -129,7 +130,7 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
                     $mail->Body = "
                         Dear $reporterName, <br><br>
                         The status of your reported found item titled '<strong>$itemTitle</strong>' is currently <strong>pending</strong>. 
-                        The admins of Ramonian Lost Gems is reviewing your report and will update you once a decision has been made.<br><br>
+                        The admins of Ramonian Lost Gems are reviewing your report and will update you once a decision has been made.<br><br>
                         Best regards,<br>
                         Admins of Ramonian Lost Gems
                     ";
