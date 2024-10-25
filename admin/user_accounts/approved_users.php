@@ -198,19 +198,30 @@ $result = $conn->query($sql);
                 <td><?= htmlspecialchars($row['last_name']) ?></td>
                 <td>
                     <?php
-                    // Determine if user is in High School or College
-                    if ($row['school_type'] == '1') {
-                        // College
-                        echo 'College';
-                    } else if ($row['school_type'] == '0') {
-                        // High School, display grade as well if available
-                        echo 'High School';
-                        if (!empty($row['grade'])) {
-                            echo ' (Grade ' . htmlspecialchars($row['grade']) . ')';
+                    // Determine user role based on school_type and related fields
+                    $schoolType = htmlspecialchars($row['school_type']);
+                    $userRole = '';
+
+                    if ($schoolType == '1') {
+                        $userRole = 'Student - College';
+                    } elseif ($schoolType == '0') {
+                        $userRole = 'Student - High School (Grade ' . htmlspecialchars($row['grade']) . ')';
+                    } elseif ($schoolType == '2') {
+                        $teachingStatus = htmlspecialchars($row['teaching_status']);
+                        $departmentOrPosition = htmlspecialchars($row['department_or_position']);
+
+                        // Customize the display for teaching or non-teaching employees
+                        if ($teachingStatus == 'Teaching') {
+                            $userRole = 'Employee (Teaching, ' . $departmentOrPosition . ')';
+                        } else {
+                            $userRole = 'Employee (Non-Teaching, ' . $departmentOrPosition . ')';
                         }
-                    } else {
-                        echo 'Unknown';
+                    } elseif ($schoolType == '3' || empty($schoolType)) {
+                        // Guest user (if school_type is 3 or empty)
+                        $userRole = 'Guest';
                     }
+
+                    echo $userRole;
                     ?>
                 </td>
                 <td><?= htmlspecialchars($row['college']) ?></td>
