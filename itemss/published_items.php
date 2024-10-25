@@ -238,7 +238,7 @@ if ($school_type === '0') {
                         echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                     } else {
                         // Updated decent default avatar
-                        echo "<img src='uploads/avatars/2.png' alt='Default Avatar' class='avatar'>";
+                        echo "<img src='../uploads/avatars/2.png' alt='Default Avatar' class='avatar'>";
                     }
                 } else {
                     echo "<p><strong>User Info:</strong>No Info</p>";
