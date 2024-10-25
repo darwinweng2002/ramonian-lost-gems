@@ -96,7 +96,7 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
                 if ($status == 1) { // Published
                     $mail->Body = "
                         Dear $reporterName, <br><br>
-                        We are pleased to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been <strong>published</strong> by the admins. 
+                        We are pleased to inform you that your reported missing item titled '<strong>$itemTitle</strong>' has been <strong>published</strong> by the admins. 
                         Your report is now visible to other users on our mobile application. Thank you for helping us reconnect lost items with their owners.<br><br>
                         Best regards,<br>
                         Admins of Ramonian Lost Gems
@@ -104,15 +104,16 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
                 } elseif ($status == 2) { // Claimed
                     $mail->Body = "
                         Dear $reporterName, <br><br>
-                        We are happy to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been successfully <strong>claimed</strong> by its rightful owner. 
+                        We are happy to inform you that your reported missing item titled '<strong>$itemTitle</strong>' has been successfully <strong>claimed</strong> by its rightful owner. 
                         Thank you for your valuable contribution in helping us return lost items.<br><br>
                         Best regards,<br>
                         Admins of Ramonian Lost Gems
                     ";
                 } elseif ($status == 3) { // Surrendered
                     $mail->Body = "
-                        Dear $reporterName, <br><br>
-                        We would like to inform you that your reported found item titled '<strong>$itemTitle</strong>' has been <strong>surrendered</strong> to the SSG officers for safekeeping. 
+                       Dear $reporterName, <br><br>
+                        We would like to inform you that your reported missing item titled '<strong>$itemTitle</strong>' has been <strong>surrendered</strong> to the SSG officers for safekeeping. 
+                        You may now proceed to the OSA Building, 3rd floor, SSG office to claim your missing item. Please ensure you bring a valid ID and proof of ownership for verification purposes.<br><br>
                         Thank you for your efforts in reporting and submitting this item.<br><br>
                         Best regards,<br>
                         Admins of Ramonian Lost Gems
@@ -129,7 +130,7 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
                 } else { // Pending (Fallback in case)
                     $mail->Body = "
                         Dear $reporterName, <br><br>
-                        The status of your reported found item titled '<strong>$itemTitle</strong>' is currently <strong>pending</strong>. 
+                        The status of your reported missing item titled '<strong>$itemTitle</strong>' is currently <strong>pending</strong>. 
                         The admins of Ramonian Lost Gems are reviewing your report and will update you once a decision has been made.<br><br>
                         Best regards,<br>
                         Admins of Ramonian Lost Gems
