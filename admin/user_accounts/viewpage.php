@@ -41,6 +41,7 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+<?php require_once('../inc/header.php') ?>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -141,7 +142,8 @@ $conn->close();
     </style>
 </head>
 <body>
-
+<?php require_once('../inc/topBarNav.php') ?>
+<?php require_once('../inc/navigation.php') ?> 
 <div class="container">
     <h2>User Details</h2>
     <div class="user-info">
