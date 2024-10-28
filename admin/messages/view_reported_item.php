@@ -259,7 +259,8 @@ if ($message_id > 0) {
                             $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                             echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                         } else {
-                            echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
+                            // Updated decent default avatar
+                            echo "<img src='../../uploads/avatars/2.png' alt='Default Avatar' class='avatar'>";
                         }
                     } else {
                         echo "<p><strong>User Info:</strong>No Info</p>";
