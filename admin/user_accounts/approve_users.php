@@ -1,5 +1,5 @@
 <?php
-include '../../config.php';
+include '../../config.php';  // Ensure config.php sets up $conn correctly
 
 // Include PHPMailer for email notifications
 use PHPMailer\PHPMailer\PHPMailer;
@@ -16,17 +16,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user_id > 0) {
         // Get the user's details before approval
         $stmt = $conn->prepare("SELECT first_name, email FROM user_member WHERE id = ?");
+        if (!$stmt) {
+            error_log("Prepare failed: " . $conn->error); // Log prepare error
+            echo '0';
+            exit;
+        }
+        
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
         $stmt->close();
 
+        if (!$user) {
+            error_log("User not found or no email found for user_id: " . $user_id);
+            echo '0'; // User not found
+            exit;
+        }
+
         // Proceed with updating the user's status to 'approved'
         $stmt = $conn->prepare("UPDATE user_member SET status = 'approved' WHERE id = ?");
+        if (!$stmt) {
+            error_log("Prepare failed for update query: " . $conn->error); // Log prepare error
+            echo '0';
+            exit;
+        }
+
         $stmt->bind_param('i', $user_id);
 
         if ($stmt->execute()) {
+            $stmt->close();
+
             // Prepare to send the approval email
             $mail = new PHPMailer(true);
             try {
@@ -36,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->SMTPAuth = true;
                 $mail->Username = 'ran_ramonian'; // Replace with your email
                 $mail->Password = 'test123456'; // Replace with your email password or app-specific password
-                $mail->SMTPSecure =  'tls';
+                $mail->SMTPSecure = 'tls';
                 $mail->Port = 2525;
 
                 // Recipients
@@ -58,10 +78,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo '0'; // Failure (email sending failed)
             }
         } else {
+            error_log("Database update error: " . $stmt->error); // Log update query error
             echo '0'; // Failure (query failed)
+            $stmt->close();
         }
-        $stmt->close();
     } else {
+        error_log("Invalid user ID: " . $user_id); // Log invalid user ID
         echo '0'; // Failure (invalid user ID)
     }
 
