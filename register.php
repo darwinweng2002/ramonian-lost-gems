@@ -518,64 +518,64 @@ button {
    $(document).ready(function() {
     // Populate courses dynamically based on selected college
 
-    // Form validation logic
-    function validateForm() {
+// Form validation logic
+function validateForm() {
     let formIsValid = true;
 
-    // Validate username or email
+    // Validate email only
     const email = $('#email').val().trim();
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const usernamePattern = /^[a-zA-Z0-9._-]{8,16}$/;
 
-    if (!emailPattern.test(email) && !usernamePattern.test(email)) {
+    if (!emailPattern.test(email)) {
         formIsValid = false;
         $('#email').addClass('is-invalid');
-        $('#email-error').text('Please enter a valid email or username (8-16 characters)').show();
+        $('#email-error').text('Please enter a valid email address').show();
     } else {
         $('#email').removeClass('is-invalid').addClass('is-valid');
         $('#email-error').hide();
     }
 
-        // Validate password and confirm password
-        const password = $('#yourPassword').val().trim();
-        const confirmPassword = $('#confirm_password').val().trim();
+    // Validate password and confirm password
+    const password = $('#yourPassword').val().trim();
+    const confirmPassword = $('#confirm_password').val().trim();
 
-        if (password.length < 8 || password.length > 16) {
-            formIsValid = false;
-            $('#yourPassword').addClass('is-invalid');
-            $('#yourPassword').siblings('.invalid-feedback').show().text('Please make sure your password is not too short and matches.');
-        } else {
-            $('#yourPassword').removeClass('is-invalid').addClass('is-valid');
-            $('#yourPassword').siblings('.invalid-feedback').hide();
-        }
-
-        if (password !== confirmPassword) {
-            formIsValid = false;
-            $('#confirm_password').addClass('is-invalid');
-            $('#confirm_password').siblings('.invalid-feedback').show().text('Please make sure your password is not too short and matches.');
-        } else if (confirmPassword.length >= 8 && confirmPassword.length <= 16) {
-            $('#confirm_password').removeClass('is-invalid').addClass('is-valid');
-            $('#confirm_password').siblings('.invalid-feedback').hide();
-        }
-
-        // Validate school ID file upload
-        const schoolId = $('#school_id').val();
-        const allowedFileTypes = /(\.jpg|\.jpeg|\.png)$/i;
-        if (!schoolId || !allowedFileTypes.test(schoolId)) {
-            formIsValid = false;
-            $('#school_id').addClass('is-invalid');
-        } else {
-            $('#school_id').removeClass('is-invalid').addClass('is-valid');
-        }
-
-        // Enable/disable the register button based on form validity
-        $('#register-btn').prop('disabled', !formIsValid);
+    if (password.length < 8 || password.length > 16) {
+        formIsValid = false;
+        $('#yourPassword').addClass('is-invalid');
+        $('#yourPassword').siblings('.invalid-feedback').show().text('Please make sure your password is not too short and matches.');
+    } else {
+        $('#yourPassword').removeClass('is-invalid').addClass('is-valid');
+        $('#yourPassword').siblings('.invalid-feedback').hide();
     }
 
-    // Real-time validation on form input fields
-    $('#email, #yourPassword, #confirm_password, #school_id').on('input change', function() {
-        validateForm();
-    });
+    if (password !== confirmPassword) {
+        formIsValid = false;
+        $('#confirm_password').addClass('is-invalid');
+        $('#confirm_password').siblings('.invalid-feedback').show().text('Please make sure your password is not too short and matches.');
+    } else if (confirmPassword.length >= 8 && confirmPassword.length <= 16) {
+        $('#confirm_password').removeClass('is-invalid').addClass('is-valid');
+        $('#confirm_password').siblings('.invalid-feedback').hide();
+    }
+
+    // Validate school ID file upload
+    const schoolId = $('#school_id').val();
+    const allowedFileTypes = /(\.jpg|\.jpeg|\.png)$/i;
+    if (!schoolId || !allowedFileTypes.test(schoolId)) {
+        formIsValid = false;
+        $('#school_id').addClass('is-invalid');
+    } else {
+        $('#school_id').removeClass('is-invalid').addClass('is-valid');
+    }
+
+    // Enable/disable the register button based on form validity
+    $('#register-btn').prop('disabled', !formIsValid);
+}
+
+// Real-time validation on form input fields
+$('#email, #yourPassword, #confirm_password, #school_id').on('input change', function() {
+    validateForm();
+});
+
 
     // School ID image preview
     $('#school_id').on('change', function(event) {
