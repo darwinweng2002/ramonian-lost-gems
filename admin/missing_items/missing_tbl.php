@@ -22,7 +22,7 @@ SELECT mi.id, mi.title, mi.owner, user_info.email, user_info.college, mi.time_mi
 FROM missing_items mi
 LEFT JOIN (
     -- Fetch data from user_member
-    SELECT id AS user_id, email, college, email FROM user_member
+    SELECT id AS user_id, email, college, FROM user_member
     UNION
     -- Fetch data from user_staff
     SELECT id AS user_id, first_name, department AS college, email FROM user_staff
