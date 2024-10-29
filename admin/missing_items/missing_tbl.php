@@ -210,8 +210,8 @@ $result = $conn->query($sql);
                 <thead>
                     <tr>
                         <th>Item Image</th>
-                        <th>Owner's Name</th>
                         <th>Item Name</th>
+                        <th>Owner's Name</th>
                         <th>User</th>
                         <th>College</th>
                         <th>Category</th>
@@ -231,9 +231,9 @@ $result = $conn->query($sql);
                                         <img src="/path/to/placeholder.jpg" alt="No Image" class="item-image">
                                     <?php endif; ?>
                                 </td>
-                                <td><?= htmlspecialchars($row['owner']) ?></td>
                                 <td><?= htmlspecialchars($row['title']) ?></td>
                                 <td><?= htmlspecialchars($row['email']) ?></td>
+                                <td><?= htmlspecialchars($row['owner']) ?></td>
                                 <td><?= htmlspecialchars($row['college']) ?></td>
                                 <td><?= htmlspecialchars($row['category']) ?></td>
                                 <td><?= htmlspecialchars($row['time_missing']) ?></td>
