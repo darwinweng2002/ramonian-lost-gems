@@ -210,7 +210,6 @@ $result = $conn->query($sql);
                 <thead>
                     <tr>
                         <th>Item Image</th>
-                        <th>ID</th>
                         <th>Owner's Name</th>
                         <th>Item Name</th>
                         <th>User</th>
@@ -232,7 +231,6 @@ $result = $conn->query($sql);
                                         <img src="/path/to/placeholder.jpg" alt="No Image" class="item-image">
                                     <?php endif; ?>
                                 </td>
-                                <td><?= htmlspecialchars($row['id']) ?></td>
                                 <td><?= htmlspecialchars($row['owner']) ?></td>
                                 <td><?= htmlspecialchars($row['title']) ?></td>
                                 <td><?= htmlspecialchars($row['email']) ?></td>
