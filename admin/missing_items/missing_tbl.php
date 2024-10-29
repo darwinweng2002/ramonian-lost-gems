@@ -26,7 +26,7 @@ LEFT JOIN (
 ) AS user_info ON mi.user_id = user_info.user_id
 LEFT JOIN categories c ON mi.category_id = c.id
 WHERE mi.is_denied = 0  -- Exclude denied items
-AND CONCAT_WS(' ', mi.title, user_info.first_name, user_info.college, c.name) LIKE '%$searchTerm%'
+AND CONCAT_WS(' ', mi.title, user_info.email, user_info.college, c.name) LIKE '%$searchTerm%'
 ORDER BY mi.id DESC";
 
 
@@ -214,7 +214,7 @@ $result = $conn->query($sql);
                                 <td><?= htmlspecialchars($row['id']) ?></td>
                                 <td><?= htmlspecialchars($row['owner']) ?></td>
                                 <td><?= htmlspecialchars($row['title']) ?></td>
-                                <td><?= htmlspecialchars($row['first_name']) ?></td>
+                                <td><?= htmlspecialchars($row['email']) ?></td>
                                 <td><?= htmlspecialchars($row['college']) ?></td>
                                 <td><?= htmlspecialchars($row['category']) ?></td>
                                 <td><?= htmlspecialchars($row['time_missing']) ?></td>
