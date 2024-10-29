@@ -12,11 +12,13 @@ if ($conn->connect_error) {
 // Initialize search term
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
-// SQL query to fetch reported items with category and ID, excluding denied items and with search functionality
-$sql = "SELECT mh.id, mh.title, um.email as user_name, um.college, c.name as category_name, mh.founder, mh.time_found, mh.status
+// SQL query to fetch reported items with category and first image
+$sql = "SELECT mh.id, mh.title, um.email as user_name, um.college, c.name as category_name, mh.founder, mh.time_found, mh.status,
+               img.image_path AS image_path  -- Fetch image path
         FROM message_history mh
         LEFT JOIN user_member um ON mh.user_id = um.id
         LEFT JOIN categories c ON mh.category_id = c.id
+        LEFT JOIN images img ON mh.id = img.message_id  -- Join with images table
         WHERE mh.is_denied = 0"; // Exclude denied items
 
 // Add search condition
@@ -28,7 +30,7 @@ if (!empty($searchTerm)) {
               OR mh.founder LIKE '%$searchTerm%')";
 }
 
-$sql .= " ORDER BY mh.time_found DESC";
+$sql .= " GROUP BY mh.id ORDER BY mh.time_found DESC"; // Group by to fetch only one image per item
 $result = $conn->query($sql);
 ?>
 
@@ -197,12 +199,10 @@ $result = $conn->query($sql);
     <div class="container">
         <h2>Reported Found Items</h2>
 
-        <!-- Button aligned right above the search -->
         <a href="https://ramonianlostgems.com/admin/report/send_message.php/" class="btn btn-success">
-                <i class="fas fa-plus-circle"></i> Create report found item
-            </a>
+            <i class="fas fa-plus-circle"></i> Create report found item
+        </a>
 
-        <!-- Search Form (Original UI preserved) -->
         <form class="search-form" method="GET" action="">
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
@@ -215,7 +215,7 @@ $result = $conn->query($sql);
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <!-- <th>ID</th> -->
+                        <th>Item Image</th>
                         <th>Item Name</th>
                         <th>User</th>
                         <th>Department</th>
@@ -231,7 +231,14 @@ $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
-                        //echo "<td>" . htmlspecialchars($row['id']) . "</td>";
+                        
+                        // Display item image if exists, else placeholder
+                        if (!empty($row['image_path'])) {
+                            echo "<td><img src='" . htmlspecialchars($row['image_path']) . "' alt='Item Image' style='width: 50px; height: 50px; object-fit: cover;'></td>";
+                        } else {
+                            echo "<td><img src='/path/to/placeholder.jpg' alt='No Image' style='width: 50px; height: 50px; object-fit: cover;'></td>";
+                        }
+
                         echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['user_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['college']) . "</td>";
@@ -251,7 +258,7 @@ $result = $conn->query($sql);
                             case 3:
                                 echo "<span class='badge badge-surrendered'>Surrendered</span>";
                                 break;
-                            case 4: // New Denied status
+                            case 4:
                                 echo "<span class='badge badge-danger'>Denied</span>";
                                 break;
                             default:
@@ -267,7 +274,7 @@ $result = $conn->query($sql);
                     echo "<tr><td colspan='9'>No items found.</td></tr>";
                 }
                 ?>
-            </tbody>
+                </tbody>
             </table>
         </div>
     </div>
