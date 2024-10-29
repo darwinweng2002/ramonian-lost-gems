@@ -15,11 +15,11 @@ $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']
 // SQL query to fetch reported items, including status, user_member, and user_staff
 // SQL query to fetch reported items, including status, user_member, and user_staff, excluding denied items
 $sql = "
-SELECT mi.id, mi.title, mi.owner, user_info.first_name, user_info.college, mi.time_missing, mi.status, c.name AS category
+SELECT mi.id, mi.title, mi.owner, user_info.email, user_info.college, mi.time_missing, mi.status, c.name AS category
 FROM missing_items mi
 LEFT JOIN (
     -- Fetch data from user_member
-    SELECT id AS user_id, first_name, college, email FROM user_member
+    SELECT id AS user_id, email, college, email FROM user_member
     UNION
     -- Fetch data from user_staff
     SELECT id AS user_id, first_name, department AS college, email FROM user_staff
