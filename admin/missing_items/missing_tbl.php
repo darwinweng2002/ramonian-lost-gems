@@ -1,8 +1,8 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 include '../../config.php';
+
+// Define the base path where the images are stored
+$base_image_url = base_url . 'uploads/items/';  // Adjust this to your actual image directory
 
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
@@ -15,23 +15,27 @@ if ($conn->connect_error) {
 // Initialize search term
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
-// SQL query to fetch reported items, including status, user_member, and user_staff
-// SQL query to fetch reported items, including status, user_member, and user_staff, excluding denied items
+// SQL query to fetch reported missing items, including status, email, and image
 $sql = "
-SELECT mi.id, mi.title, mi.owner, user_info.email, user_info.college, mi.time_missing, mi.status, c.name AS category
+SELECT mi.id, mi.title, mi.owner, user_info.email, user_info.college, mi.time_missing, mi.status, c.name AS category,
+       img.image_path AS image_path  -- Fetch first image path for each item
 FROM missing_items mi
 LEFT JOIN (
     -- Fetch data from user_member
-    SELECT id AS user_id, email, college, FROM user_member
+    SELECT id AS user_id, first_name, college, email FROM user_member
     UNION
     -- Fetch data from user_staff
     SELECT id AS user_id, first_name, department AS college, email FROM user_staff
 ) AS user_info ON mi.user_id = user_info.user_id
 LEFT JOIN categories c ON mi.category_id = c.id
+LEFT JOIN (
+    SELECT message_id, MIN(image_path) AS image_path
+    FROM missing_item_images
+    GROUP BY message_id
+) img ON mi.id = img.message_id  -- Join to get the first image of each item
 WHERE mi.is_denied = 0  -- Exclude denied items
 AND CONCAT_WS(' ', mi.title, user_info.email, user_info.college, c.name) LIKE '%$searchTerm%'
 ORDER BY mi.id DESC";
-
 
 $result = $conn->query($sql);
 ?>
@@ -214,6 +218,13 @@ $result = $conn->query($sql);
                     <?php if ($result->num_rows > 0): ?>
                         <?php while($row = $result->fetch_assoc()): ?>
                             <tr>
+                            <td>
+                                    <?php if (!empty($row['image_path'])): ?>
+                                        <img src="<?= $base_image_url . htmlspecialchars($row['image_path']) ?>" alt="Item Image" class="item-image">
+                                    <?php else: ?>
+                                        <img src="/path/to/placeholder.jpg" alt="No Image" class="item-image">
+                                    <?php endif; ?>
+                                </td>
                                 <td><?= htmlspecialchars($row['id']) ?></td>
                                 <td><?= htmlspecialchars($row['owner']) ?></td>
                                 <td><?= htmlspecialchars($row['title']) ?></td>
