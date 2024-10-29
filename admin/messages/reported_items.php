@@ -215,7 +215,7 @@ $result = $conn->query($sql);
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <!-- <th>ID</th> -->
                         <th>Item Name</th>
                         <th>User</th>
                         <th>Department</th>
@@ -231,7 +231,7 @@ $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['id']) . "</td>";
+                        //echo "<td>" . htmlspecialchars($row['id']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['user_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['college']) . "</td>";
