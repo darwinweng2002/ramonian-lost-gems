@@ -211,8 +211,8 @@ $result = $conn->query($sql);
                     <tr>
                         <th>Item Image</th>
                         <th>Item Name</th>
-                        <th>Owner's Name</th>
                         <th>User</th>
+                        <th>Owner's Name</th>
                         <th>College</th>
                         <th>Category</th>
                         <th>Last Seen</th>
