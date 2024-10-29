@@ -2,7 +2,7 @@
 include '../../config.php';
 
 // Define the base path where the images are stored
-$base_image_url = base_url . 'uploads/items/';  // Adjust this to your actual image directory
+$base_image_url = base_url . 'uploads/missing_items/';  // Adjust this to your actual image directory
 
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
@@ -177,6 +177,12 @@ $result = $conn->query($sql);
         }
         .table-responsive::-webkit-scrollbar-track {
             background-color: #f4f4f4;
+        }
+        .item-image {
+            width: 50px; /* Fixed width */
+            height: 50px; /* Fixed height */
+            object-fit: cover; /* Ensures no stretching */
+            border-radius: 5px; /* Optional for rounded corners */
         }
     </style>
 </head>
