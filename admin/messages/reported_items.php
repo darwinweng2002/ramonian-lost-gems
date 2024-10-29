@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
 // SQL query to fetch reported items with category and ID, excluding denied items and with search functionality
-$sql = "SELECT mh.id, mh.title, um.first_name as user_name, um.college, c.name as category_name, mh.founder, mh.time_found, mh.status
+$sql = "SELECT mh.id, mh.title, um.email as user_name, um.college, c.name as category_name, mh.founder, mh.time_found, mh.status
         FROM message_history mh
         LEFT JOIN user_member um ON mh.user_id = um.id
         LEFT JOIN categories c ON mh.category_id = c.id
@@ -22,7 +22,7 @@ $sql = "SELECT mh.id, mh.title, um.first_name as user_name, um.college, c.name a
 // Add search condition
 if (!empty($searchTerm)) {
     $sql .= " AND (mh.title LIKE '%$searchTerm%' 
-              OR um.first_name LIKE '%$searchTerm%'
+              OR um.email LIKE '%$searchTerm%'
               OR um.college LIKE '%$searchTerm%' 
               OR c.name LIKE '%$searchTerm%'
               OR mh.founder LIKE '%$searchTerm%')";
