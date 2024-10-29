@@ -206,6 +206,7 @@ $result = $conn->query($sql);
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
+                        <th>Item Image</th>
                         <th>ID</th>
                         <th>Owner's Name</th>
                         <th>Item Name</th>
