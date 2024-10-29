@@ -196,8 +196,8 @@ $result = $conn->query($sql);
 }
 .badge-danger { background-color: #dc3545; } /* Denied status */
 .item-image {
-            width: 50px; /* Fixed width */
-            height: 50px; /* Fixed height */
+            width: 100px; /* Fixed width */
+            height: 100px; /* Fixed height */
             object-fit: cover; /* Ensures no stretching */
             border-radius: 5px; /* Optional for rounded corners */
         }
