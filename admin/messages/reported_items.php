@@ -1,8 +1,8 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 include '../../config.php';
+
+// Define the base path where the images are stored
+$base_image_url = base_url . 'uploads/items/';  // Adjust this to your actual image directory
 
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
@@ -15,14 +15,19 @@ if ($conn->connect_error) {
 // Initialize search term
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
-// SQL query to fetch reported items with category and first image
-$sql = "SELECT mh.id, mh.title, um.email as user_name, um.college, c.name as category_name, mh.founder, mh.time_found, mh.status,
-               img.image_path AS image_path  -- Fetch image path
-        FROM message_history mh
-        LEFT JOIN user_member um ON mh.user_id = um.id
-        LEFT JOIN categories c ON mh.category_id = c.id
-        LEFT JOIN message_images img ON mh.id = img.message_id  -- Join with images table
-        WHERE mh.is_denied = 0"; // Exclude denied items
+// SQL query to fetch reported found items with their first image
+$sql = "
+    SELECT mh.id, mh.title, um.email as user_name, um.college, c.name as category_name, mh.founder, mh.time_found, mh.status,
+           mi.image_path AS image_path  -- Fetch image path
+    FROM message_history mh
+    LEFT JOIN user_member um ON mh.user_id = um.id
+    LEFT JOIN categories c ON mh.category_id = c.id
+    LEFT JOIN (
+        SELECT message_id, MIN(image_path) AS image_path
+        FROM message_images
+        GROUP BY message_id
+    ) mi ON mh.id = mi.message_id
+    WHERE mh.is_denied = 0"; // Exclude denied items
 
 // Add search condition
 if (!empty($searchTerm)) {
@@ -33,7 +38,7 @@ if (!empty($searchTerm)) {
               OR mh.founder LIKE '%$searchTerm%')";
 }
 
-$sql .= " GROUP BY mh.id ORDER BY mh.time_found DESC"; // Group by to fetch only one image per item
+$sql .= " ORDER BY mh.time_found DESC";
 $result = $conn->query($sql);
 ?>
 
@@ -235,11 +240,11 @@ $result = $conn->query($sql);
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
                         
-                        // Display item image if exists, else placeholder
                         if (!empty($row['image_path'])) {
-                            echo "<td><img src='" . htmlspecialchars($row['image_path']) . "' alt='Item Image' style='width: 50px; height: 50px; object-fit: cover;'></td>";
+                            $imageSrc = $base_image_url . htmlspecialchars($row['image_path']);
+                            echo "<td><img src='" . $imageSrc . "' alt='Item Image' class='item-image'></td>";
                         } else {
-                            echo "<td><img src='/path/to/placeholder.jpg' alt='No Image' style='width: 50px; height: 50px; object-fit: cover;'></td>";
+                            echo "<td><img src='/path/to/placeholder.jpg' alt='No Image' class='item-image'></td>";  // Provide a default image path
                         }
 
                         echo "<td>" . htmlspecialchars($row['title']) . "</td>";
