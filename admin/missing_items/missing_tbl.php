@@ -32,10 +32,10 @@ LEFT JOIN (
 ) AS user_info ON mi.user_id = user_info.user_id
 LEFT JOIN categories c ON mi.category_id = c.id
 LEFT JOIN (
-    SELECT message_id, MIN(image_path) AS image_path
+    SELECT missing_item_id, MIN(image_path) AS image_path
     FROM missing_item_images
-    GROUP BY message_id
-) img ON mi.id = img.message_id  -- Join to get the first image of each item
+    GROUP BY missing_item_id
+) img ON mi.id = img.missing_item_id  -- Join to get the first image of each item
 WHERE mi.is_denied = 0  -- Exclude denied items
 AND CONCAT_WS(' ', mi.title, user_info.email, user_info.college, c.name) LIKE '%$searchTerm%'
 ORDER BY mi.id DESC";
