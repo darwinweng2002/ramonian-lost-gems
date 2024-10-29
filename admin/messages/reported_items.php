@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 include '../../config.php';
 
 // Database connection
@@ -18,7 +21,7 @@ $sql = "SELECT mh.id, mh.title, um.email as user_name, um.college, c.name as cat
         FROM message_history mh
         LEFT JOIN user_member um ON mh.user_id = um.id
         LEFT JOIN categories c ON mh.category_id = c.id
-        LEFT JOIN images img ON mh.id = img.message_id  -- Join with images table
+        LEFT JOIN message_images img ON mh.id = img.message_id  -- Join with images table
         WHERE mh.is_denied = 0"; // Exclude denied items
 
 // Add search condition
