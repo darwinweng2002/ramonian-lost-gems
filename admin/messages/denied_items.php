@@ -135,12 +135,6 @@ $result_found = $conn->query($sql_found);
         .input-group-text i {
             font-size: 14px;
         }
-        .item-image {
-            width: 50px; /* Fixed width */
-            height: 50px; /* Fixed height */
-            object-fit: cover; /* Ensures no stretching */
-            border-radius: 5px; /* Optional for rounded corners */
-        }
     </style>
 </head>
 <body>
@@ -181,12 +175,12 @@ $result_found = $conn->query($sql_found);
                         while ($row = $result_found->fetch_assoc()) {
                             echo "<tr>";
                             // Display the item image, with a fallback in case no image is available
-                        if (!empty($row['image_path'])) {
-                            $imageSrc = $base_image_url . htmlspecialchars($row['image_path']);
-                            echo "<td><img src='" . $imageSrc . "' alt='Item Image' class='item-image'></td>";
-                        } else {
-                            echo "<td><img src='/path/to/placeholder.jpg' alt='No Image' class='item-image'></td>";  // Provide a default image path
-                        }
+                            if (!empty($row['image_path'])) {
+                                $imageSrc = $base_image_url . htmlspecialchars($row['image_path']);
+                                echo "<td><img src='" . $imageSrc . "' alt='Item Image' class='item-image'></td>";
+                            } else {
+                                echo "<td><img src='default-image.jpg' alt='No Image' class='item-image'></td>";  // Provide a default image path
+                            }
                             echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['founder']) . "</td>";
