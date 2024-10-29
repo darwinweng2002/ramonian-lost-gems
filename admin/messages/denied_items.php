@@ -135,6 +135,12 @@ $result_found = $conn->query($sql_found);
         .input-group-text i {
             font-size: 14px;
         }
+        .item-image {
+            width: 50px; /* Fixed width */
+            height: 50px; /* Fixed height */
+            object-fit: cover; /* Ensures no stretching */
+            border-radius: 5px; /* Optional for rounded corners */
+        }
     </style>
 </head>
 <body>
