@@ -721,7 +721,7 @@ if (!$is_guest) {
 <?php endif; ?>
 
                                             <div class="text-center mt-4 d-flex justify-content-center">
-                                        <a href="https://ramonianlostgems.com/main.php" class="btn btn-secondary mx-2">Back</a>
+                                        <a href="https://ramonianlostgems.com/itemss/items.php" class="btn btn-secondary mx-2">Back</a>
                                     </div>
                                         </div>
                                     <?php endif; ?>
