@@ -165,7 +165,7 @@ $result = $conn->query($sql);
     <div class="container">
         <br>
         <br>
-        <h3>Approved Student Account - PRMSU Iba</h3>
+        <h3>Approved User Account - PRMSU Iba</h3>
 
         <!-- Search Form -->
         <form class="search-form" method="GET" action="approved_users.php">
