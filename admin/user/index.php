@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <?php 
 $user = $conn->query("SELECT * FROM users where id ='".$_settings->userdata('id')."'");
 foreach($user->fetch_array() as $k =>$v){
