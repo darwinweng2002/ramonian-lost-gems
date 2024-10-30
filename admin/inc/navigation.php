@@ -15,10 +15,11 @@
 
 <ul class="sidebar-nav" id="sidebar-nav">
 
-  <li class="nav-item">
+  <!--<li class="nav-item">
       <i class="bi bi-grid"></i>
     </a>
-  </li><!-- End Dashboard Nav -->
+  </li>-->
+  <!-- End Dashboard Nav -->
 
   <li class="nav-item">
     <a class="nav-link <?= $page != 'user/list' ? 'collapsed' : '' ?> nav-users" href="https://ramonianlostgems.com/admin/messages/reported_items.php">
