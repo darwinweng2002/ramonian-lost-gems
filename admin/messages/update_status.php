@@ -79,12 +79,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 // Server settings
                 $mail->isSMTP();
-                $mail->Host = 'mail.smtp2go.com';
+                $mail->Host = 'smtp.gmail.com'; // Replace with your SMTP server
                 $mail->SMTPAuth = true;
-                $mail->Username = 'ran_ramonian'; // Your email
-                $mail->Password = 'test123456'; // Your email password
-                $mail->SMTPSecure = 'tls';
-                $mail->Port = 2525;
+                $mail->Username = 'vdarwin860@gmail.com'; // Replace with your email
+                $mail->Password = 'ybve xumi zutn nmro'; // Replace with your email password or app-specific password
+                $mail->SMTPSecure =  'ssl';
+                $mail->Port = 465;
 
                 // Sender and recipient settings
                 $mail->setFrom('admin@ramonianlostgems.com', 'Ramonian Lost Gems'); // Your app name
