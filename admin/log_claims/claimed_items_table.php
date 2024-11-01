@@ -39,69 +39,69 @@ $result = $conn->query($sql);
 <html lang="en">
 <head>
 <?php require_once('../inc/header.php'); ?>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claimed Items</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
-        .container {
-            margin: 30px auto;
-            max-width: 1200px;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
-       /* .table-wrapper {
-            overflow-x: auto; /* Enable horizontal scrolling 
-        } */
-        .table {
-            width: 100%;
-            min-width: 1000px; /* Set a minimum width to handle wider content */
-            table-layout: auto; /* Avoid fixed table layout to prevent content overlap */
-        }
-        .table thead {
-            background-color: #f2f2f2;
-            color: #444444;
-        }
-        .table th, .table td {
-            vertical-align: middle;
-            white-space: nowrap; /* Prevent text wrapping in table cells */
-        }
-        .btn-view {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .btn-view:hover {
-            background-color: #0056b3;
-        }
-        .btn-delete {
-            background-color: #dc3545;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .btn-delete:hover {
-            background-color: #c82333;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claimed Items</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        padding: 20px;
+    }
+    .container {
+        margin: 30px auto;
+        max-width: 1200px;
+        background-color: #fff;
+        padding: 30px; /* Increased padding for better spacing */
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    .table-wrapper {
+        overflow-x: auto; /* Enable horizontal scrolling for smaller screens */
+    }
+    .table {
+        width: 100%;
+        min-width: 800px; /* Set a reasonable minimum width */
+        table-layout: auto; /* Prevents table cells from squeezing */
+    }
+    .table thead {
+        background-color: #f2f2f2;
+        color: #444444;
+    }
+    .table th, .table td {
+        vertical-align: middle;
+        white-space: nowrap; /* Prevent text wrapping */
+    }
+    .btn-view {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .btn-view:hover {
+        background-color: #0056b3;
+    }
+    .btn-delete {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
+</style>
 </head>
 <body>
 <?php require_once('../inc/topBarNav.php'); ?>
@@ -121,7 +121,7 @@ $result = $conn->query($sql);
                     <th>Owners Name</th>
                     <th>User Email</th>
                     <th>Category</th>
-                    <th>Item Type</th> <!-- Show whether it’s Found or Missing -->
+                    <th>Item Type</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -133,17 +133,15 @@ $result = $conn->query($sql);
                 echo "<td>" . htmlspecialchars($row['title'] ?? '') . "</td>";
                 echo "<td>" . htmlspecialchars($row['description'] ?? '') . "</td>";
                 echo "<td>" . htmlspecialchars($row['time_recorded'] ?? '') . "</td>";
-                echo "<td>" . htmlspecialchars($row['owner'] ?? '') . "</td>"; // Now dynamically handles both cases
+                echo "<td>" . htmlspecialchars($row['owner'] ?? '') . "</td>";
                 echo "<td>" . htmlspecialchars($row['email'] ?? '') . "</td>";
                 echo "<td>" . htmlspecialchars($row['category_name'] ?? '') . "</td>";
-                echo "<td>" . htmlspecialchars($row['item_type'] ?? '') . "</td>"; // Show whether it's Found or Missing
-                echo "<td>";
-                echo "<button class='btn btn-delete' data-id='" . htmlspecialchars($row['id'] ?? '') . "'>Delete</button>";
-                echo "</td>";
+                echo "<td>" . htmlspecialchars($row['item_type'] ?? '') . "</td>";
+                echo "<td><button class='btn btn-delete' data-id='" . htmlspecialchars($row['id'] ?? '') . "'>Delete</button></td>";
                 echo "</tr>";
             }
         } else {
-            echo "<tr><td colspan='8' class='text-center'>No claimed items found.</td></tr>"; // Updated colspan to 8
+            echo "<tr><td colspan='8' class='text-center'>No claimed items found.</td></tr>";
         }
         ?>
         </tbody>
