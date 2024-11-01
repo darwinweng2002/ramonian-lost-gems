@@ -63,9 +63,9 @@ $result = $conn->query($sql);
             color: #333;
             margin-bottom: 20px;
         }
-        .table-wrapper {
-            overflow-x: auto; /* Enable horizontal scrolling */
-        }
+       /* .table-wrapper {
+            overflow-x: auto; /* Enable horizontal scrolling 
+        } */
         .table {
             width: 100%;
             min-width: 1000px; /* Set a minimum width to handle wider content */
