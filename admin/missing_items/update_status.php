@@ -98,14 +98,14 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
                         Hello $reporterName,<br><br>
                         Your reported item, '<strong>$itemTitle</strong>,' has been <strong>published</strong> on our app. It's now visible to other users. Thank you for helping reconnect lost items.<br><br>
                         Regards,<br>
-                        Ramonian Lost Gems Team
+                        Ramonian Lost Gems Admin
                     ";
                 } elseif ($status == 2) { // Claimed
                     $mail->Body = "
                         Hi $reporterName,<br><br>
                         Great news! The item you reported, '<strong>$itemTitle</strong>,' has been <strong>claimed</strong> by its owner. Thank you for your help!<br><br>
                         Regards,<br>
-                        Ramonian Lost Gems Team
+                        Ramonian Lost Gems Admin
                     ";
                 } elseif ($status == 3) { // Surrendered
                     $mail->Body = "
@@ -113,7 +113,7 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
                         The item you reported, '<strong>$itemTitle</strong>,' has been <strong>surrendered</strong> for safekeeping. Visit the SSG office with a valid ID to claim it.<br><br>
                         Thank you for your assistance.<br><br>
                         Regards,<br>
-                        Ramonian Lost Gems Team
+                        Ramonian Lost Gems Admin
                     ";
                 } elseif ($status == 4) { // Denied
                     $mail->Body = "
@@ -121,14 +121,14 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
                         Unfortunately, your report for '<strong>$itemTitle</strong>' was <strong>denied</strong>. This may be due to incomplete information. Please review our guidelines and submit a new report if needed.<br><br>
                         Thank you for your understanding.<br><br>
                         Regards,<br>
-                        Ramonian Lost Gems Team
+                        Ramonian Lost Gems Admin
                     ";
                 } else { // Pending (Fallback)
                     $mail->Body = "
                         Hello $reporterName,<br><br>
                         The status of your reported item, '<strong>$itemTitle</strong>,' is currently <strong>pending</strong>. We will notify you once there is an update.<br><br>
                         Regards,<br>
-                        Ramonian Lost Gems Team
+                        Ramonian Lost Gems Admin
                     ";
                 }
                 

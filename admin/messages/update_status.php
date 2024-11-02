@@ -100,35 +100,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         Hello $reporterName,<br><br>
                         The item you reported, '<strong>$itemTitle</strong>,' has now been <strong>published</strong> on our app. Thank you for helping reconnect lost items with their owners.<br><br>
                         Best regards,<br>
-                        Ramonian Lost Gems Team
+                        Ramonian Lost Gems Admin
                     ";
                 } elseif ($newStatus == 2) { // Claimed
                     $mail->Body = "
                         Hello $reporterName,<br><br>
                         We're happy to let you know that the item you reported, '<strong>$itemTitle</strong>,' has been <strong>claimed</strong> by its rightful owner. Thank you for your contribution!<br><br>
                         Regards,<br>
-                        Ramonian Lost Gems Team
+                        Ramonian Lost Gems Admin
                     ";
                 } elseif ($newStatus == 3) { // Surrendered
                     $mail->Body = "
                         Hi $reporterName,<br><br>
                         The item titled '<strong>$itemTitle</strong>' has been <strong>surrendered</strong> to the SSG officers for safekeeping. Thank you for reporting this item.<br><br>
                         Kind regards,<br>
-                        Ramonian Lost Gems Team
+                        Ramonian Lost Gems Admin
                     ";
                 } elseif ($newStatus == 4) { // Denied
                     $mail->Body = "
                         Hi $reporterName,<br><br>
                         We regret to inform you that the item '<strong>$itemTitle</strong>' did not meet our criteria and has been <strong>denied</strong>. Feel free to review our guidelines and submit a new report if needed.<br><br>
                         Regards,<br>
-                        Ramonian Lost Gems Team
+                        Ramonian Lost Gems Admin
                     ";
                 } else { // Pending
                     $mail->Body = "
                         Dear $reporterName,<br><br>
                         The status of the item '<strong>$itemTitle</strong>' is currently <strong>pending</strong>. We will notify you of any updates.<br><br>
                         Regards,<br>
-                        Ramonian Lost Gems Team
+                        Ramonian Lost Gems Admin
                     ";
                 }
                 
