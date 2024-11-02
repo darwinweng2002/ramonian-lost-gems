@@ -77,65 +77,63 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
             try {
                 // Server settings
                 $mail->isSMTP();
-                $mail->Host = 'mail.smtp2go.com'; // Set your SMTP server
+                $mail->Host = 'smtp.gmail.com'; // Replace with your SMTP server
                 $mail->SMTPAuth = true;
-                $mail->Username = 'ran_ramonian'; // Your email
-                $mail->Password = 'test123456'; // Your email password
-                $mail->SMTPSecure = 'tls';
-                $mail->Port = 2525;
+                $mail->Username = 'vdarwin860@gmail.com'; // Replace with your email
+                $mail->Password = 'ybve xumi zutn nmro'; // Replace with your email password or app-specific password
+                $mail->SMTPSecure =  'ssl';
+                $mail->Port = 465;
             
                 // Recipients
                 $mail->setFrom('admin@ramonianlostgems.com', 'Ramonian Lost Gems'); // Change this to your "From" email
                 $mail->addAddress($reporterEmail); // The reporter's email
             
                 // Content
+              
                 $mail->isHTML(true);
-                $mail->Subject = 'Status Update for Your Reported Item: ' . $itemTitle;
-            
-                // Ensure we use $status (the correct variable) instead of $newStatus
+                $mail->Subject = 'Update on Your Missing Item Report: ' . $itemTitle;
+                
                 if ($status == 1) { // Published
                     $mail->Body = "
-                        Dear $reporterName, <br><br>
-                        We are pleased to inform you that your reported missing item titled '<strong>$itemTitle</strong>' has been <strong>published</strong> by the admins. 
-                        Your report is now visible to other users on our mobile application. Thank you for helping us reconnect lost items with their owners.<br><br>
-                        Best regards,<br>
-                        Admins of Ramonian Lost Gems
+                        Hello $reporterName,<br><br>
+                        Your reported item, '<strong>$itemTitle</strong>,' has been <strong>published</strong> on our app. It's now visible to other users. Thank you for helping reconnect lost items.<br><br>
+                        Regards,<br>
+                        Ramonian Lost Gems Team
                     ";
                 } elseif ($status == 2) { // Claimed
                     $mail->Body = "
-                        Dear $reporterName, <br><br>
-                        We are happy to inform you that your reported missing item titled '<strong>$itemTitle</strong>' has been successfully <strong>claimed</strong> by its rightful owner. 
-                        Thank you for your valuable contribution in helping us return lost items.<br><br>
-                        Best regards,<br>
-                        Admins of Ramonian Lost Gems
+                        Hi $reporterName,<br><br>
+                        Great news! The item you reported, '<strong>$itemTitle</strong>,' has been <strong>claimed</strong> by its owner. Thank you for your help!<br><br>
+                        Regards,<br>
+                        Ramonian Lost Gems Team
                     ";
                 } elseif ($status == 3) { // Surrendered
                     $mail->Body = "
-                       Dear $reporterName, <br><br>
-                        We would like to inform you that your reported missing item titled '<strong>$itemTitle</strong>' has been <strong>surrendered</strong> to the SSG officers for safekeeping. 
-                        You may now proceed to the OSA Building, 3rd floor, SSG office to claim your missing item. Please ensure you bring a valid ID and proof of ownership for verification purposes.<br><br>
-                        Thank you for your efforts in reporting and submitting this item.<br><br>
-                        Best regards,<br>
-                        Admins of Ramonian Lost Gems
+                        Hello $reporterName,<br><br>
+                        The item you reported, '<strong>$itemTitle</strong>,' has been <strong>surrendered</strong> for safekeeping. Visit the SSG office with a valid ID to claim it.<br><br>
+                        Thank you for your assistance.<br><br>
+                        Regards,<br>
+                        Ramonian Lost Gems Team
                     ";
                 } elseif ($status == 4) { // Denied
                     $mail->Body = "
-                        Dear $reporterName, <br><br>
-                        We regret to inform you that your reported missing item titled '<strong>$itemTitle</strong>' has been <strong>denied</strong> by the admins. 
-                        This could be due to various reasons, such as insufficient information or the item not fitting our criteria. 
-                        We sincerely apologize for any inconvenience this may have caused, and we encourage you to review the guidelines and submit a new report if applicable.<br><br>
-                        Best regards,<br>
-                        Admins of Ramonian Lost Gems
+                        Dear $reporterName,<br><br>
+                        Unfortunately, your report for '<strong>$itemTitle</strong>' was <strong>denied</strong>. This may be due to incomplete information. Please review our guidelines and submit a new report if needed.<br><br>
+                        Thank you for your understanding.<br><br>
+                        Regards,<br>
+                        Ramonian Lost Gems Team
                     ";
-                } else { // Pending (Fallback in case)
+                } else { // Pending (Fallback)
                     $mail->Body = "
-                        Dear $reporterName, <br><br>
-                        The status of your reported missing item titled '<strong>$itemTitle</strong>' is currently <strong>pending</strong>. 
-                        The admins of Ramonian Lost Gems are reviewing your report and will update you once a decision has been made.<br><br>
-                        Best regards,<br>
-                        Admins of Ramonian Lost Gems
+                        Hello $reporterName,<br><br>
+                        The status of your reported item, '<strong>$itemTitle</strong>,' is currently <strong>pending</strong>. We will notify you once there is an update.<br><br>
+                        Regards,<br>
+                        Ramonian Lost Gems Team
                     ";
                 }
+                
+                $mail->AltBody = strip_tags($mail->Body);
+                
                 
 
                 $mail->send();
