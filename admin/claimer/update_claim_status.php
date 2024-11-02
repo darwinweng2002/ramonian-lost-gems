@@ -55,28 +55,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $subject = '';
 
             if ($new_status === 'approved') {
-                $subject = 'Your Claim Request has been Approved';
-                $status_message = "
-                    Hello {$claimantName},<br><br>
-                    Your claim request for the item <strong>{$itemName}</strong> has been approved.<br>
-                    Please proceed to the OSA Building 3rd floor Student Organization Office for actual verification and please bring your ID.<br><br>
-                    Thank you.
+                $mail->Body = "
+                    Hi {$claimantName},<br><br>
+                    Great news! Your request to claim the item '<strong>{$itemName}</strong>' has been <strong>approved</strong>.<br>
+                    Please visit the OSA Building, 3rd floor, Student Organization Office for verification. Remember to bring your ID for identification.<br><br>
+                    Thank you for using Ramonian Lost Gems to reunite with your lost items!<br><br>
+                    Best,<br>
+                    Ramonian Lost Gems Admin
                 ";
             } elseif ($new_status === 'rejected') {
-                $subject = 'Your Claim Request has been Rejected';
-                $status_message = "
-                    Hello {$claimantName},<br><br>
-                    Unfortunately, your claim request for the item <strong>{$itemName}</strong> has been rejected.<br><br>
-                    Thank you for your understanding.
+                $mail->Body = "
+                    Hi {$claimantName},<br><br>
+                    We wanted to let you know that your request to claim the item '<strong>{$itemName}</strong>' has been <strong>rejected</strong>.<br><br>
+                    Thank you for your understanding, and feel free to reach out if you have any questions.<br><br>
+                    Best,<br>
+                    Ramonian Lost Gems Admin
                 ";
             } elseif ($new_status === 'claimed') {
-                $subject = 'Your Claim Request Status Updated';
-                $status_message = "
-                    Hello {$claimantName},<br><br>
-                    Your claim request status for the item <strong>{$itemName}</strong> has been updated to <strong>claimed</strong>.<br><br>
-                    Thank you.
+                $mail->Body = "
+                    Hi {$claimantName},<br><br>
+                    We’re happy to inform you that the status of your requested item, '<strong>{$itemName}</strong>,' has been updated to <strong>claimed</strong>.<br><br>
+                    Thank you for helping us reconnect items with their owners!<br><br>
+                    Best,<br>
+                    Ramonian Lost Gems Admin
                 ";
             }
+            
+            // Adding a plain text alternative
+            $mail->AltBody = strip_tags($mail->Body);
 
             // Initialize PHPMailer and send the email
             $mail = new PHPMailer(true);
