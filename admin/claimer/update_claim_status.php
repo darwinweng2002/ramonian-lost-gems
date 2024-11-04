@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->Body = "
                     Hi {$claimantName},<br><br>
                     Great news! Your request to claim the item '<strong>{$itemName}</strong>' has been <strong>approved</strong>.<br>
-                    Please visit the OSA Building, 3rd floor, Student Organization Office for verification. Remember to bring your ID for identification.<br><br>
+                    Please visit the OSA Building, 3rd floor, Student Organization Office for actual verification. Remember to bring your ID for identification.<br><br>
                     Thank you for using Ramonian Lost Gems to reunite with your lost items!<br><br>
                     Best,<br>
                     Ramonian Lost Gems Admin
@@ -90,12 +90,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 // Server settings
                 $mail->isSMTP();
-                $mail->Host = 'mail.smtp2go.com';  // Replace with your SMTP server
+                $mail->Host = 'smtp.gmail.com'; // Replace with your SMTP server
                 $mail->SMTPAuth = true;
-                $mail->Username = 'ran_ramonian'; // Your SMTP username
-                $mail->Password = 'test123456';   // Your SMTP password
-                $mail->SMTPSecure = 'tls';
-                $mail->Port = 2525;  // SMTP port
+                $mail->Username = 'vdarwin860@gmail.com'; // Replace with your email
+                $mail->Password = 'ybve xumi zutn nmro'; // Replace with your email password or app-specific password
+                $mail->SMTPSecure =  'ssl';
+                $mail->Port = 465;
 
                 // Recipients
                 $mail->setFrom('admin@ramonianlostgems.com', 'Ramonian Lost Gems');
