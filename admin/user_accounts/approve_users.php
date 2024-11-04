@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user_id > 0) {
         // Get the user's details before approval
-        $stmt = $conn->prepare("SELECT first_name, email FROM user_member WHERE id = ?");
+        $stmt = $conn->prepare("SELECT first_name, last_name, email FROM user_member WHERE id = ?");
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->SMTPAuth = true;
                 $mail->Username = 'vdarwin860@gmail.com'; // Replace with your email
                 $mail->Password = 'ybve xumi zutn nmro'; // Replace with your email password or app-specific password
-                $mail->SMTPSecure =  'ssl';
+                $mail->SMTPSecure = 'ssl';
                 $mail->Port = 465;
 
                 // Recipients
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Content
                 $mail->isHTML(true);
                 $mail->Subject = 'Account Approved';
-                $mail->Body = "Dear " . htmlspecialchars($user['first_name']) . ",<br>Your account has been approved by the admin. You can now log in to your account.<br><br>Regards,<br>Admin";
+                $mail->Body = "Dear " . htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) . ",<br>Your account has been approved by the admin. You can now log in to your account.<br><br>Regards,<br>Ramonian Lost Gems Admin";
 
                 // Send the email
                 $mail->send();
