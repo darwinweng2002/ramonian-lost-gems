@@ -50,12 +50,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt_update->bind_param('si', $new_status, $claimId);
 
         if ($stmt_update->execute()) {
-            // Prepare the email content based on the new status
-            $status_message = '';
-            $subject = '';
+            // Initialize PHPMailer
+            $mail = new PHPMailer(true);
 
+            // Prepare the email content based on the new status
             if ($new_status === 'approved') {
-                $mail->Body = "
+                $subject = "Claim Request Approved";
+                $status_message = "
                     Hi {$claimantName},<br><br>
                     Great news! Your request to claim the item '<strong>{$itemName}</strong>' has been <strong>approved</strong>.<br>
                     Please visit the OSA Building, 3rd floor, Student Organization Office for actual verification. Remember to bring your ID for identification.<br><br>
@@ -64,7 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     Ramonian Lost Gems Admin
                 ";
             } elseif ($new_status === 'rejected') {
-                $mail->Body = "
+                $subject = "Claim Request Rejected";
+                $status_message = "
                     Hi {$claimantName},<br><br>
                     We wanted to let you know that your request to claim the item '<strong>{$itemName}</strong>' has been <strong>rejected</strong>.<br><br>
                     Thank you for your understanding, and feel free to reach out if you have any questions.<br><br>
@@ -72,7 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     Ramonian Lost Gems Admin
                 ";
             } elseif ($new_status === 'claimed') {
-                $mail->Body = "
+                $subject = "Item Claimed";
+                $status_message = "
                     Hi {$claimantName},<br><br>
                     We’re happy to inform you that the status of your requested item, '<strong>{$itemName}</strong>,' has been updated to <strong>claimed</strong>.<br><br>
                     Thank you for helping us reconnect items with their owners!<br><br>
@@ -80,39 +83,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     Ramonian Lost Gems Admin
                 ";
             }
-            
-            // Adding a plain text alternative
-            $mail->AltBody = strip_tags($mail->Body);
-
-            // Initialize PHPMailer and send the email
-            $mail = new PHPMailer(true);
 
             try {
-                // Server settings
+                // PHPMailer configuration
                 $mail->isSMTP();
-                $mail->Host = 'smtp.gmail.com'; // Replace with your SMTP server
+                $mail->Host = 'smtp.gmail.com';
                 $mail->SMTPAuth = true;
-                $mail->Username = 'vdarwin860@gmail.com'; // Replace with your email
-                $mail->Password = 'ybve xumi zutn nmro'; // Replace with your email password or app-specific password
-                $mail->SMTPSecure =  'ssl';
+                $mail->Username = 'vdarwin860@gmail.com';
+                $mail->Password = 'ybve xumi zutn nmro';
+                $mail->SMTPSecure = 'ssl';
                 $mail->Port = 465;
+                $mail->SMTPDebug = 2;  // Set to 0 to disable debug output
 
-                // Recipients
+                // Email content
                 $mail->setFrom('admin@ramonianlostgems.com', 'Ramonian Lost Gems');
-                $mail->addAddress($claimantEmail); // Add claimant's email
+                $mail->addAddress($claimantEmail);
 
-                // Content
                 $mail->isHTML(true);
                 $mail->Subject = $subject;
                 $mail->Body = $status_message;
+                $mail->AltBody = strip_tags($status_message);
 
-                // Send the email
                 $mail->send();
 
-                // Return success response
                 echo json_encode(['success' => true]);
             } catch (Exception $e) {
-                // Log the error
                 error_log("Mailer Error: " . $mail->ErrorInfo);
                 echo json_encode(['success' => false, 'error' => 'Failed to send email notification.']);
             }
