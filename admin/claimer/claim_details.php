@@ -259,7 +259,7 @@ $result = $stmt->get_result();
                 if (result.isConfirmed) {
                     const formData = new FormData(document.getElementById('statusForm'));
 
-                    fetch('update_claim_status.php', {
+                    fetch('../update_claim_status.php', {
                         method: 'POST',
                         body: formData
                     })
