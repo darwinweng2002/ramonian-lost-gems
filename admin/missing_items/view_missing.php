@@ -234,12 +234,13 @@ $result = $stmt->get_result();
 
             echo "<div class='message-box'>";
                 
-                if ($avatar) {
-                    $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
-                    echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
-                } else {
-                    echo "<img src='uploads/avatars/default-avatar.png' alt='Default Avatar' class='avatar'>";
-                }
+            if ($avatar) {
+                $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
+                echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
+            } else {
+                // Updated decent default avatar
+                echo "<img src='../../uploads/avatars/2.png' alt='Default Avatar' class='avatar'>";
+            }
 
                 echo "<p><strong>Item Name:</strong> " . $title . "</p>";
                 echo "<p><strong>Owner Name:</strong> " . $owner . "</p>";
