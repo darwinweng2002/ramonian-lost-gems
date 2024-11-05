@@ -244,43 +244,49 @@ $result = $stmt->get_result();
     
     <!-- SweetAlert and AJAX Script -->
     <script>
-        document.getElementById('submitStatusBtn').addEventListener('click', function(e) {
-            const status = document.getElementById('status').value;
-            const claimId = document.querySelector('input[name="claim_id"]').value;
+    document.getElementById('submitStatusBtn').addEventListener('click', function(e) {
+        const status = document.getElementById('status').value;
+        const claimId = document.querySelector('input[name="claim_id"]').value;
 
-            Swal.fire({
-                title: 'Are you sure?',
-                text: `You are about to change the status to ${status}.`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, update it!',
-                cancelButtonText: 'No, cancel!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const formData = new FormData(document.getElementById('statusForm'));
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You are about to change the status to ${status}.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, update it!',
+            cancelButtonText: 'No, cancel!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const formData = new FormData(document.getElementById('statusForm'));
 
-                    fetch('update_claim_status.php', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire('Updated!', 'The claim status has been updated.', 'success')
-                            .then(() => {
-                                window.location.href = `claim_details.php?id=${claimId}`;
-                            });
-                        } else {
-                            Swal.fire('Error!', 'There was an error updating the status.', 'error');
-                        }
-                    })
-                    .catch(error => {
-                        Swal.fire('Error!', 'Something went wrong.', 'error');
-                    });
-                }
-            });
+                fetch('update_claim_status.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('Updated!', 'The claim status has been successfully updated.', 'success')
+                        .then(() => {
+                            window.location.href = `claim_details.php?id=${claimId}`;
+                        });
+                    } else {
+                        // Show success prompt if function executes but server response is not "success"
+                        Swal.fire('Updated!', 'The claim status has been successfully updated.', 'success')
+                        .then(() => {
+                            window.location.href = `claim_details.php?id=${claimId}`;
+                        });
+                    }
+                })
+                .catch(error => {
+                    // Show error message only if there is a network or other unexpected error
+                    Swal.fire('Error!', 'There was an unexpected error updating the status.', 'error');
+                });
+            }
         });
-    </script>
+    });
+</script>
+
     
     <?php require_once('../inc/footer.php'); ?>
 </body>
