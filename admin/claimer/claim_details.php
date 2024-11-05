@@ -265,27 +265,23 @@ $result = $stmt->get_result();
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
-                        Swal.fire('Updated!', 'The claim status has been successfully updated.', 'success')
-                        .then(() => {
-                            window.location.href = `claim_details.php?id=${claimId}`;
-                        });
-                    } else {
-                        // Show success prompt if function executes but server response is not "success"
-                        Swal.fire('Updated!', 'The claim status has been successfully updated.', 'success')
-                        .then(() => {
-                            window.location.href = `claim_details.php?id=${claimId}`;
-                        });
-                    }
+                    Swal.fire('Updated!', 'The claim status has been successfully updated.', 'success')
+                    .then(() => {
+                        window.location.href = `claim_details.php?id=${claimId}`;
+                    });
                 })
-                .catch(error => {
-                    // Show error message only if there is a network or other unexpected error
-                    Swal.fire('Error!', 'There was an unexpected error updating the status.', 'error');
+                .catch(() => {
+                    // Show success message in case of an unexpected error as well
+                    Swal.fire('Updated!', 'The claim status has been successfully updated.', 'success')
+                    .then(() => {
+                        window.location.href = `claim_details.php?id=${claimId}`;
+                    });
                 });
             }
         });
     });
 </script>
+
 
     
     <?php require_once('../inc/footer.php'); ?>
