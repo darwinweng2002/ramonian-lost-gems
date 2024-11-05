@@ -495,7 +495,7 @@ if ($userType === 'user_member') {
     <div class="image-preview-container" id="imagePreviewContainer"></div>
     
     <p id="fileValidationMessage" style="color: red; display: none;">Supported file types: jpg, jpeg, png, gif.</p>
-    <p id="imageUploadError" style="color: red; display: none;">You must upload between 1 and 6 images.</p>
+    <p id="imageUploadError" style="color: red; display: none;">The maximum number of images to be uploaded is 6</p>
     
     <button type="submit" class="submit-btn" disabled>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send">
