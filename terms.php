@@ -192,7 +192,7 @@ include 'config.php';
                   
                   <li><strong>Posting Lost and Found Items:</strong> As a registered user, you can report lost and found items through the application. Reports must include specific details such as item name, description, and, optionally, multiple images of the item. Your reports will be reviewed by an admin before being published.</li>
                   
-                  <li><strong>Claiming Items:</strong> Only registered users with approved accounts can submit claim requests for lost or found items. Guest users may report lost or found items but cannot claim them. All claims will be verified by an admin before final approval.</li>
+                  <li><strong>Claiming Items:</strong> Both registered users with approved accounts and guest users are now able to submit claim requests for lost or found items. This means that any user, whether registered or a guest, can initiate the claiming process if they believe they’ve found their lost item. However, all claim requests—whether from guests or registered users—will still undergo an admin verification process before final approval to ensure authenticity and prevent misuse.</li>
                   
                   <li><strong>Responsibilities of Admin Users:</strong> Admins have the responsibility of managing and reviewing all reported lost and found items. Admins can publish, delete, or reject reported items. They can also manage claim requests and change the status of an item to 'claimed' once it has been returned to its owner. Admins are authorized to update the status of reports and manage user accounts.</li>
                   
