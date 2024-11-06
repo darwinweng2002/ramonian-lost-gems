@@ -148,10 +148,10 @@ if (isset($_POST['guest_login'])) {
                   </div>
                   <form class="row g-3 needs-validation" novalidate method="POST">
                               <div class="col-12">
-                  <label for="yourEmail" class="form-label">Username</label>
+                  <label for="yourEmail" class="form-label">Email</label>
                   <div class="input-group has-validation">
                       <input type="text" name="email" class="form-control" id="yourEmail" required>
-                      <div class="invalid-feedback">Please enter your username.</div>
+                      <div class="invalid-feedback">Please enter your email.</div>
                   </div>
               </div>
               <div class="col-12">
@@ -164,15 +164,6 @@ if (isset($_POST['guest_login'])) {
               </div>
               </form>
                   <br>
-                <!--  <form method="POST" action="">
-                    <div class="col-12">
-                      <br>
-                      <p style="text-align: center;">Not a student or employee member? Proceed as guest.
-                      <button class="btn btn-secondary w-100" type="submit" name="guest_login" value="1">Login as Guest</button>
-                      </p>
-                    </div>
-                  </form> -->
-
                   <div class="text-center mt-3">
                   <p>Don't have an account? 
                   <a href="https://ramonianlostgems.com/register.php" class="btn btn-primary w-100" style="color: #fff;">Sign up</a>
