@@ -347,6 +347,7 @@ h2, h3 {
         <option value="Passport">Passport</option>
         <option value="National ID">National ID</option>
         <option value="Student ID">Student ID</option>
+        <option value="Student ID">Others</option>
     </select>
 </div>
 
