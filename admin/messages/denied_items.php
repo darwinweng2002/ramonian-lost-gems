@@ -135,6 +135,19 @@ $result_found = $conn->query($sql_found);
         .input-group-text i {
             font-size: 14px;
         }
+        .print-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .print-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -145,7 +158,9 @@ $result_found = $conn->query($sql_found);
 <section class="section">
     <div class="container">
         <h2>Denied Found Items</h2>
-        
+        <button class="print-button" onclick="printSection()">
+            <i class="fas fa-print"></i> Print Denied Items
+        </button>
         <!-- Search Form -->
         <form class="search-form" method="GET" action="denied_items.php">
             <div class="input-group">
@@ -199,7 +214,35 @@ $result_found = $conn->query($sql_found);
         </div>
     </div>
 </section>
+<script>
+        // JavaScript function to handle print
+        function printSection() {
+            // Open a new window and write HTML content to it
+            const printContent = document.querySelector('.container').innerHTML;
+            const printWindow = window.open('', '', 'width=800,height=600');
+            
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Print Denied Found Items</title>
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+                    <style>
+                        body { font-family: Arial, sans-serif; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { padding: 8px; text-align: center; }
+                        .item-image { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; }
+                    </style>
+                </head>
+                <body onload="window.print(); window.close();">
+                    ${printContent}
+                </body>
+                </html>
+            `);
 
+            // Close the document to signal it is ready for printing
+            printWindow.document.close();
+        }
+    </script>
 <?php
 // Close connections
 $result_found->free();
