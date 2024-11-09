@@ -263,7 +263,7 @@ $result = $conn->query($sql);
                         }
 
                         echo "<td>" . htmlspecialchars($row['title']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['user_name']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['first_name'] ?? 'Unknown') . "</td>";
                         echo "<td>" . htmlspecialchars($row['college']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['founder']) . "</td>";
