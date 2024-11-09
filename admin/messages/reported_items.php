@@ -31,7 +31,7 @@ $sql = "
         SELECT id AS user_id, first_name, department AS college, email, avatar, NULL AS school_type, 'staff' AS user_type FROM user_staff
     ) AS user_info ON mh.user_id = user_info.user_id
     LEFT JOIN categories c ON mh.category_id = c.id
-    LEFT JOIN user_admin admin ON mh.updated_by_admin = admin.id  -- Join to get the admin username
+    LEFT JOIN user admin ON mh.updated_by_admin = admin.id  -- Join to get the admin username
     WHERE mh.is_denied = 0";
 
 // Add search condition
