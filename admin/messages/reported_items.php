@@ -246,6 +246,7 @@ $result = $conn->query($sql);
                         <th>Finder's Name</th>
                         <th>Time Found</th>
                         <th>Status</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
