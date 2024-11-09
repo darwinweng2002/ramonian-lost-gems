@@ -289,7 +289,7 @@ $result = $conn->query($sql);
                                 break;
                         }
                         echo "</td>";
-
+                        echo "<td>" . (!empty($row['admin_username']) ? htmlspecialchars($row['admin_username']) : 'Pending') . "</td>";
                         echo "<td><a href='https://ramonianlostgems.com/admin/messages/view_reported_item.php?id=" . htmlspecialchars($row['id']) . "' class='btn btn-primary btn-sm'>View</a></td>";
                         echo "</tr>";
                     }
