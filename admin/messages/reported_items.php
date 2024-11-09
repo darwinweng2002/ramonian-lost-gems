@@ -17,23 +17,25 @@ $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']
 
 // SQL query to fetch reported found items with their first image
 $sql = "
-    SELECT mh.id, mh.title, um.email as user_name, um.college, c.name as category_name, mh.founder, mh.time_found, mh.status,
-           mi.image_path AS image_path  -- Fetch image path
+    SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, user_info.first_name, user_info.college, 
+           user_info.email, user_info.avatar, user_info.school_type, mh.contact, mh.founder, mh.time_found, 
+           mh.status, mh.updated_by_admin, mh.updated_at, c.name as category_name, admin.username as updated_by_admin_username
     FROM message_history mh
-    LEFT JOIN user_member um ON mh.user_id = um.id
-    LEFT JOIN categories c ON mh.category_id = c.id
+    LEFT JOIN message_images mi ON mh.id = mi.message_id
     LEFT JOIN (
-        SELECT message_id, MIN(image_path) AS image_path
-        FROM message_images
-        GROUP BY message_id
-    ) mi ON mh.id = mi.message_id
-    WHERE mh.is_denied = 0"; // Exclude denied items
+        SELECT id AS user_id, first_name, college, email, avatar, school_type, 'member' AS user_type FROM user_member
+        UNION
+        SELECT id AS user_id, first_name, department AS college, email, avatar, NULL AS school_type, 'staff' AS user_type FROM user_staff
+    ) AS user_info ON mh.user_id = user_info.user_id
+    LEFT JOIN categories c ON mh.category_id = c.id
+    LEFT JOIN user_admin admin ON mh.updated_by_admin = admin.id  -- Join to get the admin username
+    WHERE mh.is_denied = 0";
 
 // Add search condition
 if (!empty($searchTerm)) {
     $sql .= " AND (mh.title LIKE '%$searchTerm%' 
-              OR um.email LIKE '%$searchTerm%'
-              OR um.college LIKE '%$searchTerm%' 
+              OR user_info.email LIKE '%$searchTerm%'
+              OR user_info.college LIKE '%$searchTerm%' 
               OR c.name LIKE '%$searchTerm%'
               OR mh.founder LIKE '%$searchTerm%')";
 }
@@ -225,7 +227,7 @@ $result = $conn->query($sql);
         </form>
 
         <div class="table-responsive">
-            <table class="table table-striped table-bordered">
+        <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>Item Image</th>
@@ -236,6 +238,7 @@ $result = $conn->query($sql);
                         <th>Finder's Name</th>
                         <th>Time Found</th>
                         <th>Status</th>
+                        <th>Updated By</th> <!-- Column for admin username -->
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -249,11 +252,11 @@ $result = $conn->query($sql);
                             $imageSrc = $base_image_url . htmlspecialchars($row['image_path']);
                             echo "<td><img src='" . $imageSrc . "' alt='Item Image' class='item-image'></td>";
                         } else {
-                            echo "<td><img src='/path/to/placeholder.jpg' alt='No Image' class='item-image'></td>";  // Provide a default image path
+                            echo "<td><img src='/path/to/placeholder.jpg' alt='No Image' class='item-image'></td>";
                         }
 
                         echo "<td>" . htmlspecialchars($row['title']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['user_name']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['first_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['college']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['founder']) . "</td>";
@@ -280,11 +283,18 @@ $result = $conn->query($sql);
                         }
                         echo "</td>";
 
+                        // Display admin username or "Pending" if not updated
+                        if ($row['status'] > 0 && !empty($row['updated_by_admin_username'])) {
+                            echo "<td>" . htmlspecialchars($row['updated_by_admin_username']) . "</td>";
+                        } else {
+                            echo "<td>Pending</td>";
+                        }
+
                         echo "<td><a href='https://ramonianlostgems.com/admin/messages/view_reported_item.php?id=" . htmlspecialchars($row['id']) . "' class='btn btn-primary btn-sm'>View</a></td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='9'>No items found.</td></tr>";
+                    echo "<tr><td colspan='10'>No items found.</td></tr>";
                 }
                 ?>
                 </tbody>
