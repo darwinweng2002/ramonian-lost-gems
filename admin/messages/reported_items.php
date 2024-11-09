@@ -1,11 +1,8 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 include '../../config.php';
 
 // Define the base path where the images are stored
-$base_image_url = base_url . 'uploads/items/';
+$base_image_url = base_url . 'uploads/items/';  // Adjust this to your actual image directory
 
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
@@ -18,39 +15,32 @@ if ($conn->connect_error) {
 // Initialize search term
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
-// SQL query to fetch reported found items with their first image and admin who updated status
+// SQL query to fetch reported found items with their first image
 $sql = "
-    SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, user_info.first_name, user_info.college, 
-           user_info.email, user_info.avatar, user_info.school_type, mh.contact, mh.founder, mh.time_found, 
-           mh.status, mh.updated_by_admin, mh.updated_at, c.name as category_name, 
-           users.username AS admin_username  -- Get admin username from the `user` table
+    SELECT mh.id, mh.title, um.email as user_name, um.college, c.name as category_name, mh.founder, mh.time_found, mh.status,
+           mi.image_path AS image_path  -- Fetch image path
     FROM message_history mh
-    LEFT JOIN message_images mi ON mh.id = mi.message_id
-    LEFT JOIN (
-        SELECT id AS user_id, first_name, college, email, avatar, school_type, 'member' AS user_type FROM user_member
-        UNION
-        SELECT id AS user_id, first_name, department AS college, email, avatar, NULL AS school_type, 'staff' AS user_type FROM user_staff
-    ) AS user_info ON mh.user_id = user_info.user_id
+    LEFT JOIN user_member um ON mh.user_id = um.id
     LEFT JOIN categories c ON mh.category_id = c.id
-    LEFT JOIN users ON mh.updated_by_admin = users.id  -- Join with `user` for updated by info
-    WHERE mh.is_denied = 0";
+    LEFT JOIN (
+        SELECT message_id, MIN(image_path) AS image_path
+        FROM message_images
+        GROUP BY message_id
+    ) mi ON mh.id = mi.message_id
+    WHERE mh.is_denied = 0"; // Exclude denied items
 
-// Add search condition if a search term is present
+// Add search condition
 if (!empty($searchTerm)) {
     $sql .= " AND (mh.title LIKE '%$searchTerm%' 
-              OR user_info.email LIKE '%$searchTerm%'
-              OR user_info.college LIKE '%$searchTerm%' 
+              OR um.email LIKE '%$searchTerm%'
+              OR um.college LIKE '%$searchTerm%' 
               OR c.name LIKE '%$searchTerm%'
               OR mh.founder LIKE '%$searchTerm%')";
 }
 
-// Order the results by time found
 $sql .= " ORDER BY mh.time_found DESC";
-
 $result = $conn->query($sql);
 ?>
-
-
 
 
 <!DOCTYPE html>
@@ -246,7 +236,6 @@ $result = $conn->query($sql);
                         <th>Finder's Name</th>
                         <th>Time Found</th>
                         <th>Status</th>
-                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -264,7 +253,7 @@ $result = $conn->query($sql);
                         }
 
                         echo "<td>" . htmlspecialchars($row['title']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['first_name'] ?? 'Unknown') . "</td>";
+                        echo "<td>" . htmlspecialchars($row['user_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['college']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['founder']) . "</td>";
@@ -290,7 +279,7 @@ $result = $conn->query($sql);
                                 break;
                         }
                         echo "</td>";
-                        echo "<td>" . (!empty($row['admin_username']) ? htmlspecialchars($row['admin_username']) : 'Pending') . "</td>";
+
                         echo "<td><a href='https://ramonianlostgems.com/admin/messages/view_reported_item.php?id=" . htmlspecialchars($row['id']) . "' class='btn btn-primary btn-sm'>View</a></td>";
                         echo "</tr>";
                     }
