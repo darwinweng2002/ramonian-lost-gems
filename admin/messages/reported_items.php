@@ -32,7 +32,7 @@ $sql = "
         SELECT id AS user_id, first_name, department AS college, email, avatar, NULL AS school_type, 'staff' AS user_type FROM user_staff
     ) AS user_info ON mh.user_id = user_info.user_id
     LEFT JOIN categories c ON mh.category_id = c.id
-    LEFT JOIN user ON mh.updated_by_admin = user.id  -- Join with `user` for updated by info
+    LEFT JOIN users ON mh.updated_by_admin = user.id  -- Join with `user` for updated by info
     WHERE mh.is_denied = 0";
 
 // Add search condition if a search term is present
