@@ -9,6 +9,9 @@ require '../../PHPMailer/src/Exception.php';
 require '../../PHPMailer/src/PHPMailer.php';
 require '../../PHPMailer/src/SMTP.php';
 
+// Start session to access admin data
+session_start();
+
 // Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
@@ -22,6 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $itemId = intval($_POST['id']);
     $newStatus = intval($_POST['status']);
     
+    // Retrieve admin username from session
+    $adminUsername = isset($_SESSION['admin_username']) ? $_SESSION['admin_username'] : 'Unknown Admin';
+
     // Check that the status is valid (between 0 and 4)
     if ($newStatus >= 0 && $newStatus <= 4) {
         // Fetch the reporter's email and item title for the email notification
@@ -39,9 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtFetch->fetch();
         $stmtFetch->close();
 
-        // Update the status in the database
-        $stmt = $conn->prepare("UPDATE message_history SET status = ? WHERE id = ?");
-        $stmt->bind_param('ii', $newStatus, $itemId);
+        // Update the status in the database and track the admin who made the update
+        $stmt = $conn->prepare("UPDATE message_history SET status = ?, updated_by_admin = ? WHERE id = ?");
+        $stmt->bind_param('isi', $newStatus, $adminUsername, $itemId);
         
         if ($stmt->execute()) {
             // If the item is published, also update the category status
@@ -91,7 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->addAddress($reporterEmail, $reporterName); // Send to the reporter
 
                 // Email content
-                // Email content based on status update
                 $mail->isHTML(true);
                 $mail->Subject = 'Update on Your Reported Item: ' . $itemTitle;
                 
@@ -133,7 +138,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 
                 $mail->AltBody = strip_tags($mail->Body);
-                
 
                 $mail->send();
             } catch (Exception $e) {
