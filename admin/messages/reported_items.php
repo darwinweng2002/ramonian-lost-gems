@@ -23,7 +23,7 @@ $sql = "
     SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, user_info.first_name, user_info.college, 
            user_info.email, user_info.avatar, user_info.school_type, mh.contact, mh.founder, mh.time_found, 
            mh.status, mh.updated_by_admin, mh.updated_at, c.name as category_name, 
-           user.username AS admin_username  -- Get admin username from the `user` table
+           users.username AS admin_username  -- Get admin username from the `user` table
     FROM message_history mh
     LEFT JOIN message_images mi ON mh.id = mi.message_id
     LEFT JOIN (
