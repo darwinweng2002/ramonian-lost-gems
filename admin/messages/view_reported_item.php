@@ -331,7 +331,7 @@ if ($firstName || $email || $college) {
                         }
                         echo "</div>";
                     }
-
+                    $publishDisabled = $msgData['status'] == 4 ? 'disabled' : '';
                     $denyDisabled = $msgData['status'] != 4 ? 'disabled' : '';
                     $denyClass = $msgData['status'] != 4 ? 'disabled-btn' : 'deny-btn';
                     
@@ -475,7 +475,19 @@ if ($firstName || $email || $college) {
         $('.publish-btn[data-id="' + messageId + '"]').prop('disabled', true);
     }
 });
-
+$(document).on('change', '.form-select', function() {
+    var messageId = $(this).attr('id').split('-')[1];
+    var selectedStatus = $(this).val();
+    
+    // Disable publish button if status is 'Denied'
+    var publishBtn = $('.publish-btn[data-id="' + messageId + '"]');
+    if (selectedStatus == 4) { // Denied
+        publishBtn.prop('disabled', true).attr('title', 'Cannot publish denied items');
+    } else {
+        publishBtn.prop('disabled', selectedStatus != 1);
+        publishBtn.attr('title', selectedStatus != 1 ? 'Status is not set to Published' : '');
+    }
+});
     </script>
 </body>
 <?php require_once('../inc/footer.php') ?>
