@@ -209,7 +209,7 @@ if ($message_id > 0) {
     cursor: not-allowed;
     position: absolute;
     bottom: 20px;
-    right: 20px;
+    right: 50px;
     pointer-events: none; /* Disable click events */
 }
 
