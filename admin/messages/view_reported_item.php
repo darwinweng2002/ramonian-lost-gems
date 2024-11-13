@@ -331,12 +331,14 @@ if ($firstName || $email || $college) {
                         }
                         echo "</div>";
                     }
-                    $publishDisabled = ($msgData['status'] == 4 || $msgData['status'] != 1) ? 'disabled title="Cannot publish denied items"' : ''; 
+                    $publishClass = ($msgData['status'] == 4 || $msgData['status'] != 1) ? 'disabled-btn' : 'publish-btn';
+                    $publishDisabled = ($msgData['status'] == 4 || $msgData['status'] != 1) ? 'disabled title="Cannot publish denied items"' : '';
+
                     $denyDisabled = $msgData['status'] != 4 ? 'disabled' : '';
                     $denyClass = $msgData['status'] != 4 ? 'disabled-btn' : 'deny-btn';
                     
                     // Publish and Deny buttons with dynamic disabled state
-                    echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "' $publishDisabled>Publish Report</button>";
+                    echo "<button class='$publishClass' data-id='" . htmlspecialchars($msgId) . "' $publishDisabled>Publish Report</button>";
                     echo "<button class='" . $denyClass . "' data-id='" . htmlspecialchars($msgId) . "' $denyDisabled>Deny Report</button>";
 
                     echo "</div>";
