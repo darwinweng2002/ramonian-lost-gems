@@ -338,7 +338,7 @@ if ($firstName || $email || $college) {
                     $denyClass = $msgData['status'] != 4 ? 'disabled-btn' : 'deny-btn';
                     
                     // Publish and Deny buttons with dynamic disabled state
-                    echo "<button class='" . $denyClass . "' data-id='" . htmlspecialchars($msgId) . "' $publishDisabled>Publish Report</button>";
+                    echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "' $publishDisabled>Publish Report</button>";
                     echo "<button class='" . $denyClass . "' data-id='" . htmlspecialchars($msgId) . "' $denyDisabled>Deny Report</button>";
 
                     echo "</div>";
