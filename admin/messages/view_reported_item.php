@@ -331,12 +331,12 @@ if ($firstName || $email || $college) {
                         }
                         echo "</div>";
                     }
-                    $publishDisabled = ($msgData['status'] == 4 || $msgData['status'] != 1) ? 'disabled title="Cannot publish denied items"' : ''; 
-                    $denyDisabled = $msgData['status'] != 4 ? 'disabled' : '';
+                    $publishDisabledClass = ($msgData['status'] == 4) ? 'disabled-btn' : 'publish-btn'; // Apply 'disabled-btn' style if denied
+                    $publishDisabled = ($msgData['status'] == 4 || $msgData['status'] != 1) ? 'disabled title="Cannot publish denied items"' : '';
                     $denyClass = $msgData['status'] != 4 ? 'disabled-btn' : 'deny-btn';
                     
                     // Publish and Deny buttons with dynamic disabled state
-                    echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "' $publishDisabled>Publish Report</button>";
+                    echo "<button class='$publishDisabledClass' data-id='" . htmlspecialchars($msgId) . "' $publishDisabled>Publish Report</button>";
                     echo "<button class='" . $denyClass . "' data-id='" . htmlspecialchars($msgId) . "' $denyDisabled>Deny Report</button>";
 
                     echo "</div>";
@@ -479,16 +479,19 @@ if ($firstName || $email || $college) {
 $(document).on('change', '.form-select', function() {
     var messageId = $(this).attr('id').split('-')[1];
     var selectedStatus = $(this).val();
-    
-    // Disable publish button if status is 'Denied'
     var publishBtn = $('.publish-btn[data-id="' + messageId + '"]');
+
+    // Toggle the disabled style based on status
     if (selectedStatus == 4) { // Denied
-        publishBtn.prop('disabled', true).attr('title', 'Cannot publish denied items');
+        publishBtn.prop('disabled', true).addClass('disabled-btn').removeClass('publish-btn').attr('title', 'Cannot publish denied items');
     } else {
-        publishBtn.prop('disabled', selectedStatus != 1);
-        publishBtn.attr('title', selectedStatus != 1 ? 'Status is not set to Published' : '');
+        publishBtn.prop('disabled', selectedStatus != 1)
+                  .toggleClass('disabled-btn', selectedStatus != 1)
+                  .toggleClass('publish-btn', selectedStatus == 1)
+                  .attr('title', selectedStatus != 1 ? 'Status is not set to Published' : '');
     }
 });
+
     </script>
 </body>
 <?php require_once('../inc/footer.php') ?>
