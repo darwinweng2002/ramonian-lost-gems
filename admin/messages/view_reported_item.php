@@ -338,7 +338,7 @@ if ($firstName || $email || $college) {
                     $denyClass = $msgData['status'] != 4 ? 'disabled-btn' : 'deny-btn';
                     
                     // Publish and Deny buttons with dynamic disabled state
-                    echo "<button class='publish-btn' data-id='" . htmlspecialchars($msgId) . "' $publishDisabled>Publish Report</button>";
+                    echo "<button class='$publishClass' data-id='" . htmlspecialchars($msgId) . "' $publishDisabled>Publish Report</button>";
                     echo "<button class='" . $denyClass . "' data-id='" . htmlspecialchars($msgId) . "' $denyDisabled>Deny Report</button>";
 
                     echo "</div>";
@@ -482,15 +482,18 @@ $(document).on('change', '.form-select', function() {
     var messageId = $(this).attr('id').split('-')[1];
     var selectedStatus = $(this).val();
     
-    // Disable publish button if status is 'Denied'
+    // Get the publish button for the current item
     var publishBtn = $('.publish-btn[data-id="' + messageId + '"]');
+    
     if (selectedStatus == 4) { // Denied
-        publishBtn.prop('disabled', true).attr('title', 'Cannot publish denied items');
-    } else {
-        publishBtn.prop('disabled', selectedStatus != 1);
-        publishBtn.attr('title', selectedStatus != 1 ? 'Status is not set to Published' : '');
+        publishBtn.prop('disabled', true).addClass('disabled-btn').attr('title', 'Cannot publish denied items');
+    } else if (selectedStatus == 1) { // Published
+        publishBtn.prop('disabled', false).removeClass('disabled-btn').attr('title', '');
+    } else { // Any other status
+        publishBtn.prop('disabled', true).addClass('disabled-btn').attr('title', 'Status is not set to Published');
     }
 });
+
     </script>
 </body>
 <?php require_once('../inc/footer.php') ?>
