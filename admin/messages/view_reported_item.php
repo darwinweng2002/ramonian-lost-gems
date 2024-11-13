@@ -200,6 +200,18 @@ if ($message_id > 0) {
     right: 10px;
     pointer-events: none; /* Disable click events */
 }
+.publish-disabled-btn {
+    background-color: #d3d3d3;
+    color: #999;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: not-allowed;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    pointer-events: none; /* Disable click events */
+}
 
     </style>
 </head>
@@ -331,7 +343,7 @@ if ($firstName || $email || $college) {
                         }
                         echo "</div>";
                     }
-                    $publishClass = ($msgData['status'] == 4 || $msgData['status'] != 1) ? 'disabled-btn' : 'publish-btn';
+                    $publishClass = ($msgData['status'] == 4 || $msgData['status'] != 1) ? 'publish-disabled-btn' : 'publish-btn';
                     $publishDisabled = ($msgData['status'] == 4 || $msgData['status'] != 1) ? 'disabled title="Cannot publish denied items"' : '';
 
                     $denyDisabled = $msgData['status'] != 4 ? 'disabled' : '';
