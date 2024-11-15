@@ -218,7 +218,7 @@ $result_found = $conn->query($sql_found);
     // JavaScript function to handle print
     function printSection() {
         // Define the logo URL (replace with the actual logo path)
-        const logoSrc = 'path/to/logo.png'; // Replace with actual logo path
+        const logoSrc = '../../uploads/logo.png'; // Replace with actual logo path
 
         // Get only the table content
         const tableContent = document.querySelector('.table-responsive').innerHTML;
