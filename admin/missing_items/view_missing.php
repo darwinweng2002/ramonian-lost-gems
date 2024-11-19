@@ -179,7 +179,7 @@ $result = $stmt->get_result();
     cursor: not-allowed;
     position: absolute;
     bottom: 20px;
-    right: 10px;
+    right: 130px;
     pointer-events: none; /* Disable click events */
 }
     </style>
