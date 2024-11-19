@@ -309,6 +309,8 @@ if ($firstName || $email || $college) {
                 }
 
                // Disable Deny button if status is not Pending (status = 0)
+               $publishClass = ($msgData['status'] == 4 || $msgData['status'] != 1) ? 'publish-disabled-btn' : 'publish-btn';
+               $publishDisabled = ($msgData['status'] == 4 || $msgData['status'] != 1) ? 'disabled title="Cannot publish denied items"' : '';
                $denyButtonDisabled = ($status != 4) ? "disabled" : "";
                $denyButtonClass = ($status != 4) ? "btn-disabled" : "deny-btn"; // Use a disabled class if necessary
                
