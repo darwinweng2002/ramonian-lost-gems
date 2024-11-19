@@ -312,6 +312,7 @@ if ($firstName || $email || $college) {
                $denyButtonDisabled = ($status != 4) ? "disabled" : "";
                $denyButtonClass = ($status != 4) ? "btn-disabled" : "deny-btn"; // Use a disabled class if necessary
                
+               echo "<button class='" . $publishClass . "' data-id='" . htmlspecialchars($msgId) . "' $publishDisabled>Publish Report</button>";
                echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny Report</button>";               
             }
         }
