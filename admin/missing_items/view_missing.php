@@ -308,14 +308,22 @@ if ($firstName || $email || $college) {
                     echo "<p>No images available.</p>";
                 }
 
-               // Disable Deny button if status is not Pending (status = 0)
-               $denyButtonDisabled = ($status != 4) ? "disabled" : "";
-               $denyButtonClass = ($status != 4) ? "btn-disabled" : "deny-btn"; // Use a disabled class if necessary
-               
-               
-               echo "<button class='publish-btn' data-id='" . htmlspecialchars($itemId) . "'>Publish Report</button>";
-               echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny Report</button>";               
-            }
+                foreach ($items as $itemId => $itemData) {
+                    $status = intval($itemData['status']); // Ensure status is treated as an integer
+                
+                    // Determine button properties based on status
+                    $publishButtonDisabled = ($status == 4) ? "disabled" : "";
+                    $publishButtonClass = ($status == 4) ? "btn-disabled" : "publish-btn";
+                    $denyButtonDisabled = ($status != 4) ? "disabled" : "";
+                    $denyButtonClass = ($status != 4) ? "btn-disabled" : "deny-btn";
+                
+                    echo "<div class='message-box'>";
+                    // Other item details...
+                
+                    echo "<button class='" . $publishButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $publishButtonDisabled . ">Publish Report</button>";
+                    echo "<button class='" . $denyButtonClass . "' data-id='" . htmlspecialchars($itemId) . "' " . $denyButtonDisabled . ">Deny Report</button>";
+                    echo "</div>";
+                }
         }
         ?>
     </div>
