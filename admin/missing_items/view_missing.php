@@ -307,9 +307,6 @@ if ($firstName || $email || $college) {
                 } else {
                     echo "<p>No images available.</p>";
                 }
-
-                foreach ($items as $itemId => $itemData) {
-                    $status = intval($itemData['status']); // Ensure status is treated as an integer
                 
                     // Determine button properties based on status
                     $publishButtonDisabled = ($status == 4) ? "disabled" : "";
