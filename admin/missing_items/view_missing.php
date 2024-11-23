@@ -164,7 +164,7 @@ $result = $stmt->get_result();
     cursor: pointer;
     position: absolute;
     bottom: 20px;
-    right: 10px;
+    right: 130px;
 }
 
 .deny-btn:hover {
