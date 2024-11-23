@@ -58,10 +58,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $subject = "Claim Request Approved";
                 $status_message = "
                     Hi {$claimantName},<br><br>
-                    Great news! Your request to claim the item '<strong>{$itemName}</strong>' has been <strong>approved</strong>.<br>
-                    Please visit the Student Organization Office on the 3rd floor of the OSA Building for verification. The address is PRMSU Iba Campus, Zone 6, Iba, Zambales. Remember to bring your ID for identification.<br><br>
-                    Thank you for using Ramonian Lost Gems to reunite with your lost items!<br><br>
-                    Best regards,<br>
+                    Great news!
+                    Your request to claim the item '<strong>{$itemName}</strong>' has been <strong>approved</strong>.
+                    Please visit the Student Organization Office on the 3rd floor of the OSA Building for verification. The complete address is Quality Assurance Building, Iba Main Campus, President Ramon Magsaysay State University, Palanginan, Iba, Zambales. Remember to bring your ID for identification.
+                    Thank you for using Ramonian Lost Gems to reunite with your lost items!
+                    Best regards,
                     Ramonian Lost Gems Admin
                 ";
             } elseif ($new_status === 'rejected') {
