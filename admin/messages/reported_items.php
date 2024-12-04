@@ -15,10 +15,9 @@ if ($conn->connect_error) {
 // Initialize search term
 $searchTerm = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
 
-// SQL query to fetch reported found items with their first image and updated_by field
+// SQL query to fetch reported found items with their first image
 $sql = "
-    SELECT mh.id, mh.title, um.email as user_name, um.college, c.name as category_name, 
-           mh.founder, mh.time_found, mh.status, mh.updated_by,
+    SELECT mh.id, mh.title, um.email as user_name, um.college, c.name as category_name, mh.founder, mh.time_found, mh.status,
            mi.image_path AS image_path  -- Fetch image path
     FROM message_history mh
     LEFT JOIN user_member um ON mh.user_id = um.id
@@ -42,6 +41,7 @@ if (!empty($searchTerm)) {
 $sql .= " ORDER BY mh.time_found DESC";
 $result = $conn->query($sql);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -251,7 +251,6 @@ background-color: #0056b3;
                         <th>Finder's Name</th>
                         <th>Time Found</th>
                         <th>Status</th>
-                        <th>Updated By</th> <!-- New Column -->
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -296,14 +295,11 @@ background-color: #0056b3;
                         }
                         echo "</td>";
 
-                        // New column for Updated By
-                        echo "<td>" . htmlspecialchars($row['updated_by'] ?? 'N/A') . "</td>";
-
                         echo "<td><a href='https://ramonianlostgems.com/admin/messages/view_reported_item.php?id=" . htmlspecialchars($row['id']) . "' class='btn btn-primary btn-sm'>View</a></td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='10'>No items found.</td></tr>";
+                    echo "<tr><td colspan='9'>No items found.</td></tr>";
                 }
                 ?>
                 </tbody>

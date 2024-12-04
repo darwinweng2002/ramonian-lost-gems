@@ -1,7 +1,7 @@
 <?php
-session_start(); // Start session to track admin details
 include '../../config.php';
 
+// Include PHPMailer for email notifications
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -9,20 +9,39 @@ require '../../PHPMailer/src/Exception.php';
 require '../../PHPMailer/src/PHPMailer.php';
 require '../../PHPMailer/src/SMTP.php';
 
+// Database connection
 $conn = new mysqli('localhost', 'u450897284_root', 'Lfisgemsdb1234', 'u450897284_lfis_db');
 
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Get the posted data
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $itemId = intval($_POST['id']);
     $newStatus = intval($_POST['status']);
-    $currentAdmin = $_SESSION['username'] ?? 'Unknown Admin'; // Get admin username
-
+    
+    // Check that the status is valid (between 0 and 4)
     if ($newStatus >= 0 && $newStatus <= 4) {
-        $stmt = $conn->prepare("UPDATE message_history SET status = ?, updated_by = ? WHERE id = ?");
-        $stmt->bind_param('isi', $newStatus, $currentAdmin, $itemId);
+        // Fetch the reporter's email and item title for the email notification
+        $stmtFetch = $conn->prepare("SELECT mh.title, mh.status, user_info.email, user_info.first_name
+                                     FROM message_history mh
+                                     LEFT JOIN (
+                                         SELECT id AS user_id, email, first_name FROM user_member
+                                         UNION
+                                         SELECT id AS user_id, email, first_name FROM user_staff
+                                     ) AS user_info ON mh.user_id = user_info.user_id
+                                     WHERE mh.id = ?");
+        $stmtFetch->bind_param('i', $itemId);
+        $stmtFetch->execute();
+        $stmtFetch->bind_result($itemTitle, $currentStatus, $reporterEmail, $reporterName);
+        $stmtFetch->fetch();
+        $stmtFetch->close();
+
+        // Update the status in the database
+        $stmt = $conn->prepare("UPDATE message_history SET status = ? WHERE id = ?");
+        $stmt->bind_param('ii', $newStatus, $itemId);
         
         if ($stmt->execute()) {
             // If the item is published, also update the category status

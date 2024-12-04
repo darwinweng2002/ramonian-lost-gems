@@ -18,9 +18,7 @@ $message_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($message_id > 0) {
     // SQL query to fetch the details of the selected message by its ID from both user_member and user_staff
     $sql = "
-    SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, user_info.first_name, user_info.college, 
-           user_info.email, user_info.avatar, user_info.school_type, mh.contact, mh.founder, mh.time_found, 
-           mh.status, mh.updated_by, c.name as category_name
+    SELECT mh.id, mh.message, mi.image_path, mh.title, mh.landmark, user_info.first_name, user_info.college, user_info.email, user_info.avatar, user_info.school_type, mh.contact, mh.founder, mh.time_found, mh.status, c.name as category_name
     FROM message_history mh
     LEFT JOIN message_images mi ON mh.id = mi.message_id
     LEFT JOIN (
@@ -30,7 +28,7 @@ if ($message_id > 0) {
     ) AS user_info ON mh.user_id = user_info.user_id
     LEFT JOIN categories c ON mh.category_id = c.id
     WHERE mh.is_denied = 0 AND mh.id = $message_id"; 
-    // Exclude denied items
+// Exclude denied items
 
     // Fetch only the selected message
     $result = $conn->query($sql);
@@ -244,8 +242,7 @@ if ($message_id > 0) {
                             'founder' => $row['founder'],
                             'time_found' => $row['time_found'],
                             'category_name' => $row['category_name'],
-                            'status' => $row['status'],
-                            'updated_by' => $row['updated_by']
+                            'status' => $row['status']
                         ];
                     }
                     if ($row['image_path']) {
@@ -268,7 +265,6 @@ if ($message_id > 0) {
                     $founder = htmlspecialchars($msgData['founder'] ?? '');
                     $timeFound = htmlspecialchars($msgData['time_found'] ?? '');
                     $categoryName = htmlspecialchars($msgData['category_name'] ?? '');
-                    $updatedBy = htmlspecialchars($msgData['updated_by'] ?? 'N/A');
 
                     if ($firstName || $email || $college) {
                         if ($avatar) {
@@ -289,7 +285,6 @@ if ($message_id > 0) {
                     echo "<p><strong>Date and Time Found:</strong> " . $timeFound . "</p>";
                     echo "<p><strong>Description:</strong> " . $message . "</p>";
                     echo "<p><strong>Contact:</strong> " . $contact . "</p>";
-                    echo "<p><strong>Last Updated By:</strong> " . $updatedBy . "</p>";
 
                     
 // Assuming school_type is already fetched in $schoolType
