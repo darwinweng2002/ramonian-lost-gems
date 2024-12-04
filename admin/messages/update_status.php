@@ -18,7 +18,7 @@ if ($conn->connect_error) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $itemId = intval($_POST['id']);
     $newStatus = intval($_POST['status']);
-    $currentAdmin = $_SESSION['admin_username'] ?? 'Unknown Admin'; // Get admin username
+    $currentAdmin = $_SESSION['username'] ?? 'Unknown Admin'; // Get admin username
 
     if ($newStatus >= 0 && $newStatus <= 4) {
         $stmt = $conn->prepare("UPDATE message_history SET status = ?, updated_by = ? WHERE id = ?");
