@@ -225,7 +225,7 @@ if ($message_id > 0) {
         <h1>Found Item Details</h1>
 
         <div class="table-responsive">
-        <?php
+            <?php
             if ($result->num_rows > 0) {
                 $messages = [];
                 while ($row = $result->fetch_assoc()) {
@@ -275,6 +275,7 @@ if ($message_id > 0) {
                             $fullAvatar = base_url . 'uploads/avatars/' . $avatar;
                             echo "<img src='" . htmlspecialchars($fullAvatar) . "' alt='Avatar' class='avatar'>";
                         } else {
+                            // Updated decent default avatar
                             echo "<img src='../../uploads/avatars/2.png' alt='Default Avatar' class='avatar'>";
                         }
                     } else {
@@ -288,14 +289,79 @@ if ($message_id > 0) {
                     echo "<p><strong>Date and Time Found:</strong> " . $timeFound . "</p>";
                     echo "<p><strong>Description:</strong> " . $message . "</p>";
                     echo "<p><strong>Contact:</strong> " . $contact . "</p>";
-                    echo "<p><strong>Last Updated By:</strong> " . $updatedBy . "</p>"; // NEW FIELD
+                    echo "<p><strong>Last Updated By:</strong> " . $updatedBy . "</p>";
+
                     
-                    ...
+// Assuming school_type is already fetched in $schoolType
+$userRole = 'N/A'; // Default value for user role
+
+// Determine user role based on school_type
+if ($school_type == 0) {
+    $userRole = 'High School Student';
+} elseif ($school_type == 1) {
+    $userRole = 'College Student';
+} elseif ($school_type== 2) {
+    $userRole = 'Employee';
+} elseif ($school_type == 3) {
+    $userRole = 'Guest';
+}
+
+// Display user info with role
+if ($firstName || $email || $college) {
+    echo "<p><strong>User Info:</strong> " . ($firstName ? htmlspecialchars($firstName) : 'N/A') . " (" . ($email ? htmlspecialchars($email) : 'N/A') . ")</p>";
+    echo "<p><strong>User Role:</strong> " . htmlspecialchars($userRole) . "</p>";
+    echo "<p><strong>Department:</strong> " . ($college ? htmlspecialchars($college) : 'N/A') . "</p>";
+}
+
+
+                    echo "<div class='form-group'>";
+                    echo "<label for='status' class='control-label'>Status</label>";
+                    echo "<select name='status' id='status-".$msgId."' class='form-select form-select-sm rounded-0' required='required'>";
+                    echo "<option value='0' " . ($msgData['status'] == 0 ? 'selected' : '') . ">Pending</option>";
+                    echo "<option value='1' " . ($msgData['status'] == 1 ? 'selected' : '') . ">Published</option>";
+                    echo "<option value='2' " . ($msgData['status'] == 2 ? 'selected' : '') . ">Claimed</option>";
+                    echo "<option value='3' " . ($msgData['status'] == 3 ? 'selected' : '') . ">Surrendered</option>";
+                    echo "<option value='4' " . ($msgData['status'] == 4 ? 'selected' : '') . ">Denied</option>"; // New option for Denied
+                    echo "</select>";                    
+                    echo "<button class='btn btn-primary save-status-btn' data-id='" . $msgId . "'>Save Status</button>";
+                    echo "</div>";
+
+                    echo "<dt class='text-muted'>Status</dt>";
+                    if ($msgData['status'] == 1) {
+                        echo "<span class='badge bg-primary px-3 rounded-pill'>Published</span>";
+                    } elseif ($msgData['status'] == 2) {
+                        echo "<span class='badge bg-success px-3 rounded-pill'>Claimed</span>";
+                    } elseif ($msgData['status'] == 3) {
+                        echo "<span class='badge bg-secondary px-3 rounded-pill'>Surrendered</span>";
+                    } elseif ($msgData['status'] == 4) {
+                        echo "<span class='badge bg-danger px-3 rounded-pill'>Denied</span>"; // New badge for Denied
+                    } else {
+                        echo "<span class='badge bg-secondary px-3 rounded-pill'>Pending</span>";
+                    }
+                    
+
+                    if (!empty($msgData['images'])) {
+                        echo "<p><strong>Images:</strong></p>";
+                        echo "<div class='image-grid'>";
+                        foreach ($msgData['images'] as $imagePath) {
+                            echo "<a href='" . htmlspecialchars($imagePath) . "' data-lightbox='message-" . htmlspecialchars($msgId) . "' data-title='Image'><img src='" . htmlspecialchars($imagePath) . "' alt='Image'></a>";
+                        }
+                        echo "</div>";
+                    }
+                    $publishClass = ($msgData['status'] == 4 || $msgData['status'] != 1) ? 'publish-disabled-btn' : 'publish-btn';
+                    $publishDisabled = ($msgData['status'] == 4 || $msgData['status'] != 1) ? 'disabled title="Cannot publish denied items"' : '';
+
+                    $denyDisabled = $msgData['status'] != 4 ? 'disabled' : '';
+                    $denyClass = $msgData['status'] != 4 ? 'disabled-btn' : 'deny-btn';
+                    
+                    // Publish and Deny buttons with dynamic disabled state
+                    echo "<button class='" . $publishClass . "' data-id='" . htmlspecialchars($msgId) . "' $publishDisabled>Publish Report</button>";
+                    echo "<button class='" . $denyClass . "' data-id='" . htmlspecialchars($msgId) . "' $denyDisabled>Deny Report</button>";
+
+                    echo "</div>";
                 }
             }
             ?>
-        </div>
-    </div>
         </div>
     </div>
 
