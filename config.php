@@ -2,9 +2,6 @@
 ob_start();
 ini_set('date.timezone','Asia/Manila');
 date_default_timezone_set('Asia/Manila');
-$dateTime = new DateTime("now", new DateTimeZone('Asia/Manila')); // Adjust timezone
-echo $dateTime->format("h:i A"); // Display in 12-hour format
-
 session_start();
 
 require_once('initialize.php');
