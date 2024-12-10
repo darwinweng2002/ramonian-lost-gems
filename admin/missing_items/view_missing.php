@@ -147,13 +147,16 @@ $result = $stmt->get_result();
             white-space: nowrap; /* Prevent text wrapping */
         }
         .btn-disabled {
-    background-color: #ccc;
-    color: #666;
-    cursor: not-allowed;
+            background-color: #d3d3d3;
+    color: #999;
     border: none;
     padding: 10px 15px;
     border-radius: 5px;
-    opacity: 0.6;
+    cursor: not-allowed;
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+    pointer-events: none; 
 }
 .deny-btn {
     background-color: #dc3545;
