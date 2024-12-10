@@ -154,6 +154,7 @@ $result = $stmt->get_result();
     padding: 10px 15px;
     border-radius: 5px;
     opacity: 0.6;
+    right: 10px;
 }
 .deny-btn {
     background-color: #dc3545;
