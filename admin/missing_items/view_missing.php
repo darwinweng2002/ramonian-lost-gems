@@ -154,7 +154,7 @@ $result = $stmt->get_result();
     padding: 10px 15px;
     border-radius: 5px;
     opacity: 0.6;
-    right: 130px;
+    right: 10px;
 }
 .deny-btn {
     background-color: #dc3545;
@@ -165,7 +165,7 @@ $result = $stmt->get_result();
     cursor: pointer;
     position: absolute;
     bottom: 20px;
-    right: 130px;
+    right: 10px;
 }
 
 .deny-btn:hover {
@@ -180,7 +180,7 @@ $result = $stmt->get_result();
     cursor: not-allowed;
     position: absolute;
     bottom: 20px;
-    right: 130px;
+    right: 10px;
     pointer-events: none; /* Disable click events */
 }
     </style>
